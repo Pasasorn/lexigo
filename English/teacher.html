@@ -79,6 +79,14 @@ tr:hover td{background:#F0F4FF}
 .last-sync{font-size:12px;color:#78909C;font-weight:700}
 .refresh-btn{background:#EFF6FF;border:2px solid #BFDBFE;color:#1E3A8A;border-radius:11px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
 
+/* Tabs */
+.tab-bar{display:flex;gap:6px;margin-bottom:12px;background:#fff;border-radius:16px;padding:6px;border:2px solid #BFDBFE}
+.tab-btn{flex:1;padding:10px 8px;border:none;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;background:transparent;color:#78909C;transition:all .2s}
+.tab-btn.active{background:linear-gradient(135deg,#1E3A8A,#1D4ED8);color:#fff;box-shadow:0 2px 8px rgba(30,58,138,0.3)}
+.tab-btn.tab-order.active{background:linear-gradient(135deg,#92400E,#D97706);box-shadow:0 2px 8px rgba(146,64,14,0.3)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
 /* Loading */
 .loading{position:fixed;inset:0;background:rgba(255,255,255,0.85);display:none;align-items:center;justify-content:center;z-index:100}
 .loading.show{display:flex}
@@ -164,50 +172,56 @@ function jsonpCall(params) {
     </div>
   </div>
 
-  <!-- Orders panel -->
-  <div style="background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:12px;border:2px solid #FDE68A">
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn tab-order active" id="tabOrders" onclick="switchTab('orders')">📦 Orders</button>
+    <button class="tab-btn" id="tabStudents" onclick="switchTab('students')">👨‍🎓 นักเรียน</button>
+  </div>
+
+  <!-- Tab: Orders -->
+  <div class="tab-pane active" id="paneOrders">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-size:14px;font-weight:900;color:#92400E">📦 Orders รอตรวจสอบ</div>
-        <div style="font-size:11px;color:#78909C;font-weight:700;margin-top:1px">ตรวจสลิป → Verify → ระบบสร้างรหัสนักเรียนให้อัตโนมัติ</div>
-      </div>
+      <div style="font-size:12px;color:#78909C;font-weight:700">ตรวจสลิป → Verify → ระบบสร้างรหัสนักเรียนให้อัตโนมัติ</div>
       <button class="refresh-btn" onclick="loadPurchases()" style="border-color:#FDE68A;color:#92400E">🔄 โหลด Orders</button>
     </div>
-    <div id="ordersWrap"><div style="font-size:13px;color:#78909C;font-weight:700;text-align:center;padding:12px">กด "โหลด Orders" เพื่อดูรายการ</div></div>
+    <div id="ordersWrap"><div style="font-size:13px;color:#78909C;font-weight:700;text-align:center;padding:16px">กด "โหลด Orders" เพื่อดูรายการ</div></div>
   </div>
 
-  <!-- Add student panel -->
-  <div style="background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:12px;border:2px solid #BFDBFE">
-    <div style="font-size:14px;font-weight:900;color:#1E3A8A;margin-bottom:10px">➕ เพิ่มนักเรียนใหม่</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <input id="addCode" class="search-inp" placeholder="รหัส 6 หลัก (ว่างไว้=สุ่มให้)" maxlength="6" style="max-width:150px">
-      <input id="addNote" class="search-inp" placeholder="ชื่อจริง/หมายเหตุ (ไม่บังคับ)" style="flex:1;min-width:150px">
-      <button class="ctrl-btn active" onclick="addStudent()">เพิ่ม ✓</button>
+  <!-- Tab: Students -->
+  <div class="tab-pane" id="paneStudents">
+    <!-- Add student -->
+    <div style="background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:12px;border:2px solid #BFDBFE">
+      <div style="font-size:14px;font-weight:900;color:#1E3A8A;margin-bottom:10px">➕ เพิ่มนักเรียนใหม่</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="addCode" class="search-inp" placeholder="รหัส 6 หลัก (ว่างไว้=สุ่มให้)" maxlength="6" style="max-width:150px">
+        <input id="addNote" class="search-inp" placeholder="ชื่อจริง/หมายเหตุ (ไม่บังคับ)" style="flex:1;min-width:150px">
+        <button class="ctrl-btn active" onclick="addStudent()">เพิ่ม ✓</button>
+      </div>
+      <div id="addResult" style="font-size:13px;font-weight:700;margin-top:8px;min-height:18px"></div>
     </div>
-    <div id="addResult" style="font-size:13px;font-weight:700;margin-top:8px;min-height:18px"></div>
-  </div>
 
-  <!-- Controls -->
-  <div class="ctrl-row">
-    <input class="search-inp" id="searchInp" placeholder="🔍 ค้นหาชื่อ/รหัส..." oninput="renderTable()">
-    <button class="ctrl-btn active" id="sortDays" onclick="setSort('days')">เรียงตามวัน ↓</button>
-    <button class="ctrl-btn" id="sortName" onclick="setSort('name')">เรียงตามชื่อ</button>
-  </div>
+    <!-- Controls -->
+    <div class="ctrl-row">
+      <input class="search-inp" id="searchInp" placeholder="🔍 ค้นหาชื่อ/รหัส..." oninput="renderTable()">
+      <button class="ctrl-btn active" id="sortDays" onclick="setSort('days')">เรียงตามวัน ↓</button>
+      <button class="ctrl-btn" id="sortName" onclick="setSort('name')">เรียงตามชื่อ</button>
+    </div>
 
-  <!-- Table -->
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>ชื่อเล่น</th>
-          <th>รหัส</th>
-          <th>วันที่เรียน</th>
-          <th>ความคืบหน้า</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <!-- Table -->
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ชื่อเล่น</th>
+            <th>รหัส</th>
+            <th>วันที่เรียน</th>
+            <th>ความคืบหน้า</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div style="text-align:center;margin-top:8px">
@@ -218,6 +232,15 @@ function jsonpCall(params) {
 <script>
 let allStudents = [];
 let sortBy = 'days';
+
+function switchTab(tab) {
+  document.getElementById('paneOrders').classList.toggle('active', tab==='orders');
+  document.getElementById('paneStudents').classList.toggle('active', tab==='students');
+  document.getElementById('tabOrders').classList.toggle('active', tab==='orders');
+  document.getElementById('tabOrders').classList.toggle('tab-order', tab==='orders');
+  document.getElementById('tabStudents').classList.toggle('active', tab==='students');
+  if (tab==='orders') loadPurchases();
+}
 
 function doLogin() {
   const p = document.getElementById('passInp').value.trim();
@@ -541,9 +564,26 @@ function renderTable() {
     const statusTag = s.status === 'pending'
       ? `<span style="font-size:10px;background:#FEF3C7;color:#92400E;border-radius:6px;padding:2px 6px;font-weight:800">รอยืนยัน</span>`
       : '';
+
+    // Type badge
+    let typeBadge = '';
+    if (s.type === 'annual' && s.expiry_date) {
+      const exp     = new Date(s.expiry_date);
+      const today   = new Date();
+      const daysLeft = Math.ceil((exp - today) / 86400000);
+      const expStr  = exp.toLocaleDateString('th-TH', {day:'numeric',month:'short',year:'2-digit'});
+      const warn    = daysLeft <= 30 ? ';border:1.5px solid #FCA5A5' : '';
+      const color   = daysLeft <= 30 ? '#C62828' : '#1565C0';
+      const bg      = daysLeft <= 30 ? '#FEE2E2' : '#E3F2FD';
+      typeBadge = `<div style="font-size:10px;font-weight:800;background:${bg};color:${color};border-radius:6px;padding:2px 7px;margin-top:3px;display:inline-block${warn}">🔄 รายปี · หมด ${expStr} (${daysLeft} วัน)</div>`;
+    } else if (s.type === 'level') {
+      typeBadge = `<div style="font-size:10px;font-weight:800;background:#F3E8FF;color:#6B21A8;border-radius:6px;padding:2px 7px;margin-top:3px;display:inline-block">📚 ราย Level</div>`;
+    } else {
+      typeBadge = `<div style="font-size:10px;font-weight:800;background:#D1FAE5;color:#065F46;border-radius:6px;padding:2px 7px;margin-top:3px;display:inline-block">♾️ ตลอดชีพ</div>`;
+    }
     return `<tr>
       <td>${rankEl}</td>
-      <td><strong>${s.name}</strong> ${statusTag}</td>
+      <td><strong>${s.name}</strong> ${statusTag}<br>${typeBadge}</td>
       <td>
         <span style="font-family:'Courier New',monospace;color:#1D4ED8;font-weight:800">${s.code}</span><br>
         <small style="color:#78909C">${s.email||'-'}</small>
