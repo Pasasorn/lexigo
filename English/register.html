@@ -479,6 +479,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
       <div class="pend-tag">⏳ กำลังตรวจสอบการโอนเงิน</div>
     </div>
     <div class="info-table" id="pendTable"></div>
+    <div id="pendNotif" style="display:none;margin-top:10px"></div>
     <div class="steps-list">
       <div style="font-size:12px;font-weight:900;color:#37474F;margin-bottom:6px">ขั้นตอนถัดไป:</div>
       <div class="sl-item"><span class="sl-n s-done">✓</span><div>ส่งคำสั่งซื้อและสลิปเรียบร้อย</div></div>
@@ -849,6 +850,8 @@ async function doPayment() {
 }
 
 // ── STEP 2: Show pending ──
+let _checkTimer = null;
+
 function showPending(d) {
   document.getElementById('pendTable').innerHTML = `
     <div class="irow"><span class="ilbl">ชื่อ</span><span class="ival">${d.name||'—'}</span></div>
@@ -857,6 +860,49 @@ function showPending(d) {
     <div class="irow"><span class="ilbl">Line ID</span><span class="ival">${d.line||'—'}</span></div>
     <div class="irow"><span class="ilbl">Email</span><span class="ival">${d.email||'—'}</span></div>`;
   setStep(2); go(2);
+  // Auto-check สถานะทุก 30 วินาที
+  if (_checkTimer) clearInterval(_checkTimer);
+  _checkTimer = setInterval(() => checkOrderStatus(d), 30000);
+}
+
+async function checkOrderStatus(d) {
+  try {
+    const res = await jsonp({ action:'checkOrder', phone: d.phone });
+    if (res.status !== 'ok') return;
+
+    if (res.order_status === 'verified') {
+      clearInterval(_checkTimer);
+      // แจ้งนักเรียนว่า verified แล้ว
+      const notif = document.getElementById('pendNotif');
+      if (notif) {
+        notif.style.display = 'block';
+        notif.innerHTML = `<div style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:700;color:#065F46;text-align:center">
+          ✅ ชำระเงินได้รับการยืนยันแล้ว!<br>รอรับลิงก์ลงทะเบียนทาง Line ได้เลย 📱</div>`;
+      }
+    } else if (res.order_status === 'rejected') {
+      clearInterval(_checkTimer);
+      localStorage.removeItem(PK);
+      // แสดงหน้า rejected
+      document.getElementById('pendTable').innerHTML = '';
+      const notif = document.getElementById('pendNotif');
+      if (notif) {
+        notif.style.display = 'block';
+        notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:700;color:#C62828;text-align:center;line-height:1.8">
+          ❌ สลิปไม่ผ่านการตรวจสอบ<br>
+          <span style="font-size:11px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือส่งสลิปใหม่</span><br><br>
+          <button onclick="retryPayment()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
+            🔄 ส่งสลิปใหม่</button>
+          <div style="margin-top:8px;font-size:11px">หรือทักมาที่ Line: <strong>@LexiGo</strong></div>
+        </div>`;
+      }
+    }
+  } catch(e) {}
+}
+
+function retryPayment() {
+  localStorage.removeItem(PK);
+  go(1); // กลับหน้าชำระเงิน
+  setStep(1);
 }
 
 // ── STEP 3: Register student ──
