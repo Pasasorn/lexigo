@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>LexiGo — สมัครเรียน</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-height:100vh}
+
+/* Pages */
+.page{display:none;padding:16px 14px 24px;max-width:480px;margin:0 auto}
+.page.on{display:block}
+
+/* Header */
+.hdr{background:linear-gradient(135deg,#F9A825,#E91E63,#9C27B0);border-radius:22px;padding:20px 16px 16px;text-align:center;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.hdr .logo{font-size:38px;margin-bottom:4px}
+.hdr h1{font-size:17px;font-weight:900;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,.3);margin-bottom:2px}
+.hdr p{font-size:11px;color:rgba(255,255,255,.88);font-weight:700}
+.hdr-sm{background:linear-gradient(135deg,#F9A825,#E91E63);border-radius:16px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.hdr-sm .ico{font-size:28px}
+.hdr-sm h2{font-size:14px;font-weight:900;color:#fff;margin-bottom:1px}
+.hdr-sm p{font-size:11px;color:rgba(255,255,255,.85);font-weight:700}
+
+/* Cards */
+.card{background:#fff;border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.card-title{font-size:13px;font-weight:900;color:#E65100;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #FFF59D;display:flex;align-items:center;gap:6px}
+
+/* ─── TIER PRICING TABLE ─── */
+.tier-card{background:linear-gradient(135deg,#1A237E,#283593);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 4px 20px rgba(26,35,126,.35)}
+.tier-head{text-align:center;margin-bottom:14px}
+.tier-head h2{font-size:16px;font-weight:900;color:#fff;margin-bottom:2px}
+.tier-head p{font-size:11px;font-weight:700;color:rgba(255,255,255,.75)}
+.tier-rows{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.tier-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;transition:.2s}
+.tier-row.sold{background:rgba(255,255,255,.06);opacity:.5}
+.tier-row.current{background:linear-gradient(135deg,#F57F17,#E91E63);box-shadow:0 3px 12px rgba(233,30,99,.45)}
+.tier-row.upcoming{background:rgba(255,255,255,.08)}
+.tier-badge{flex-shrink:0;width:52px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tier-row.sold .tier-badge{background:rgba(255,255,255,.1)}
+.tier-row.current .tier-badge{background:rgba(255,255,255,.25)}
+.tier-row.upcoming .tier-badge{background:rgba(255,255,255,.1)}
+.tier-n{font-size:11px;font-weight:900;color:#fff;text-align:center;line-height:1.2}
+.tier-info{flex:1}
+.tier-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:1px}
+.tier-price{font-size:20px;font-weight:900;color:#fff;line-height:1}
+.tier-tag{font-size:10px;font-weight:900;padding:2px 8px;border-radius:7px}
+.tier-row.current .tier-tag{background:rgba(255,255,255,.3);color:#fff}
+.tier-row.sold .tier-tag{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.tier-row.upcoming .tier-tag{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+/* Price spotlight */
+.price-spotlight{text-align:center;padding:12px 0 10px}
+.price-badge{display:inline-block;background:rgba(255,255,255,.2);color:#FFD600;border-radius:20px;padding:3px 14px;font-size:11px;font-weight:900;margin-bottom:6px}
+.price-big{font-size:42px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.price-save{font-size:12px;font-weight:800;color:#FFD600;margin-top:4px}
+/* Spots countdown */
+.spots-countdown{background:rgba(255,255,255,.12);border-radius:14px;padding:12px 16px;text-align:center;margin-bottom:12px}
+.spots-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:2px}
+.spots-big{font-size:36px;font-weight:900;color:#FFD600;line-height:1;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.spots-unit{font-size:12px;font-weight:700;color:rgba(255,255,255,.8);margin-top:2px}
+.spots-bar-wrap{height:6px;background:rgba(255,255,255,.15);border-radius:3px;margin-top:10px;overflow:hidden}
+.spots-bar-fill{height:100%;background:linear-gradient(90deg,#FFD600,#FF6F00);border-radius:3px;transition:width .8s ease}
+
+/* per-level grid */
+.cefr-group{margin-bottom:12px}
+.cefr-label{font-size:11px;font-weight:900;color:#546E7A;margin-bottom:6px;padding:4px 8px;background:#F5F5F5;border-radius:8px;display:inline-block}
+.lvl-row{display:flex;gap:7px;flex-wrap:wrap}
+.lvl{border:2.5px solid #E0E0E0;border-radius:12px;padding:9px 6px;text-align:center;cursor:pointer;transition:.15s;background:#FAFAFA;flex:1;min-width:54px;position:relative}
+.lvl:hover{border-color:#F9A825;background:#FFFDE7}
+.lvl.sel{border-color:#4CAF50;background:linear-gradient(135deg,#F1F8E9,#DCEDC8);box-shadow:0 2px 8px rgba(76,175,80,.25)}
+.lvl.bonus{border-color:#E91E63;background:#FFF0F3}
+.lvl.bonus.sel{border-color:#E91E63;background:linear-gradient(135deg,#FCE4EC,#FFF9C4)}
+.lv-num{font-size:18px;font-weight:900;color:#37474F;line-height:1}
+.lv-day{font-size:9px;font-weight:700;color:#90A4AE;margin-top:2px;line-height:1.2}
+.lv-bonus{font-size:9px;font-weight:900;color:#E91E63;margin-top:2px}
+
+/* lifetime select button */
+.btn-lifetime{width:100%;background:linear-gradient(135deg,#1A237E,#4A148C);color:#fff;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;box-shadow:0 4px 14px rgba(74,20,140,.4);transition:.1s}
+.btn-lifetime:active{transform:scale(.98)}
+.btn-lvl-go{width:100%;background:linear-gradient(135deg,#43A047,#1B5E20);color:#fff;border:none;border-radius:12px;padding:11px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;box-shadow:0 3px 10px rgba(27,94,32,.3)}
+
+/* summary box */
+.sum-box{background:linear-gradient(135deg,#E8F5E9,#DCEDC8);border:2px solid #A5D6A7;border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.sum-pkg{font-size:13px;font-weight:900;color:#2E7D32}
+.sum-amt{font-size:24px;font-weight:900;color:#E91E63;margin-top:2px}
+.sum-note{font-size:10px;font-weight:700;color:#546E7A;margin-top:3px}
+
+/* Fields */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:900;color:#37474F;margin-bottom:4px}
+.req{color:#E91E63}
+.inp{width:100%;border:2.5px solid #E0E0E0;border-radius:11px;padding:10px 13px;font-size:14px;font-weight:700;color:#37474F;font-family:'Nunito',sans-serif;background:#FAFAFA;transition:.15s}
+.inp:focus{outline:none;border-color:#F9A825;background:#fff}
+.inp.ok{border-color:#7CB342}
+.inp.err{border-color:#E57373;background:#FFEBEE}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ferr{font-size:11px;font-weight:800;color:#C62828;margin-top:3px;display:none}
+.ferr.on{display:block}
+
+/* bank */
+.bank-box{background:linear-gradient(135deg,#E3F2FD,#EDE7F6);border:2px solid #90CAF9;border-radius:14px;padding:13px}
+.bank-ttl{font-size:12px;font-weight:900;color:#1565C0;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.brow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(144,202,249,.4);font-size:12px}
+.brow:last-child{border:none}
+.blbl{font-weight:700;color:#546E7A}
+.bval{font-weight:900;color:#1565C0}
+.bcopy{background:#1565C0;color:#fff;border:none;border-radius:7px;padding:3px 9px;font-size:10px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.bamt{font-size:18px;font-weight:900;color:#E91E63}
+.qr-ph{background:#fff;border:2px dashed #90CAF9;border-radius:11px;padding:12px;text-align:center;margin-top:10px}
+.qr-ph .qr-box{width:110px;height:110px;background:#F5F5F5;border-radius:8px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#B0BEC5;font-weight:700;text-align:center}
+.qr-ph p{font-size:10px;font-weight:700;color:#90A4AE}
+
+/* slip */
+.slip-drop{border:2.5px dashed #BDBDBD;border-radius:13px;padding:14px;text-align:center;cursor:pointer;background:#FAFAFA;position:relative;margin-top:10px}
+.slip-drop:hover{border-color:#F9A825;background:#FFFDE7}
+.slip-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.slip-preview{margin-top:8px;display:none;text-align:center}
+.slip-preview img{max-width:100%;max-height:160px;border-radius:10px;border:2px solid #7CB342}
+
+/* buttons */
+.btn{width:100%;border:none;border-radius:13px;padding:13px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:.1s;margin-top:6px}
+.btn:active{transform:scale(.98)}
+.btn-orange{background:linear-gradient(135deg,#F9A825,#E65100);color:#fff}
+.btn-green{background:linear-gradient(135deg,#43A047,#1B5E20);color:#fff}
+.btn-blue{background:linear-gradient(135deg,#1E88E5,#0D47A1);color:#fff}
+.btn-back{background:#fff;border:2px solid #E0E0E0;color:#78909C;font-size:13px;margin-top:8px;box-shadow:none}
+
+/* loading */
+.ld{display:none;text-align:center;padding:10px;gap:6px;flex-direction:column;align-items:center}
+.ld.on{display:flex}
+.spin{width:30px;height:30px;border:4px solid #FFF59D;border-top-color:#F9A825;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stt{font-size:11px;font-weight:700;color:#78909C}
+
+/* alert */
+.alt{border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800;margin-top:8px;display:none;line-height:1.5}
+.alt.on{display:block}
+.alt-err{background:#FFEBEE;color:#C62828;border:2px solid #E57373}
+.alt-warn{background:#FFF3E0;color:#E65100;border:2px solid #FFCC80}
+.alt-ok{background:#E8F5E9;color:#2E7D32;border:2px solid #A5D6A7}
+
+/* pending page */
+.pend-hero{text-align:center;padding:10px 0 14px}
+.pend-hero .ico{font-size:52px;margin-bottom:6px}
+.pend-hero h2{font-size:18px;font-weight:900;color:#1565C0;margin-bottom:4px}
+.pend-tag{display:inline-block;background:#FFF9C4;border:2px solid #F9A825;border-radius:9px;padding:4px 14px;font-size:12px;font-weight:900;color:#E65100}
+.info-table{background:#F8F9FA;border-radius:13px;padding:10px 12px;margin:12px 0;border:1.5px solid #E0E0E0}
+.irow{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid #F0F0F0}
+.irow:last-child{border:none}
+.ilbl{font-weight:700;color:#90A4AE}
+.ival{font-weight:900;color:#37474F;text-align:right;max-width:65%;word-break:break-all}
+.ival.hi{color:#E91E63}
+.steps-list{margin:10px 0}
+.sl-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid #F5F5F5;font-size:12px;font-weight:700;color:#546E7A}
+.sl-item:last-child{border:none}
+.sl-n{flex-shrink:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.s-done{background:#7CB342}
+.s-now{background:#F9A825}
+.s-wait{background:#B0BEC5}
+
+/* success page */
+.succ-hero{text-align:center;padding:10px 0 12px}
+.code-chip{font-size:22px;font-weight:900;letter-spacing:3px;background:#fff;border:2.5px dashed #7CB342;border-radius:12px;padding:10px 22px;display:inline-block;font-family:'Courier New',monospace;color:#1565C0;margin:8px 0}
+
+/* step indicator */
+.step-ind{display:flex;align-items:center;background:#fff;border-radius:12px;padding:10px 14px;margin-bottom:14px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.si{display:flex;align-items:center;gap:6px;flex:1}
+.si-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
+.si-n.act{background:linear-gradient(135deg,#F9A825,#E91E63);color:#fff}
+.si-n.dn{background:#7CB342;color:#fff}
+.si-n.id{background:#E0E0E0;color:#90A4AE}
+.si-t{font-size:10px;font-weight:800}
+.si-t.act{color:#E65100}
+.si-t.dn{color:#7CB342}
+.si-t.id{color:#B0BEC5}
+.si-line{flex:0 0 14px;height:3px;background:#E0E0E0;border-radius:2px;margin:0 3px}
+.si-line.dn{background:#7CB342}
+
+.note{font-size:11px;font-weight:700;color:#78909C;line-height:1.6;text-align:center;padding:0 8px;margin-top:6px}
+.foot{font-size:10px;color:#B0BEC5;text-align:center;padding:4px 0 16px;line-height:1.8}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     P0 — PACKAGE SELECTION
+══════════════════════════════ -->
+<div class="page on" id="p0">
+  <div class="hdr">
+    <div class="logo">🚀</div>
+    <h1>LexiGo</h1>
+    <p style="font-size:13px;font-weight:900;margin-bottom:3px">Go ทุกวัน · Grow ทุกคำ</p>
+    <p>ฟัง · พูด · อ่าน · เขียน — Oxford 3,000 คำ ใน 1 ปี</p>
+  </div>
+
+  <!-- LIFETIME TIER CARD -->
+  <div class="tier-card">
+    <div class="tier-head">
+      <h2>🌟 ตลอดชีพ — Oxford 3,000 คำ ครบ 15 Level</h2>
+      <p>A1 · A2 · B1 · B2 · 448 วัน · รวม Bonus Level</p>
+    </div>
+
+    <!-- Full price -->
+    <div style="text-align:center;margin-bottom:8px">
+      <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.6);text-decoration:line-through">ปกติ ฿8,985 (15 Level × ฿599)</span>
+    </div>
+
+    <!-- Current price display -->
+    <div class="price-spotlight">
+      <div class="price-badge" id="priceBadge">🔥 ราคาพิเศษ</div>
+      <div class="price-big" id="priceMain">…</div>
+      <div class="price-save" id="priceSave"></div>
+    </div>
+
+    <!-- Spots countdown -->
+    <div class="spots-countdown">
+      <div>
+        <div class="spots-label" id="spotsLabel">เหลือเพียง</div>
+        <div class="spots-big" id="spotsNum">…</div>
+        <div class="spots-unit">ที่ว่าง</div>
+      </div>
+      <div class="spots-bar-wrap">
+        <div class="spots-bar-fill" id="spotsBarFill"></div>
+      </div>
+    </div>
+
+    <button class="btn-lifetime" id="btnLifetime" onclick="selectPkg('lifetime')">
+      🌟 สมัครตลอดชีพ ฿<span id="lifetimePriceBtn">…</span> — จองที่นี่
+    </button>
+  </div>
+
+  <!-- OR DIVIDER -->
+  <div style="display:flex;align-items:center;gap:10px;margin:2px 0 12px">
+    <div style="flex:1;height:1px;background:#E0E0E0"></div>
+    <span style="font-size:11px;font-weight:900;color:#B0BEC5">หรือ ซื้อราย Level</span>
+    <div style="flex:1;height:1px;background:#E0E0E0"></div>
+  </div>
+
+  <!-- PER LEVEL -->
+  <div class="card">
+    <div class="card-title">📗 ซื้อทีละ Level (30 วัน · ฿599/Level)</div>
+
+    <!-- A1 Group -->
+    <div class="cefr-group">
+      <div class="cefr-label">🟢 A1 — ผู้เริ่มต้น</div>
+      <div class="lvl-row">
+        <div class="lvl" id="lv1" onclick="selectLevel(1)">
+          <div class="lv-num">1</div>
+          <div class="lv-day">Day 1–30</div>
+        </div>
+        <div class="lvl" id="lv2" onclick="selectLevel(2)">
+          <div class="lv-num">2</div>
+          <div class="lv-day">Day 31–60</div>
+        </div>
+        <div class="lvl" id="lv3" onclick="selectLevel(3)">
+          <div class="lv-num">3</div>
+          <div class="lv-day">Day 61–90</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A2 Group -->
+    <div class="cefr-group">
+      <div class="cefr-label">🔵 A2 — ผู้เรียนพื้นฐาน</div>
+      <div class="lvl-row">
+        <div class="lvl" id="lv4" onclick="selectLevel(4)">
+          <div class="lv-num">4</div>
+          <div class="lv-day">Day 91–120</div>
+        </div>
+        <div class="lvl" id="lv5" onclick="selectLevel(5)">
+          <div class="lv-num">5</div>
+          <div class="lv-day">Day 121–150</div>
+        </div>
+        <div class="lvl" id="lv6" onclick="selectLevel(6)">
+          <div class="lv-num">6</div>
+          <div class="lv-day">Day 151–180</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B1 Group -->
+    <div class="cefr-group">
+      <div class="cefr-label">🟡 B1 — ระดับกลาง</div>
+      <div class="lvl-row">
+        <div class="lvl" id="lv7" onclick="selectLevel(7)">
+          <div class="lv-num">7</div>
+          <div class="lv-day">Day 181–210</div>
+        </div>
+        <div class="lvl" id="lv8" onclick="selectLevel(8)">
+          <div class="lv-num">8</div>
+          <div class="lv-day">Day 211–240</div>
+        </div>
+        <div class="lvl" id="lv9" onclick="selectLevel(9)">
+          <div class="lv-num">9</div>
+          <div class="lv-day">Day 241–270</div>
+        </div>
+        <div class="lvl" id="lv10" onclick="selectLevel(10)">
+          <div class="lv-num">10</div>
+          <div class="lv-day">Day 271–300</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B2 Group -->
+    <div class="cefr-group">
+      <div class="cefr-label">🔴 B2 — ระดับสูง</div>
+      <div class="lvl-row">
+        <div class="lvl" id="lv11" onclick="selectLevel(11)">
+          <div class="lv-num">11</div>
+          <div class="lv-day">Day 301–330</div>
+        </div>
+        <div class="lvl" id="lv12" onclick="selectLevel(12)">
+          <div class="lv-num">12</div>
+          <div class="lv-day">Day 331–360</div>
+        </div>
+        <div class="lvl" id="lv13" onclick="selectLevel(13)">
+          <div class="lv-num">13</div>
+          <div class="lv-day">Day 361–390</div>
+        </div>
+        <div class="lvl" id="lv14" onclick="selectLevel(14)">
+          <div class="lv-num">14</div>
+          <div class="lv-day">Day 391–420</div>
+        </div>
+        <div class="lvl bonus" id="lv15" onclick="selectLevel(15)">
+          <div class="lv-num">15</div>
+          <div class="lv-day">Day 421–448</div>
+          <div class="lv-bonus">🎁 Bonus</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-lvl-go" id="btnLvlGo" onclick="selectPkg('level')" style="display:none">
+      📗 สมัคร Level ที่เลือก → ฿599
+    </button>
+  </div>
+
+  <div class="note">💡 สมัครตลอดชีพคุ้มกว่ามาก — ได้ครบ 15 Level ราคาเดียว ประหยัดถึง 71%!</div>
+  <div class="foot">📞 สอบถาม Line: @LexiGo_TH</div>
+</div>
+
+<!-- ══════════════════════════════
+     P1 — PAYMENT + CONTACT
+══════════════════════════════ -->
+<div class="page" id="p1">
+  <div class="hdr-sm">
+    <div class="ico">💳</div>
+    <div><h2>ชำระเงิน</h2><p>กรอกข้อมูลติดต่อและโอนเงิน</p></div>
+  </div>
+
+  <!-- Step indicator -->
+  <div class="step-ind">
+    <div class="si"><div class="si-n act">1</div><div class="si-t act">ชำระเงิน</div></div>
+    <div class="si-line"></div>
+    <div class="si"><div class="si-n id">2</div><div class="si-t id">ตรวจสอบ</div></div>
+    <div class="si-line"></div>
+    <div class="si"><div class="si-n id">3</div><div class="si-t id">ลงทะเบียน</div></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="sum-box" id="sumBox">
+    <div class="sum-pkg" id="sumPkg">—</div>
+    <div class="sum-amt" id="sumAmt">฿—</div>
+    <div class="sum-note" id="sumNote"></div>
+  </div>
+
+  <!-- Contact info -->
+  <div class="card">
+    <div class="card-title">👤 ข้อมูลติดต่อ (สำหรับครูแจ้งผลการยืนยัน)</div>
+    <div class="row2">
+      <div class="field">
+        <label>ชื่อ <span class="req">*</span></label>
+        <input class="inp" id="pName" type="text" placeholder="ชื่อผู้ปกครอง / นักเรียน" maxlength="40">
+        <div class="ferr" id="eName">กรุณากรอก</div>
+      </div>
+      <div class="field">
+        <label>เบอร์โทร <span class="req">*</span></label>
+        <input class="inp" id="pPhone" type="tel" placeholder="0812345678" maxlength="10"
+          oninput="this.value=this.value.replace(/\D/g,'')">
+        <div class="ferr" id="ePhone">10 หลัก</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Line ID <span style="font-size:10px;color:#90A4AE;font-weight:700">(ถ้ามี)</span></label>
+        <input class="inp" id="pLine" type="text" placeholder="@line_id" maxlength="40">
+      </div>
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input class="inp" id="pEmail" type="email" placeholder="email@gmail.com" maxlength="80">
+        <div class="ferr" id="eEmail">Email ไม่ถูกต้อง</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bank transfer -->
+  <div class="card">
+    <div class="card-title">🏦 โอนเงินเข้าบัญชี</div>
+    <div class="bank-box">
+      <div class="bank-ttl">🏦 บัญชีรับโอน</div>
+      <div class="brow">
+        <span class="blbl">ธนาคาร</span>
+        <span class="bval">กสิกรไทย (KBANK)</span>
+      </div>
+      <div class="brow">
+        <span class="blbl">เลขบัญชี</span>
+        <span style="display:flex;align-items:center;gap:6px">
+          <span class="bval" id="bankNo">663-2-18897-6</span>
+          <button class="bcopy" onclick="copyBank()">คัดลอก</button>
+        </span>
+      </div>
+      <div class="brow">
+        <span class="blbl">ชื่อบัญชี</span>
+        <span class="bval">น.ส. พศษร จันทร์เงิน</span>
+      </div>
+      <div class="brow">
+        <span class="blbl">จำนวนเงิน</span>
+        <span class="bval bamt" id="bankAmt">฿—</span>
+      </div>
+      <!-- PromptPay QR -->
+      <div class="qr-ph">
+        <img src="qr_promptpay.JPG" alt="QR PromptPay"
+          style="width:200px;object-fit:contain;border-radius:8px;margin:0 auto 6px;display:block">
+        <p>สแกน PromptPay · น.ส. พศษร จันทร์เงิน</p>
+      </div>
+    </div>
+
+    <!-- Slip upload -->
+    <div class="field" style="margin-top:14px">
+      <label>📎 แนบสลิปโอนเงิน <span class="req">*</span></label>
+      <div class="slip-drop" id="slipDrop">
+        <input type="file" accept="image/*" id="slipFile" onchange="previewSlip(this)">
+        <div style="font-size:26px;margin-bottom:3px">🖼️</div>
+        <div style="font-size:12px;font-weight:800;color:#546E7A">กดเพื่อเลือกรูปสลิป</div>
+        <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:1px">JPG, PNG ไม่เกิน 5MB</div>
+      </div>
+      <div class="slip-preview" id="slipPreview">
+        <img id="slipImg" src="" alt="สลิป">
+        <div style="font-size:11px;font-weight:800;color:#2E7D32;margin-top:4px">✅ แนบสลิปเรียบร้อย</div>
+      </div>
+      <div class="ferr" id="eSlip">กรุณาแนบสลิป</div>
+    </div>
+    <div style="background:#FFFDE7;border:1.5px solid #F9A825;border-radius:10px;padding:8px 12px;margin-top:6px;font-size:11px;font-weight:700;color:#E65100;line-height:1.5">
+      📱 หรือส่งสลิปทาง Line: <strong>@LexiGo</strong><br>พร้อมแจ้งชื่อและ Package ที่สมัคร
+    </div>
+  </div>
+
+  <button class="btn btn-orange" id="btnPay" onclick="doPayment()">
+    📨 ส่งคำสั่งซื้อและสลิป
+  </button>
+  <div class="ld" id="ldPay"><div class="spin"></div><span class="stt">กำลังส่งข้อมูล...</span></div>
+  <div class="alt" id="altPay"></div>
+  <button class="btn btn-back" onclick="go(0)">← เลือก Package ใหม่</button>
+  <div class="foot">🔒 ข้อมูลใช้เพื่อการสมัครเรียนเท่านั้น</div>
+</div>
+
+<!-- ══════════════════════════════
+     P2 — PENDING VERIFICATION
+══════════════════════════════ -->
+<div class="page" id="p2">
+  <div class="hdr-sm">
+    <div class="ico">📋</div>
+    <div><h2>รอตรวจสอบการชำระเงิน</h2><p>ทีมงานจะแจ้งผลภายใน 1–3 ชั่วโมง</p></div>
+  </div>
+
+  <div class="step-ind">
+    <div class="si"><div class="si-n dn">✓</div><div class="si-t dn">ชำระเงิน</div></div>
+    <div class="si-line dn"></div>
+    <div class="si"><div class="si-n act">2</div><div class="si-t act">ตรวจสอบ</div></div>
+    <div class="si-line"></div>
+    <div class="si"><div class="si-n id">3</div><div class="si-t id">ลงทะเบียน</div></div>
+  </div>
+
+  <div class="card">
+    <div class="pend-hero">
+      <div class="ico">📋</div>
+      <h2>ส่งคำสั่งซื้อเรียบร้อย!</h2>
+      <div class="pend-tag">⏳ กำลังตรวจสอบการโอนเงิน</div>
+    </div>
+    <div class="info-table" id="pendTable"></div>
+    <div class="steps-list">
+      <div style="font-size:12px;font-weight:900;color:#37474F;margin-bottom:6px">ขั้นตอนถัดไป:</div>
+      <div class="sl-item"><span class="sl-n s-done">✓</span><div>ส่งคำสั่งซื้อและสลิปเรียบร้อย</div></div>
+      <div class="sl-item"><span class="sl-n s-now">2</span><div>ทีมงานตรวจสอบสลิป (1–3 ชม. ในเวลา 09:00–21:00)</div></div>
+      <div class="sl-item"><span class="sl-n s-wait">3</span><div>ได้รับ <strong>ลิงค์ลงทะเบียน</strong> + <strong>ลิงค์กลุ่มลับ</strong> ทาง Line &amp; Email</div></div>
+      <div class="sl-item"><span class="sl-n s-wait">4</span><div>กรอกข้อมูลนักเรียน และเริ่มเรียนได้เลย!</div></div>
+    </div>
+    <div style="background:#E3F2FD;border-radius:11px;padding:10px 13px;font-size:11px;font-weight:700;color:#1565C0;line-height:1.6;border:1.5px solid #90CAF9;margin-top:6px">
+      💡 ยังไม่ได้รับลิงค์ใน 3 ชั่วโมง? ทักมาที่<br>Line: <strong>@LexiGo</strong> ได้เลย
+    </div>
+  </div>
+
+  <button class="btn btn-blue" onclick="go(3)">
+    ✅ ได้รับลิงค์แล้ว → กรอกข้อมูลนักเรียน
+  </button>
+  <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่ / แก้ไขข้อมูล</button>
+</div>
+
+<!-- ══════════════════════════════
+     P3 — STUDENT REGISTRATION
+     (เข้าถึงจากลิงค์ที่ครูส่ง)
+══════════════════════════════ -->
+<div class="page" id="p3">
+  <div class="hdr-sm">
+    <div class="ico">🎒</div>
+    <div><h2>ลงทะเบียนนักเรียน</h2><p>กรอกข้อมูลเพื่อเริ่มเรียน</p></div>
+  </div>
+
+  <div class="step-ind">
+    <div class="si"><div class="si-n dn">✓</div><div class="si-t dn">ชำระเงิน</div></div>
+    <div class="si-line dn"></div>
+    <div class="si"><div class="si-n dn">✓</div><div class="si-t dn">ยืนยันแล้ว</div></div>
+    <div class="si-line dn"></div>
+    <div class="si"><div class="si-n act">3</div><div class="si-t act">ลงทะเบียน</div></div>
+  </div>
+
+  <div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:#2E7D32;line-height:1.6">
+    🎉 ครูยืนยันการชำระเงินแล้ว! กรอกข้อมูลนักเรียนเพื่อเปิดใช้งาน
+  </div>
+
+  <div class="card">
+    <div class="card-title">✏️ ข้อมูลนักเรียน</div>
+
+    <div class="field">
+      <label>รหัสนักเรียน <span class="req">*</span></label>
+      <input class="inp" id="rCode" type="text" placeholder="รหัสที่ได้รับจากครู" maxlength="10"
+        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+      <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:3px">ดูได้จาก Line หรือ Email ที่ครูส่งให้</div>
+      <div class="ferr" id="eCode">กรุณากรอกรหัส</div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>ชื่อเล่น <span class="req">*</span></label>
+        <input class="inp" id="rNick" type="text" placeholder="เช่น น้องเอ" maxlength="20">
+        <div class="ferr" id="eNick">กรุณากรอก</div>
+      </div>
+      <div class="field">
+        <label>ชื่อจริง <span class="req">*</span></label>
+        <input class="inp" id="rFirst" type="text" placeholder="ชื่อจริง" maxlength="30">
+        <div class="ferr" id="eFirst">กรุณากรอก</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>นามสกุล <span class="req">*</span></label>
+      <input class="inp" id="rLast" type="text" placeholder="นามสกุล" maxlength="30">
+      <div class="ferr" id="eLast">กรุณากรอก</div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>เบอร์โทร <span class="req">*</span></label>
+        <input class="inp" id="rPhone" type="tel" placeholder="0812345678" maxlength="10"
+          oninput="this.value=this.value.replace(/\D/g,'')">
+        <div class="ferr" id="eRPhone">10 หลัก</div>
+      </div>
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input class="inp" id="rEmail" type="email" placeholder="email@gmail.com" maxlength="80">
+        <div class="ferr" id="eREmail">ไม่ถูกต้อง</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>คอร์สที่สมัคร</label>
+      <input class="inp" id="rCourse" type="text" readonly
+        style="background:#F0F4C3;cursor:default;border-color:#C0CA33;font-size:12px">
+    </div>
+
+    <div class="field">
+      <label>รหัสแนะนำเพื่อน <span style="font-size:10px;color:#90A4AE;font-weight:700">(ถ้ามี)</span></label>
+      <input class="inp" id="rRef" type="text" placeholder="รหัสนักเรียนที่แนะนำมา (ไม่บังคับ)"
+        maxlength="10" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+    </div>
+  </div>
+
+  <button class="btn btn-green" id="btnReg" onclick="doRegister()">
+    🚀 ยืนยันและเริ่มเรียน!
+  </button>
+  <div class="ld" id="ldReg"><div class="spin"></div><span class="stt">กำลังเปิดใช้งาน...</span></div>
+  <div class="alt" id="altReg"></div>
+  <button class="btn btn-back" onclick="go(2)">← ย้อนกลับ</button>
+</div>
+
+<!-- ══════════════════════════════
+     P4 — SUCCESS
+══════════════════════════════ -->
+<div class="page" id="p4">
+  <div class="hdr">
+    <div class="logo">🎉</div>
+    <h1>พร้อมเรียนแล้ว!</h1>
+    <p>ยินดีต้อนรับสู่ LexiGo</p>
+  </div>
+
+  <div class="card">
+    <div class="succ-hero">
+      <div style="font-size:48px;margin-bottom:6px">🌟</div>
+      <div style="font-size:16px;font-weight:900;color:#2E7D32;margin-bottom:4px">ลงทะเบียนสำเร็จ!</div>
+      <div style="font-size:12px;font-weight:700;color:#546E7A;margin-bottom:4px">รหัสนักเรียนของคุณ:</div>
+      <div class="code-chip" id="succCode">—</div>
+    </div>
+    <div class="info-table" id="succDetail"></div>
+  </div>
+
+  <a href="Day1_LeosBigDay_A1.html" class="btn btn-green"
+    style="display:block;text-align:center;text-decoration:none;border-radius:13px;padding:13px;font-size:15px;font-weight:900;margin-bottom:8px">
+    🌟 เริ่มเรียน Day 1 เลย!
+  </a>
+  <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่</button>
+  <div class="foot">🎓 ขอให้โชคดีในการเรียน!</div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+const PK = 'wla_purchase';
+const SK = 'wla_student';
+
+// ── Tier config ──
+const TIERS = [
+  { label:'30 คนแรก', range:'1–30',   price:2590, max:30,  tag:'🔥 Founder Price' },
+  { label:'รอบที่ 2',  range:'31–60',  price:2990, max:60,  tag:'Early Bird' },
+  { label:'รอบที่ 3',  range:'61–100', price:3990, max:100, tag:'Standard' },
+  { label:'รอบที่ 4',  range:'101+',   price:4590, max:9999,tag:'Regular' }
+];
+let currentTier = 0, spotsLeft = 30, selectedPkg = null, selectedLevel = null, slipData = null;
+
+// ── Boot ──
+window.onload = function() {
+  // Check if accessed via registration link (?mode=register&token=XXX)
+  const params = new URLSearchParams(location.search);
+  if (params.get('mode') === 'register') {
+    const token = params.get('token') || '';
+    const pkg   = params.get('pkg')   || '';
+    document.getElementById('rCode').value   = token;
+    document.getElementById('rCourse').value = pkg || (localStorage.getItem(PK) ? JSON.parse(localStorage.getItem(PK)).pkgName : '');
+    // Pre-fill contact info from purchase data
+    const pd = JSON.parse(localStorage.getItem(PK) || 'null');
+    if (pd) {
+      document.getElementById('rPhone').value = pd.phone || '';
+      document.getElementById('rEmail').value = pd.email || '';
+    }
+    setStep(3); go(3); return;
+  }
+
+  // Already registered?
+  const st = JSON.parse(localStorage.getItem(SK) || 'null');
+  if (st && st.code) { showSuccess(st); return; }
+
+  // Pending purchase?
+  const pd = JSON.parse(localStorage.getItem(PK) || 'null');
+  if (pd && pd.name) { showPending(pd); return; }
+
+  // Default: package selection
+  loadTiers();
+};
+
+// ── Load tier data ──
+function loadTiers() {
+  jsonp({ action:'getStats' }).then(d => {
+    const sold = d.lifetimeSold || 0;
+    updateTierUI(sold);
+  }).catch(() => updateTierUI(0));
+}
+
+function updateTierUI(sold) {
+  currentTier = 0;
+  for (let i = 0; i < TIERS.length; i++) {
+    if (sold >= TIERS[i].max) currentTier = i + 1;
+    else { currentTier = i; break; }
+  }
+  if (currentTier >= TIERS.length) currentTier = TIERS.length - 1;
+  const tier = TIERS[currentTier];
+  const prevMax = currentTier > 0 ? TIERS[currentTier-1].max : 0;
+  spotsLeft = tier.max === 9999 ? 999 : (tier.max - sold);
+
+  // คำนวณส่วนลด
+  const fullPrice = 8985;
+  const discount  = Math.round((fullPrice - tier.price) / fullPrice * 100);
+  const saved     = fullPrice - tier.price;
+
+  // แสดงราคาปัจจุบันเท่านั้น — ไม่แสดง tier ถัดไป
+  document.getElementById('priceMain').textContent  = '฿' + tier.price.toLocaleString();
+  document.getElementById('priceSave').textContent  = `ประหยัด ฿${saved.toLocaleString()} (ลด ${discount}%)`;
+  document.getElementById('priceBadge').textContent = tier.tag;
+  document.getElementById('lifetimePriceBtn').textContent = tier.price.toLocaleString();
+
+  // Countdown spots
+  const num = document.getElementById('spotsNum');
+  const lbl = document.getElementById('spotsLabel');
+  const fill = document.getElementById('spotsBarFill');
+
+  if (spotsLeft > 0) {
+    num.textContent = spotsLeft;
+    lbl.textContent = 'เหลือเพียง';
+    // progress bar: เต็ม = 0 ที่เหลือ
+    const pct = (spotsLeft / (tier.max - prevMax)) * 100;
+    if (fill) fill.style.width = pct + '%';
+  } else {
+    num.textContent = '0';
+    lbl.textContent = '⚡ รอบนี้เต็มแล้ว';
+    if (fill) fill.style.width = '0%';
+  }
+}
+
+// ── Package selection ──
+const LEVELS = {
+  1:{name:'Level 1 A1',days:'Day 1–30',cefr:'A1'},
+  2:{name:'Level 2 A1',days:'Day 31–60',cefr:'A1'},
+  3:{name:'Level 3 A1',days:'Day 61–90',cefr:'A1'},
+  4:{name:'Level 4 A2',days:'Day 91–120',cefr:'A2'},
+  5:{name:'Level 5 A2',days:'Day 121–150',cefr:'A2'},
+  6:{name:'Level 6 A2',days:'Day 151–180',cefr:'A2'},
+  7:{name:'Level 7 B1',days:'Day 181–210',cefr:'B1'},
+  8:{name:'Level 8 B1',days:'Day 211–240',cefr:'B1'},
+  9:{name:'Level 9 B1',days:'Day 241–270',cefr:'B1'},
+  10:{name:'Level 10 B1',days:'Day 271–300',cefr:'B1'},
+  11:{name:'Level 11 B2',days:'Day 301–330',cefr:'B2'},
+  12:{name:'Level 12 B2',days:'Day 331–360',cefr:'B2'},
+  13:{name:'Level 13 B2',days:'Day 361–390',cefr:'B2'},
+  14:{name:'Level 14 B2',days:'Day 391–420',cefr:'B2'},
+  15:{name:'Level 15 B2 🎁',days:'Day 421–448',cefr:'B2',bonus:true}
+};
+
+function selectLevel(n) {
+  for(let i=1;i<=15;i++) {
+    const el = document.getElementById('lv'+i);
+    if(el) el.classList.toggle('sel', i===n);
+  }
+  selectedLevel = n;
+  const lv = LEVELS[n];
+  document.getElementById('btnLvlGo').style.display = 'block';
+  document.getElementById('btnLvlGo').textContent =
+    `📗 สมัคร ${lv.name} (${lv.days}) → ฿599`;
+}
+
+function selectPkg(type) {
+  if (type === 'lifetime') {
+    const tier = TIERS[currentTier];
+    selectedPkg = { type:'lifetime', pkgName:`ตลอดชีพ (Oxford 3000 ทุก Level)`, price:tier.price, tier:currentTier+1 };
+  } else if (type === 'level') {
+    if (!selectedLevel) { alert('กรุณาเลือก Level ก่อน'); return; }
+    const lv = LEVELS[selectedLevel];
+    selectedPkg = { type:'level', pkgName:lv.name, price:599, level:selectedLevel, cefr:lv.cefr, days:lv.days };
+  }
+  // Update payment page
+  document.getElementById('sumPkg').textContent  = selectedPkg.pkgName;
+  document.getElementById('sumAmt').textContent  = `฿${selectedPkg.price.toLocaleString()}`;
+  document.getElementById('sumNote').textContent = selectedPkg.type==='lifetime' ? `รอบที่ ${selectedPkg.tier} — Oxford 3000 ทุก Level 365 วัน` : `เรียน 30 วัน — ${selectedPkg.level} Week`;
+  document.getElementById('bankAmt').textContent = `฿${selectedPkg.price.toLocaleString()}`;
+  go(1);
+}
+
+// ── Slip preview ──
+function previewSlip(inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  if (f.size > 5 * 1024 * 1024) { alert('ไฟล์ใหญ่เกิน 5MB'); inp.value=''; return; }
+  const r = new FileReader();
+  r.onload = e => {
+    slipData = e.target.result;
+    document.getElementById('slipImg').src = slipData;
+    document.getElementById('slipPreview').style.display = 'block';
+    document.getElementById('eSlip').classList.remove('on');
+  };
+  r.readAsDataURL(f);
+}
+
+// ── Copy bank ──
+function copyBank() {
+  const n = document.getElementById('bankNo').textContent;
+  navigator.clipboard ? navigator.clipboard.writeText(n).then(()=>alert('คัดลอกแล้ว: '+n)) : alert(n);
+}
+
+// ── Validation ──
+function fv(id, eid, ok, msg) {
+  const el=document.getElementById(id), er=document.getElementById(eid);
+  if(el){el.classList.toggle('ok',ok);el.classList.toggle('err',!ok);}
+  if(er){if(ok)er.classList.remove('on');else{er.textContent=msg;er.classList.add('on');}}
+  return ok;
+}
+function showAlt(id,msg,type){const el=document.getElementById(id);el.textContent=msg;el.className='alt on alt-'+type;}
+function hideAlt(id){document.getElementById(id).classList.remove('on');}
+
+// ── STEP 1: Payment submit ──
+async function doPayment() {
+  hideAlt('altPay');
+  const name  = document.getElementById('pName').value.trim();
+  const phone = document.getElementById('pPhone').value.trim();
+  const line  = document.getElementById('pLine').value.trim();
+  const email = document.getElementById('pEmail').value.trim();
+
+  let ok = true;
+  if(!name)                         ok &= fv('pName','eName',false,'กรุณากรอกชื่อ');
+  else                               fv('pName','eName',true,'');
+  if(!/^0\d{8,9}$/.test(phone))    ok &= fv('pPhone','ePhone',false,'10 หลัก ขึ้นต้น 0');
+  else                               fv('pPhone','ePhone',true,'');
+  // Line ID optional — ไม่บังคับ
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ok &= fv('pEmail','eEmail',false,'Email ไม่ถูกต้อง');
+  else                               fv('pEmail','eEmail',true,'');
+  if(!slipData){document.getElementById('eSlip').classList.add('on');ok=false;}
+
+  if(!ok){showAlt('altPay','⚠️ กรุณากรอกข้อมูลและแนบสลิปให้ครบ','warn');return;}
+
+  document.getElementById('btnPay').disabled=true;
+  document.getElementById('ldPay').classList.add('on');
+
+  const data = { name, phone, line, email, ...selectedPkg, slipAttached: !!slipData };
+
+  try {
+    await jsonp({ action:'newPurchase', name, phone, line, email,
+      pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type });
+    // Try slip upload
+    try {
+      await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action:'uploadSlip', phone, slip: slipData }) });
+    } catch(e) {}
+  } catch(e) { /* offline fallback */ }
+
+  localStorage.setItem(PK, JSON.stringify(data));
+  document.getElementById('ldPay').classList.remove('on');
+  document.getElementById('btnPay').disabled=false;
+  showPending(data);
+}
+
+// ── STEP 2: Show pending ──
+function showPending(d) {
+  document.getElementById('pendTable').innerHTML = `
+    <div class="irow"><span class="ilbl">ชื่อ</span><span class="ival">${d.name||'—'}</span></div>
+    <div class="irow"><span class="ilbl">Package</span><span class="ival hi">${d.pkgName||'—'}</span></div>
+    <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿${Number(d.price||0).toLocaleString()}</span></div>
+    <div class="irow"><span class="ilbl">Line ID</span><span class="ival">${d.line||'—'}</span></div>
+    <div class="irow"><span class="ilbl">Email</span><span class="ival">${d.email||'—'}</span></div>`;
+  setStep(2); go(2);
+}
+
+// ── STEP 3: Register student ──
+async function doRegister() {
+  hideAlt('altReg');
+  const code  = document.getElementById('rCode').value.trim().toUpperCase();
+  const nick  = document.getElementById('rNick').value.trim();
+  const first = document.getElementById('rFirst').value.trim();
+  const last  = document.getElementById('rLast').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const ref   = document.getElementById('rRef').value.trim().toUpperCase();
+
+  let ok = true;
+  if(!code||code.length<4) ok&=fv('rCode','eCode',false,'กรุณากรอกรหัส (อย่างน้อย 4 ตัว)');
+  else fv('rCode','eCode',true,'');
+  if(!nick)   ok&=fv('rNick','eNick',false,'กรุณากรอก');   else fv('rNick','eNick',true,'');
+  if(!first)  ok&=fv('rFirst','eFirst',false,'กรุณากรอก'); else fv('rFirst','eFirst',true,'');
+  if(!last)   ok&=fv('rLast','eLast',false,'กรุณากรอก');   else fv('rLast','eLast',true,'');
+  if(!/^0\d{8,9}$/.test(phone)) ok&=fv('rPhone','eRPhone',false,'10 หลัก'); else fv('rPhone','eRPhone',true,'');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ok&=fv('rEmail','eREmail',false,'ไม่ถูกต้อง'); else fv('rEmail','eREmail',true,'');
+  if(!ok){showAlt('altReg','⚠️ กรุณากรอกข้อมูลให้ครบ','warn');return;}
+
+  document.getElementById('btnReg').disabled=true;
+  document.getElementById('ldReg').classList.add('on');
+
+  const pd = JSON.parse(localStorage.getItem(PK)||'{}');
+  const course = document.getElementById('rCourse').value || pd.pkgName || '';
+
+  try {
+    const res = await jsonp({ action:'activateStudent', code, nick, first, last, phone, email, ref, course });
+    document.getElementById('ldReg').classList.remove('on');
+
+    if(res.status==='ok'||res.status==='already'){
+      const st = { code, nick, fullname:`${first} ${last}`, phone, email, course };
+      localStorage.setItem(SK, JSON.stringify(st));
+      localStorage.removeItem(PK);
+      showSuccess(st);
+    } else if(res.status==='not_found'||res.status==='invalid_code'){
+      fv('rCode','eCode',false,'รหัสไม่ถูกต้อง หรือยังไม่ได้รับการยืนยัน');
+      showAlt('altReg','❌ รหัส "'+code+'" ไม่พบในระบบ — ตรวจสอบอีกครั้งหรือแจ้งครู','err');
+    } else {
+      showAlt('altReg','❌ '+(res.msg||'เกิดข้อผิดพลาด กรุณาลองใหม่'),'err');
+    }
+  } catch(e) {
+    document.getElementById('ldReg').classList.remove('on');
+    // Offline: save locally
+    const st = { code, nick, fullname:`${first} ${last}`, phone, email, course };
+    localStorage.setItem(SK, JSON.stringify(st));
+    localStorage.removeItem(PK);
+    showSuccess(st);
+    setTimeout(()=>showAlt('altReg','⚠️ บันทึกออฟไลน์แล้ว (จะ sync เมื่อออนไลน์)','warn'),300);
+  }
+  document.getElementById('btnReg').disabled=false;
+}
+
+// ── Show success ──
+function showSuccess(st) {
+  document.getElementById('succCode').textContent = st.code || '—';
+  document.getElementById('succDetail').innerHTML = `
+    <div class="irow"><span class="ilbl">ชื่อเล่น</span><span class="ival">${st.nick||'—'}</span></div>
+    <div class="irow"><span class="ilbl">ชื่อ-สกุล</span><span class="ival">${st.fullname||'—'}</span></div>
+    <div class="irow"><span class="ilbl">คอร์ส</span><span class="ival hi">${st.course||'—'}</span></div>
+    <div class="irow"><span class="ilbl">Email</span><span class="ival">${st.email||'—'}</span></div>`;
+  setStep(4); go(4);
+}
+
+// ── Navigation ──
+function go(n) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p'+n).classList.add('on');
+  window.scrollTo(0,0);
+}
+function setStep(n){ /* step indicator handled per-page in HTML */ }
+
+function resetAll() {
+  if(!confirm('ล้างข้อมูลและเริ่มต้นใหม่?')) return;
+  localStorage.removeItem(PK); localStorage.removeItem(SK);
+  window.location.href = 'register.html';
+}
+
+// ── JSONP helper ──
+function jsonp(params, ms) {
+  return new Promise((resolve,reject)=>{
+    const cb='jpc_'+Date.now()+'_'+Math.floor(Math.random()*9999);
+    params.callback=cb;
+    const qs=new URLSearchParams(params).toString();
+    const s=document.createElement('script');
+    const t=setTimeout(()=>{delete window[cb];s.remove();reject(new Error('timeout'));},ms||10000);
+    window[cb]=d=>{clearTimeout(t);delete window[cb];s.remove();resolve(d);};
+    s.onerror=()=>{clearTimeout(t);reject(new Error('net'));};
+    s.src=API+'?'+qs;
+    document.body.appendChild(s);
+  });
+}
+</script>
+</body>
+</html>

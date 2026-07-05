@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🔧 Admin Test Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#1E3A5F;min-height:100vh;padding:20px}
+.box{background:#fff;border-radius:20px;padding:24px;max-width:480px;margin:0 auto}
+h1{font-size:20px;font-weight:900;color:#1E3A5F;margin-bottom:4px}
+p{font-size:13px;color:#666;font-weight:700;margin-bottom:20px}
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.day-btn{background:#EFF6FF;border:2px solid #BFDBFE;color:#1E3A8A;border-radius:12px;padding:14px 6px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;text-align:center;transition:all .15s;text-decoration:none;display:block}
+.day-btn:hover{background:#1D4ED8;color:#fff;border-color:#1D4ED8;transform:scale(1.04)}
+.day-btn.review{background:#FEF3C7;border-color:#FCD34D;color:#92400E}
+.day-btn.review:hover{background:#F59E0B;color:#fff;border-color:#F59E0B}
+.divider{border:none;border-top:2px dashed #E5E7EB;margin:16px 0}
+.clear-btn{width:100%;background:#FEF2F2;border:2px solid #FCA5A5;color:#C62828;border-radius:14px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.note{font-size:11px;color:#94A3B8;font-weight:700;text-align:center;margin-top:12px}
+</style></head><body>
+<div class="box">
+  <h1>🔧 Admin Test Panel</h1>
+  <p>กดปุ่ม Day ที่ต้องการ → เปิดได้ทันที ไม่ต้องใส่รหัส</p>
+  <div class="day-grid" id="dayGrid"></div>
+  <hr class="divider">
+  <a href="progress.html" style="display:inline-block;background:linear-gradient(135deg,#5C6BC0,#3949AB);color:#fff;border-radius:14px;padding:11px 22px;font-size:15px;font-weight:900;text-decoration:none;margin-bottom:10px;font-family:'Nunito',sans-serif">📊 ดู Learning Progress</a>
+  <hr class="divider">
+  <button class="clear-btn" onclick="clearAll()">🗑️ Reset — ล้างข้อมูลการเรียนทั้งหมด</button>
+  <p class="note">กดปุ่มเพื่อเปิด Day นั้นในโหมด Admin</p>
+</div>
+<script>
+const DAYS = [
+  {n:1,  file:'Day1_LeosBigDay_A1.html'},
+  {n:2,  file:'Day2_MimisGardenWalk_A1.html'},
+  {n:3,  file:'Day3_SamsFarmDay_A1.html'},
+  {n:4,  file:'Day4_DuckAtThePond_A1.html'},
+  {n:5,  file:'Day5_AmyAndTheButterfly_A1.html'},
+  {n:6,  file:'Day6_RiverFriends_A1.html'},
+  {n:7,  file:'Day7_Week1Review_A1.html', review:true},
+  {n:8,  file:'Day8_LeosBigBreakfast_A1.html'},
+  {n:9,  file:'Day9_LeosTastyLunch_A1.html'},
+  {n:10, file:'Day10_MimisBananaCake_A1.html'},
+  {n:11, file:'Day11_LeosChickenNoodle_A1.html'},
+  {n:12, file:'Day12_MimisGrapeBowl_A1.html'},
+  {n:13, file:'Day13_LeosMealTime_A1.html'},
+  {n:14, file:'Day14_Week2FoodReview_A1.html', review:true},
+  {n:15, file:'Day15_WelcomeHome_A1.html'},
+  {n:16, file:'Day16_TheLivingRoom_A1.html'},
+  {n:17, file:'Day17_TheKitchen_A1.html'},
+  {n:18, file:'Day18_TheBedroom_A1.html'},
+  {n:19, file:'Day19_MyFamily_A1.html'},
+  {n:20, file:'Day20_OurHouse_A1.html'},
+  {n:21, file:'Day21_Week3HomeReview_A1.html', review:true},
+];
+const grid = document.getElementById('dayGrid');
+DAYS.forEach(d => {
+  const btn = document.createElement('button');
+  btn.className = 'day-btn' + (d.review ? ' review' : '');
+  btn.innerHTML = 'Day ' + d.n + (d.review ? '<br><small>Review</small>' : '');
+  btn.onclick = () => { localStorage.setItem('wla_admin','1'); location.href = d.file; };
+  grid.appendChild(btn);
+});
+function clearAll() {
+  if (!confirm('ล้าง localStorage ทั้งหมด?')) return;
+  for (let i=1;i<=365;i++) localStorage.removeItem('wla_d'+i);
+  localStorage.removeItem('wla_student');
+  localStorage.removeItem('wla_admin');
+  location.reload();
+}
+</script>
+</body></html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>📝 English Placement Test — Oxford 3000</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#FFF3E0,#FBE9E7);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:16px}
+.wrap{max-width:480px;width:100%}
+
+/* Cover */
+.cover{background:#fff;border-radius:20px;padding:28px 20px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.cover .logo{font-size:52px;margin-bottom:8px}
+.cover h1{font-size:22px;font-weight:900;color:#E65100;margin-bottom:6px}
+.cover p{font-size:13px;color:#666;font-weight:700;line-height:1.6;margin-bottom:18px}
+.cover .meta{background:#FFF3E0;border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#E65100;font-weight:800;border:2px solid #FFCC80}
+.cover .meta div{margin-bottom:4px}
+.btn-start{background:linear-gradient(135deg,#FF6D00,#E65100);color:#fff;border:none;border-radius:14px;padding:14px 32px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;letter-spacing:.5px}
+.btn-start:hover{opacity:.9}
+
+/* Progress */
+.prog-bar-wrap{background:#fff;border-radius:20px 20px 0 0;padding:14px 18px 0;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+.prog-info{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;color:#888;margin-bottom:6px}
+.prog-track{height:8px;background:#FFCC80;border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#FF6D00,#E65100);border-radius:4px;transition:width .4s}
+
+/* Question card */
+.qcard{background:#fff;border-radius:0 0 20px 20px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-bottom:12px}
+.q-type{font-size:11px;color:#888;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.q-text{font-size:16px;font-weight:900;color:#37474F;line-height:1.5;margin-bottom:4px}
+.q-hint{font-size:12px;color:#AAA;font-weight:700;margin-bottom:14px}
+.listen-btn{background:linear-gradient(135deg,#FF6D00,#E65100);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:14px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{background:#FFF3E0;border:2px solid #FFCC80;border-radius:12px;padding:12px 8px;text-align:center;font-size:14px;font-weight:800;color:#E65100;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.choice:hover{background:#FFE0B2;transform:scale(1.02)}
+.choice.correct{background:#C8E6C9;border-color:#43A047;color:#1B5E20;pointer-events:none}
+.choice.wrong{background:#FFCDD2;border-color:#E53935;color:#B71C1C;pointer-events:none}
+.choice.reveal{background:#E8F5E9;border-color:#81C784;color:#388E3C;pointer-events:none;opacity:.7}
+.fb-row{font-size:13px;font-weight:800;margin-top:10px;min-height:20px;text-align:center}
+.fb-row.ok{color:#2E7D32}
+.fb-row.err{color:#C62828}
+.next-btn{display:none;width:100%;margin-top:14px;background:linear-gradient(135deg,#FF6D00,#E65100);color:#fff;border:none;border-radius:12px;padding:12px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* Result */
+.result{background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center}
+.result .trophy{font-size:56px;margin-bottom:10px}
+.result h2{font-size:22px;font-weight:900;color:#37474F;margin-bottom:6px}
+.score-big{font-size:42px;font-weight:900;color:#E65100;margin-bottom:4px}
+.score-sub{font-size:13px;color:#888;font-weight:700;margin-bottom:18px}
+.cefr-badge{display:inline-block;background:linear-gradient(135deg,#FF6D00,#E65100);color:#fff;border-radius:14px;padding:10px 24px;font-size:20px;font-weight:900;margin-bottom:16px}
+.result-detail{background:#FFF3E0;border-radius:14px;padding:16px;border:2px solid #FFCC80;text-align:left;margin-bottom:18px}
+.result-detail h3{font-size:14px;font-weight:900;color:#E65100;margin-bottom:10px}
+.result-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;font-weight:800;color:#37474F;line-height:1.5}
+.result-row .ri{font-size:18px;flex-shrink:0}
+.start-day{background:linear-gradient(135deg,#43A047,#2E7D32);color:#fff;border-radius:12px;padding:14px;text-align:center;margin-bottom:18px}
+.start-day .day-num{font-size:28px;font-weight:900}
+.start-day .day-lbl{font-size:13px;font-weight:800;opacity:.9}
+.btn-retake{background:#fff;border:2px solid #FFCC80;color:#E65100;border-radius:12px;padding:12px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;margin-bottom:8px}
+.btn-day1{background:linear-gradient(135deg,#FF6D00,#E65100);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;width:100%}
+
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- COVER -->
+<div class="cover" id="coverScreen">
+  <div class="logo">📝</div>
+  <h1>English Placement Test</h1>
+  <p>แบบทดสอบวัดระดับภาษาอังกฤษ<br>ก่อนเริ่มเรียน LexiGo</p>
+  <div class="meta">
+    <div>📊 จำนวนข้อ: <strong>21 ข้อ</strong></div>
+    <div>⏱️ ใช้เวลา: <strong>ประมาณ 10 นาที</strong></div>
+    <div>🎯 ระดับ: <strong>A1 → A2</strong></div>
+  </div>
+  <button class="btn-start" onclick="startTest()">เริ่มทำแบบทดสอบ 🚀</button>
+</div>
+
+<!-- QUIZ -->
+<div id="quizScreen" class="hidden">
+  <div class="prog-bar-wrap">
+    <div class="prog-info">
+      <span id="qNum">ข้อ 1 / 20</span>
+      <span id="qScore">คะแนน: 0</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+  <div class="qcard">
+    <div class="q-type" id="qType"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="q-hint" id="qHint"></div>
+    <button class="listen-btn hidden" id="listenBtn" onclick="playWord()">🔊 กดเพื่อฟัง</button>
+    <div class="choices" id="choices"></div>
+    <div class="fb-row" id="fb"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQ()">ข้อถัดไป →</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="result hidden" id="resultScreen"></div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  // ── Section 1: Thai → English (A1 vocab) ──────────────────────────────────
+  {type:'vocab', label:'คำศัพท์ A1 · เลือกคำภาษาอังกฤษ',
+   q:'แมว หมายถึงอะไรในภาษาอังกฤษ?', hint:'', listen:null,
+   choices:['cat','dog','bird','fish'], ans:'cat'},
+  {type:'vocab', label:'คำศัพท์ A1 · เลือกคำภาษาอังกฤษ',
+   q:'ต้นไม้ หมายถึงอะไรในภาษาอังกฤษ?', hint:'', listen:null,
+   choices:['flower','tree','rock','cloud'], ans:'tree'},
+  {type:'vocab', label:'คำศัพท์ A1 · เลือกคำภาษาอังกฤษ',
+   q:'แม่ หมายถึงอะไรในภาษาอังกฤษ?', hint:'', listen:null,
+   choices:['sister','aunt','mother','father'], ans:'mother'},
+  {type:'vocab', label:'คำศัพท์ A1 · เลือกคำภาษาอังกฤษ',
+   q:'หนังสือ หมายถึงอะไรในภาษาอังกฤษ?', hint:'', listen:null,
+   choices:['pen','bag','book','chair'], ans:'book'},
+  {type:'vocab', label:'คำศัพท์ A1 · เลือกคำภาษาอังกฤษ',
+   q:'กิน หมายถึงอะไรในภาษาอังกฤษ?', hint:'', listen:null,
+   choices:['drink','eat','run','sleep'], ans:'eat'},
+
+  // ── Section 2: Listening (A1) ─────────────────────────────────────────────
+  {type:'listen', label:'ทักษะฟัง · ข้อ 1/5',
+   q:'กด 🔊 ฟังคำ แล้วเลือกความหมายภาษาไทย', hint:'💡 คำคุณศัพท์ บอกขนาด', listen:'big',
+   choices:['ใหญ่','เล็ก','สูง','สั้น'], ans:'ใหญ่'},
+  {type:'listen', label:'ทักษะฟัง · ข้อ 2/5',
+   q:'กด 🔊 ฟังคำ แล้วเลือกความหมายภาษาไทย', hint:'💡 คำนาม สิ่งที่ดื่มได้', listen:'water',
+   choices:['ไฟ','น้ำ','ดิน','ลม'], ans:'น้ำ'},
+  {type:'listen', label:'ทักษะฟัง · ข้อ 3/5',
+   q:'กด 🔊 ฟังคำ แล้วเลือกความหมายภาษาไทย', hint:'💡 คำสี ใส่ใจตัวอักษรแรก', listen:'red',
+   choices:['สีน้ำเงิน','สีเขียว','สีแดง','สีเหลือง'], ans:'สีแดง'},
+  {type:'listen', label:'ทักษะฟัง · ข้อ 4/5',
+   q:'กด 🔊 ฟังคำ แล้วเลือกความหมายภาษาไทย', hint:'💡 คำนาม สถานที่เรียนหนังสือ', listen:'school',
+   choices:['บ้าน','โรงเรียน','ร้านค้า','โรงพยาบาล'], ans:'โรงเรียน'},
+  {type:'listen', label:'ทักษะฟัง · ข้อ 5/5',
+   q:'กด 🔊 ฟังคำ แล้วเลือกความหมายภาษาไทย', hint:'💡 คำคุณศัพท์ บอกอารมณ์', listen:'happy',
+   choices:['เศร้า','โกรธ','มีความสุข','กลัว'], ans:'มีความสุข'},
+
+  // ── Section 3: Reading — fill sentence (A1) ───────────────────────────────
+  {type:'reading', label:'ทักษะอ่าน · เลือกคำเติมประโยค',
+   q:'I have a pet ____. It is small and white.', hint:'เลือกคำที่เหมาะกับประโยค', listen:null,
+   choices:['cat','quickly','between','although'], ans:'cat'},
+  {type:'reading', label:'ทักษะอ่าน · เลือกคำเติมประโยค',
+   q:'She drinks ____ every morning.', hint:'', listen:null,
+   choices:['milk','blue','jump','reason'], ans:'milk'},
+  {type:'reading', label:'ทักษะอ่าน · เลือกคำเติมประโยค',
+   q:'My ____ teaches me English.', hint:'', listen:null,
+   choices:['teacher','already','during','unless'], ans:'teacher'},
+  {type:'reading', label:'ทักษะอ่าน · เลือกคำเติมประโยค',
+   q:'We play in the ____ after school.', hint:'', listen:null,
+   choices:['garden','rarely','purpose','despite'], ans:'garden'},
+  {type:'reading', label:'ทักษะอ่าน · เลือกคำเติมประโยค',
+   q:'Leo puts his pencil in his ____.',hint:'', listen:null,
+   choices:['bag','always','except','between'], ans:'bag'},
+  {type:'reading', label:'ทักษะอ่าน · เลือกคำเติมประโยค',
+   q:'The sun is very ____ today.', hint:'', listen:null,
+   choices:['bright','rarely','despite','unless'], ans:'bright'},
+
+  // ── Section 4: A2 vocabulary ──────────────────────────────────────────────
+  {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
+   q:'"always" หมายถึงอะไร?', hint:'', listen:null,
+   choices:['เสมอ','บางครั้ง','ไม่เคย','ทันที'], ans:'เสมอ'},
+  {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
+   q:'"between" หมายถึงอะไร?', hint:'', listen:null,
+   choices:['ด้านบน','ด้านล่าง','ระหว่าง','รอบๆ'], ans:'ระหว่าง'},
+  {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
+   q:'"quickly" หมายถึงอะไร?', hint:'', listen:null,
+   choices:['อย่างช้าๆ','อย่างรวดเร็ว','เบาๆ','ดังๆ'], ans:'อย่างรวดเร็ว'},
+  {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
+   q:'"describe" หมายถึงอะไร?', hint:'', listen:null,
+   choices:['นับ','เดิน','อธิบาย','ว่ายน้ำ'], ans:'อธิบาย'},
+  {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
+   q:'"reason" หมายถึงอะไร?', hint:'', listen:null,
+   choices:['คำตอบ','เหตุผล','ผลลัพธ์','ความรู้สึก'], ans:'เหตุผล'},
+];
+
+let qIdx=0, score=0, answered=false;
+let currentWord='';
+
+function startTest(){
+  document.getElementById('coverScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  showQ();
+}
+
+function speak(word, rate=0.85){
+  const u=new SpeechSynthesisUtterance(word);
+  u.lang='en-US';u.rate=rate;
+  const voices=speechSynthesis.getVoices();
+  const v=voices.find(x=>/en.*US/i.test(x.lang))||voices.find(x=>/en/i.test(x.lang));
+  if(v)u.voice=v;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function playWord(){
+  if(currentWord)speak(currentWord);
+}
+
+function showQ(){
+  const q=QUESTIONS[qIdx];
+  answered=false;
+  document.getElementById('qNum').textContent=`ข้อ ${qIdx+1} / ${QUESTIONS.length}`;
+  document.getElementById('qScore').textContent=`คะแนน: ${score}`;
+  document.getElementById('progFill').style.width=`${(qIdx/QUESTIONS.length)*100}%`;
+  document.getElementById('qType').textContent=q.label;
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('qHint').textContent=q.hint||'';
+  document.getElementById('fb').textContent='';
+  document.getElementById('fb').className='fb-row';
+  document.getElementById('nextBtn').style.display='none';
+
+  // listen button
+  const lb=document.getElementById('listenBtn');
+  if(q.listen){
+    currentWord=q.listen;
+    lb.classList.remove('hidden');
+  } else {
+    currentWord='';
+    lb.classList.add('hidden');
+  }
+
+  // shuffle choices
+  const shuffled=[...q.choices].sort(()=>Math.random()-.5);
+  document.getElementById('choices').innerHTML=shuffled.map(c=>
+    `<button class="choice" onclick="pick(this,'${c}','${q.ans}')">${c}</button>`
+  ).join('');
+}
+
+function pick(btn, chosen, ans){
+  if(answered)return;
+  answered=true;
+  const q=QUESTIONS[qIdx];
+  const allBtns=document.querySelectorAll('.choice');
+  if(chosen===ans){
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('fb').textContent='✓ ถูกต้อง! 🎉';
+    document.getElementById('fb').className='fb-row ok';
+  } else {
+    btn.classList.add('wrong');
+    allBtns.forEach(b=>{if(b.textContent===ans)b.classList.add('reveal');});
+    document.getElementById('fb').textContent=`✗ คำตอบที่ถูกคือ "${ans}"`;
+    document.getElementById('fb').className='fb-row err';
+  }
+  allBtns.forEach(b=>{if(!b.classList.contains('correct')&&!b.classList.contains('wrong')&&!b.classList.contains('reveal'))b.style.pointerEvents='none';});
+  document.getElementById('qScore').textContent=`คะแนน: ${score}`;
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function nextQ(){
+  qIdx++;
+  if(qIdx>=QUESTIONS.length){showResult();return;}
+  showQ();
+}
+
+function getLevel(s){
+  if(s<=5) return {cefr:'A1',label:'A1 ผู้เริ่มต้น',startDay:1,startLabel:'Day 1',
+    desc:'ยังไม่มีพื้นฐาน — เริ่มตั้งแต่ Day 1 ได้เลย เรียนรู้ vocab A1 ขั้นต้น',
+    tip:'เน้นฟังและพูดตามก่อน อย่าเพิ่งกังวลเรื่องการเขียน',emoji:'🌱'};
+  if(s<=10) return {cefr:'A1',label:'A1 ระดับกลาง',startDay:8,startLabel:'Day 8',
+    desc:'มีพื้นฐาน A1 บ้างแล้ว — เริ่ม Day 8 ข้ามสัปดาห์ที่ 1 ไปได้เลย',
+    tip:'ทบทวน Week 1 ด้วยตัวเองก่อน แล้วค่อยเริ่ม Day 8',emoji:'🌿'};
+  if(s<=15) return {cefr:'A1',label:'A1 ระดับสูง',startDay:22,startLabel:'Day 22',
+    desc:'รู้ vocab A1 ส่วนใหญ่แล้ว — เริ่ม Day 22 ซึ่งเป็น A1 สัปดาห์ที่ 4',
+    tip:'ถ้ารู้สึกยากเกินไป ย้อนกลับมา Day 15 ได้เลย',emoji:'🌳'};
+  if(s<=18) return {cefr:'A2',label:'A2 ผู้เริ่มต้น',startDay:31,startLabel:'Day 31 (กำลังมา)',
+    desc:'รู้ vocab A1 ครบแล้ว! อยู่ระดับ A2 — รอ Week 5+ ที่กำลังสร้าง',
+    tip:'ระหว่างรอ ใช้ Day 22–30 ทบทวน A1 หรือเขียนประโยคตัวเอง',emoji:'🌺'};
+  return {cefr:'B1',label:'B1+',startDay:31,startLabel:'Day 31 (กำลังมา)',
+    desc:'ระดับสูงมาก! อยู่เหนือ A2 แล้ว — คอร์สนี้อาจง่ายเกินไปในช่วงแรก',
+    tip:'ลองทำ Day 22–30 เพื่อเช็ก vocab A1 ที่อาจยังขาด แล้วรอ A2+ track',emoji:'🏆'};
+}
+
+function showResult(){
+  const lv=getLevel(score);
+  document.getElementById('quizScreen').classList.add('hidden');
+  const rs=document.getElementById('resultScreen');
+  rs.classList.remove('hidden');
+
+  const pct=Math.round(score/QUESTIONS.length*100);
+  let trophy='🎉';
+  if(score<=5)trophy='📚';
+  else if(score<=10)trophy='🌟';
+  else if(score<=15)trophy='⭐';
+  else trophy='🏆';
+
+  rs.innerHTML=`
+    <div class="trophy">${trophy}</div>
+    <h2>ผลการทดสอบ</h2>
+    <div class="score-big">${score} / ${QUESTIONS.length}</div>
+    <div class="score-sub">คะแนน ${pct}%</div>
+    <div class="cefr-badge">${lv.cefr} ${lv.emoji}</div>
+    <div class="result-detail">
+      <h3>📊 สรุปผลการทดสอบ</h3>
+      <div class="result-row"><span class="ri">🎯</span><div>ระดับที่ประเมิน: <strong>${lv.label}</strong></div></div>
+      <div class="result-row"><span class="ri">📝</span><div>${lv.desc}</div></div>
+      <div class="result-row"><span class="ri">💡</span><div>${lv.tip}</div></div>
+    </div>
+    <div style="font-size:13px;color:#888;font-weight:800;margin-bottom:8px">แนะนำให้เริ่มที่:</div>
+    <div class="start-day">
+      <div class="day-num">${lv.startLabel}</div>
+      <div class="day-lbl">LexiGo</div>
+    </div>
+    <button class="btn-retake" onclick="retake()">🔄 ทำใหม่อีกครั้ง</button>
+    ${lv.startDay===1?`<button class="btn-day1" onclick="window.location='Day1_LeosBigDay_A1.html'">🚀 ไป Day 1</button>`:lv.startDay===8?`<button class="btn-day1" onclick="window.location='Day8_LeosBigBreakfast_A1.html'">🚀 ไป Day 8</button>`:lv.startDay===22?`<button class="btn-day1" onclick="window.location='Day22_FirstDayAtSchool_A1.html'">🚀 ไป Day 22</button>`:'<div style="font-size:12px;color:#888;font-weight:700;text-align:center;padding:10px">⏳ Day 31+ กำลังจะมาเร็วๆ นี้!</div>'}
+  `;
+}
+
+function retake(){
+  qIdx=0;score=0;answered=false;
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  showQ();
+}
+
+// preload voices
+window.addEventListener('load',()=>{
+  speechSynthesis.getVoices();
+  setTimeout(()=>speechSynthesis.getVoices(),500);
+});
+</script>
+</body>
+</html>

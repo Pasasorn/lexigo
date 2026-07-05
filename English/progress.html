@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>📊 Learning Progress</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#F3F0FF;min-height:100vh;padding:16px;max-width:720px;margin:0 auto;color:#37474F}
+.hdr{background:linear-gradient(135deg,#5C6BC0,#3949AB);border-radius:20px;padding:16px 20px;margin-bottom:14px;color:#fff}
+.hdr h1{font-size:20px;font-weight:900}
+.hdr p{font-size:12px;opacity:.8;font-weight:600;margin-top:2px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.stat{background:#fff;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.07)}
+.stat-n{font-size:26px;font-weight:900;color:#5C6BC0}
+.stat-l{font-size:11px;color:#7986CB;font-weight:700;margin-top:2px}
+/* tabs */
+.tabs{display:flex;gap:6px;margin-bottom:12px;background:#fff;border-radius:14px;padding:6px;box-shadow:0 2px 6px rgba(0,0,0,0.07)}
+.tab{flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;text-align:center;color:#90A4AE;background:none;border:none;font-family:'Nunito',sans-serif;transition:.15s}
+.tab.on{background:#5C6BC0;color:#fff}
+.panel{display:none}.panel.on{display:block}
+.card{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.card-title{font-size:14px;font-weight:900;color:#3949AB;margin-bottom:12px}
+/* step bars */
+.step-bars{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.sbar{display:flex;align-items:center;gap:7px}
+.sbar-l{font-size:11px;font-weight:800;color:#78909C;width:95px;flex-shrink:0}
+.sbar-track{flex:1;height:8px;background:#E0E0E0;border-radius:4px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:4px}
+.sbar-v{font-size:12px;font-weight:900;min-width:32px;text-align:right}
+/* day rows */
+.week-hdr{background:#EDE7F6;border-radius:11px;padding:9px 13px;margin-bottom:7px;font-size:13px;font-weight:900;color:#3949AB;display:flex;justify-content:space-between;align-items:center}
+.day-row{display:flex;align-items:center;gap:8px;padding:7px 11px;background:#F8F9FA;border-radius:10px;margin-bottom:4px;cursor:pointer}
+.day-row:hover{background:#EDE7F6}
+.day-num{font-size:11px;font-weight:900;color:#90A4AE;width:38px;flex-shrink:0}
+.day-title{font-size:12px;font-weight:700;color:#37474F;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-bar{width:60px;height:7px;background:#E0E0E0;border-radius:4px;overflow:hidden;flex-shrink:0}
+.day-bar-fill{height:100%;border-radius:4px}
+.badge{display:inline-block;padding:2px 7px;border-radius:7px;font-size:11px;font-weight:800;white-space:nowrap}
+.bg{background:#C8E6C9;color:#1B5E20}.by{background:#FFF9C4;color:#F57F17}.br{background:#FFCDD2;color:#B71C1C}.bn{background:#ECEFF1;color:#607D8B}
+/* month/year */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcard{background:#F8F9FA;border-radius:12px;padding:12px;text-align:center}
+.mcard-name{font-size:13px;font-weight:900;color:#3949AB;margin-bottom:6px}
+.mcard-n{font-size:22px;font-weight:900}
+.mcard-sub{font-size:11px;color:#90A4AE;font-weight:700}
+/* detail drawer */
+.detail{display:none;background:#F8F9FA;border-radius:10px;padding:10px 12px;margin:-2px 0 5px;border:1px solid #E0E0E0}
+.detail.open{display:block}
+.tip{background:#FFF8E1;border:2px solid #FFE082;border-radius:10px;padding:8px 12px;font-size:12px;color:#E65100;font-weight:700;margin-bottom:6px}
+.no-data{text-align:center;padding:24px;color:#90A4AE;font-size:13px;font-weight:700}
+a.back{display:inline-flex;align-items:center;gap:6px;background:#3949AB;color:#fff;border-radius:11px;padding:9px 16px;font-size:13px;font-weight:800;text-decoration:none;margin-bottom:12px;font-family:'Nunito',sans-serif}
+canvas{max-height:200px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>📊 Learning Progress</h1>
+  <p>LexiGo — ติดตาม Progress การเรียน</p>
+</div>
+<a class="back" href="admin.html">← หน้าหลัก</a>
+
+<div class="stat-row">
+  <div class="stat"><div class="stat-n" id="sDays">0</div><div class="stat-l">วันที่เรียน</div></div>
+  <div class="stat"><div class="stat-n" id="sAvg">—</div><div class="stat-l">คะแนนเฉลี่ย</div></div>
+  <div class="stat"><div class="stat-n" id="sStreak">0🔥</div><div class="stat-l">วันติดต่อกัน</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="switchTab('weekly',this)">📅 รายสัปดาห์</button>
+  <button class="tab" onclick="switchTab('monthly',this)">📆 รายเดือน</button>
+  <button class="tab" onclick="switchTab('yearly',this)">📊 รายปี</button>
+</div>
+
+<!-- WEEKLY -->
+<div class="panel on" id="panel-weekly">
+  <div class="card">
+    <div class="card-title">📈 Score รายวัน</div>
+    <div id="chartWrap"><canvas id="chartLine"></canvas></div>
+    <div class="no-data" id="chartNoData" style="display:none">📭 ยังไม่มีข้อมูล — เรียน Day 1 แล้วกลับมาดูได้เลย!</div>
+  </div>
+  <div class="card">
+    <div class="card-title">📅 รายละเอียดแต่ละสัปดาห์ <span style="font-size:11px;color:#90A4AE;font-weight:600">(กดแต่ละวันเพื่อดูรายละเอียด)</span></div>
+    <div id="weeklyList"></div>
+  </div>
+</div>
+
+<!-- MONTHLY -->
+<div class="panel" id="panel-monthly">
+  <div class="card">
+    <div class="card-title">📆 สรุปรายเดือน</div>
+    <div id="monthlyList"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📈 Chart รายเดือน</div>
+    <canvas id="chartMonth"></canvas>
+    <div class="no-data" id="chartMonthNoData" style="display:none">📭 ยังไม่มีข้อมูลเดือน</div>
+  </div>
+</div>
+
+<!-- YEARLY -->
+<div class="panel" id="panel-yearly">
+  <div class="card">
+    <div class="card-title">📊 สรุปรายปี</div>
+    <div id="yearlyList"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">💪 ความสม่ำเสมอ</div>
+    <div id="consistencyView"></div>
+  </div>
+</div>
+
+<script>
+const DAY_META={
+  d1:{day:1,week:1,title:"Leo's Big Day",theme:"Animals"},
+  d2:{day:2,week:1,title:"Mimi's Garden Walk",theme:"Animals"},
+  d3:{day:3,week:1,title:"The School Zoo",theme:"Animals"},
+  d4:{day:4,week:1,title:"Farm Morning",theme:"Animals"},
+  d5:{day:5,week:1,title:"Under the Sea",theme:"Animals"},
+  d6:{day:6,week:1,title:"Pets at Home",theme:"Animals"},
+  d7:{day:7,week:1,title:"Week 1 Review",theme:"Review"},
+  d8:{day:8,week:2,title:"Lunch at School",theme:"Food"},
+  d9:{day:9,week:2,title:"Mimi's Breakfast",theme:"Food"},
+  d10:{day:10,week:2,title:"Market Day",theme:"Food"},
+  d11:{day:11,week:2,title:"Cooking with Grandma",theme:"Food"},
+  d12:{day:12,week:2,title:"Fruit Basket",theme:"Food"},
+  d13:{day:13,week:2,title:"Healthy Snacks",theme:"Food"},
+  d14:{day:14,week:2,title:"Week 2 Review",theme:"Review"},
+  d15:{day:15,week:3,title:"Welcome Home",theme:"Home"},
+  d16:{day:16,week:3,title:"My Room",theme:"Home"},
+  d17:{day:17,week:3,title:"Family Dinner",theme:"Home"},
+  d18:{day:18,week:3,title:"Cleaning Day",theme:"Home"},
+  d19:{day:19,week:3,title:"Evening Routine",theme:"Home"},
+  d20:{day:20,week:3,title:"Weekend at Home",theme:"Home"},
+  d21:{day:21,week:3,title:"Week 3 Review",theme:"Review"},
+};
+const WEEK_NAMES={1:'สัปดาห์ 1 — Animals 🐾',2:'สัปดาห์ 2 — Food 🍎',3:'สัปดาห์ 3 — Home 🏠'};
+const MONTH_TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const STEP_LABELS=['📖 Step 2','🗣️ Step 3','✏️ Step 4','🎮 Step 5'];
+
+function sc(v){return v>=80?'#43A047':v>=60?'#FFA726':'#E53935';}
+function badge(v){
+  if(v==null)return '<span class="badge bn">—</span>';
+  const cls=v>=80?'bg':v>=60?'by':'br';
+  return `<span class="badge ${cls}">${v}%</span>`;
+}
+function avg(arr){const f=arr.filter(v=>v!=null);return f.length?Math.round(f.reduce((a,b)=>a+b,0)/f.length):null;}
+function stepBars(d){
+  const steps=[
+    {l:'📖 Step 2',v:d.step2},{l:'🗣️ Step 3',v:d.step3},
+    {l:'✏️ Step 4',v:d.step4},{l:'🎮 Step 5',v:d.step5}
+  ];
+  return '<div class="step-bars">'+steps.filter(s=>s.v!=null).map(s=>`
+    <div class="sbar">
+      <span class="sbar-l">${s.l}</span>
+      <div class="sbar-track"><div class="sbar-fill" style="width:${s.v}%;background:${sc(s.v)}"></div></div>
+      <span class="sbar-v" style="color:${sc(s.v)}">${s.v}%</span>
+    </div>`).join('')+'</div>';
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('panel-'+id).classList.add('on');
+}
+
+function render(){
+  const prog=JSON.parse(localStorage.getItem('wla_progress')||'{}');
+  const keys=Object.keys(prog);
+
+  // ── stats ──
+  const allOverall=keys.map(k=>prog[k].overall).filter(v=>v!=null);
+  document.getElementById('sDays').textContent=keys.length;
+  document.getElementById('sAvg').textContent=allOverall.length?avg(allOverall)+'%':'—';
+  const dates=[...new Set(keys.map(k=>prog[k].date).filter(Boolean))].sort().reverse();
+  let streak=0;for(let i=0;i<dates.length;i++){if(i===0){streak=1;continue;}const diff=(new Date(dates[i-1])-new Date(dates[i]))/86400000;if(diff===1)streak++;else break;}
+  document.getElementById('sStreak').textContent=streak+'🔥';
+
+  // ═══════ WEEKLY ═══════
+  const sorted=Object.keys(DAY_META).map(k=>({key:k,...DAY_META[k],...(prog[k]||{})}))
+    .filter(d=>prog[d.key]).sort((a,b)=>a.day-b.day);
+
+  if(sorted.length===0){
+    document.getElementById('chartWrap').style.display='none';
+    document.getElementById('chartNoData').style.display='block';
+  } else {
+    new Chart(document.getElementById('chartLine'),{
+      type:'line',
+      data:{
+        labels:sorted.map(d=>'D'+d.day),
+        datasets:[
+          {label:'Overall',data:sorted.map(d=>d.overall??null),borderColor:'#5C6BC0',backgroundColor:'rgba(92,107,192,0.08)',borderWidth:3,pointBackgroundColor:sorted.map(d=>sc(d.overall??0)),pointRadius:5,tension:0.3,fill:true},
+          {label:'Step 3',data:sorted.map(d=>d.step3??null),borderColor:'#FF8A65',borderWidth:2,borderDash:[4,3],pointRadius:3,tension:0.3,fill:false},
+        ]
+      },
+      options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Nunito',size:11},boxWidth:12}}},
+        scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},
+        responsive:true,maintainAspectRatio:true}
+    });
+  }
+
+  const weeklyList=document.getElementById('weeklyList');
+  weeklyList.innerHTML='';
+  [1,2,3].forEach(w=>{
+    const days=Object.keys(DAY_META).map(k=>({key:k,...DAY_META[k],...(prog[k]||{})}))
+      .filter(d=>d.week===w).sort((a,b)=>a.day-b.day);
+    const doneScores=days.map(d=>prog[d.key]?.overall).filter(v=>v!=null);
+    const wAvg=avg(doneScores);
+    const wh=document.createElement('div');
+    wh.className='week-hdr';
+    wh.innerHTML=`<span>${WEEK_NAMES[w]}</span>${badge(wAvg)}`;
+    weeklyList.appendChild(wh);
+    days.forEach(d=>{
+      const overall=prog[d.key]?.overall??null;
+      const pd=prog[d.key];
+      const wrap=document.createElement('div');
+      // row
+      const row=document.createElement('div');
+      row.className='day-row';
+      row.innerHTML=`<div class="day-num">Day ${d.day}</div><div class="day-title">${d.title}</div>
+        <div class="day-bar"><div class="day-bar-fill" style="width:${overall??0}%;background:${sc(overall??0)}"></div></div>
+        ${badge(overall)}
+        ${pd?.date?`<span style="font-size:10px;color:#90A4AE">${pd.date}</span>`:''}`;
+      // detail drawer
+      const detail=document.createElement('div');
+      detail.className='detail';
+      detail.id='det-'+d.key;
+      if(pd){
+        const weak=pd.step3!=null&&pd.step3<70?'<div class="tip">🔁 Step 3 ต้องฝึกพูดเพิ่ม</div>':'';
+        const d4=pd.step4!=null&&pd.step4<80?'<div class="tip">✏️ Dictation ต้องฝึกเพิ่ม</div>':'';
+        detail.innerHTML=stepBars(pd)+weak+d4;
+      } else {
+        detail.innerHTML='<div style="color:#90A4AE;font-size:12px;font-weight:700">ยังไม่ได้เรียน</div>';
+      }
+      row.onclick=()=>{detail.classList.toggle('open');};
+      wrap.appendChild(row);wrap.appendChild(detail);
+      weeklyList.appendChild(wrap);
+    });
+  });
+
+  // ═══════ MONTHLY ═══════
+  const byMonth={};
+  keys.forEach(k=>{
+    const d=prog[k];
+    if(!d.month||!d.year)return;
+    const mk=d.year+'-'+String(d.month).padStart(2,'0');
+    if(!byMonth[mk])byMonth[mk]={days:[],scores:[],label:MONTH_TH[d.month-1]+' '+d.year};
+    byMonth[mk].days.push(d);
+    if(d.overall!=null)byMonth[mk].scores.push(d.overall);
+  });
+  const monthKeys=Object.keys(byMonth).sort();
+  const monthlyList=document.getElementById('monthlyList');
+  monthlyList.innerHTML='';
+  if(monthKeys.length===0){monthlyList.innerHTML='<div class="no-data">📭 ยังไม่มีข้อมูลเดือน</div>';}
+  else{
+    monthlyList.innerHTML='<div class="grid2">'+monthKeys.map(mk=>{
+      const m=byMonth[mk]; const mAvg=avg(m.scores);
+      const s2=avg(m.days.map(d=>d.step2));const s3=avg(m.days.map(d=>d.step3));
+      const s4=avg(m.days.map(d=>d.step4));const s5=avg(m.days.map(d=>d.step5));
+      return `<div class="mcard">
+        <div class="mcard-name">${m.label}</div>
+        <div class="mcard-n" style="color:${sc(mAvg??50)}">${mAvg!=null?mAvg+'%':'—'}</div>
+        <div class="mcard-sub">${m.days.length} วัน</div>
+        <div style="margin-top:8px;font-size:11px;text-align:left;color:#546E7A;font-weight:700;line-height:2">
+          📖${s2!=null?s2+'%':'—'} &nbsp; 🗣️${s3!=null?s3+'%':'—'}<br>
+          ✏️${s4!=null?s4+'%':'—'} &nbsp; 🎮${s5!=null?s5+'%':'—'}
+        </div>
+      </div>`;
+    }).join('')+'</div>';
+    if(monthKeys.length>1){
+      document.getElementById('chartMonthNoData').style.display='none';
+      new Chart(document.getElementById('chartMonth'),{
+        type:'bar',
+        data:{labels:monthKeys.map(mk=>byMonth[mk].label),
+          datasets:[{label:'คะแนนเฉลี่ย',data:monthKeys.map(mk=>avg(byMonth[mk].scores)),
+            backgroundColor:monthKeys.map(mk=>{const a=avg(byMonth[mk].scores);return a>=80?'#81C784':a>=60?'#FFB74D':'#E57373';}),
+            borderRadius:8}]},
+        options:{plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},responsive:true,maintainAspectRatio:true}
+      });
+    } else {document.getElementById('chartMonthNoData').style.display='block';}
+  }
+
+  // ═══════ YEARLY ═══════
+  const byYear={};
+  keys.forEach(k=>{
+    const d=prog[k];
+    if(!d.year)return;
+    if(!byYear[d.year])byYear[d.year]={days:[],scores:[]};
+    byYear[d.year].days.push(d);
+    if(d.overall!=null)byYear[d.year].scores.push(d.overall);
+  });
+  const yearlyList=document.getElementById('yearlyList');
+  const yearKeys=Object.keys(byYear).sort();
+  if(yearKeys.length===0){yearlyList.innerHTML='<div class="no-data">📭 ยังไม่มีข้อมูล</div>';}
+  else{
+    yearlyList.innerHTML='<div class="grid2">'+yearKeys.map(y=>{
+      const yd=byYear[y]; const yAvg=avg(yd.scores);
+      const s3avg=avg(yd.days.map(d=>d.step3));
+      return `<div class="mcard">
+        <div class="mcard-name">ปี ${y}</div>
+        <div class="mcard-n" style="color:${sc(yAvg??50)}">${yAvg!=null?yAvg+'%':'—'}</div>
+        <div class="mcard-sub">${yd.days.length} วัน / 365 วัน</div>
+        <div style="margin-top:6px;height:6px;background:#E0E0E0;border-radius:3px;overflow:hidden">
+          <div style="width:${Math.min(100,Math.round(yd.days.length/365*100))}%;height:100%;background:#5C6BC0;border-radius:3px"></div>
+        </div>
+        <div style="font-size:10px;color:#90A4AE;font-weight:700;margin-top:3px">${Math.round(yd.days.length/365*100)}% ของปี</div>
+        ${s3avg!=null?`<div style="margin-top:6px;font-size:11px;font-weight:800;color:${sc(s3avg)}">🗣️ พูด avg: ${s3avg}%</div>`:''}
+      </div>`;
+    }).join('')+'</div>';
+  }
+
+  // consistency heatmap (simple)
+  const cv=document.getElementById('consistencyView');
+  if(dates.length===0){cv.innerHTML='<div class="no-data">📭 ยังไม่มีข้อมูล</div>';}
+  else{
+    const dateSet=new Set(dates);
+    const today=new Date(); const rows=[];
+    for(let w=7;w>=0;w--){
+      const weekDots=[];
+      for(let d=6;d>=0;d--){
+        const dt=new Date(today);dt.setDate(dt.getDate()-w*7-d);
+        const ds=dt.toISOString().slice(0,10);
+        const has=dateSet.has(ds);
+        const score=has?Object.values(prog).find(p=>p.date===ds)?.overall:null;
+        const col=has?(score>=80?'#43A047':score>=60?'#FFA726':'#E53935'):'#E0E0E0';
+        weekDots.push(`<div title="${ds}" style="width:20px;height:20px;border-radius:5px;background:${col}"></div>`);
+      }
+      rows.push(weekDots.join(''));
+    }
+    cv.innerHTML=`
+      <div style="font-size:11px;color:#90A4AE;font-weight:700;margin-bottom:8px">🟩 ≥80% &nbsp; 🟨 60-79% &nbsp; 🟥 <60% &nbsp; ⬜ ไม่ได้เรียน</div>
+      <div style="display:flex;flex-direction:column;gap:4px">${rows.map(r=>`<div style="display:flex;gap:4px">${r}</div>`).join('')}</div>
+      <div style="font-size:11px;color:#90A4AE;font-weight:700;margin-top:8px">← 8 สัปดาห์ที่ผ่านมา</div>`;
+  }
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 Competition Dashboard — LexiGo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#0F172A;color:#F1F5F9;min-height:100vh}
+
+/* ── Header ── */
+.hdr{background:linear-gradient(135deg,#1E3A8A,#0E7490);padding:20px 24px 16px;text-align:center}
+.hdr h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:900;color:#fff}
+.hdr p{font-size:.9rem;color:#BAE6FD;margin-top:4px}
+
+/* ── Period Card ── */
+.period-bar{background:#1E293B;border-bottom:2px solid #334155;padding:16px 24px;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center}
+.period-item{text-align:center}
+.period-label{font-size:.7rem;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em}
+.period-value{font-size:1.1rem;font-weight:900;color:#38BDF8}
+.period-end{color:#F87171}
+.countdown{font-size:1.6rem;font-weight:900;color:#FDE68A}
+.period-divider{color:#475569;font-size:1.5rem}
+
+/* ── Scoring Guide ── */
+.score-guide{background:#1E293B;border:1px solid #334155;border-radius:16px;padding:20px;margin:20px 24px 0}
+.score-guide h2{font-size:1rem;font-weight:900;color:#FDE68A;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.score-pill{background:#0F172A;border:1px solid #334155;border-radius:12px;padding:12px 16px;text-align:center}
+.score-pill .pts{font-size:1.5rem;font-weight:900;color:#34D399}
+.score-pill .desc{font-size:.78rem;color:#94A3B8;margin-top:4px}
+
+/* ── Section titles ── */
+.section{margin:20px 24px 0}
+.section-title{font-size:1rem;font-weight:900;color:#F1F5F9;display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.badge{background:#334155;border-radius:99px;padding:2px 10px;font-size:.7rem;color:#94A3B8;font-weight:700}
+
+/* ── Hero cards (Speed + Quiz) ── */
+.hero-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.hero-card{background:#1E293B;border:1px solid #334155;border-radius:16px;padding:20px}
+.hero-card h3{font-size:.85rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.hero-card.speed h3{color:#F472B6}
+.hero-card.quiz  h3{color:#A78BFA}
+.podium-list{display:flex;flex-direction:column;gap:10px}
+.podium-item{display:flex;align-items:center;gap:12px;background:#0F172A;border-radius:12px;padding:10px 14px}
+.podium-rank{font-size:1.3rem;width:32px;text-align:center}
+.podium-info{flex:1}
+.podium-name{font-size:.95rem;font-weight:800;color:#F1F5F9}
+.podium-sub{font-size:.75rem;color:#94A3B8;margin-top:2px}
+.podium-pts{font-size:1.1rem;font-weight:900;color:#34D399;white-space:nowrap}
+.empty-slot{opacity:.4;font-style:italic}
+
+/* ── My Stats ── */
+.my-stats-card{background:#1E293B;border:1px solid #334155;border-radius:16px;padding:20px}
+.my-stats-card h3{font-size:.85rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:#FDE68A;display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.input-row{display:flex;gap:10px;margin-bottom:16px}
+.input-row input{flex:1;background:#0F172A;border:1px solid #334155;border-radius:10px;padding:10px 14px;color:#F1F5F9;font-family:'Nunito',sans-serif;font-size:.9rem}
+.input-row button{background:#0891B2;border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer}
+.input-row button:hover{background:#0E7490}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.stat-box{background:#0F172A;border:1px solid #334155;border-radius:12px;padding:12px 10px;text-align:center}
+.stat-box .n{font-size:1.6rem;font-weight:900;color:#38BDF8}
+.stat-box .l{font-size:.72rem;color:#94A3B8;margin-top:3px}
+
+/* ── Day Log Table ── */
+.day-log{width:100%;border-collapse:collapse;font-size:.82rem}
+.day-log th{background:#0F172A;color:#94A3B8;padding:8px 12px;text-align:left;font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.day-log td{padding:8px 12px;border-bottom:1px solid #1E293B;color:#CBD5E1}
+.day-log tr:last-child td{border-bottom:none}
+.day-log tr:hover td{background:#1E293B}
+.pts-cell{font-weight:900;color:#34D399}
+.streak-badge{display:inline-block;background:#F472B620;color:#F472B6;border-radius:6px;padding:1px 7px;font-size:.7rem;font-weight:800}
+
+/* ── Loading / Error ── */
+.msg-box{text-align:center;padding:30px;color:#64748B;font-size:.9rem}
+.error-box{background:#450A0A20;border:1px solid #7F1D1D;border-radius:12px;padding:14px 18px;color:#FCA5A5;font-size:.85rem;margin:16px 24px}
+
+/* ── Bottom padding ── */
+.bottom{height:40px}
+
+/* ── Refresh button ── */
+.refresh-btn{background:#1E3A8A;border:none;border-radius:10px;padding:8px 18px;color:#93C5FD;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px}
+.refresh-btn:hover{background:#1D4ED8}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="hdr">
+  <h1>🏆 Competition Dashboard</h1>
+  <p>LexiGo — ติดตามผลการแข่งขันแบบ real-time</p>
+</div>
+
+<!-- ══ PERIOD BAR ══ -->
+<div class="period-bar" id="periodBar">
+  <div class="period-item">
+    <div class="period-label">🟢 เริ่มต้น</div>
+    <div class="period-value" id="startDate">กำลังโหลด...</div>
+  </div>
+  <div class="period-divider">→</div>
+  <div class="period-item">
+    <div class="period-label">🔴 สิ้นสุด</div>
+    <div class="period-value period-end" id="endDate">—</div>
+  </div>
+  <div class="period-divider">·</div>
+  <div class="period-item">
+    <div class="period-label">⏳ เหลืออีก</div>
+    <div class="countdown" id="daysLeft">—</div>
+  </div>
+  <button class="refresh-btn" onclick="loadAll(true)">
+    <span id="refreshIcon">🔄</span> รีเฟรช
+  </button>
+</div>
+
+<!-- ══ SCORING GUIDE ══ -->
+<div class="section">
+  <div class="score-guide">
+    <h2>⚡ ระบบคะแนน Speed Heroes</h2>
+    <div class="score-grid" id="scoreGuide">
+      <div class="score-pill"><div class="pts" id="ptAtt">10</div><div class="desc">คะแนนต่อวันที่เข้าเรียน</div></div>
+      <div class="score-pill"><div class="pts" id="ptCor">5</div><div class="desc">คะแนนต่อข้อ quiz ที่ถูก</div></div>
+      <div class="score-pill"><div class="pts" id="ptS7">50</div><div class="desc">โบนัส streak 7 วัน</div></div>
+      <div class="score-pill"><div class="pts" id="ptS30">200</div><div class="desc">โบนัส streak 30 วัน</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HERO BOARDS ══ -->
+<div class="section">
+  <div class="section-title">🥊 Leaderboard <span class="badge" id="compDays">รอโหลด</span></div>
+  <div class="hero-row">
+
+    <!-- Speed Heroes -->
+    <div class="hero-card speed">
+      <h3>🏃 Speed Heroes <span style="font-size:.7rem;color:#94A3B8;font-weight:400">เรียนสม่ำเสมอ</span></h3>
+      <div class="podium-list" id="speedList">
+        <div class="msg-box">กำลังโหลด...</div>
+      </div>
+    </div>
+
+    <!-- Quiz Champions -->
+    <div class="hero-card quiz">
+      <h3>🧠 Quiz Champions <span style="font-size:.7rem;color:#94A3B8;font-weight:400">คะแนนสอบสูงสุด</span></h3>
+      <div class="podium-list" id="quizList">
+        <div class="msg-box">กำลังโหลด...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MY STATS ══ -->
+<div class="section" style="margin-top:20px">
+  <div class="my-stats-card">
+    <h3>📊 ผลของฉัน — ดูคะแนนรายวัน</h3>
+    <div class="input-row">
+      <input type="text" id="myCode" placeholder="กรอก Student Code เช่น AB12" maxlength="10">
+      <button onclick="loadMyStats()">ดูผล</button>
+    </div>
+    <div id="myStatsArea" style="display:none">
+      <div class="stat-grid">
+        <div class="stat-box"><div class="n" id="myDays">0</div><div class="l">วันที่เรียน</div></div>
+        <div class="stat-box"><div class="n" id="myStreak">0</div><div class="l">Streak ปัจจุบัน 🔥</div></div>
+        <div class="stat-box"><div class="n" id="myMaxStreak">0</div><div class="l">Streak สูงสุด</div></div>
+        <div class="stat-box"><div class="n" id="myTotal">0</div><div class="l">คะแนนรวม ⭐</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="day-log">
+          <thead><tr>
+            <th>วัน</th><th>วันที่บันทึก</th><th>ข้อถูก</th><th>คะแนนวันนั้น</th><th>Streak</th>
+          </tr></thead>
+          <tbody id="dayLogBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="myStatsMsg" class="msg-box" style="padding:10px 0">กรอก code แล้วกดดูผล</div>
+  </div>
+</div>
+
+<div id="errorBox" style="display:none" class="error-box"></div>
+<div class="bottom"></div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+
+function jsonp(params, cb) {
+  const cbName = 'dash_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const s = document.createElement('script');
+  window[cbName] = (d) => { delete window[cbName]; if(s.parentNode) s.parentNode.removeChild(s); cb(null,d); };
+  s.onerror = () => { delete window[cbName]; if(s.parentNode) s.parentNode.removeChild(s); cb('network error'); };
+  const qs = Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  s.src = `${API_URL}?${qs}&callback=${cbName}`;
+  document.body.appendChild(s);
+}
+
+// ── Period Banner ──
+function updatePeriod(cfg) {
+  const fmt = (iso) => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('th-TH', {day:'numeric', month:'short', year:'numeric'});
+  };
+  document.getElementById('startDate').textContent = fmt(cfg.competition_start);
+  document.getElementById('endDate').textContent   = fmt(cfg.competition_end);
+
+  if (cfg.competition_end) {
+    const now  = new Date();
+    const end  = new Date(cfg.competition_end);
+    const diff = Math.ceil((end - now) / 86400000);
+    document.getElementById('daysLeft').textContent =
+      diff > 0 ? diff + ' วัน' : (diff === 0 ? 'วันนี้!' : 'สิ้นสุดแล้ว');
+  }
+
+  document.getElementById('compDays').textContent = (cfg.competition_days || 30) + '-Day Sprint';
+
+  // Scoring pills
+  if (cfg.pts_attendance)  document.getElementById('ptAtt').textContent  = cfg.pts_attendance;
+  if (cfg.pts_per_correct) document.getElementById('ptCor').textContent  = cfg.pts_per_correct;
+  if (cfg.pts_streak_7)    document.getElementById('ptS7').textContent   = cfg.pts_streak_7;
+  if (cfg.pts_streak_30)   document.getElementById('ptS30').textContent  = cfg.pts_streak_30;
+}
+
+// ── Podium ──
+const MEDALS = ['🥇','🥈','🥉'];
+function buildPodium(listId, items, valKey, subFn) {
+  const el = document.getElementById(listId);
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div class="msg-box empty-slot">ยังไม่มีข้อมูล</div>';
+    return;
+  }
+  const slots = 3;
+  let html = '';
+  for (let i = 0; i < slots; i++) {
+    const it = items[i];
+    if (!it) {
+      html += `<div class="podium-item empty-slot">
+        <div class="podium-rank">❓</div>
+        <div class="podium-info"><div class="podium-name">ยังว่าง</div><div class="podium-sub">—</div></div>
+      </div>`;
+    } else {
+      html += `<div class="podium-item">
+        <div class="podium-rank">${MEDALS[i]}</div>
+        <div class="podium-info">
+          <div class="podium-name">${esc(it.nickname||it.name||'?')}</div>
+          <div class="podium-sub">${subFn(it)}</div>
+        </div>
+        <div class="podium-pts">${it[valKey] ?? '—'}</div>
+      </div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── Load Leaderboard ──
+function loadLeaderboard() {
+  jsonp({action:'getLeaderboard'}, (err, data) => {
+    if (err || !data) { showError('โหลด leaderboard ไม่ได้: ' + err); return; }
+
+    // Config update
+    if (data.config) updatePeriod(data.config);
+
+    // Speed Heroes
+    buildPodium('speedList', data.speed_heroes || [], 'total_score', it =>
+      `🔥 Streak ${it.max_streak||0} วัน · ${it.days_completed||0} วัน`);
+
+    // Quiz Champions — แสดง pts + เวลา (tiebreaker: เวลาน้อยกว่าชนะ)
+    buildPodium('quizList', data.quiz_champions || [], 'quiz_score', it => {
+      const t = it.time_seconds || 0;
+      const m = Math.floor(t/60), s = t%60;
+      const timeStr = t > 0 ? `⏱ ${m}:${s<10?'0':''}${s}` : '—';
+      return `${timeStr} · ${esc(it.nickname||'')}`;
+    });
+  });
+}
+
+// ── Load My Stats ──
+function loadMyStats() {
+  const code = document.getElementById('myCode').value.trim().toUpperCase();
+  if (!code) return;
+  document.getElementById('myStatsMsg').textContent = 'กำลังโหลด...';
+  document.getElementById('myStatsMsg').style.display = '';
+  document.getElementById('myStatsArea').style.display = 'none';
+
+  jsonp({action:'myStats', code}, (err, data) => {
+    if (err || !data || data.status === 'error') {
+      document.getElementById('myStatsMsg').textContent = '❌ ไม่พบข้อมูล — ตรวจสอบ code ใหม่';
+      return;
+    }
+    renderMyStats(data);
+  });
+}
+
+function renderMyStats(d) {
+  document.getElementById('myStatsMsg').style.display = 'none';
+  document.getElementById('myStatsArea').style.display = '';
+
+  document.getElementById('myDays').textContent       = d.days_completed || 0;
+  document.getElementById('myStreak').textContent     = d.current_streak || 0;
+  document.getElementById('myMaxStreak').textContent  = d.max_streak     || 0;
+  document.getElementById('myTotal').textContent      = d.total_score    || 0;
+
+  const rows = (d.daily_log || []).sort((a,b) => a.day - b.day);
+  const tbody = document.getElementById('dayLogBody');
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748B">ยังไม่มีข้อมูล</td></tr>';
+    return;
+  }
+
+  // คำนวณ running streak ต่อแต่ละ row
+  tbody.innerHTML = rows.map((r, i) => {
+    const dt = r.saved_at ? new Date(r.saved_at).toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : '—';
+    const pts = (r.day_points != null) ? r.day_points : ((r.score||0)*1);
+    const corr = (r.correct_count != null) ? r.correct_count : '—';
+    const sk = r.streak_at_day;
+    const skBadge = sk >= 7 ? `<span class="streak-badge">🔥${sk}</span>` : (sk > 1 ? `<span style="color:#94A3B8;font-size:.8rem">×${sk}</span>` : '');
+    return `<tr>
+      <td><b>Day ${r.day}</b></td>
+      <td>${dt}</td>
+      <td>${corr}</td>
+      <td class="pts-cell">+${pts} ⭐</td>
+      <td>${skBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Load Config separately if leaderboard doesn't return it ──
+function loadConfig() {
+  jsonp({action:'getLeaderboard'}, (err, data) => {
+    if (!err && data && data.config) updatePeriod(data.config);
+  });
+}
+
+// ── Error ──
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.style.display = '';
+  el.textContent = '⚠️ ' + msg;
+  setTimeout(() => { el.style.display='none'; }, 8000);
+}
+
+// ── Refresh icon ──
+let refreshing = false;
+function loadAll(manual) {
+  if (refreshing) return;
+  refreshing = true;
+  const icon = document.getElementById('refreshIcon');
+  icon.className = 'spin';
+  icon.textContent = '⏳';
+  loadLeaderboard();
+  setTimeout(() => {
+    refreshing = false;
+    icon.className = '';
+    icon.textContent = '🔄';
+  }, 3000);
+}
+
+// Enter key on code input
+document.getElementById('myCode').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loadMyStats();
+});
+
+// Restore saved code
+const saved = localStorage.getItem('wla_lb_mycode');
+if (saved) document.getElementById('myCode').value = saved;
+document.getElementById('myCode').addEventListener('change', () => {
+  localStorage.setItem('wla_lb_mycode', document.getElementById('myCode').value.trim().toUpperCase());
+});
+
+// Auto-refresh every 60s
+loadAll();
+setInterval(() => loadAll(), 60000);
+</script>
+</body>
+</html>

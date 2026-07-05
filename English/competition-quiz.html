@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚔️ Word Battle — LexiGo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#0F172A;color:#F1F5F9;min-height:100vh;overflow-x:hidden}
+.hdr{background:linear-gradient(135deg,#7C3AED,#DB2777);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.hdr-title{font-size:1.15rem;font-weight:900;color:#fff}
+.timer-box{background:rgba(0,0,0,0.3);border-radius:12px;padding:6px 16px;text-align:center}
+.timer-num{font-size:1.4rem;font-weight:900;color:#FDE68A;font-variant-numeric:tabular-nums}
+.timer-lbl{font-size:.65rem;color:#E9D5FF;font-weight:700}
+.prog-bar{background:#1E293B;padding:10px 20px;display:flex;align-items:center;gap:10px}
+.round-dots{display:flex;gap:6px}
+.rd{width:28px;height:28px;border-radius:50%;background:#334155;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#64748B;transition:all .3s}
+.rd.done{background:#10B981;color:#fff}
+.rd.active{background:#7C3AED;color:#fff;box-shadow:0 0 0 3px #7C3AED40}
+.score-live{margin-left:auto;font-size:1rem;font-weight:900;color:#FDE68A}
+.screen{display:none;padding:20px}
+.screen.active{display:block}
+/* Lock */
+.lock-card{background:#1E293B;border:2px solid #334155;border-radius:20px;padding:28px 24px;text-align:center;max-width:440px;margin:0 auto}
+.lock-icon{font-size:48px;margin-bottom:12px}
+.lock-card h2{font-size:1.3rem;font-weight:900;color:#F1F5F9;margin-bottom:8px}
+.lock-card p{font-size:.88rem;color:#94A3B8;margin-bottom:20px;line-height:1.6}
+.att-dots{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.att-dot{width:32px;height:32px;border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.att-dot.free{background:#10B981}
+.att-dot.paid{background:#F59E0B}
+.att-dot.used{background:#374151;opacity:.5}
+.btn-start{background:linear-gradient(135deg,#7C3AED,#DB2777);border:none;border-radius:14px;padding:14px 32px;color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;width:100%;margin-top:8px}
+.btn-start:disabled{opacity:.4;cursor:not-allowed}
+.btn-pay{background:#F59E0B;border:none;border-radius:14px;padding:12px 24px;color:#fff;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;margin-top:8px;width:100%}
+.pay-panel{background:#0F172A;border:1px solid #334155;border-radius:14px;padding:16px;margin-top:14px;text-align:left;display:none}
+.pay-panel.open{display:block}
+.pay-label{font-size:.75rem;color:#94A3B8;font-weight:700;margin-bottom:4px}
+.pay-val{font-size:1rem;font-weight:900;color:#FDE68A;margin-bottom:12px}
+.slip-input{display:none}
+.upload-btn{background:#1E293B;border:2px dashed #475569;border-radius:12px;padding:14px;text-align:center;cursor:pointer;color:#94A3B8;font-size:.85rem;font-weight:700;width:100%;display:block}
+.upload-btn:hover{border-color:#7C3AED;color:#C4B5FD}
+.verify-btn{background:#7C3AED;border:none;border-radius:10px;padding:10px 20px;color:#fff;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;margin-top:10px;width:100%;display:none}
+.verify-msg{font-size:.8rem;margin-top:8px;font-weight:700}
+/* Intro */
+.round-intro{text-align:center;max-width:440px;margin:20px auto}
+.round-badge{display:inline-block;background:linear-gradient(135deg,#7C3AED,#DB2777);border-radius:20px;padding:6px 20px;font-size:.8rem;font-weight:900;color:#fff;margin-bottom:14px}
+.round-title{font-size:1.6rem;font-weight:900;color:#F1F5F9;margin-bottom:8px}
+.round-desc{font-size:.9rem;color:#94A3B8;margin-bottom:24px;line-height:1.7;white-space:pre-line}
+.btn-next{background:linear-gradient(135deg,#7C3AED,#DB2777);border:none;border-radius:14px;padding:13px 32px;color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;cursor:pointer}
+/* Game */
+.game-area{max-width:500px;margin:0 auto}
+.q-counter{font-size:.8rem;color:#64748B;font-weight:700;text-align:center;margin-bottom:14px}
+/* Match */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match-card{background:#1E293B;border:2px solid #334155;border-radius:14px;padding:12px 10px;text-align:center;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .2s;min-height:50px;display:flex;align-items:center;justify-content:center;line-height:1.3}
+.match-card:hover{border-color:#7C3AED;background:#2D1B69}
+.match-card.sel{border-color:#7C3AED;background:#4C1D95;color:#E9D5FF}
+.match-card.correct{border-color:#10B981;background:#064E3B;color:#6EE7B7;pointer-events:none}
+.match-card.wrong{border-color:#EF4444;background:#450A0A;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* Fill */
+.question-box{background:#1E293B;border:1px solid #334155;border-radius:16px;padding:20px;margin-bottom:14px;font-size:1rem;color:#F1F5F9;font-weight:700;line-height:1.7;text-align:center}
+.blank{display:inline-block;min-width:70px;border-bottom:3px solid #7C3AED;color:#A78BFA;font-weight:900}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice-btn{background:#1E293B;border:2px solid #334155;border-radius:12px;padding:12px 10px;color:#F1F5F9;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .2s}
+.choice-btn:hover{border-color:#7C3AED;background:#1E1B4B}
+.choice-btn.correct{border-color:#10B981;background:#064E3B;color:#6EE7B7;pointer-events:none}
+.choice-btn.wrong{border-color:#EF4444;background:#450A0A;color:#FCA5A5;pointer-events:none}
+.choice-btn.reveal{border-color:#10B981;background:#064E3B;color:#6EE7B7;pointer-events:none}
+/* TF */
+.tf-word{background:#1E293B;border:1px solid #4C1D95;border-radius:16px;padding:22px;text-align:center;margin-bottom:16px}
+.tf-eng{font-size:1.5rem;font-weight:900;color:#E9D5FF}
+.tf-eq{font-size:1rem;color:#64748B;margin:5px 0}
+.tf-thai{font-size:1.25rem;font-weight:800;color:#FDE68A}
+.tf-btns{display:flex;gap:12px}
+.tf-btn{flex:1;border:none;border-radius:14px;padding:15px;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all .2s}
+.tf-btn.true-btn{background:#10B981;color:#fff}
+.tf-btn.false-btn{background:#EF4444;color:#fff}
+.tf-btn.correct{box-shadow:0 0 0 4px #FDE68A;pointer-events:none}
+.tf-btn.wrong{opacity:.4;pointer-events:none}
+/* Scramble */
+.scramble-thai{font-size:1.3rem;font-weight:900;color:#FDE68A;text-align:center;margin-bottom:6px}
+.scramble-hint{font-size:.8rem;color:#64748B;text-align:center;margin-bottom:14px}
+.letter-answer{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;min-height:50px;background:#0F172A;border:2px solid #334155;border-radius:14px;padding:10px;margin-bottom:12px}
+.letter-answer span{background:#7C3AED;border-radius:8px;padding:5px 11px;font-size:1.05rem;font-weight:900;color:#fff}
+.letter-pool{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.letter-tile{background:#1E293B;border:2px solid #4B5563;border-radius:8px;padding:7px 13px;font-size:1.05rem;font-weight:900;cursor:pointer;transition:all .2s;color:#F1F5F9}
+.letter-tile:hover{border-color:#7C3AED;background:#2D1B69}
+.letter-tile.used{opacity:.2;pointer-events:none}
+.scramble-result{text-align:center;font-size:1rem;font-weight:900;margin-top:8px}
+.btn-check-sc{background:#7C3AED;border:none;border-radius:12px;padding:10px 28px;color:#fff;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:block;margin:10px auto 0}
+.btn-clear-sc{background:#334155;border:none;border-radius:12px;padding:7px 18px;color:#94A3B8;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;display:block;margin:5px auto 0}
+/* Type */
+.type-prompt{font-size:1.5rem;font-weight:900;color:#FDE68A;text-align:center;margin-bottom:6px}
+.type-sub{font-size:.8rem;color:#64748B;text-align:center;margin-bottom:14px}
+.type-input{width:100%;background:#1E293B;border:2px solid #334155;border-radius:14px;padding:14px 18px;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:800;color:#F1F5F9;text-align:center;letter-spacing:2px;outline:none}
+.type-input:focus{border-color:#7C3AED}
+.type-input.correct{border-color:#10B981;background:#064E3B;color:#6EE7B7}
+.type-input.wrong{border-color:#EF4444;background:#450A0A;color:#FCA5A5}
+.btn-submit-type{background:#7C3AED;border:none;border-radius:12px;padding:11px 28px;color:#fff;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:block;margin:10px auto 0}
+/* Round Complete */
+.round-complete{text-align:center;background:#1E293B;border:2px solid #334155;border-radius:20px;padding:28px 20px;max-width:400px;margin:0 auto}
+.rc-icon{font-size:48px}
+.rc-title{font-size:1.3rem;font-weight:900;margin:10px 0 4px}
+.rc-pts{font-size:2rem;font-weight:900;color:#FDE68A}
+.rc-sub{font-size:.85rem;color:#94A3B8;margin-bottom:20px}
+/* Results */
+.results-card{background:#1E293B;border:2px solid #7C3AED;border-radius:20px;padding:28px 24px;max-width:460px;margin:0 auto;text-align:center}
+.results-card h2{font-size:1.4rem;font-weight:900;margin-bottom:4px}
+.final-score{font-size:3rem;font-weight:900;color:#FDE68A;margin:10px 0}
+.score-breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+.sb-item{background:#0F172A;border-radius:12px;padding:12px 8px}
+.sb-n{font-size:1.4rem;font-weight:900;color:#A78BFA}
+.sb-l{font-size:.7rem;color:#64748B;margin-top:3px}
+.btn-submit-score{background:linear-gradient(135deg,#7C3AED,#DB2777);border:none;border-radius:14px;padding:13px 32px;color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;width:100%;margin-top:8px}
+.btn-retry{background:#1E293B;border:2px solid #475569;border-radius:14px;padding:11px 24px;color:#94A3B8;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;margin-top:8px;width:100%}
+/* Flash */
+.flash{position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:10px 28px;border-radius:14px;font-size:1rem;font-weight:900;z-index:999;pointer-events:none;opacity:0;transition:opacity .2s}
+.flash.show{opacity:1}
+.flash.ok{background:#064E3B;color:#6EE7B7;border:2px solid #10B981}
+.flash.err{background:#450A0A;color:#FCA5A5;border:2px solid #EF4444}
+.err-msg{color:#FCA5A5;font-size:.83rem;font-weight:700;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="flash" id="flash"></div>
+<div class="hdr">
+  <div class="hdr-title">⚔️ Word Battle</div>
+  <div class="timer-box"><div class="timer-num" id="timerNum">0:00</div><div class="timer-lbl">⏱ เวลาที่ใช้</div></div>
+</div>
+<div class="prog-bar" id="progBar" style="display:none">
+  <div class="round-dots">
+    <div class="rd" id="rd1">1</div><div class="rd" id="rd2">2</div><div class="rd" id="rd3">3</div>
+    <div class="rd" id="rd4">4</div><div class="rd" id="rd5">5</div>
+  </div>
+  <div class="score-live">⭐ <span id="scoreLive">0</span></div>
+</div>
+
+<!-- LOCK -->
+<div class="screen active" id="scrLock">
+  <div class="lock-card">
+    <div class="lock-icon">⚔️</div>
+    <h2>Word Battle Competition</h2>
+    <p>5 รอบเกม · คำศัพท์ Day 1–30<br>คะแนน = ถูก×10 · คะแนนเท่ากัน → ใครเร็วกว่าชนะ<br><strong style="color:#A78BFA">ต้องเรียนครบ 30 วัน จึงเข้าแข่งได้</strong></p>
+    <div id="lockMsg" class="err-msg" style="margin-bottom:12px"></div>
+    <div class="att-dots" id="attDots"></div>
+    <p style="font-size:.78rem;color:#64748B;margin-bottom:14px">🟢 ฟรี 3 ครั้ง · 🟡 ซื้อเพิ่ม 29 บาท/ครั้ง</p>
+    <button class="btn-start" id="btnStart" onclick="startBattle()" disabled>⚔️ เริ่มแข่ง!</button>
+    <button class="btn-pay" id="btnShowPay" onclick="togglePay()" style="display:none">💳 ซื้อ attempt เพิ่ม (29 บาท)</button>
+    <div class="pay-panel" id="payPanel">
+      <div class="pay-label">PromptPay</div><div class="pay-val" id="ppNumber">กำลังโหลด...</div>
+      <div class="pay-label">จำนวน</div><div class="pay-val">29 บาท / 1 ครั้ง</div>
+      <label class="upload-btn" for="slipFile">📷 อัปโหลด Slip</label>
+      <input type="file" class="slip-input" id="slipFile" accept="image/*" onchange="slipSelected(this)">
+      <div id="slipName" style="font-size:.78rem;color:#64748B;margin-top:6px"></div>
+      <button class="verify-btn" id="verifyBtn" onclick="verifySlip()">✅ ยืนยัน Slip</button>
+      <div class="verify-msg" id="verifyMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="screen" id="scrIntro">
+  <div class="round-intro">
+    <div class="round-badge" id="introBadge">Round 1 / 5</div>
+    <div class="round-title" id="introTitle"></div>
+    <div class="round-desc" id="introDesc"></div>
+    <button class="btn-next" onclick="startRound()">เริ่มเลย! →</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="scrGame">
+  <div class="game-area">
+    <div class="q-counter" id="qCounter"></div>
+    <div id="gameContent"></div>
+  </div>
+</div>
+
+<!-- ROUND COMPLETE -->
+<div class="screen" id="scrRoundDone">
+  <div class="round-complete">
+    <div class="rc-icon" id="rcIcon">🎯</div>
+    <div class="rc-title" id="rcTitle">Round 1 เสร็จ!</div>
+    <div class="rc-pts" id="rcPts">+0 pts</div>
+    <div class="rc-sub" id="rcSub"></div>
+    <button class="btn-next" onclick="nextRound()">Round ถัดไป →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="scrResults">
+  <div class="results-card">
+    <div style="font-size:40px">🏆</div>
+    <h2>Battle จบแล้ว!</h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div style="font-size:.85rem;color:#94A3B8;margin-bottom:8px">คะแนนรวม</div>
+    <div class="score-breakdown">
+      <div class="sb-item"><div class="sb-n" id="sbCorrect">0</div><div class="sb-l">ถูก</div></div>
+      <div class="sb-item"><div class="sb-n" id="sbWrong">0</div><div class="sb-l">ผิด</div></div>
+      <div class="sb-item"><div class="sb-n" id="sbTime">0</div><div class="sb-l">⏱ เวลา</div></div>
+    </div>
+    <div style="font-size:.8rem;color:#64748B;margin-bottom:16px">คะแนน = ถูก×10 · เวลาน้อย = ได้เปรียบ tiebreaker</div>
+    <div id="submitMsg" class="err-msg" style="margin-bottom:8px"></div>
+    <button class="btn-submit-score" id="btnSubmit" onclick="submitScore()">📤 ส่งคะแนน Leaderboard</button>
+    <button class="btn-retry" onclick="location.reload()">🔄 เล่นใหม่</button>
+    <a href="leaderboard.html" style="display:block;margin-top:10px;font-size:.85rem;color:#A78BFA;font-weight:700;text-align:center;text-decoration:none">🏅 ดู Leaderboard →</a>
+  </div>
+</div>
+
+<script>
+const API_URL='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+// ไม่จำกัดเวลา — ใช้ stopwatch
+const WORDS=[
+  {e:'cat',t:'แมว',day:1},{e:'dog',t:'หมา',day:1},{e:'bird',t:'นก',day:1},
+  {e:'fish',t:'ปลา',day:1},{e:'big',t:'ใหญ่',day:1},{e:'small',t:'เล็ก',day:1},
+  {e:'flower',t:'ดอกไม้',day:2},{e:'tree',t:'ต้นไม้',day:2},{e:'grass',t:'หญ้า',day:2},
+  {e:'leaf',t:'ใบไม้',day:2},{e:'green',t:'สีเขียว',day:2},{e:'grow',t:'เติบโต',day:2},
+  {e:'farm',t:'ฟาร์ม',day:3},{e:'cow',t:'วัว',day:3},{e:'pig',t:'หมู',day:3},
+  {e:'sheep',t:'แกะ',day:3},{e:'hen',t:'แม่ไก่',day:3},{e:'duck',t:'เป็ด',day:3},
+  {e:'pond',t:'สระน้ำ',day:4},{e:'frog',t:'กบ',day:4},{e:'fly',t:'บิน',day:4},
+  {e:'jump',t:'กระโดด',day:4},{e:'swim',t:'ว่ายน้ำ',day:4},{e:'wet',t:'เปียก',day:4},
+  {e:'butterfly',t:'ผีเสื้อ',day:5},{e:'color',t:'สี',day:5},{e:'pretty',t:'สวย',day:5},
+  {e:'look',t:'มอง',day:5},{e:'run',t:'วิ่ง',day:5},{e:'garden',t:'สวน',day:5},
+  {e:'river',t:'แม่น้ำ',day:6},{e:'water',t:'น้ำ',day:6},{e:'boat',t:'เรือ',day:6},
+  {e:'float',t:'ลอย',day:6},{e:'rock',t:'หิน',day:6},{e:'long',t:'ยาว',day:6},
+  {e:'breakfast',t:'อาหารเช้า',day:8},{e:'eat',t:'กิน',day:8},{e:'drink',t:'ดื่ม',day:8},
+  {e:'bread',t:'ขนมปัง',day:8},{e:'egg',t:'ไข่',day:8},{e:'milk',t:'นม',day:8},
+  {e:'apple',t:'แอปเปิ้ล',day:9},{e:'banana',t:'กล้วย',day:9},{e:'orange',t:'ส้ม',day:9},
+  {e:'rice',t:'ข้าว',day:10},{e:'soup',t:'ซุป',day:10},{e:'cook',t:'ทำอาหาร',day:10},
+  {e:'sweet',t:'หวาน',day:11},{e:'hot',t:'ร้อน',day:11},{e:'cold',t:'เย็น',day:11},
+  {e:'hungry',t:'หิว',day:12},{e:'full',t:'อิ่ม',day:12},{e:'lunch',t:'อาหารกลางวัน',day:12},
+  {e:'dinner',t:'อาหารเย็น',day:13},{e:'cake',t:'เค้ก',day:13},{e:'cup',t:'ถ้วย',day:13},
+  {e:'house',t:'บ้าน',day:15},{e:'room',t:'ห้อง',day:15},{e:'bed',t:'เตียง',day:15},
+  {e:'chair',t:'เก้าอี้',day:16},{e:'table',t:'โต๊ะ',day:16},{e:'door',t:'ประตู',day:16},
+  {e:'mother',t:'แม่',day:17},{e:'father',t:'พ่อ',day:17},{e:'sister',t:'น้องสาว',day:17},
+  {e:'brother',t:'พี่ชาย',day:18},{e:'baby',t:'ทารก',day:18},{e:'family',t:'ครอบครัว',day:18},
+  {e:'old',t:'แก่',day:19},{e:'young',t:'อายุน้อย',day:19},{e:'happy',t:'มีความสุข',day:19},
+  {e:'red',t:'สีแดง',day:22},{e:'blue',t:'สีน้ำเงิน',day:22},{e:'yellow',t:'สีเหลือง',day:22},
+  {e:'black',t:'สีดำ',day:23},{e:'white',t:'สีขาว',day:23},{e:'draw',t:'วาด',day:23},
+  {e:'round',t:'กลม',day:24},{e:'square',t:'สี่เหลี่ยม',day:24},{e:'paint',t:'ระบาย',day:24},
+  {e:'morning',t:'ตอนเช้า',day:29},{e:'night',t:'กลางคืน',day:29},{e:'today',t:'วันนี้',day:29},
+  {e:'tomorrow',t:'พรุ่งนี้',day:30},{e:'week',t:'สัปดาห์',day:30},{e:'time',t:'เวลา',day:30},
+];
+const FILL_Q=[
+  {sent:'The ___ sits on the mat.',blank:'cat',choices:['cat','dog','frog','fish']},
+  {sent:'I drink cold ___ every morning.',blank:'milk',choices:['milk','water','soup','juice']},
+  {sent:'The duck can ___ in the pond.',blank:'swim',choices:['swim','fly','jump','run']},
+  {sent:'She picks a red ___ from the tree.',blank:'apple',choices:['apple','banana','orange','flower']},
+  {sent:'Mom cooks ___ for lunch.',blank:'rice',choices:['rice','bread','cake','egg']},
+  {sent:'The ___ jumps high in the grass.',blank:'frog',choices:['frog','cow','pig','sheep']},
+  {sent:'We have breakfast in the ___.',blank:'morning',choices:['morning','night','week','time']},
+  {sent:'Dad sits on the ___ and reads.',blank:'chair',choices:['chair','table','bed','door']},
+  {sent:'The butterfly has a pretty ___.',blank:'color',choices:['color','leaf','rock','farm']},
+  {sent:'My ___ is warm and safe.',blank:'house',choices:['house','room','pond','river']},
+];
+const ROUNDS=[
+  {id:1,icon:'🃏',title:'Word Match',desc:'จับคู่คำภาษาอังกฤษกับความหมายภาษาไทย\nคลิกคู่ที่ถูกต้องให้ครบ 8 คู่!',fn:'playMatch'},
+  {id:2,icon:'📝',title:'Fill the Blank',desc:'เติมคำให้สมบูรณ์!\nเลือกคำที่ถูกต้องจาก 4 ตัวเลือก (10 ข้อ)',fn:'playFill'},
+  {id:3,icon:'✅',title:'True or False',desc:'คำแปลนี้ถูกหรือผิด?\nกด TRUE หรือ FALSE ให้เร็วที่สุด! (10 ข้อ)',fn:'playTF'},
+  {id:4,icon:'🔤',title:'Word Scramble',desc:'เรียงตัวอักษรให้เป็นคำภาษาอังกฤษที่ถูกต้อง\nคลิกตัวอักษรตามลำดับ (8 คำ)',fn:'playScramble'},
+  {id:5,icon:'⌨️',title:'Speed Type',desc:'เห็นคำไทย → พิมพ์คำอังกฤษให้ไวที่สุด!\n(8 คำ — ไม่คำนึงตัวพิมพ์เล็ก/ใหญ่)',fn:'playType'},
+];
+
+let student=null,attempts=null;
+let timerInterval=null,elapsedSeconds=0,timerStarted=false;
+let currentRound=0,totalScore=0,totalCorrect=0,totalWrong=0,roundScore=0;
+
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function pick(a,n){return shuffle(a).slice(0,n);}
+function jsonp(p,cb){
+  const n='wb_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+  const s=document.createElement('script');
+  window[n]=(d)=>{delete window[n];s.remove();cb(null,d);};
+  s.onerror=()=>{delete window[n];s.remove();cb('err');};
+  s.src=API_URL+'?'+Object.entries(p).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')+'&callback='+n;
+  document.body.appendChild(s);
+}
+function flash(msg,ok=true){
+  const el=document.getElementById('flash');
+  el.textContent=msg;el.className='flash '+(ok?'ok':'err');el.classList.add('show');
+  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1300);
+}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function updScore(){document.getElementById('scoreLive').textContent=totalScore;}
+function setDot(n,st){for(let i=1;i<=5;i++){const el=document.getElementById('rd'+i);el.className='rd'+(i<n?' done':i===n?' '+st:'');}}
+
+/* TIMER */
+function startTimer(){
+  if(timerStarted)return;timerStarted=true;
+  document.getElementById('progBar').style.display='flex';
+  timerInterval=setInterval(()=>{
+    elapsedSeconds++;
+    const m=Math.floor(elapsedSeconds/60),s=elapsedSeconds%60;
+    document.getElementById('timerNum').textContent=m+':'+(s<10?'0':'')+s;
+  },1000);
+}
+
+/* LOCK */
+function loadLock(){
+  student=JSON.parse(localStorage.getItem('wla_student')||'null');
+  if(!student||!student.code){document.getElementById('lockMsg').textContent='❌ กรุณา Login ที่ progress.html ก่อน';return;}
+  jsonp({action:'getAttempts',code:student.code},(err,d)=>{
+    if(err||!d){document.getElementById('lockMsg').textContent='⚠️ โหลดข้อมูลไม่ได้';return;}
+    attempts=d;renderDots(d);
+    const prog=JSON.parse(localStorage.getItem('wla_student')||'{}');
+    const days=(prog.progress||[]).length;
+    if(days<30){document.getElementById('lockMsg').textContent='📅 เรียนอีก '+(30-days)+' วันก่อนนะ! (ตอนนี้ '+days+'/30)';return;}
+    const avail=(d.free_available||0)+(d.paid_credits||0);
+    if(avail>0)document.getElementById('btnStart').disabled=false;
+    else document.getElementById('lockMsg').textContent='attempt หมดแล้ว ซื้อเพิ่มได้เลย 👇';
+    document.getElementById('btnShowPay').style.display='block';
+    jsonp({action:'getLeaderboard'},(e2,cfg)=>{if(!e2&&cfg&&cfg.config&&cfg.config.promptpay_number)document.getElementById('ppNumber').textContent=cfg.config.promptpay_number;});
+  });
+}
+function renderDots(d){
+  const free=parseInt(d.free_available||3),paid=parseInt(d.paid_credits||0),used=parseInt(d.free_used||0);
+  let h='';
+  for(let i=0;i<3;i++)h+=`<div class="att-dot ${i<(3-used)?'free':'used'}">🟢</div>`;
+  for(let i=0;i<paid;i++)h+=`<div class="att-dot paid">🟡</div>`;
+  document.getElementById('attDots').innerHTML=h;
+}
+function togglePay(){document.getElementById('payPanel').classList.toggle('open');}
+function slipSelected(input){
+  const f=input.files[0];if(!f)return;
+  document.getElementById('slipName').textContent='📎 '+f.name;
+  document.getElementById('verifyBtn').style.display='block';
+}
+function verifySlip(){
+  const f=document.getElementById('slipFile').files[0];if(!f)return;
+  const msg=document.getElementById('verifyMsg');
+  msg.textContent='⏳ กำลังตรวจสอบ...';msg.style.color='#FDE68A';
+  const r=new FileReader();
+  r.onload=()=>{
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'verifySlip',code:student.code,image:r.result.split(',')[1]})})
+    .then(x=>x.json()).then(d=>{
+      if(d.status==='ok'){msg.textContent='✅ ได้ 1 attempt เพิ่มแล้ว!';msg.style.color='#6EE7B7';document.getElementById('btnStart').disabled=false;}
+      else{msg.textContent='❌ '+(d.msg||'ตรวจสอบไม่ผ่าน');msg.style.color='#FCA5A5';}
+    }).catch(()=>{msg.textContent='❌ Network error';msg.style.color='#FCA5A5';});
+  };r.readAsDataURL(f);
+}
+
+/* FLOW */
+function startBattle(){
+  jsonp({action:'useAttempt',code:student.code},(err,d)=>{
+    if(err||!d||d.status!=='ok'){document.getElementById('lockMsg').textContent='❌ '+(d&&d.msg?d.msg:'ไม่สามารถเริ่มได้');return;}
+    currentRound=0;totalScore=totalCorrect=totalWrong=0;
+    showIntro(1);
+  });
+}
+function showIntro(n){
+  currentRound=n;const r=ROUNDS[n-1];
+  document.getElementById('introBadge').textContent='Round '+n+' / 5';
+  document.getElementById('introTitle').textContent=r.icon+' '+r.title;
+  document.getElementById('introDesc').textContent=r.desc;
+  setDot(n,'active');showScreen('scrIntro');
+}
+function startRound(){startTimer();showScreen('scrGame');window[ROUNDS[currentRound-1].fn]();}
+function finishRound(pts,cor,wr){
+  totalCorrect+=cor;totalWrong+=wr;updScore();setDot(currentRound,'done');
+  document.getElementById('rcIcon').textContent=ROUNDS[currentRound-1].icon;
+  document.getElementById('rcTitle').textContent='Round '+currentRound+' เสร็จ!';
+  document.getElementById('rcPts').textContent='+'+pts+' pts';
+  document.getElementById('rcSub').textContent='ถูก '+cor+' · ผิด '+wr;
+  showScreen('scrRoundDone');
+}
+function nextRound(){if(currentRound>=5)endBattle();else showIntro(currentRound+1);}
+function endBattle(){
+  clearInterval(timerInterval);
+  document.getElementById('finalScore').textContent=totalScore+' pts';
+  document.getElementById('sbCorrect').textContent=totalCorrect;
+  document.getElementById('sbWrong').textContent=totalWrong;
+  const m=Math.floor(elapsedSeconds/60),s=elapsedSeconds%60;
+  document.getElementById('sbTime').textContent=m+':'+(s<10?'0':'')+s;
+  showScreen('scrResults');
+}
+function submitScore(){
+  const btn=document.getElementById('btnSubmit');
+  btn.disabled=true;btn.textContent='⏳ กำลังส่ง...';
+  jsonp({action:'saveQuizScore',code:student.code,score:totalScore,time_seconds:elapsedSeconds},(err,d)=>{
+    if(err||!d||d.status!=='ok'){btn.disabled=false;btn.textContent='📤 ส่งคะแนน Leaderboard';document.getElementById('submitMsg').textContent='❌ ลองใหม่';return;}
+    btn.textContent='✅ ส่งแล้ว!';
+    const mm=Math.floor(elapsedSeconds/60),ss=elapsedSeconds%60;
+    document.getElementById('submitMsg').textContent='บันทึกครั้งที่ '+(d.attempt_num||'?')+' · '+totalScore+' pts · ⏱ '+mm+':'+(ss<10?'0':'')+ss;
+    document.getElementById('submitMsg').style.color='#6EE7B7';
+  });
+}
+
+/* R1: MATCH */
+let mPairs,mSelE=null,mSelT=null,mDone=0,mPts=0,mWr=0;
+function playMatch(){
+  mPairs=pick(WORDS,8);mSelE=null;mSelT=null;mDone=0;mPts=0;mWr=0;
+  const es=shuffle(mPairs),ts=shuffle(mPairs);
+  document.getElementById('qCounter').textContent='🃏 จับคู่ให้ครบ 8 คู่';
+  document.getElementById('gameContent').innerHTML=
+    '<div class="match-grid"><div id="ec">'+es.map(w=>`<div class="match-card" id="me_${w.e}" onclick="mPick('+"'eng','"+w.e+"'"+')">${w.e}</div>`).join('')+'</div><div id="tc">'+ts.map(w=>`<div class="match-card" id="mt_${w.e}" onclick="mPick('+"'thai','"+w.e+"'"+')">${w.t}</div>`).join('')+'</div></div>';
+}
+function mPick(side,key){
+  if(side==='eng'){if(mSelE){const old=document.getElementById('me_'+mSelE);if(old)old.classList.remove('sel');}mSelE=key;document.getElementById('me_'+key).classList.add('sel');}
+  else{if(mSelT){const old=document.getElementById('mt_'+mSelT);if(old)old.classList.remove('sel');}mSelT=key;document.getElementById('mt_'+key).classList.add('sel');}
+  if(mSelE&&mSelT){
+    if(mSelE===mSelT){
+      document.getElementById('me_'+mSelE).className='match-card correct';
+      document.getElementById('mt_'+mSelT).className='match-card correct';
+      mPts+=10;mDone++;totalScore+=10;updScore();flash('✅ ถูก! +10');
+      mSelE=null;mSelT=null;
+      if(mDone>=8)setTimeout(()=>finishRound(mPts,mDone,mWr),500);
+    }else{
+      const eEl=document.getElementById('me_'+mSelE),tEl=document.getElementById('mt_'+mSelT);
+      eEl.classList.add('wrong');tEl.classList.add('wrong');mWr++;flash('❌ ไม่ใช่คู่กัน',false);
+      setTimeout(()=>{eEl.classList.remove('sel','wrong');tEl.classList.remove('sel','wrong');mSelE=null;mSelT=null;},600);
+    }
+  }
+}
+
+/* R2: FILL */
+let fQs,fIdx=0,fPts=0,fCor=0,fWr=0;
+function playFill(){fQs=shuffle(FILL_Q).slice(0,10);fIdx=0;fPts=0;fCor=0;fWr=0;showFill();}
+function showFill(){
+  const q=fQs[fIdx];
+  document.getElementById('qCounter').textContent='📝 ข้อ '+(fIdx+1)+' / '+fQs.length;
+  document.getElementById('gameContent').innerHTML=
+    '<div class="question-box">'+q.sent.replace('___','<span class="blank">___</span>')+'</div>'+
+    '<div class="choices">'+shuffle(q.choices).map(c=>`<button class="choice-btn" onclick="pickF('+"'"+c+"','"+q.blank+"',this"+')">${c}</button>`).join('')+'</div>';
+}
+function pickF(ch,cor,el){
+  document.querySelectorAll('.choice-btn').forEach(b=>b.setAttribute('disabled',''));
+  if(ch===cor){el.classList.add('correct');fPts+=10;fCor++;totalScore+=10;updScore();flash('✅ ถูก! +10');}
+  else{el.classList.add('wrong');fWr++;document.querySelectorAll('.choice-btn').forEach(b=>{if(b.textContent===cor)b.classList.add('reveal');});flash('❌ ผิด',false);}
+  fIdx++;if(fIdx>=fQs.length)setTimeout(()=>finishRound(fPts,fCor,fWr),800);else setTimeout(showFill,800);
+}
+
+/* R3: TRUE/FALSE */
+let tQs,tIdx=0,tPts=0,tCor=0,tWr=0;
+function playTF(){
+  const pool=shuffle(WORDS);
+  tQs=pool.slice(0,10).map((w,i)=>{
+    const isTr=Math.random()>.4;
+    const pair=isTr?w:(WORDS.find(x=>x.e!==w.e&&x.t!==w.t)||WORDS[(i+5)%WORDS.length]);
+    return{eng:w.e,thai:isTr?w.t:pair.t,ans:isTr};
+  });
+  tIdx=0;tPts=0;tCor=0;tWr=0;showTF();
+}
+function showTF(){
+  const q=tQs[tIdx];
+  document.getElementById('qCounter').textContent='✅ ข้อ '+(tIdx+1)+' / '+tQs.length;
+  document.getElementById('gameContent').innerHTML=
+    '<div class="tf-word"><div class="tf-eng">'+q.eng+'</div><div class="tf-eq">=</div><div class="tf-thai">'+q.thai+'</div></div>'+
+    '<div class="tf-btns"><button class="tf-btn true-btn" onclick="pickTF(true,this)">✅ TRUE</button><button class="tf-btn false-btn" onclick="pickTF(false,this)">❌ FALSE</button></div>';
+}
+function pickTF(ch,el){
+  const q=tQs[tIdx];
+  document.querySelectorAll('.tf-btn').forEach(b=>b.setAttribute('disabled',''));
+  if(ch===q.ans){el.classList.add('correct');tPts+=10;tCor++;totalScore+=10;updScore();flash('✅ ถูก! +10');}
+  else{el.classList.add('wrong');tWr++;document.querySelectorAll('.tf-btn').forEach(b=>{if((b.classList.contains('true-btn')&&q.ans)||(b.classList.contains('false-btn')&&!q.ans))b.classList.add('correct');});flash('❌ ผิด',false);}
+  tIdx++;if(tIdx>=tQs.length)setTimeout(()=>finishRound(tPts,tCor,tWr),800);else setTimeout(showTF,800);
+}
+
+/* R4: SCRAMBLE */
+let sWords,sIdx=0,sPts=0,sCor=0,sWr=0,sAns=[];
+function playScramble(){sWords=pick(WORDS.filter(w=>w.e.length>=3&&w.e.length<=9),8);sIdx=0;sPts=0;sCor=0;sWr=0;showSc();}
+function showSc(){
+  const w=sWords[sIdx];sAns=[];
+  const letters=shuffle(w.e.split(''));
+  document.getElementById('qCounter').textContent='🔤 คำที่ '+(sIdx+1)+' / '+sWords.length;
+  document.getElementById('gameContent').innerHTML=
+    '<div class="scramble-thai">'+w.t+'</div>'+
+    '<div class="scramble-hint">🔤 '+w.e.length+' ตัวอักษร</div>'+
+    '<div class="letter-answer" id="scAns" onclick="scDel()"></div>'+
+    '<div class="letter-pool">'+letters.map((l,i)=>`<div class="letter-tile" id="st_${i}" onclick="scAdd(${i},'${l}')">${l}</div>`).join('')+'</div>'+
+    '<div class="scramble-result" id="scRes"></div>'+
+    '<button class="btn-check-sc" onclick="checkSc(\''+w.e+'\')">✔ ตรวจ</button>'+
+    '<button class="btn-clear-sc" onclick="scClear()">✕ ล้าง</button>';
+}
+function scAdd(i,l){const t=document.getElementById('st_'+i);if(t.classList.contains('used'))return;t.classList.add('used');sAns.push({i,l});document.getElementById('scAns').innerHTML=sAns.map(a=>'<span>'+a.l+'</span>').join('');}
+function scDel(){if(!sAns.length)return;const last=sAns.pop();document.getElementById('st_'+last.i).classList.remove('used');document.getElementById('scAns').innerHTML=sAns.map(a=>'<span>'+a.l+'</span>').join('');}
+function scClear(){sAns=[];document.querySelectorAll('.letter-tile').forEach(t=>t.classList.remove('used'));document.getElementById('scAns').innerHTML='';}
+function checkSc(cor){
+  const typed=sAns.map(a=>a.l).join('').toLowerCase();
+  const res=document.getElementById('scRes');
+  if(typed===cor.toLowerCase()){res.innerHTML='<span style="color:#6EE7B7">✅ ถูก!</span>';sPts+=10;sCor++;totalScore+=10;updScore();flash('✅ ถูก! +10');}
+  else{res.innerHTML='<span style="color:#FCA5A5">❌ คำที่ถูก: <b>'+cor+'</b></span>';sWr++;flash('❌ ผิด',false);}
+  sIdx++;if(sIdx>=sWords.length)setTimeout(()=>finishRound(sPts,sCor,sWr),1000);else setTimeout(showSc,1000);
+}
+
+/* R5: SPEED TYPE */
+let tpWords,tpIdx=0,tpPts=0,tpCor=0,tpWr=0;
+function playType(){tpWords=pick(WORDS,8);tpIdx=0;tpPts=0;tpCor=0;tpWr=0;showTp();}
+function showTp(){
+  const w=tpWords[tpIdx];
+  document.getElementById('qCounter').textContent='⌨️ คำที่ '+(tpIdx+1)+' / '+tpWords.length;
+  document.getElementById('gameContent').innerHTML=
+    '<div class="type-prompt">'+w.t+'</div>'+
+    '<div class="type-sub">พิมพ์คำภาษาอังกฤษ แล้วกด Enter</div>'+
+    '<input type="text" class="type-input" id="tpIn" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key===\'Enter\')checkTp(\''+w.e+'\')">'+
+    '<button class="btn-submit-type" onclick="checkTp(\''+w.e+'\')">ส่งคำตอบ →</button>';
+  setTimeout(()=>{const el=document.getElementById('tpIn');if(el)el.focus();},100);
+}
+function checkTp(cor){
+  const el=document.getElementById('tpIn');if(!el)return;
+  const typed=el.value.trim().toLowerCase();if(!typed)return;
+  el.disabled=true;
+  if(typed===cor.toLowerCase()){el.classList.add('correct');tpPts+=10;tpCor++;totalScore+=10;updScore();flash('✅ ถูก! +10');}
+  else{el.classList.add('wrong');el.value=typed+' → '+cor;tpWr++;flash('❌ '+cor,false);}
+  tpIdx++;if(tpIdx>=tpWords.length)setTimeout(()=>finishRound(tpPts,tpCor,tpWr),900);else setTimeout(showTp,900);
+}
+
+loadLock();
+</script>
+</body>
+</html>

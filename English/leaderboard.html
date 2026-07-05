@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🏆 Live Progress Board — LexiGo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 50%,#0F172A 100%);min-height:100vh;padding:16px;color:#fff}
+.hdr{text-align:center;padding:20px 0 14px}
+.hdr h1{font-size:22px;font-weight:900;background:linear-gradient(90deg,#F59E0B,#FBBF24,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr p{font-size:13px;color:#94A3B8;font-weight:700;margin-top:4px}
+.refresh-btn{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:#fff;border-radius:12px;padding:7px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px}
+.summary-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.sum-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;text-align:center}
+.sum-n{font-size:22px;font-weight:900}
+.sum-l{font-size:10px;color:#94A3B8;font-weight:700;margin-top:2px}
+.tier-section{margin-bottom:20px}
+.tier-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;margin-bottom:8px;font-size:15px;font-weight:900}
+.tier-legend{background:linear-gradient(135deg,#78350F,#92400E);border:2px solid #F59E0B}
+.tier-champion{background:linear-gradient(135deg,#164E63,#0E7490);border:2px solid #34D399}
+.tier-explorer{background:linear-gradient(135deg,#14532D,#166534);border:2px solid #86EFAC}
+.tier-starter{background:linear-gradient(135deg,#1E1B4B,#312E81);border:2px solid #A5B4FC}
+.tier-count{font-size:12px;opacity:.7;background:rgba(255,255,255,.15);padding:3px 10px;border-radius:10px}
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:11px 14px;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.rank{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+.rank-1{background:linear-gradient(135deg,#F59E0B,#D97706)}
+.rank-2{background:linear-gradient(135deg,#9CA3AF,#6B7280)}
+.rank-3{background:linear-gradient(135deg,#B45309,#92400E)}
+.rank-n{background:rgba(255,255,255,.15)}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.av-legend{background:linear-gradient(135deg,#F59E0B,#FBBF24)}
+.av-champion{background:linear-gradient(135deg,#34D399,#059669)}
+.av-explorer{background:linear-gradient(135deg,#86EFAC,#16A34A)}
+.av-starter{background:linear-gradient(135deg,#A5B4FC,#6366F1)}
+.info{flex:1;min-width:0}
+.name{font-size:14px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:11px;color:#94A3B8;font-weight:700;margin-top:1px}
+.progress-wrap{margin-top:5px}
+.progress-track{height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px}
+.pf-legend{background:linear-gradient(90deg,#F59E0B,#FBBF24)}
+.pf-champion{background:linear-gradient(90deg,#34D399,#059669)}
+.pf-explorer{background:linear-gradient(90deg,#86EFAC,#16A34A)}
+.pf-starter{background:linear-gradient(90deg,#A5B4FC,#6366F1)}
+.stats{text-align:right;flex-shrink:0}
+.stat-main{font-size:15px;font-weight:900;color:#FBBF24}
+.stat-sub{font-size:10px;color:#64748B;font-weight:700}
+.empty{text-align:center;padding:16px;color:#475569;font-size:13px;font-weight:700;background:rgba(255,255,255,.03);border-radius:12px}
+.loading{text-align:center;padding:40px;color:#64748B;font-size:14px;font-weight:700}
+.err-box{background:rgba(239,68,68,.15);border:2px solid rgba(239,68,68,.4);border-radius:14px;padding:14px;text-align:center;font-size:13px;color:#FCA5A5;font-weight:700}
+.last-update{text-align:center;font-size:11px;color:#475569;font-weight:700;margin-top:16px;padding-bottom:20px}
+</style></head><body>
+
+<div class="hdr">
+  <h1>🏆 Live Progress Board</h1>
+  <p>LexiGo</p>
+  <button class="refresh-btn" onclick="load()">🔄 รีเฟรช</button>
+</div>
+
+<div class="summary-bar" id="summaryBar">
+  <div class="sum-card"><div class="sum-n" id="sumTotal">—</div><div class="sum-l">นักเรียนทั้งหมด</div></div>
+  <div class="sum-card"><div class="sum-n" id="sumLegend" style="color:#F59E0B">—</div><div class="sum-l">🏆 Legend</div></div>
+  <div class="sum-card"><div class="sum-n" id="sumChamp" style="color:#34D399">—</div><div class="sum-l">🌳 Champion</div></div>
+  <div class="sum-card"><div class="sum-n" id="sumActive" style="color:#A5B4FC">—</div><div class="sum-l">🌱🌿 เรียนอยู่</div></div>
+</div>
+
+<div id="board"><div class="loading">⏳ กำลังโหลด...</div></div>
+<div class="last-update" id="lastUpdate"></div>
+
+<script>
+const API="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+
+function jsonp(params,cb){
+  const cbName='cb_'+Date.now();
+  const s=document.createElement('script');
+  const q=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+  window[cbName]=(d)=>{delete window[cbName];s.remove();cb(null,d);};
+  s.onerror=()=>{delete window[cbName];s.remove();cb(new Error('err'));};
+  s.src=API+'?'+q+'&callback='+cbName;
+  document.body.appendChild(s);
+}
+
+function fmtTime(s){
+  if(!s||s>=999999)return'—';
+  const m=Math.floor(s/60),sec=s%60;
+  return m>0?m+'m '+sec+'s':sec+'s';
+}
+
+function rankBadge(i){
+  const cls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-n';
+  const txt=i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+  return `<div class="rank ${cls}">${txt}</div>`;
+}
+
+function load(){
+  document.getElementById('board').innerHTML='<div class="loading">⏳ กำลังโหลด...</div>';
+  jsonp({action:'getLeaderboard'},(err,data)=>{
+    if(err||!data||data.status!=='ok'){
+      document.getElementById('board').innerHTML='<div class="err-box">❌ โหลดไม่สำเร็จ<br><small>ตรวจสอบการเชื่อมต่อ หรือรอสักครู่แล้วกดรีเฟรช</small></div>';
+      return;
+    }
+    render(data);
+    document.getElementById('lastUpdate').textContent='อัปเดตล่าสุด '+new Date().toLocaleTimeString('th-TH');
+  });
+}
+
+function render(data){
+  const students=(data.students||[]).filter(s=>s.days_done>0);
+  const quizMap={};
+  (data.quiz_champions||[]).forEach(q=>quizMap[q.code]=q);
+
+  const legends   = students.filter(s=>s.days_done>=30&&quizMap[s.code])
+    .sort((a,b)=>{const qa=quizMap[a.code],qb=quizMap[b.code];return(qb.quiz_score-qa.quiz_score)||(qa.time_seconds-qb.time_seconds);});
+  const champions = students.filter(s=>s.days_done>=15&&s.days_done<30)
+    .sort((a,b)=>b.days_done-a.days_done||b.total_score-a.total_score);
+  const explorers = students.filter(s=>s.days_done>=8&&s.days_done<15)
+    .sort((a,b)=>b.days_done-a.days_done||b.current_streak-a.current_streak);
+  const starters  = students.filter(s=>s.days_done>=1&&s.days_done<8)
+    .sort((a,b)=>b.days_done-a.days_done);
+
+  document.getElementById('sumTotal').textContent=students.length;
+  document.getElementById('sumLegend').textContent=legends.length;
+  document.getElementById('sumChamp').textContent=champions.length;
+  document.getElementById('sumActive').textContent=explorers.length+starters.length;
+
+  let html='';
+
+  // LEGEND
+  html+=tierSection('legend','🏆','Legend — จบครบ 30 วัน + ทำ Quiz',legends.length,
+    legends.length===0?'<div class="empty">ยังไม่มีผู้เรียนถึงระดับนี้ — เป็นคนแรกได้เลย! 🚀</div>':
+    legends.map((s,i)=>{
+      const q=quizMap[s.code];
+      return`<div class="card">
+        ${rankBadge(i)}
+        <div class="avatar av-legend">🏆</div>
+        <div class="info"><div class="name">${s.name}</div><div class="sub">🔥 Max streak ${s.max_streak} วัน · ⏱ ${fmtTime(q.time_seconds)}</div></div>
+        <div class="stats"><div class="stat-main">${q.quiz_score}</div><div class="stat-sub">คะแนน Quiz</div></div>
+      </div>`;
+    }).join(''));
+
+  // CHAMPION
+  html+=tierSection('champion','🌳','Champion — 15–29 วัน',champions.length,
+    champions.length===0?'<div class="empty">ยังไม่มีผู้เรียนถึงระดับนี้</div>':
+    champions.map((s,i)=>{
+      const pct=Math.round(s.days_done/30*100);
+      return`<div class="card">
+        ${rankBadge(i)}
+        <div class="avatar av-champion">🌳</div>
+        <div class="info"><div class="name">${s.name}</div><div class="sub">📅 ${s.days_done} วัน · 🔥 Streak ${s.current_streak}</div>
+        <div class="progress-wrap"><div class="progress-track"><div class="progress-fill pf-champion" style="width:${pct}%"></div></div></div></div>
+        <div class="stats"><div class="stat-main" style="color:#34D399">${s.days_done}/30</div><div class="stat-sub">วันที่จบ</div></div>
+      </div>`;
+    }).join(''));
+
+  // EXPLORER
+  html+=tierSection('explorer','🌿','Explorer — 8–14 วัน',explorers.length,
+    explorers.length===0?'<div class="empty">ยังไม่มีผู้เรียนถึงระดับนี้</div>':
+    explorers.map((s,i)=>{
+      const pct=Math.round(s.days_done/15*100);
+      return`<div class="card">
+        ${rankBadge(i)}
+        <div class="avatar av-explorer">🌿</div>
+        <div class="info"><div class="name">${s.name}</div><div class="sub">📅 ${s.days_done} วัน · 🔥 Streak ${s.current_streak}</div>
+        <div class="progress-wrap"><div class="progress-track"><div class="progress-fill pf-explorer" style="width:${pct}%"></div></div></div></div>
+        <div class="stats"><div class="stat-main" style="color:#86EFAC">${s.days_done}/15</div><div class="stat-sub">วันที่จบ</div></div>
+      </div>`;
+    }).join(''));
+
+  // STARTER
+  html+=tierSection('starter','🌱','Starter — 1–7 วัน',starters.length,
+    starters.length===0?'<div class="empty">ยังไม่มีนักเรียนในระดับนี้</div>':
+    starters.map((s,i)=>{
+      const pct=Math.round(s.days_done/8*100);
+      return`<div class="card">
+        ${rankBadge(i)}
+        <div class="avatar av-starter">🌱</div>
+        <div class="info"><div class="name">${s.name}</div><div class="sub">📅 ${s.days_done} วันแรก</div>
+        <div class="progress-wrap"><div class="progress-track"><div class="progress-fill pf-starter" style="width:${pct}%"></div></div></div></div>
+        <div class="stats"><div class="stat-main" style="color:#A5B4FC">${s.days_done}</div><div class="stat-sub">วันที่จบ</div></div>
+      </div>`;
+    }).join(''));
+
+  document.getElementById('board').innerHTML=html;
+}
+
+function tierSection(key,emoji,title,count,body){
+  return`<div class="tier-section">
+    <div class="tier-hdr tier-${key}">
+      <span style="font-size:22px">${emoji}</span>
+      <span style="flex:1">${title}</span>
+      <span class="tier-count">${count} คน</span>
+    </div>${body}</div>`;
+}
+
+load();
+setInterval(load,120000);
+</script>
+</body></html>

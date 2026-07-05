@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Day 28 — Week 4 School Review!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 auto;color:#37474F}
+.page{display:none}.page.on{display:block}
+.hdr{background:linear-gradient(135deg,#42A5F5,#1565C0,#7C4DFF);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 12px rgba(0,0,0,0.25)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.cefr{background:rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#C5CAE9;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #9FA8DA}
+.vbar label{font-size:13px;color:#1A237E;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #9FA8DA;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#3F51B5}
+.vstatus{font-size:12px;color:#1A237E;font-weight:700}
+.score-bar{background:#C5CAE9;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#1A237E;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #9FA8DA}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#42A5F5,#7C4DFF);transition:width .4s}
+.strack{flex:1;height:9px;background:#E8EAF6;border-radius:5px;overflow:hidden;border:1px solid #9FA8DA}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(0.96)}
+.btn-p{background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;box-shadow:0 3px 8px rgba(66,165,245,0.4)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.navrow{display:flex;justify-content:space-between;margin-top:16px;gap:8px}
+.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#E8EAF6;border:2px solid #9FA8DA;border-radius:12px;cursor:pointer;font-size:13px;color:#1A237E;font-weight:700;font-family:'Nunito',sans-serif}
+.tts:hover{background:#C5CAE9}
+.step-label{font-size:17px;font-weight:900;color:#1565C0;margin-bottom:5px}
+.step-sub{font-size:13px;color:#78909C;margin-bottom:10px;font-weight:600}
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}
+.wcard{background:#fff;border-radius:14px;padding:10px 8px;text-align:center;border:2.5px solid #9FA8DA;cursor:pointer;transition:.2s;font-weight:700}
+.wcard:hover{transform:scale(1.04);box-shadow:0 3px 10px rgba(0,0,0,0.13)}
+.wcard .eng{font-size:14px;font-weight:900;margin-bottom:2px}
+.wcard .th{font-size:11px;color:#78909C;font-weight:600}
+.wcard .day-badge{font-size:9px;padding:2px 6px;border-radius:8px;color:#fff;margin-bottom:3px;display:inline-block}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
+.match-card{background:#fff;border-radius:12px;padding:10px 12px;text-align:center;font-size:14px;font-weight:800;cursor:pointer;border:2.5px solid #E0E0E0;transition:.2s;min-height:46px;display:flex;align-items:center;justify-content:center}
+.match-card.sel{border-color:#42A5F5;background:#E3F2FD}
+.match-card.matched{border-color:#7CB342;background:#E8F5E9;pointer-events:none;color:#2E7D32}
+.match-card.wrong-flash{border-color:#E57373;background:#FFEBEE;animation:flash .5s}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:0.4}}
+.qcard{background:#fff;border-radius:18px;padding:16px 18px;margin-bottom:12px;border:2.5px solid #9FA8DA;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.qcard h3{font-size:17px;font-weight:900;color:#37474F;margin-bottom:12px}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qopt{padding:10px 12px;border-radius:12px;border:2.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;text-align:center;transition:.2s;font-family:'Nunito',sans-serif}
+.qopt:hover{background:#E3F2FD;border-color:#42A5F5}
+.qopt.correct{background:#E8F5E9;border-color:#7CB342;color:#2E7D20}
+.qopt.wrong{background:#FFEBEE;border-color:#E57373;color:#C62828}
+.qfb{font-size:14px;font-weight:700;margin-top:8px;min-height:18px}
+.lock-screen{text-align:center;padding:40px 20px;background:#C5CAE9;border-radius:20px;border:3px solid #9FA8DA;margin-top:10px}
+.lock-screen h2{font-size:22px;font-weight:900;color:#1565C0;margin:12px 0 8px}
+.d-code-input{width:100%;max-width:200px;font-size:20px;padding:12px 16px;border-radius:14px;border:3px solid #9FA8DA;background:#fff;color:#37474F;text-align:center;font-family:'Courier New',monospace;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.unlock-btn{background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+.unlock-err{color:#C62828;font-size:13px;font-weight:700;margin-top:6px;display:none}
+.complete-screen{display:none;text-align:center;padding:20px 16px;background:#E8F5E9;border-radius:20px;border:3px solid #A5D6A7;margin-top:12px}
+.complete-screen.show{display:block}
+.code-box{background:#fff;border:3px dashed #7CB342;border-radius:16px;padding:16px;margin:14px 0}
+.code-txt{font-size:28px;font-weight:900;color:#2E7D32;letter-spacing:3px;font-family:'Courier New',monospace}
+.copy-btn{background:#7CB342;color:#fff;border:none;border-radius:12px;padding:9px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+.already-done{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:10px 14px;font-size:13px;color:#2E7D32;font-weight:700;margin-bottom:10px;display:none}
+.already-done.show{display:block}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fin{animation:up .5s ease}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.bounce{animation:bounce 1s ease infinite}
+</style>
+</head>
+<body>
+<div class="hdr"><span class="hdr-l" id="lbl">🏫 Day 28 · Week 4 Review!</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
+<div class="already-done" id="alreadyDone">✅ Review Week 4 เสร็จแล้ว! Code: <strong id="savedCode28"></strong> — Week 4 สมบูรณ์ 🏆</div>
+<div class="score-bar"><span>⭐ Score: <span id="totalSc">0</span> / 36</span><div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div><span id="starDisp">☆☆☆</span></div>
+<div class="vbar"><label>🔊</label><select id="vsel" onchange="setV(this.value)"></select><label>Speed:</label><input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'"><span id="rv" style="font-size:13px;color:#1A237E;font-weight:800">0.85×</span><span class="vstatus" id="vs">loading...</span></div>
+<div class="lock-screen" id="lockScreen" style="display:none">
+  <div style="font-size:56px">🔒</div><h2>Day 28 ยังล็อกอยู่!</h2>
+  <p>ต้องเรียน <strong>Day 27 ให้จบก่อน</strong></p>
+  <input class="d-code-input" id="codeInput" placeholder="D27-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 28</button>
+  <div class="unlock-err" id="unlockErr">❌ Code ไม่ถูกต้อง ลองใหม่</div>
+</div>
+<div id="mainContent" style="display:none">
+<div class="page on fin" id="p0">
+  <div style="text-align:center;padding:16px 8px">
+    <div class="bounce" style="font-size:52px">🏫</div>
+    <div style="font-size:24px;font-weight:900;background:linear-gradient(90deg,#42A5F5,#1565C0,#7C4DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:9px 0 4px">Week 4 Review Day!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">ทบทวน <strong style="color:#37474F">36 คำ</strong> จาก 6 วัน</div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:14px 0">
+      <span style="background:#E3F2FD;border-radius:10px;padding:5px 11px;font-size:12px;font-weight:800;color:#1565C0">🏫 Day22: school class teacher student desk chair</span>
+      <span style="background:#E8EAF6;border-radius:10px;padding:5px 11px;font-size:12px;font-weight:800;color:#3F51B5">📚 Day23: book pen board window door learn</span>
+      <span style="background:#E0F7FA;border-radius:10px;padding:5px 11px;font-size:12px;font-weight:800;color:#006064">🎒 Day24: bag pencil ruler eraser paper draw</span>
+      <span style="background:#E8F5E9;border-radius:10px;padding:5px 11px;font-size:12px;font-weight:800;color:#2E7D32">🎮 Day25: play friend run jump fun game</span>
+      <span style="background:#FFF3E0;border-radius:10px;padding:5px 11px;font-size:12px;font-weight:800;color:#E65100">👩‍🏫 Day26: kind help listen smart read write</span>
+      <span style="background:#F3E5F5;border-radius:10px;padding:5px 11px;font-size:12px;font-weight:800;color:#4A148C">🔢 Day27: number count easy one two three</span>
+    </div>
+    <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+      <button class="btn btn-p" onclick="go(1)" style="font-size:16px;padding:12px 24px">🃏 Word Wall</button>
+      <button class="btn btn-p" onclick="go(2)" style="font-size:16px;padding:12px 24px;background:linear-gradient(135deg,#1E88E5,#0D47A1)">🎯 Match Game</button>
+      <button class="btn btn-p" onclick="go(3)" style="font-size:16px;padding:12px 24px;background:linear-gradient(135deg,#7C4DFF,#4A148C)">📝 Quick Quiz</button>
+    </div>
+  </div>
+</div>
+<div class="page" id="p1">
+  <div class="step-label">🃏 Word Wall — All 36 Words</div>
+  <p class="step-sub">คลิกคำเพื่อฟังเสียง! ลองพูดตาม 🗣️</p>
+  <div class="wgrid" id="wordWall"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Match Game →</button></div>
+</div>
+<div class="page" id="p2">
+  <div class="step-label">🎯 Matching — English ↔ Thai</div>
+  <p class="step-sub">จับคู่ English กับคำแปลไทย! <span id="matchProgress">0/12 คู่</span></p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:10px">
+    <div><div style="font-size:12px;font-weight:800;color:#1565C0;margin-bottom:6px">🇬🇧 English</div><div id="engSide"></div></div>
+    <div><div style="font-size:12px;font-weight:800;color:#1565C0;margin-bottom:6px">🇹🇭 Thai</div><div id="thaiSide"></div></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-p" onclick="buildMatch()">New Round 🔄</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(1)">← Word Wall</button><button class="btn btn-p" onclick="go(3)">Quick Quiz →</button></div>
+</div>
+<div class="page" id="p3">
+  <div class="step-label">📝 Quick Quiz — 12 Questions</div>
+  <p class="step-sub">ทำข้อสอบ 12 ข้อ เลือกคำตอบที่ถูกต้อง!</p>
+  <div id="quizArea"></div>
+  <div id="quizResult" style="display:none;background:#E8F5E9;border-radius:16px;padding:16px;text-align:center;border:2px solid #A5D6A7">
+    <div style="font-size:36px">🏆</div>
+    <div style="font-size:20px;font-weight:900;color:#2E7D32">Quiz Done!</div>
+    <div style="font-size:26px;font-weight:900;margin:8px 0" id="quizScore">0/12</div>
+    <button class="btn btn-p" onclick="buildQuiz()" style="margin-top:8px">Try Again 🔄</button>
+  </div>
+  <div class="complete-screen" id="completeScreen">
+    <div style="font-size:36px">🏫🏆</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Week 4 School Complete!</div>
+    <div style="font-size:14px;color:#78909C;margin-bottom:10px;font-weight:700">คุณเรียนครบ 36 คำแล้ว! 🎉</div>
+    <div class="code-box">
+      <div style="font-size:12px;color:#78909C;font-weight:700;margin-bottom:4px">🔑 Week 4 Completion Code</div>
+      <div class="code-txt" id="codeDisplay">D28-????</div>
+      <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+    </div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">🏅 จดรหัสนี้ไว้เพื่อยืนยัน!<br><strong style="color:#2E7D32">Week 4 เสร็จสิ้น ✓</strong></div>
+    <div style="background:#E3F2FD;border:2px solid #90CAF9;border-radius:12px;padding:10px 14px;margin:14px 0;font-size:13px;color:#1565C0;font-weight:700;line-height:1.6">
+      🌟 ต่อไป: เรียน <strong>Day 29 สี</strong> และ <strong>Day 30 รูปร่าง</strong>!</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
+      <a href="admin.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
+      <a href="Day29_ColorsAroundUs_A1.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🎨 Day 29 →</a>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(2)">← Match Game</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+</div>
+</div>
+<script>
+const ALL_WORDS=[
+  ['school','โรงเรียน'],
+  ['class','ชั้นเรียน'],
+  ['teacher','ครู'],
+  ['student','นักเรียน'],
+  ['desk','โต๊ะ'],
+  ['chair','เก้าอี้'],
+  ['book','หนังสือ'],
+  ['pen','ปากกา'],
+  ['board','กระดาน'],
+  ['window','หน้าต่าง'],
+  ['door','ประตู'],
+  ['learn','เรียนรู้'],
+  ['bag','กระเป๋า'],
+  ['pencil','ดินสอ'],
+  ['ruler','ไม้บรรทัด'],
+  ['eraser','ยางลบ'],
+  ['paper','กระดาษ'],
+  ['draw','วาดรูป'],
+  ['play','เล่น'],
+  ['friend','เพื่อน'],
+  ['run','วิ่ง'],
+  ['jump','กระโดด'],
+  ['fun','สนุก'],
+  ['game','เกม'],
+  ['kind','ใจดี'],
+  ['help','ช่วยเหลือ'],
+  ['listen','ฟัง'],
+  ['smart','ฉลาด'],
+  ['read','อ่าน'],
+  ['write','เขียน'],
+  ['number','ตัวเลข'],
+  ['count','นับ'],
+  ['easy','ง่าย'],
+  ['one','หนึ่ง'],
+  ['two','สอง'],
+  ['three','สาม']
+];
+const DAY_COLORS=['','#42A5F5','#1E88E5','#1565C0','#0D47A1','#283593','#1A237E'];
+const DAY_STARTS=[0,0,6,12,18,24,30];
+const STEPS=['🏫 Cover','🃏 Word Wall','🎯 Match','📝 Quiz'];
+const MY_KEY='wla_d28',MY_DAY=28,PREV_KEY='wla_d27',PREV_PFX='D27-';
+function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode28').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(v.startsWith(PREV_PFX)&&v.length===8)){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
+function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
+function initContent(){const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});buildWordWall();buildMatch();buildQuiz();loadV();}
+function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🏫 Day 28 · '+STEPS[n];}
+let allV=[],curV=null;
+function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');const di=allV.findIndex(v=>v.default);if(di>=0)document.getElementById('vsel').value=di;curV=allV[parseInt(document.getElementById('vsel').value)]||allV[0];document.getElementById('vs').textContent=`✓ ${allV.length} voices`;}
+function setV(i){curV=allV[parseInt(i)]||null;}
+window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,400);setTimeout(loadV,1200);
+function speak(t){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(curV)u.voice=curV;u.rate=parseFloat(document.getElementById('rsl').value);window.speechSynthesis.speak(u);}
+function getDay(i){for(let d=6;d>=1;d--){if(i>=DAY_STARTS[d])return d+21;}return 22;}
+function buildWordWall(){document.getElementById('wordWall').innerHTML=ALL_WORDS.map((w,i)=>{const d=getDay(i);const col=DAY_COLORS[d-21]||'#42A5F5';return `<div class="wcard" onclick="speak('${w[0]}')"><div class="day-badge" style="background:${col}">Day ${d}</div><div class="eng" style="color:${col}">${w[0]}</div><div class="th">${w[1]}</div></div>`;}).join('');}
+let matchSel=null,matchDone=0,matchTotal=0;
+function speakFb(type){const msgs={correct:['Correct!','Great!','Well done!'],wrong:['Try again!','Almost!'],perfect:['Perfect!','Amazing!']};const list=msgs[type]||msgs.correct;const u=new SpeechSynthesisUtterance(list[Math.floor(Math.random()*list.length)]);if(curV)u.voice=curV;u.rate=1.0;u.lang='en-US';window.speechSynthesis.speak(u);}
+function buildMatch(){matchSel=null;matchDone=0;const subset=[...ALL_WORDS].sort(()=>Math.random()-0.5).slice(0,12);matchTotal=subset.length;const eS=[...subset].sort(()=>Math.random()-0.5),tS=[...subset].sort(()=>Math.random()-0.5);document.getElementById('matchProgress').textContent=`0/${matchTotal} คู่`;document.getElementById('engSide').innerHTML=eS.map(w=>`<div class="match-card" id="me_${w[0]}" data-word="${w[0]}" onclick="matchClick('eng','${w[0]}')">${w[0]}</div>`).join('');document.getElementById('thaiSide').innerHTML=tS.map(w=>`<div class="match-card" id="mt_${w[0]}" data-word="${w[0]}" onclick="matchClick('thai','${w[0]}')">${w[1]}</div>`).join('');}
+function matchClick(side,word){if(!matchSel){matchSel={side,word};document.getElementById(`m${side==='eng'?'e':'t'}_${word}`).classList.add('sel');}else{const other=matchSel;if(other.word===word&&other.side!==side){document.getElementById(`me_${word}`).classList.add('matched');document.getElementById(`mt_${word}`).classList.add('matched');speakFb('correct');matchDone++;document.getElementById('matchProgress').textContent=`${matchDone}/${matchTotal} คู่`;updateScore(matchDone*3,36);if(matchDone>=matchTotal)setTimeout(()=>{go(3);},400);}else{const w1=document.getElementById(`m${other.side==='eng'?'e':'t'}_${other.word}`),w2=document.getElementById(`m${side==='eng'?'e':'t'}_${word}`);w1.classList.add('wrong-flash');w2.classList.add('wrong-flash');setTimeout(()=>{w1.classList.remove('sel','wrong-flash');w2.classList.remove('wrong-flash');},600);};document.getElementById(`m${other.side==='eng'?'e':'t'}_${other.word}`).classList.remove('sel');matchSel=null;}}
+let quizScore=0,quizAnswered=0;
+function buildQuiz(){quizScore=0;quizAnswered=0;document.getElementById('quizResult').style.display='none';document.getElementById('completeScreen').classList.remove('show');const subset=[...ALL_WORDS].sort(()=>Math.random()-0.5).slice(0,12);document.getElementById('quizArea').innerHTML=subset.map((w,i)=>{const isE2T=i%2===0,question=isE2T?`What is "${w[0]}" in Thai?`:`"${w[1]}" in English is?`,correct=isE2T?w[1]:w[0],pool=ALL_WORDS.filter(x=>x[0]!==w[0]).sort(()=>Math.random()-0.5).slice(0,3).map(x=>isE2T?x[1]:x[0]),opts=[correct,...pool].sort(()=>Math.random()-0.5);return `<div class="qcard" id="qc${i}"><h3>${i+1}. ${question}</h3><div class="qopts">${opts.map(o=>`<button class="qopt" onclick="answerQ(${i},'${o.replace(/'/g,"\'")}','${correct.replace(/'/g,"\'")}',${`this`})">${o}</button>`).join('')}</div><div class="qfb" id="qf${i}"></div></div>`;}).join('');}
+function answerQ(qi,ans,correct,el){const card=document.getElementById('qc'+qi);if(card.dataset.done)return;card.dataset.done='1';card.querySelectorAll('.qopt').forEach(b=>b.style.pointerEvents='none');if(ans===correct){el.classList.add('correct');quizScore++;document.getElementById('qf'+qi).textContent='✓ Correct!';document.getElementById('qf'+qi).style.color='#2E7D32';}else{el.classList.add('wrong');card.querySelectorAll('.qopt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});document.getElementById('qf'+qi).textContent=`✗ ${correct}`;document.getElementById('qf'+qi).style.color='#C62828';}quizAnswered++;updateScore(quizScore*3,36);if(quizAnswered===12){setTimeout(()=>{document.getElementById('quizScore').textContent=`${quizScore}/12`;document.getElementById('quizResult').style.display='block';updateScore(quizScore*3,36);if(quizScore>=9)showCompletion();},500);}};
+function updateScore(sc,total){document.getElementById('totalSc').textContent=Math.min(sc,total);document.getElementById('sfill').style.width=(Math.min(sc,total)/total*100)+'%';document.getElementById('starDisp').textContent=sc<total*0.33?'☆☆☆':sc<total*0.67?'⭐☆☆':sc<total?'⭐⭐☆':'⭐⭐⭐';}
+function generateCode(d){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+d+'-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);document.getElementById('savedCode28').textContent=code;document.getElementById('alreadyDone').classList.add('show');}syncToCloud(MY_DAY,code);document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
+function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
+checkLock();
+</script>
+<script>
+const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+</script>
+</body>
+</html>

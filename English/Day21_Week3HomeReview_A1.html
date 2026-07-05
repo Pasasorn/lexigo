@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Day 21 — Week 3 Review &#x1F4DD;</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 auto;color:#37474F}
+.hdr{background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(230,74,25,.35)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff}
+.cefr{background:rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:5px;margin-left:8px}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#FFF3E0;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #FFAB91}
+.vbar label{font-size:13px;color:#E64A19;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #FFAB91;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#E64A19}
+.score-bar{background:#FFF3E0;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#E64A19;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #FFAB91}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#FF8A65,#E64A19);transition:width .4s}
+.strack{flex:1;height:9px;background:#FFE0B2;border-radius:5px;overflow:hidden}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(.96)}
+.btn-p{background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;box-shadow:0 3px 8px rgba(230,74,25,.35)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#FFF3E0;border:2px solid #FFAB91;border-radius:12px;cursor:pointer;font-size:13px;color:#E64A19;font-weight:700;font-family:'Nunito',sans-serif}
+.tts:hover{background:#FFE0B2}
+.page{display:none}.page.on{display:block}
+.step-label{font-size:17px;font-weight:900;color:#BF360C;margin-bottom:4px}
+.step-sub{font-size:13px;color:#78909C;font-weight:700;margin-bottom:12px}
+.navrow{display:flex;gap:10px;margin-top:16px}
+/* Flash cards */
+.fc-card{background:#fff;border:2.5px solid #FFAB91;border-radius:18px;padding:22px 16px;text-align:center;cursor:pointer;margin-bottom:10px;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .2s;user-select:none}
+.fc-card:active{transform:scale(.97)}
+.fc-en{font-size:28px;font-weight:900;color:#E64A19;margin-bottom:4px}
+.fc-ph{font-size:13px;color:#FF7043;font-weight:600;margin-bottom:6px}
+.fc-th{font-size:22px;font-weight:900;color:#BF360C;display:none}
+.fc-hint{font-size:11px;color:#FFAB91;font-weight:700}
+.fc-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.fc-count{font-size:13px;font-weight:800;color:#78909C}
+/* Word grid for cover */
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.wchip{background:#fff;border:1.5px solid #FFAB91;border-radius:10px;padding:6px 8px;text-align:center;cursor:pointer}
+.wchip-en{font-size:13px;font-weight:900;color:#E64A19}
+.wchip-th{font-size:11px;color:#BF360C;font-weight:700}
+/* Quiz */
+.qcard{background:#fff;border:2px solid #FFAB91;border-radius:16px;padding:16px;margin-bottom:12px}
+.qword{font-size:24px;font-weight:900;color:#E64A19;margin-bottom:12px;text-align:center}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{padding:10px;border-radius:12px;border:2px solid #FFAB91;font-size:14px;font-weight:800;cursor:pointer;text-align:center;font-family:'Nunito',sans-serif;background:#FFF3E0;color:#37474F;transition:all .15s}
+.opt:hover{background:#FFE0B2}
+.opt.correct{background:#C8E6C9;border-color:#43A047;color:#1B5E20;pointer-events:none}
+.opt.wrong{background:#FFCDD2;border-color:#E53935;color:#B71C1C;pointer-events:none}
+.opt.disabled{pointer-events:none;opacity:.6}
+/* Sentence Builder */
+.sb-sent{font-size:14px;font-weight:700;color:#546E7A;margin-bottom:8px;line-height:1.6}
+.sb-target{min-height:38px;background:#FFF8E1;border:1.5px dashed #FFB74D;border-radius:8px;padding:6px 10px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:8px}
+.sb-bank{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.sb-word{background:#fff;border:1.5px solid #FFAB91;border-radius:8px;padding:5px 11px;font-size:13px;font-weight:800;color:#E64A19;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s}
+.sb-word:hover{background:#FFE0B2}
+.sb-word.used{opacity:.3;pointer-events:none}
+/* Lock */
+.lock-screen{text-align:center;padding:40px 20px;background:#FFF8E1;border-radius:20px;border:3px solid #FFAB91;margin-top:10px}
+.lock-screen h2{font-size:22px;font-weight:900;color:#E65100;margin:12px 0 8px}
+.lock-screen p{font-size:14px;color:#546E7A;font-weight:700;line-height:1.7;margin-bottom:16px}
+.code-inp{padding:11px 16px;border-radius:14px;border:3px solid #FFAB91;font-size:18px;font-weight:800;text-align:center;letter-spacing:3px;font-family:'Nunito',sans-serif;width:220px}
+.code-inp:focus{outline:none;border-color:#E64A19}
+.unlock-btn{background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px}
+.unlock-err{color:#C62828;font-size:13px;font-weight:700;margin-top:6px;display:none}
+.already-done{background:linear-gradient(135deg,#43A047,#2E7D32);color:#fff;border-radius:12px;padding:9px 14px;font-size:13px;font-weight:700;margin-bottom:9px;display:none}
+.already-done.show{display:block}
+.complete-screen{background:linear-gradient(135deg,#FFF3E0,#FFE0B2);border-radius:20px;padding:22px 18px;text-align:center;margin-top:16px;border:3px solid #FFAB91;display:none}
+.complete-screen.show{display:block}
+.code-box{background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:16px;padding:16px;margin:12px 0}
+.code-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:4px}
+.code-txt{font-size:32px;font-weight:900;color:#fff;letter-spacing:4px}
+.copy-btn{background:#fff;color:#E64A19;border:none;border-radius:12px;padding:9px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+.wave{display:inline-block;animation:wv 1.4s ease 2;font-size:48px}
+@keyframes wv{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <span class="hdr-l" id="lbl">&#x1F4DD; Day 21 &middot; Week 3 Review</span>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span class="cefr">&#x1F7E0; A1</span>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+<div class="already-done" id="alreadyDone">&#x2705; เรียน Day 21 จบแล้ว! Code: <strong id="savedCode"></strong> &mdash; Week 3 ครบแล้ว! &#x1F389;</div>
+<div class="lock-screen" id="lockScreen" style="display:none">
+  <div style="font-size:56px">&#x1F512;</div>
+  <h2>Day 21 ยังล็อกอยู่!</h2>
+  <p>ต้องเรียน <strong>Day 20 ให้จบก่อน</strong><br>แล้วกรอก Completion Code ของ Day 20</p>
+  <input class="code-inp" id="codeInput" placeholder="D20-XXXX" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">&#x1F513; Unlock Day 21</button>
+  <div class="unlock-err" id="unlockErr">&#x274C; Code ไม่ถูกต้อง ลองใหม่</div>
+</div>
+<div id="mainContent" style="display:none">
+<div class="score-bar">
+  <span>&#x2B50; Score: <span id="totalSc">0</span> / 36</span>
+  <div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div>
+  <span id="starDisp">&#x2606;&#x2606;&#x2606;</span>
+</div>
+<div class="vbar">
+  <label>&#x1F50A;</label>
+  <select id="vsel"></select>
+  <label>Speed:</label>
+  <input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'x'">
+  <span id="rv" style="font-size:13px;color:#E64A19;font-weight:800">0.85x</span>
+</div>
+
+<!-- p0: Cover — All 36 Words -->
+<div class="page on" id="p0">
+  <div style="text-align:center;padding:14px 8px 10px">
+    <div class="wave">&#x1F3E0;</div>
+    <div style="font-size:24px;font-weight:900;color:#BF360C;margin:8px 0 4px">Week 3 Review Day!</div>
+    <div style="font-size:14px;color:#78909C;font-weight:700;margin-bottom:14px">ทบทวน <strong style="color:#E64A19">36 คำ</strong> จาก Day 15–20 ทั้งหมด</div>
+    <div style="background:#FFF3E0;border-radius:14px;padding:10px 12px;margin-bottom:12px;border:2px solid #FFAB91">
+      <div style="font-size:12px;font-weight:900;color:#BF360C;margin-bottom:8px">&#x1F4DA; Week 3 Vocabulary — คลิกฟัง</div>
+      <div class="wgrid" id="allWordGrid"></div>
+    </div>
+    <button class="btn btn-p" onclick="go(1)" style="margin-top:8px;padding:13px 30px;font-size:17px;border-radius:18px">Start Review! &#x2192;</button>
+  </div>
+</div>
+
+<!-- p1: Flashcard Review -->
+<div class="page" id="p1">
+  <div class="step-label">&#x1F4DA; Vocab Flashcard Review</div>
+  <p class="step-sub">กดการ์ดเพื่อพลิกดูคำแปล → กด &#x25B6; ฟังเสียง</p>
+  <div class="fc-card" id="fcCard" onclick="flipCard()">
+    <div class="fc-en" id="fcEn">-</div>
+    <div class="fc-ph" id="fcPh">-</div>
+    <div class="fc-th" id="fcTh">-</div>
+    <div class="fc-hint" id="fcHint">กดเพื่อดูคำแปล &#x1F447;</div>
+  </div>
+  <div class="fc-nav">
+    <button class="btn btn-o" onclick="fcNav(-1)" style="padding:9px 16px">&#x2190; Prev</button>
+    <span class="fc-count"><span id="fcIdx">1</span> / <span id="fcTotal">36</span></span>
+    <button class="btn btn-p" onclick="fcNav(1)" style="padding:9px 16px">Next &#x2192;</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:10px;justify-content:center">
+    <button class="tts" onclick="speakFC()">&#x25B6; ฟังเสียง</button>
+    <button class="tts" onclick="shuffleFC()">&#x1F500; สุ่มใหม่</button>
+  </div>
+  <div style="margin-top:12px;background:#FFF3E0;border-radius:12px;padding:10px 14px;font-size:12px;color:#78909C;font-weight:700;border:1.5px solid #FFAB91">
+    &#x2139;&#xFE0F; เป้าหมาย: จำให้ได้ทุกคำ ก่อนทำ Quiz ในหน้าต่อไป
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">&#x2190; Back</button><button class="btn btn-p" onclick="go(2)">Quiz! &#x1F3AE;</button></div>
+</div>
+
+<!-- p2: Vocabulary Quiz -->
+<div class="page" id="p2">
+  <div class="step-label">&#x1F9E0; Vocabulary Quiz</div>
+  <p class="step-sub">เลือกคำแปลที่ถูกต้อง 10 ข้อ!</p>
+  <div id="qProgressBar" style="height:8px;background:#FFE0B2;border-radius:5px;overflow:hidden;margin-bottom:12px"><div id="qFill" style="height:100%;width:0%;background:#E64A19;transition:width .4s"></div></div>
+  <div id="qarea"></div>
+  <div id="qResult" style="display:none;background:#E8F5E9;border:2px solid #A5D6A7;border-radius:16px;padding:14px;text-align:center;margin-top:10px">
+    <div style="font-size:20px;font-weight:900;color:#1B5E20" id="qScore"></div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(1)">&#x2190; Back</button><button class="btn btn-p" onclick="go(3)">Sentences! &#x270F;&#xFE0F;</button></div>
+</div>
+
+<!-- p3: Sentence Builder -->
+<div class="page" id="p3">
+  <div class="step-label">&#x270F;&#xFE0F; Sentence Builder</div>
+  <p class="step-sub">เรียงคำให้เป็นประโยค 5 ข้อ!</p>
+  <div id="sbarea"></div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <button class="btn btn-p" onclick="checkSB()">Check &#x2713;</button>
+    <button class="btn btn-o" onclick="buildSB()">Reset &#x1F504;</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(2)">&#x2190; Back</button><button class="btn btn-p" onclick="go(4)">Finish! &#x1F3C6;</button></div>
+</div>
+
+<!-- p4: Completion -->
+<div class="page" id="p4">
+  <div style="text-align:center;padding:16px 8px">
+    <div style="font-size:48px;margin-bottom:8px">&#x1F3C6;</div>
+    <div style="font-size:22px;font-weight:900;color:#BF360C;margin-bottom:6px">Week 3 Complete!</div>
+    <div style="font-size:15px;color:#546E7A;font-weight:700;margin-bottom:16px">คุณเรียน <strong style="color:#E64A19">36 คำ</strong> ใน 7 วัน เก่งมากเลย!</div>
+    <div id="w3Summary" style="background:#fff;border:2px solid #FFAB91;border-radius:16px;padding:14px 16px;margin:0 0 14px;text-align:left"></div>
+    <div style="background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:16px;padding:16px;margin:0 0 14px">
+      <div style="font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:4px">&#x1F511; Completion Code &mdash; Day 21</div>
+      <div class="code-txt" id="codeDisplay">D21-????</div>
+      <button class="copy-btn" onclick="copyCode()">&#x1F4CB; Copy Code</button>
+    </div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.8;margin-bottom:16px">&#x26A0;&#xFE0F; จดเก็บไว้!<br><strong style="color:#2E7D32">Week 4 School ปลดล็อกแล้ว &#x1F393;</strong></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a href="progress.html" style="background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">&#x1F3E0; หน้าหลัก</a>
+      <a href="Day22_FirstDayAtSchool_A1.html" style="background:linear-gradient(135deg,#1E88E5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">&#x1F393; Week 4 &#x2192;</a>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(3)">&#x2190; Back</button></div>
+</div>
+</div>
+
+<script>
+const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+const DAY=21, LOCK_KEY='wla_d21', PREV_KEY='wla_d20';
+const STEPS=['Cover','Flashcards','Quiz','Sentences','Complete'];
+/* All 36 Week 3 words — Day 15-20 */
+const ALL_WORDS=[
+  /* Day 15 — Living Room */
+  {e:'home',    t:'บ้าน',         ph:'/hohm/'},
+  {e:'room',    t:'ห้อง',         ph:'/room/'},
+  {e:'door',    t:'ประตู',        ph:'/dor/'},
+  {e:'window',  t:'หน้าต่าง',     ph:'/win-doh/'},
+  {e:'floor',   t:'พื้น',         ph:'/flor/'},
+  {e:'wall',    t:'ผนัง',         ph:'/wawl/'},
+  /* Day 16 — Living Room */
+  {e:'chair',   t:'เก้าอี้',      ph:'/chair/'},
+  {e:'table',   t:'โต๊ะ',        ph:'/tay-bul/'},
+  {e:'sofa',    t:'โซฟา',        ph:'/soh-fah/'},
+  {e:'lamp',    t:'โคมไฟ',       ph:'/lamp/'},
+  {e:'sit',     t:'นั่ง',         ph:'/sit/'},
+  {e:'watch',   t:'ดู',           ph:'/woch/'},
+  /* Day 17 — Kitchen */
+  {e:'kitchen', t:'ห้องครัว',     ph:'/kitch-en/'},
+  {e:'cup',     t:'ถ้วย',        ph:'/kup/'},
+  {e:'plate',   t:'จาน',         ph:'/playt/'},
+  {e:'spoon',   t:'ช้อน',        ph:'/spoon/'},
+  {e:'clean',   t:'สะอาด',       ph:'/kleen/'},
+  {e:'help',    t:'ช่วย',         ph:'/help/'},
+  /* Day 18 — Bedroom */
+  {e:'bed',     t:'เตียง',       ph:'/bed/'},
+  {e:'pillow',  t:'หมอน',        ph:'/pil-oh/'},
+  {e:'toy',     t:'ของเล่น',     ph:'/toy/'},
+  {e:'book',    t:'หนังสือ',     ph:'/book/'},
+  {e:'sleep',   t:'นอนหลับ',     ph:'/sleep/'},
+  {e:'quiet',   t:'เงียบ',       ph:'/kwai-et/'},
+  /* Day 19 — Family */
+  {e:'family',  t:'ครอบครัว',    ph:'/fam-uh-lee/'},
+  {e:'mother',  t:'แม่',          ph:'/muh-ther/'},
+  {e:'father',  t:'พ่อ',          ph:'/fah-ther/'},
+  {e:'sister',  t:'พี่/น้องสาว', ph:'/sis-ter/'},
+  {e:'brother', t:'พี่/น้องชาย', ph:'/bruh-ther/'},
+  {e:'love',    t:'รัก',          ph:'/luhv/'},
+  /* Day 20 — Our House */
+  {e:'garden',  t:'สวน',         ph:'/gar-den/'},
+  {e:'roof',    t:'หลังคา',      ph:'/roof/'},
+  {e:'stairs',  t:'บันได',       ph:'/stairz/'},
+  {e:'small',   t:'เล็ก',         ph:'/smawl/'},
+  {e:'big',     t:'ใหญ่',         ph:'/big/'},
+  {e:'tidy',    t:'เป็นระเบียบ',  ph:'/ty-dee/'}
+];
+/* 5 review sentences from Week 3 */
+const SB_SENTS=[
+  'Leo sits on the sofa.',
+  'Mimi helps clean the kitchen.',
+  'The bed is big and soft.',
+  'Father reads a book at night.',
+  'Our house has a big garden.'
+];
+/* TTS */
+var voices=[];
+function loadVoices(){voices=window.speechSynthesis.getVoices();var sel=document.getElementById('vsel');sel.innerHTML='';var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});pool.forEach(function(v,i){var o=document.createElement('option');o.value=i;o.textContent=v.name+' ('+v.lang+')';sel.appendChild(o);if(v.name.indexOf('Zira')>=0||v.name.indexOf('Libby')>=0)sel.value=i;});}
+if(typeof speechSynthesis!=='undefined'){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
+setTimeout(loadVoices,300);setTimeout(loadVoices,900);setTimeout(loadVoices,2000);
+function getSpeed(){return parseFloat(document.getElementById('rsl').value)||0.85;}
+function speak(text,cb){speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});var idx=parseInt(document.getElementById('vsel').value)||0;u.voice=pool[idx]||null;u.rate=getSpeed();u.lang='en-US';if(cb)u.onend=cb;speechSynthesis.speak(u);}
+
+/* Navigation */
+var cur=0;
+function go(n){document.getElementById('p'+cur).classList.remove('on');cur=n;document.getElementById('p'+n).classList.add('on');document.getElementById('lbl').textContent='Day 21 - '+STEPS[n];document.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===n);});window.scrollTo(0,0);if(n===1)initFC();if(n===2)buildQuiz();if(n===3)buildSB();if(n===4)buildFinalScreen();}
+
+/* All Words Grid */
+function buildWordGrid(){
+  var el=document.getElementById('allWordGrid');if(!el)return;
+  el.innerHTML=ALL_WORDS.map(function(w){
+    return '<div class="wchip" onclick="speak(\''+w.e+'\')">'
+      +'<div class="wchip-en">&#x1F50A; '+w.e+'</div>'
+      +'<div class="wchip-th">'+w.t+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+/* Flashcards */
+var fcOrder=[],fcCur=0,fcShowing=false;
+function initFC(){
+  if(fcOrder.length===0){fcOrder=ALL_WORDS.slice().sort(function(){return Math.random()-.5;});}
+  document.getElementById('fcTotal').textContent=fcOrder.length;
+  showFC(0);
+}
+function showFC(i){
+  fcCur=i;fcShowing=false;
+  var w=fcOrder[i];
+  document.getElementById('fcEn').textContent=w.e;
+  document.getElementById('fcPh').textContent=w.ph;
+  document.getElementById('fcTh').textContent=w.t;
+  document.getElementById('fcTh').style.display='none';
+  document.getElementById('fcHint').textContent='กดเพื่อดูคำแปล';
+  document.getElementById('fcIdx').textContent=i+1;
+  document.getElementById('fcCard').style.background='#fff';
+}
+function flipCard(){
+  fcShowing=!fcShowing;
+  document.getElementById('fcTh').style.display=fcShowing?'block':'none';
+  document.getElementById('fcHint').textContent=fcShowing?'กด Next เพื่อต่อไป':'กดเพื่อดูคำแปล';
+  document.getElementById('fcCard').style.background=fcShowing?'#FFF3E0':'#fff';
+  if(fcShowing)speak(fcOrder[fcCur].e);
+}
+function fcNav(dir){
+  var next=fcCur+dir;
+  if(next<0)next=fcOrder.length-1;
+  if(next>=fcOrder.length)next=0;
+  showFC(next);
+  /* count progress */
+  var pct=Math.round((fcCur+1)/ALL_WORDS.length*100);
+  document.getElementById('sfill').style.width=pct+'%';
+  document.getElementById('totalSc').textContent=fcCur+1;
+}
+function shuffleFC(){fcOrder=ALL_WORDS.slice().sort(function(){return Math.random()-.5;});showFC(0);}
+function speakFC(){speak(fcOrder[fcCur].e);}
+
+/* Vocab Quiz — 10 random questions */
+var qData=[],qCur=0,qCorrect=0;
+function buildQuiz(){
+  qCorrect=0;
+  document.getElementById('qResult').style.display='none';
+  document.getElementById('qFill').style.width='0%';
+  /* pick 10 random words */
+  var pool=ALL_WORDS.slice().sort(function(){return Math.random()-.5;}).slice(0,10);
+  qData=pool.map(function(w){
+    /* 3 wrong options from remaining pool */
+    var wrong=ALL_WORDS.filter(function(x){return x.e!==w.e;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+    var opts=[{t:w.t,correct:true}].concat(wrong.map(function(x){return{t:x.t,correct:false};})).sort(function(){return Math.random()-.5;});
+    return{w:w,opts:opts,done:false};
+  });
+  qCur=0;
+  renderQ();
+}
+function renderQ(){
+  var area=document.getElementById('qarea');
+  if(qCur>=qData.length){showQResult();return;}
+  var q=qData[qCur];
+  area.innerHTML='<div class="qcard">'
+    +'<div style="font-size:11px;font-weight:900;color:#90A4AE;margin-bottom:6px">ข้อที่ '+(qCur+1)+' / '+qData.length+'</div>'
+    +'<button class="tts" onclick="speak(\''+q.w.e+'\')" style="margin-bottom:10px">&#x25B6; '+q.w.e+'</button>'
+    +'<div class="opts">'
+    +q.opts.map(function(o,i){return '<button class="opt" onclick="pickQ('+i+')" id="opt'+i+'">'+o.t+'</button>';}).join('')
+    +'</div></div>';
+}
+function pickQ(idx){
+  var q=qData[qCur];
+  if(q.done)return;q.done=true;
+  for(var i=0;i<q.opts.length;i++){
+    var btn=document.getElementById('opt'+i);
+    if(btn){btn.classList.add(q.opts[i].correct?'correct':'disabled');}
+  }
+  var btn=document.getElementById('opt'+idx);
+  if(q.opts[idx].correct){qCorrect++;btn.classList.add('correct');}
+  else btn.classList.add('wrong');
+  document.getElementById('qFill').style.width=Math.round((qCur+1)/qData.length*100)+'%';
+  setTimeout(function(){qCur++;renderQ();},900);
+}
+function showQResult(){
+  var el=document.getElementById('qResult');el.style.display='block';
+  var pct=Math.round(qCorrect/qData.length*100);
+  document.getElementById('qScore').innerHTML=(pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐')+' '+qCorrect+'/'+qData.length+' ถูก ('+pct+'%)';
+  document.getElementById('qarea').innerHTML='';
+}
+
+/* Sentence Builder */
+var sbPicked=[],sbDone=[];
+function buildSB(){
+  sbPicked=SB_SENTS.map(function(){return[];});
+  sbDone=SB_SENTS.map(function(){return false;});
+  var area=document.getElementById('sbarea');if(!area)return;
+  area.innerHTML=SB_SENTS.map(function(sent,i){
+    var words=sent.replace(/[.,!?]/g,'').split(' ');
+    var sh=words.slice().sort(function(){return Math.random()-.5;});
+    return '<div style="background:#fff;border:2px solid #FFAB91;border-radius:14px;padding:10px 12px;margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'
+      +'<button class="tts" onclick="speak(SB_SENTS['+i+'])" style="padding:5px 11px;font-size:13px">&#x25B6; ฟัง</button>'
+      +'<span style="font-size:12px;color:#78909C;font-weight:700">ประโยคที่ '+(i+1)+'</span>'
+      +'<span id="sbfb'+i+'" style="font-size:12px;font-weight:800;margin-left:auto"></span>'
+      +'</div>'
+      +'<div id="sbtgt'+i+'" class="sb-target"><span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span></div>'
+      +'<div id="sbbank'+i+'" class="sb-bank">'
+      +sh.map(function(w){return '<button class="sb-word" data-si="'+i+'" data-word="'+w+'" onclick="pickSB(+this.dataset.si,this,this.dataset.word)">'+w+'</button>';}).join('')
+      +'</div></div>';
+  }).join('');
+}
+function pickSB(i,btn,word){if(sbDone[i])return;sbPicked[i].push(word);btn.disabled=true;btn.classList.add('used');_renderSB(i);}
+function unpickSB(i,j){if(sbDone[i])return;var w=sbPicked[i].splice(j,1)[0];var bank=document.getElementById('sbbank'+i);var btns=bank.querySelectorAll('.sb-word');for(var b=0;b<btns.length;b++){if(btns[b].dataset.word===w&&btns[b].disabled){btns[b].disabled=false;btns[b].classList.remove('used');break;}}_renderSB(i);}
+function _renderSB(i){var tgt=document.getElementById('sbtgt'+i);if(!tgt)return;tgt.innerHTML=sbPicked[i].length?sbPicked[i].map(function(w,j){return '<span onclick="unpickSB('+i+','+j+')" style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:6px;padding:4px 9px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer">'+w+'</span>';}).join(''):'<span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span>';}
+var sbScore=null;
+function checkSB(){
+  var ok=0;
+  SB_SENTS.forEach(function(sent,i){
+    var exp=sent.replace(/[.,!?]/g,'').split(' ');
+    var good=JSON.stringify(sbPicked[i])===JSON.stringify(exp);
+    var fb=document.getElementById('sbfb'+i);
+    if(fb){fb.textContent=good?'✓':'✗';fb.style.color=good?'#2E7D32':'#C62828';}
+    if(good){sbDone[i]=true;ok++;}
+  });
+  sbScore=Math.round(ok/SB_SENTS.length*100);
+  var u=new SpeechSynthesisUtterance(ok===SB_SENTS.length?'Excellent! Perfect score!':'Good job! Keep going!');
+  var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});
+  var idx=parseInt(document.getElementById('vsel').value)||0;
+  u.voice=pool[idx]||null;u.rate=1.0;u.lang='en-US';
+  window.speechSynthesis.speak(u);
+}
+
+/* Completion */
+function generateCode(day){var c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';var code='D'+day+'-';for(var i=0;i<4;i++)code+=c[Math.floor(Math.random()*c.length)];return code;}
+function buildFinalScreen(){
+  var code=localStorage.getItem(LOCK_KEY);
+  if(!code){code=generateCode(DAY);localStorage.setItem(LOCK_KEY,code);syncToCloud(DAY,code,sbScore||80);document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=code;}
+  document.getElementById('codeDisplay').textContent=code;
+  var el=document.getElementById('w3Summary');if(!el)return;
+  var rows=[['Flashcard Review','36 คำ'],['Vocab Quiz',qCorrect+'/10 ข้อ'],['Sentence Builder',sbScore!==null?sbScore+'%':'—'],['Week 3 Words','Day 15–20 ✓']];
+  el.innerHTML=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #FFE0B2"><span style="font-size:13px;font-weight:700;color:#546E7A">'+r[0]+'</span><span style="font-size:13px;font-weight:900;color:#E64A19">'+r[1]+'</span></div>';}).join('');
+}
+function copyCode(){var code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){alert('Copied: '+code);});else alert('Code: '+code);}
+function syncToCloud(day,code,score){try{var st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;var cb='jpc_'+Date.now();var s=document.createElement('script');window[cb]=function(){delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+(score||80)+'&callback='+cb;document.body.appendChild(s);}catch(e){}}
+function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}var mine=localStorage.getItem(LOCK_KEY);var prev=localStorage.getItem(PREV_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function tryUnlock(){var v=document.getElementById('codeInput').value.trim().toUpperCase();var prev=localStorage.getItem(PREV_KEY);if(v===prev||(v&&v.indexOf('D'+(DAY-1)+'-')===0)){localStorage.setItem(PREV_KEY,v);document.getElementById('lockScreen').style.display='none';unlockContent();}else{document.getElementById('unlockErr').style.display='block';}}
+function unlockContent(){document.getElementById('mainContent').style.display='block';}
+
+window.addEventListener('DOMContentLoaded',function(){
+  checkLock();
+  var dots=document.getElementById('dots');
+  STEPS.forEach(function(_,i){var d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=function(){go(i);};dots.appendChild(d);});
+  loadVoices();
+  buildWordGrid();
+});
+</script>
+</body>
+</html>

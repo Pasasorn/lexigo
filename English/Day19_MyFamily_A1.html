@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Day 19 — My Family 👨‍👩‍👧‍👦</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 auto;color:#37474F}
+.hdr{background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(230,74,25,.35)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff}
+.cefr{background:rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:5px;margin-left:8px}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#FFF3E0;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #FFAB91}
+.vbar label{font-size:13px;color:#E64A19;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #FFAB91;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#E64A19}
+.score-bar{background:#FFF3E0;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#E64A19;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #FFAB91}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#FF8A65,#E64A19);transition:width .4s}
+.strack{flex:1;height:9px;background:#FFE0B2;border-radius:5px;overflow:hidden}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(.96)}
+.btn-p{background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;box-shadow:0 3px 8px rgba(230,74,25,.35)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#FFF3E0;border:2px solid #FFAB91;border-radius:12px;cursor:pointer;font-size:13px;color:#E64A19;font-weight:700;font-family:'Nunito',sans-serif}
+.tts:hover{background:#FFE0B2}
+.vocab{font-weight:900;color:#E64A19;background:#FFE0B2;padding:1px 5px;border-radius:6px}
+.sbox{background:#FFF3E0;border-radius:16px;padding:16px 18px;font-size:16px;line-height:2.2;color:#37474F;border:2px solid #FFAB91;font-weight:600}
+.page{display:none}.page.on{display:block}
+.step-label{font-size:17px;font-weight:900;color:#BF360C;margin-bottom:4px}
+.step-sub{font-size:13px;color:#78909C;font-weight:700;margin-bottom:12px}
+.navrow{display:flex;gap:10px;margin-top:16px}
+.acrow{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:4px}
+.ac{background:#FFF3E0;border:2px solid #FFAB91;border-radius:14px;padding:11px;cursor:pointer;transition:transform .15s;text-align:center;user-select:none}
+.ac:active{transform:scale(.95)}
+.ac-en{font-size:18px;font-weight:900;color:#E64A19}
+.ac-ph{font-size:11px;color:#FF7043;font-weight:600;margin:2px 0}
+.ac-th{font-size:15px;font-weight:800;color:#BF360C}
+.ac-hint{font-size:10px;color:#FF8A65;font-weight:700;margin-top:3px}
+.srow{background:#FFF3E0;border-radius:14px;border:2px solid #FFAB91;padding:12px 15px;margin-bottom:8px}
+.srow-text{font-size:15px;font-weight:700;color:#37474F;line-height:1.5;margin-bottom:8px}
+.rec-wrap{background:#fff;border:2px solid #FFAB91;border-radius:12px;padding:8px 12px;margin-bottom:8px}
+.score-mini-wrap{height:7px;background:#E0E0E0;border-radius:4px;overflow:hidden;margin:5px 0 3px}
+.score-mini{height:7px;border-radius:4px;width:0;transition:width .5s}
+.rec-label{font-size:11px;font-weight:800;color:#666}
+.rec-transcript{font-size:11px;color:#999;font-style:italic;min-height:14px}
+.rec-btn{background:linear-gradient(135deg,#EF5350,#C62828);color:#fff;border:none;border-radius:10px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.rec-btn.recording{background:linear-gradient(135deg,#FF7043,#D84315);animation:pulse .7s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.no-rec{background:#FFF3E0;border:2px solid #FFAB91;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;color:#E64A19;display:none;margin-bottom:8px}
+.s4w{background:#fff;border:1.5px solid #FFAB91;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:800;color:#E64A19;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.s4w:hover{background:#FFF3E0}
+.s4w.used{opacity:.35;pointer-events:none}
+.wm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.wm-col{display:flex;flex-direction:column;gap:8px}
+.wm-btn{padding:11px 8px;border-radius:12px;border:2px solid #FFAB91;font-size:14px;font-weight:800;cursor:pointer;text-align:center;font-family:'Nunito',sans-serif;transition:all .15s;background:#fff}
+.wm-en{color:#E64A19}.wm-th{color:#BF360C}
+.wm-btn.selected{background:#FFE0B2;border-color:#E64A19;transform:scale(1.04)}
+.wm-btn.correct{background:#C8E6C9;border-color:#43A047;color:#1B5E20;pointer-events:none}
+.wm-btn.wrong{background:#FFCDD2;border-color:#E53935;color:#B71C1C}
+.lock-screen{text-align:center;padding:40px 20px;background:#FFF8E1;border-radius:20px;border:3px solid #FFAB91;margin-top:10px}
+.lock-screen h2{font-size:22px;font-weight:900;color:#E65100;margin:12px 0 8px}
+.lock-screen p{font-size:14px;color:#546E7A;font-weight:700;line-height:1.7;margin-bottom:16px}
+.code-inp{padding:11px 16px;border-radius:14px;border:3px solid #FFAB91;font-size:18px;font-weight:800;text-align:center;letter-spacing:3px;font-family:'Nunito',sans-serif;width:220px}
+.code-inp:focus{outline:none;border-color:#E64A19}
+.unlock-btn{background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px}
+.unlock-err{color:#C62828;font-size:13px;font-weight:700;margin-top:6px;display:none}
+.already-done{background:linear-gradient(135deg,#43A047,#2E7D32);color:#fff;border-radius:12px;padding:9px 14px;font-size:13px;font-weight:700;margin-bottom:9px;display:none}
+.already-done.show{display:block}
+.complete-screen{background:linear-gradient(135deg,#FFF3E0,#FFE0B2);border-radius:20px;padding:22px 18px;text-align:center;margin-top:16px;border:3px solid #FFAB91;display:none}
+.complete-screen.show{display:block}
+.code-box{background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:16px;padding:16px;margin:12px 0}
+.code-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:4px}
+.code-txt{font-size:32px;font-weight:900;color:#fff;letter-spacing:4px}
+.copy-btn{background:#fff;color:#E64A19;border:none;border-radius:12px;padding:9px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+.wave{display:inline-block;animation:wv 1.2s ease 3;font-size:48px}
+@keyframes wv{0%,100%{transform:rotate(0)}25%{transform:rotate(20deg)}75%{transform:rotate(-15deg)}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <span class="hdr-l" id="lbl">&#x1F468;&#x200D;&#x1F469;&#x200D;&#x1F467;&#x200D;&#x1F466; Day 19 &middot; My Family</span>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span class="cefr">&#x1F7E0; A1</span>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+<div class="already-done" id="alreadyDone">&#x2705; เรียน Day 19 จบแล้ว! Code: <strong id="savedCode"></strong> &mdash; Day 20 ปลดล็อกแล้ว &#x1F389;</div>
+<div class="lock-screen" id="lockScreen" style="display:none">
+  <div style="font-size:56px">&#x1F512;</div>
+  <h2>Day 19 ยังล็อกอยู่!</h2>
+  <p>ต้องเรียน <strong>Day 18 ให้จบก่อน</strong><br>แล้วกรอก Completion Code ของ Day 18</p>
+  <input class="code-inp" id="codeInput" placeholder="D18-XXXX" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">&#x1F513; Unlock Day 19</button>
+  <div class="unlock-err" id="unlockErr">&#x274C; Code ไม่ถูกต้อง ลองใหม่</div>
+</div>
+<div id="mainContent" style="display:none">
+<div class="score-bar">
+  <span>&#x2B50; Score: <span id="totalSc">0</span> / 6</span>
+  <div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div>
+  <span id="starDisp">&#x2606;&#x2606;&#x2606;</span>
+</div>
+<div class="vbar">
+  <label>&#x1F50A;</label>
+  <select id="vsel"></select>
+  <label>Speed:</label>
+  <input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'x'">
+  <span id="rv" style="font-size:13px;color:#E64A19;font-weight:800">0.85x</span>
+  <button class="tts" onclick="speak('family mother father sister brother love')">&#x25B6; Test</button>
+</div>
+
+<!-- p0 Cover -->
+<div class="page on" id="p0">
+  <div style="text-align:center;padding:16px 8px">
+    <div class="wave">&#x1F46A;</div>
+    <div style="font-size:26px;font-weight:900;color:#BF360C;margin:9px 0 4px">My Family!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 19 &middot; Week 3: My Home &mdash; <strong style="color:#37474F">6 new words</strong></div>
+    <div class="acrow" id="cvA"></div>
+    <button class="btn btn-p" onclick="go(1)" style="margin-top:20px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! &#x2192;</button>
+  </div>
+</div>
+
+<!-- p1 Step 1 -->
+<div class="page" id="p1">
+  <div style="text-align:center;padding:10px 6px">
+    <div style="font-size:44px;margin-bottom:7px">&#x1F3A7;</div>
+    <div class="step-label">Step 1 &middot; Listen First</div>
+    <p class="step-sub">ปิดตาแล้วฟัง อย่าดูตัวหนังสือ!</p>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="tts" onclick="speak(STORY,function(){updScore(1)})">&#x25B6; Play Story</button>
+      <button class="tts" onclick="speechSynthesis.cancel()">&#x25A0; Stop</button>
+    </div>
+    <div style="border-radius:16px;overflow:hidden;border:2px solid #FFAB91;background:#FFF3E0;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+      <img src="img_day19.png" alt="Story" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" >
+      <div style="padding:30px;text-align:center;font-size:50px;display:none">&#x1F46A;</div>
+    </div>
+    <div style="background:#FFF3E0;border-radius:14px;padding:11px 15px;font-size:14px;color:#E64A19;border:2px solid #FFAB91;font-weight:700">
+      &#x1F4AC; Think: <strong>Who is in Leo's family?</strong>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">&#x2190; Back</button><button class="btn btn-p" onclick="go(2)">Next &#x2192;</button></div>
+</div>
+
+<!-- p2 Step 2 -->
+<div class="page" id="p2">
+  <div class="step-label">Step 2 &middot; Read + Listen &#x1F4D6;</div>
+  <p class="step-sub"><span style="color:#E64A19;font-weight:900;background:#FFE0B2;padding:2px 7px;border-radius:6px">Orange</span> = vocab! กด &#x25B6; ฟังก่อน แล้วกด &#x1F3A4; อ่านออกเสียง</p>
+  <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <button class="tts" onclick="speak(STORY)">&#x25B6; ฟังตัวอย่าง</button>
+    <button class="tts" onclick="speechSynthesis.cancel()">&#x25A0; Stop</button>
+  </div>
+  <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #FFAB91;background:#FFF3E0;min-height:80px;display:flex;align-items:center;justify-content:center">
+    <img src="img_day19.png" alt="Story" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div style="padding:20px;text-align:center;font-size:40px;display:none">&#x1F46A;</div>
+  </div>
+  <div class="sbox">
+    After dinner the <span class="vocab">family</span> sits together.<br>
+    "This is my <span class="vocab">mother</span>," says Leo. "She cooks the best food!"<br>
+    "This is my <span class="vocab">father</span>," says Mimi. "He reads to us at night."<br><br>
+    Mimi is Leo's <span class="vocab">sister</span>.<br>
+    Leo is Mimi's <span class="vocab">brother</span>.<br>
+    They <span class="vocab">love</span> each other very much. &#x2764;&#xFE0F;
+  </div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFAB91;border-radius:16px;padding:14px 16px">
+    <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">&#x2705; ไมค์พร้อม!</div>
+    <button class="rec-btn" id="r2recBtn" onclick="startRec2()">&#x1F3A4; อ่านทั้งเรื่อง</button>
+    <div class="rec-wrap" style="margin-top:8px">
+      <div class="score-mini-wrap"><div class="score-mini" id="r2bar"></div></div>
+      <div class="rec-label" id="r2lbl">— กด &#x25B6; ฟังก่อน แล้วกด &#x1F3A4; —</div>
+      <div class="rec-transcript" id="r2interim"></div>
+    </div>
+  </div>
+  <div id="s2summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(1)">&#x2190; Back</button><button class="btn btn-p" onclick="go(3)">Next &#x2192;</button></div>
+</div>
+
+<!-- p3 Step 3 -->
+<div class="page" id="p3">
+  <div class="step-label">Step 3 &middot; Read + Speak &#x1F5E3;&#xFE0F;</div>
+  <p class="step-sub">กด &#x25B6; ฟัง &#x2192; กด &#x1F3A4; พูดตาม &#x2192; ดูคะแนน!</p>
+  <div id="micStatus" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:10px;display:none">&#x2705; ไมค์พร้อม!</div>
+  <div class="no-rec" id="noRec">&#x26A0;&#xFE0F; ใช้ Chrome หรือ Edge เพื่อใช้ไมโครโฟน</div>
+  <div id="sl"></div>
+  <div id="s3summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(2)">&#x2190; Back</button><button class="btn btn-p" onclick="go(4)">Next &#x2192;</button></div>
+</div>
+
+<!-- p4 Step 4 -->
+<div class="page" id="p4">
+  <div class="step-label">Step 4 &middot; Listen + Write &#x270F;&#xFE0F;</div>
+  <p class="step-sub">กด &#x25B6; ฟัง &#x2192; กดคำเรียงประโยค!</p>
+  <div id="s4area"></div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <button class="btn btn-p" onclick="checkS4()">Check &#x2713;</button>
+    <button class="btn btn-o" onclick="buildS4()">Reset &#x1F504;</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(3)">&#x2190; Back</button><button class="btn btn-p" onclick="go(5)">Play Game! &#x1F3AE;</button></div>
+</div>
+
+<!-- p5 Step 5: Word Match -->
+<div class="page" id="p5">
+  <div class="step-label">Step 5 &middot; Word Match &#x1F3AE;</div>
+  <p class="step-sub">จับคู่คำอังกฤษ &#x2194; คำไทยให้ครบ 6 คู่!</p>
+  <div style="background:#FFF3E0;border-radius:14px;padding:9px 14px;margin-bottom:10px;font-size:14px;color:#E64A19;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #FFAB91">
+    &#x2B50; <strong id="wmSc">0</strong> / 6 คู่
+    <div style="flex:1;height:9px;background:#FFE0B2;border-radius:5px;overflow:hidden"><div id="wmFill" style="height:100%;width:0%;background:linear-gradient(90deg,#FF8A65,#E64A19);transition:width .4s"></div></div>
+  </div>
+  <div class="wm-grid">
+    <div class="wm-col" id="wmEn"></div>
+    <div class="wm-col" id="wmTh"></div>
+  </div>
+  <div id="wmResult" style="text-align:center;font-size:14px;font-weight:800;color:#2E7D32;min-height:20px"></div>
+  <button class="btn btn-o" onclick="buildWM()" style="font-size:13px;padding:8px 14px;margin-top:8px">เริ่มใหม่ &#x1F504;</button>
+  <div class="complete-screen" id="completeScreen">
+    <div style="font-size:36px">&#x1F46A;</div>
+    <div style="font-size:20px;font-weight:900;color:#BF360C;margin:8px 0">Day 19 Complete! &#x1F389;</div>
+    <div id="daySummary" style="background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;text-align:left;border:2px solid #FFAB91"></div>
+    <div class="code-box">
+      <div class="code-label">&#x1F511; Completion Code &mdash; Day 19</div>
+      <div class="code-txt" id="codeDisplay">D19-????</div>
+      <button class="copy-btn" onclick="copyCode()">&#x1F4CB; Copy Code</button>
+    </div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">&#x26A0;&#xFE0F; จดเก็บไว้!<br><strong style="color:#2E7D32">Day 20 ปลดล็อกอัตโนมัติแล้ว &#x2713;</strong></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+      <a href="progress.html" style="background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">&#x1F3E0; หน้าหลัก</a>
+      <a href="Day20_OurHouse_A1.html" style="background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">&#x1F3E1; Day 20 &#x2192;</a>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">&#x2190; Back</button><button class="btn btn-p" onclick="go(0)">Start Over &#x1F501;</button></div>
+</div>
+</div>
+
+<script>
+const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+const DAY=19, LOCK_KEY='wla_d19', PREV_KEY='wla_d18';
+const STEPS=['Cover','Step 1','Step 2','Step 3','Step 4','Step 5'];
+const WORDS=[
+  {e:'family', t:'ครอบครัว', ph:'/faem-uh-lee/'},
+  {e:'mother', t:'แม่',       ph:'/muh-ther/'},
+  {e:'father', t:'พ่อ',       ph:'/fah-ther/'},
+  {e:'sister', t:'พี่/น้องสาว',ph:'/sis-ter/'},
+  {e:'brother',t:'พี่/น้องชาย',ph:'/bruh-ther/'},
+  {e:'love',   t:'รัก',       ph:'/luhv/'}
+];
+const SS=[
+  "After dinner the family sits together.",
+  "Mimi is Leo's sister.",
+  "Leo is Mimi's brother.",
+  "They love each other very much."
+];
+const DS=['I love my family.','Mimi is Leo\'s sister.','Mother cooks for us every day.'];
+const STORY="After dinner the family sits together. This is my mother, says Leo. She cooks the best food! This is my father, says Mimi. He reads to us at night. Mimi is Leo's sister. Leo is Mimi's brother. They love each other very much.";
+
+/* TTS */
+var voices=[];
+function loadVoices(){
+  voices=window.speechSynthesis.getVoices();
+  var sel=document.getElementById('vsel');
+  sel.innerHTML='';
+  var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});
+  pool.forEach(function(v,i){
+    var o=document.createElement('option');
+    o.value=i; o.textContent=v.name+' ('+v.lang+')';
+    sel.appendChild(o);
+    if(v.name.indexOf('Zira')>=0||v.name.indexOf('Libby')>=0)sel.value=i;
+  });
+}
+if(typeof speechSynthesis!=='undefined'){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
+setTimeout(loadVoices,300);setTimeout(loadVoices,900);setTimeout(loadVoices,2000);
+function getSpeed(){return parseFloat(document.getElementById('rsl').value)||0.85;}
+function speak(text,cb){
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);
+  var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});
+  var idx=parseInt(document.getElementById('vsel').value)||0;
+  u.voice=pool[idx]||null; u.rate=getSpeed(); u.lang='en-US';
+  if(cb)u.onend=cb;
+  speechSynthesis.speak(u);
+}
+
+/* Navigation */
+var cur=0;
+function go(n){
+  document.getElementById('p'+cur).classList.remove('on');
+  cur=n;
+  document.getElementById('p'+n).classList.add('on');
+  document.getElementById('lbl').textContent='Day 19 - '+STEPS[n];
+  document.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===n);});
+  window.scrollTo(0,0);
+  if(n===3)buildSL();
+  if(n===4)buildS4();
+  if(n===5)buildWM();
+}
+
+/* Word Cards */
+function buildCards(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.innerHTML=WORDS.map(function(w){
+    return '<div class="ac" onclick="speak(\''+w.e+'\')">'
+      +'<div class="ac-en">&#x1F50A; '+w.e+'</div>'
+      +'<div class="ac-ph">'+w.ph+'</div>'
+      +'<div class="ac-th">'+w.t+'</div>'
+      +'<div class="ac-hint">กดฟัง</div></div>';
+  }).join('');
+}
+
+/* Step 3 Speak-Along */
+function buildSL(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';}
+  var el=document.getElementById('sl');
+  if(!el||el.children.length)return;
+  el.innerHTML=SS.map(function(s,i){
+    var safe=s.replace(/'/g,"\\'");
+    return '<div class="srow">'
+      +'<div style="font-size:11px;font-weight:900;color:#90A4AE;margin-bottom:4px">ประโยคที่ '+(i+1)+'</div>'
+      +'<div class="srow-text">'+s+'</div>'
+      +'<div style="display:flex;gap:8px">'
+      +'<button class="tts" onclick="speak(\''+safe+'\')">&#x25B6; ฟัง</button>'
+      +'<button class="rec-btn" id="rec'+i+'" onclick="startRec('+i+')">&#x1F3A4; พูด</button>'
+      +'</div></div>'
+      +'<div class="rec-wrap" id="rw'+i+'">'
+      +'<div class="score-mini-wrap"><div class="score-mini" id="bar'+i+'"></div></div>'
+      +'<div class="rec-label" id="lbl'+i+'">— กด &#x25B6; ฟังก่อน แล้วกด &#x1F3A4; —</div>'
+      +'<div class="rec-transcript" id="tr'+i+'"></div></div>';
+  }).join('');
+}
+
+/* Mic */
+if(navigator.mediaDevices){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(){
+    var m=document.getElementById('micStatus');if(m)m.style.display='block';
+    var m2=document.getElementById('micStatus2');if(m2)m2.style.display='block';
+  }).catch(function(){});
+}
+function calcScore(heard,target){
+  var h=heard.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);
+  var t=target.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);
+  if(!t.length)return 0;
+  var match=0;
+  t.forEach(function(w){var i=h.indexOf(w);if(i>=0){match++;h.splice(i,1);}});
+  return Math.round(match/t.length*100);
+}
+var activeRec=null,activeIdx=-1,recScores=SS.map(function(){return null;});
+function startRec(i){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';return;}
+  if(activeRec){try{activeRec.abort();}catch(e){}activeRec=null;}
+  if(activeIdx>=0){var pb=document.getElementById('rec'+activeIdx);if(pb){pb.classList.remove('recording');pb.textContent='&#x1F3A4; พูดใหม่';}}
+  activeIdx=i;
+  var btn=document.getElementById('rec'+i);
+  btn.classList.add('recording');btn.innerHTML='&#x23F9; หยุด';
+  document.getElementById('lbl'+i).textContent='กำลังฟัง...';
+  document.getElementById('tr'+i).textContent='';
+  var rec=new (window.SpeechRecognition||window.webkitSpeechRecognition)();
+  rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=false;
+  activeRec=rec;var finalResult='';
+  rec.onresult=function(e){var interim='',final='';for(var r of e.results){if(r.isFinal)final+=r[0].transcript;else interim+=r[0].transcript;}if(interim)document.getElementById('tr'+i).textContent='"'+interim+'"';if(final)finalResult=final;};
+  rec.onend=function(){
+    if(activeRec!==rec){btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; พูดใหม่';return;}
+    btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; พูดใหม่';
+    (function(ii){btn.onclick=function(){startRec(ii);};})(i);
+    activeRec=null;
+    var text=finalResult.trim();
+    if(text){var sc=calcScore(text,SS[i]);recScores[i]=sc;var bar=document.getElementById('bar'+i);bar.style.width=sc+'%';bar.style.background=sc>=80?'#43A047':sc>=50?'#FFA726':'#E53935';document.getElementById('lbl'+i).textContent=sc+'%';document.getElementById('tr'+i).textContent='"'+text+'"';checkSummary3();}
+  };
+  rec.onerror=function(e){if(e.error==='no-speech')return;if(activeRec===rec)activeRec=null;btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; พูดใหม่';};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; พูดใหม่';}
+}
+function checkSummary3(){
+  var done=recScores.filter(function(s){return s!==null;});
+  if(!done.length)return;
+  var avg=Math.round(done.reduce(function(a,b){return a+b;},0)/done.length);
+  var el=document.getElementById('s3summary');if(!el)return;
+  el.innerHTML='<div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:12px 16px;margin-top:12px"><div style="font-size:15px;font-weight:900;color:#1B5E20">'+(avg>=80?'&#x2B50;&#x2B50;&#x2B50;':avg>=60?'&#x2B50;&#x2B50;':'&#x2B50;')+' Step 3: '+avg+'%</div></div>';
+  el.style.display='block';
+}
+var step2Score=null,activeRec2=null,s2FullText='',s2SilenceTimer=null;
+function finishRec2(){
+  var txt=s2FullText.trim();
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง';return;}
+  var scores=SS.map(function(s){return Math.min(100,calcScore(txt,s));});
+  var avg=Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length);
+  step2Score=avg;
+  var bar=document.getElementById('r2bar');
+  bar.style.width=avg+'%';bar.style.background=avg>=80?'#43A047':avg>=50?'#FFA726':'#E53935';
+  document.getElementById('r2lbl').textContent=avg+'% '+(avg>=80?'เยี่ยมมาก!':avg>=50?'ดี!':'ลองใหม่นะ');
+}
+function stopRec2(){
+  if(s2SilenceTimer){clearTimeout(s2SilenceTimer);s2SilenceTimer=null;}
+  var btn=document.getElementById('r2recBtn');
+  btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; อ่านอีกครั้ง';btn.onclick=startRec2;
+  if(activeRec2){try{activeRec2.stop();}catch(e){}activeRec2=null;}
+  finishRec2();
+}
+function startRec2(){
+  var SR2=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR2)return;
+  if(activeRec2){stopRec2();return;}
+  if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();setTimeout(startRec2,1500);return;}
+  s2FullText='';
+  document.getElementById('r2bar').style.width='0%';
+  var btn=document.getElementById('r2recBtn');
+  btn.classList.add('recording');btn.innerHTML='&#x23F9; หยุด';
+  document.getElementById('r2lbl').textContent='กำลังฟัง...';
+  document.getElementById('r2interim').textContent='';
+  var rec=new SR2();rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=true;
+  activeRec2=rec;
+  rec.onresult=function(e){var interim='';for(var r of e.results){if(r.isFinal)s2FullText+=r[0].transcript+' ';else interim+=r[0].transcript;}if(interim)document.getElementById('r2interim').textContent='"'+interim+'"';if(s2SilenceTimer)clearTimeout(s2SilenceTimer);s2SilenceTimer=setTimeout(stopRec2,2500);};
+  rec.onend=function(){if(activeRec2){activeRec2=null;finishRec2();}};
+  rec.onerror=function(e){if(e.error==='no-speech')return;activeRec2=null;btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; อ่านทั้งเรื่อง';};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.innerHTML='&#x1F3A4; อ่านทั้งเรื่อง';}
+}
+
+/* Step 4 Arrange */
+var s4picked=[],s4done=[],step4Score=null;
+function buildS4(){
+  s4picked=DS.map(function(){return[];});
+  s4done=DS.map(function(){return false;});
+  var area=document.getElementById('s4area');if(!area)return;
+  area.innerHTML=DS.map(function(sent,i){
+    var words=sent.replace(/[.,!?]/g,'').split(' ');
+    var sh=words.slice().sort(function(){return Math.random()-.5;});
+    return '<div style="background:#fff;border:2px solid #FFAB91;border-radius:14px;padding:10px 12px;margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'
+      +'<button class="tts" onclick="speak(DS['+i+'])" style="padding:5px 11px;font-size:13px">&#x25B6; ฟัง</button>'
+      +'<span style="font-size:12px;color:#78909C;font-weight:700">ประโยคที่ '+(i+1)+'</span>'
+      +'<span id="s4fb'+i+'" style="font-size:12px;font-weight:800;margin-left:auto"></span>'
+      +'</div>'
+      +'<div id="s4tgt'+i+'" style="min-height:34px;background:#FFF8E1;border-radius:8px;padding:5px 9px;border:1.5px dashed #FFB74D;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;align-items:center">'
+      +'<span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span>'
+      +'</div>'
+      +'<div id="s4bank'+i+'" style="display:flex;flex-wrap:wrap;gap:6px">'
+      +sh.map(function(w){return '<button class="s4w" data-si="'+i+'" data-word="'+w+'" onclick="pickS4(+this.dataset.si,this,this.dataset.word)">'+w+'</button>';}).join('')
+      +'</div></div>';
+  }).join('');
+}
+function pickS4(i,btn,word){if(s4done[i])return;s4picked[i].push(word);btn.disabled=true;btn.classList.add('used');_renderS4(i);}
+function unpickS4(i,j){
+  if(s4done[i])return;
+  var w=s4picked[i].splice(j,1)[0];
+  var bank=document.getElementById('s4bank'+i);
+  var btns=bank.querySelectorAll('.s4w');
+  for(var b=0;b<btns.length;b++){if(btns[b].dataset.word===w&&btns[b].disabled){btns[b].disabled=false;btns[b].classList.remove('used');break;}}
+  _renderS4(i);
+}
+function _renderS4(i){
+  var tgt=document.getElementById('s4tgt'+i);if(!tgt)return;
+  tgt.innerHTML=s4picked[i].length
+    ?s4picked[i].map(function(w,j){return '<span onclick="unpickS4('+i+','+j+')" style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:6px;padding:4px 9px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer">'+w+'</span>';}).join('')
+    :'<span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span>';
+}
+function checkS4(){
+  var ok=0;
+  DS.forEach(function(sent,i){
+    var exp=sent.replace(/[.,!?]/g,'').split(' ');
+    var good=JSON.stringify(s4picked[i])===JSON.stringify(exp);
+    var fb=document.getElementById('s4fb'+i);
+    if(fb){fb.textContent=good?'✓':'✗';fb.style.color=good?'#2E7D32':'#C62828';}
+    if(good){s4done[i]=true;ok++;}
+  });
+  step4Score=Math.round(ok/DS.length*100);
+  speakFb(ok===DS.length?'perfect':ok>0?'correct':'wrong');
+}
+
+/* Step 5 Word Match */
+var selE=null,selT=null,wmScore=0;
+function buildWM(){
+  wmScore=0;selE=null;selT=null;
+  document.getElementById('wmSc').textContent=0;
+  document.getElementById('wmFill').style.width='0%';
+  document.getElementById('wmResult').textContent='';
+  document.getElementById('completeScreen').classList.remove('show');
+  var enSh=WORDS.slice().sort(function(){return Math.random()-.5;});
+  var thSh=WORDS.slice().sort(function(){return Math.random()-.5;});
+  document.getElementById('wmEn').innerHTML=enSh.map(function(w){return '<div class="wm-btn wm-en" id="e_'+w.e+'" onclick="pickE(\''+w.e+'\')">'+w.e+'</div>';}).join('');
+  document.getElementById('wmTh').innerHTML=thSh.map(function(w){return '<div class="wm-btn wm-th" id="t_'+w.e+'" onclick="pickT(\''+w.e+'\')">'+w.t+'</div>';}).join('');
+}
+function pickE(k){if(document.getElementById('e_'+k).classList.contains('correct'))return;document.querySelectorAll('#wmEn .wm-btn.selected').forEach(function(el){el.classList.remove('selected');});selE=k;document.getElementById('e_'+k).classList.add('selected');if(selT)checkWM();}
+function pickT(k){if(document.getElementById('t_'+k).classList.contains('correct'))return;document.querySelectorAll('#wmTh .wm-btn.selected').forEach(function(el){el.classList.remove('selected');});selT=k;document.getElementById('t_'+k).classList.add('selected');if(selE)checkWM();}
+function checkWM(){
+  var eEl=document.getElementById('e_'+selE);
+  var tEl=document.getElementById('t_'+selT);
+  if(selE===selT){
+    eEl.classList.remove('selected');eEl.classList.add('correct');
+    tEl.classList.remove('selected');tEl.classList.add('correct');
+    wmScore++;
+    document.getElementById('wmSc').textContent=wmScore;
+    document.getElementById('wmFill').style.width=Math.round(wmScore/WORDS.length*100)+'%';
+    speakFb('correct');
+    if(wmScore>=WORDS.length)setTimeout(showCompletion,500);
+  }else{
+    eEl.classList.add('wrong');tEl.classList.add('wrong');
+    speakFb('wrong');
+    setTimeout(function(){eEl.classList.remove('selected','wrong');tEl.classList.remove('selected','wrong');},700);
+  }
+  selE=null;selT=null;
+}
+
+/* Feedback */
+function speakFb(type){
+  var msgs={correct:['Correct!','Great job!','Well done!'],wrong:['Try again!','Almost!'],perfect:['Perfect!','Amazing!']};
+  var list=msgs[type]||msgs.correct;
+  var u=new SpeechSynthesisUtterance(list[Math.floor(Math.random()*list.length)]);
+  var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});
+  var idx=parseInt(document.getElementById('vsel').value)||0;
+  u.voice=pool[idx]||null;u.rate=1.0;u.lang='en-US';
+  window.speechSynthesis.speak(u);
+}
+
+/* Score */
+function updScore(n){
+  var pct=Math.round(n/WORDS.length*100);
+  document.getElementById('sfill').style.width=pct+'%';
+  var sc=document.getElementById('totalSc');if(sc)sc.textContent=n;
+  var sd=document.getElementById('starDisp');if(sd)sd.textContent=pct>=80?'&#x2B50;&#x2B50;&#x2B50;':pct>=50?'&#x2B50;&#x2B50;':'&#x2B50;';
+}
+
+/* Completion */
+function generateCode(day){
+  var c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var code='D'+day+'-';
+  for(var i=0;i<4;i++)code+=c[Math.floor(Math.random()*c.length)];
+  return code;
+}
+function showCompletion(){
+  var code=localStorage.getItem(LOCK_KEY);
+  if(!code){
+    code=generateCode(DAY);
+    localStorage.setItem(LOCK_KEY,code);
+    syncToCloud(DAY,code,Math.round(wmScore/WORDS.length*100));
+    document.getElementById('alreadyDone').classList.add('show');
+    document.getElementById('savedCode').textContent=code;
+  }
+  document.getElementById('codeDisplay').textContent=code;
+  buildDaySummary();
+  document.getElementById('completeScreen').classList.add('show');
+}
+function buildDaySummary(){
+  var el=document.getElementById('daySummary');if(!el)return;
+  var recDone=recScores.filter(function(s){return s!==null;});
+  var s3=recDone.length?Math.round(recDone.reduce(function(a,b){return a+b;},0)/recDone.length):null;
+  var rows=[['Step 2 Reading',step2Score],['Step 3 Speaking',s3],['Step 4 Arrange',step4Score],['Step 5 Word Match',Math.round(wmScore/WORDS.length*100)]];
+  el.innerHTML=rows.map(function(r){var lbl=r[0],sc=r[1];return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:12px;font-weight:700;color:#546E7A;min-width:120px">'+lbl+'</span><div style="flex:1;height:7px;background:#E0E0E0;border-radius:4px;overflow:hidden"><div style="height:100%;width:'+(sc||0)+'%;background:'+(sc>=80?'#43A047':sc>=50?'#FFA726':'#E53935')+'"></div></div><span style="font-size:12px;font-weight:800;color:#37474F;min-width:36px;text-align:right">'+(sc!==null&&sc!==undefined?sc+'%':'—')+'</span></div>';}).join('');
+}
+function copyCode(){
+  var code=document.getElementById('codeDisplay').textContent;
+  if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){alert('Copied: '+code);});
+  else alert('Code: '+code);
+}
+function syncToCloud(day,code,score){
+  try{
+    var st=JSON.parse(localStorage.getItem('wla_student')||'null');
+    if(!st||!st.code)return;
+    var cb='jpc_'+Date.now();
+    var s=document.createElement('script');
+    window[cb]=function(){delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+    s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+(score||100)+'&callback='+cb;
+    document.body.appendChild(s);
+  }catch(e){}
+}
+
+/* Lock */
+function checkLock(){
+  if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}
+  var mine=localStorage.getItem(LOCK_KEY);
+  var prev=localStorage.getItem(PREV_KEY);
+  if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=mine;unlockContent();}
+  else if(prev){unlockContent();}
+  else{document.getElementById('lockScreen').style.display='block';}
+}
+function tryUnlock(){
+  var v=document.getElementById('codeInput').value.trim().toUpperCase();
+  var prev=localStorage.getItem(PREV_KEY);
+  if(v===prev||(v&&v.indexOf('D'+(DAY-1)+'-')===0)){
+    localStorage.setItem(PREV_KEY,v);
+    document.getElementById('lockScreen').style.display='none';
+    unlockContent();
+  }else{document.getElementById('unlockErr').style.display='block';}
+}
+function unlockContent(){document.getElementById('mainContent').style.display='block';}
+
+/* Init */
+window.addEventListener('DOMContentLoaded',function(){
+  checkLock();
+  var dots=document.getElementById('dots');
+  STEPS.forEach(function(_,i){
+    var d=document.createElement('div');
+    d.className='dot'+(i===0?' on':'');
+    d.onclick=function(){go(i);};
+    dots.appendChild(d);
+  });
+  loadVoices();
+  buildCards('cvA');
+  buildS4();
+  buildSL();
+});
+</script>
+</body>
+</html>

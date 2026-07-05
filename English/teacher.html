@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard 👩‍🏫</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#F0F4FF;min-height:100vh;padding:16px;max-width:760px;margin:0 auto;color:#37474F}
+.hdr{background:linear-gradient(135deg,#1E3A8A,#1D4ED8);border-radius:22px;padding:18px 20px;margin-bottom:14px;text-align:center;box-shadow:0 4px 14px rgba(30,58,138,0.4)}
+.hdr h1{font-size:22px;font-weight:900;color:#fff;margin-bottom:3px}
+.hdr p{font-size:13px;color:rgba(255,255,255,0.8);font-weight:600}
+
+/* Login */
+.login-box{background:#fff;border-radius:20px;padding:28px 24px;text-align:center;border:2px solid #BFDBFE;box-shadow:0 4px 12px rgba(0,0,0,0.07)}
+.login-box h2{font-size:18px;font-weight:900;color:#1E3A8A;margin-bottom:8px}
+.pass-inp{font-size:18px;text-align:center;letter-spacing:3px;width:100%;max-width:220px;padding:12px 16px;border:3px solid #BFDBFE;border-radius:14px;font-family:'Courier New',monospace;font-weight:700;color:#1E3A8A;margin:12px 0}
+.pass-inp:focus{outline:none;border-color:#1D4ED8}
+.login-btn{background:linear-gradient(135deg,#1E3A8A,#1D4ED8);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+.login-err{color:#C62828;font-size:13px;font-weight:700;margin-top:8px;min-height:18px}
+
+/* Stats cards */
+.stats-row{display:flex;gap:9px;margin-bottom:12px;flex-wrap:wrap}
+.scard{flex:1;min-width:100px;background:#fff;border-radius:16px;padding:13px 12px;text-align:center;border:2px solid #BFDBFE;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+.scard-n{font-size:28px;font-weight:900;color:#1D4ED8}
+.scard-l{font-size:11px;color:#78909C;font-weight:700;margin-top:2px}
+
+/* Controls */
+.ctrl-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.search-inp{flex:1;min-width:160px;border:2px solid #BFDBFE;border-radius:12px;padding:9px 13px;font-size:14px;font-family:'Nunito',sans-serif;font-weight:700;color:#37474F}
+.search-inp:focus{outline:none;border-color:#1D4ED8}
+.ctrl-btn{padding:9px 15px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;border:2px solid #BFDBFE;background:#fff;color:#1E3A8A;font-family:'Nunito',sans-serif}
+.ctrl-btn:hover{background:#EFF6FF}
+.ctrl-btn.active{background:#1D4ED8;color:#fff;border-color:#1D4ED8}
+
+/* Table */
+.tbl-wrap{background:#fff;border-radius:18px;overflow:hidden;border:2px solid #BFDBFE;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:12px}
+table{width:100%;border-collapse:collapse}
+th{background:#1E3A8A;color:#fff;font-size:12px;font-weight:800;padding:10px 12px;text-align:left}
+td{padding:10px 12px;font-size:13px;font-weight:700;border-bottom:1px solid #EFF6FF;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#F0F4FF}
+.rank{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;background:#EFF6FF;color:#1D4ED8}
+.rank.gold{background:#FFF9C4;color:#E65100}
+.rank.silver{background:#F3F4F6;color:#546E7A}
+.rank.bronze{background:#FBE9E7;color:#BF360C}
+.prog-mini{height:7px;background:#EFF6FF;border-radius:4px;overflow:hidden;margin-top:4px;min-width:80px}
+.prog-mini-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#1D4ED8,#0891B2)}
+.day-badge{font-size:11px;font-weight:800;padding:2px 8px;border-radius:7px}
+.badge-30{background:#D1FAE5;color:#065F46}
+.badge-hi{background:#DBEAFE;color:#1E40AF}
+.badge-lo{background:#FEF3C7;color:#92400E}
+.badge-0{background:#F3F4F6;color:#9CA3AF}
+
+/* Leaderboard */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin-bottom:16px}
+.pod{text-align:center;border-radius:16px 16px 0 0;padding:12px 10px 8px;min-width:90px;font-weight:800}
+.pod-1{background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;height:110px;display:flex;flex-direction:column;justify-content:flex-end}
+.pod-2{background:linear-gradient(135deg,#6B7280,#4B5563);color:#fff;height:80px;display:flex;flex-direction:column;justify-content:flex-end}
+.pod-3{background:linear-gradient(135deg,#B45309,#92400E);color:#fff;height:60px;display:flex;flex-direction:column;justify-content:flex-end}
+.pod-name{font-size:13px;font-weight:900}
+.pod-days{font-size:11px;opacity:.9}
+
+/* Sync */
+.sync-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.last-sync{font-size:12px;color:#78909C;font-weight:700}
+.refresh-btn{background:#EFF6FF;border:2px solid #BFDBFE;color:#1E3A8A;border-radius:11px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* Loading */
+.loading{position:fixed;inset:0;background:rgba(255,255,255,0.85);display:none;align-items:center;justify-content:center;z-index:100}
+.loading.show{display:flex}
+.spinner{width:44px;height:44px;border:5px solid #BFDBFE;border-top-color:#1D4ED8;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+const TEACHER_PASS_LOCAL = 'oxford2026';
+
+function jsonpCall(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'jsonp_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    params.callback = cbName;
+    const qs = new URLSearchParams(params).toString();
+    const script = document.createElement('script');
+    const timer = setTimeout(() => {
+      delete window[cbName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Timeout'));
+    }, 10000);
+    window[cbName] = (data) => {
+      clearTimeout(timer);
+      delete window[cbName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+      resolve(data);
+    };
+    script.onerror = () => { clearTimeout(timer); reject(new Error('Network error')); };
+    script.src = API_URL + '?' + qs;
+    document.body.appendChild(script);
+  });
+}
+</script>
+
+<div class="hdr">
+  <h1>👩‍🏫 Teacher Dashboard</h1>
+  <p>LexiGo · ติดตามความคืบหน้านักเรียน</p>
+</div>
+
+<div class="loading" id="loading"><div class="spinner"></div></div>
+
+<!-- ── Login ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h2>🔐 รหัสผ่านครู</h2>
+    <p>กรอกรหัสเพื่อดู dashboard</p>
+    <input class="pass-inp" id="passInp" type="password" placeholder="••••••••"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <br>
+    <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ →</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ── Dashboard ── -->
+<div id="dashboard" style="display:none">
+
+  <div class="sync-row">
+    <span class="last-sync" id="lastSync">กำลังโหลด...</span>
+    <button class="refresh-btn" onclick="loadData()">🔄 รีเฟรช</button>
+  </div>
+
+  <div class="stats-row" id="statsRow"></div>
+
+  <!-- Podium top 3 -->
+  <div id="podiumWrap" style="background:#fff;border-radius:18px;padding:16px;margin-bottom:12px;border:2px solid #BFDBFE;display:none">
+    <div style="font-size:14px;font-weight:900;color:#1E3A8A;margin-bottom:12px;text-align:center">🏆 Top 3 นักเรียน</div>
+    <div class="podium" id="podium"></div>
+  </div>
+
+  <!-- Leaderboard toggle -->
+  <div style="background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:12px;border:2px solid #BFDBFE;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div>
+      <div style="font-size:14px;font-weight:900;color:#1E3A8A">🏆 Leaderboard การแข่งขัน</div>
+      <div style="font-size:12px;color:#78909C;font-weight:700;margin-top:2px" id="lbStatus">กำลังตรวจสอบ...</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="leaderboard.html" target="_blank" class="ctrl-btn" style="text-decoration:none;font-size:12px">👁️ ดู Leaderboard</a>
+      <button id="lbToggleBtn" class="ctrl-btn active" onclick="toggleLeaderboard()" style="font-size:12px">⏳ โหลด...</button>
+    </div>
+  </div>
+
+  <!-- Add student panel -->
+  <div style="background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:12px;border:2px solid #BFDBFE">
+    <div style="font-size:14px;font-weight:900;color:#1E3A8A;margin-bottom:10px">➕ เพิ่มนักเรียนใหม่</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <input id="addCode" class="search-inp" placeholder="รหัส 6 หลัก (ว่างไว้=สุ่มให้)" maxlength="6" style="max-width:150px">
+      <input id="addNote" class="search-inp" placeholder="ชื่อจริง/หมายเหตุ (ไม่บังคับ)" style="flex:1;min-width:150px">
+      <button class="ctrl-btn active" onclick="addStudent()">เพิ่ม ✓</button>
+    </div>
+    <div id="addResult" style="font-size:13px;font-weight:700;margin-top:8px;min-height:18px"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="ctrl-row">
+    <input class="search-inp" id="searchInp" placeholder="🔍 ค้นหาชื่อ/รหัส..." oninput="renderTable()">
+    <button class="ctrl-btn active" id="sortDays" onclick="setSort('days')">เรียงตามวัน ↓</button>
+    <button class="ctrl-btn" id="sortName" onclick="setSort('name')">เรียงตามชื่อ</button>
+  </div>
+
+  <!-- Table -->
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ชื่อเล่น</th>
+          <th>รหัส</th>
+          <th>วันที่เรียน</th>
+          <th>ความคืบหน้า</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin-top:8px">
+    <button class="refresh-btn" onclick="logout()" style="background:#FEF2F2;border-color:#FCA5A5;color:#C62828">🚪 ออกจากระบบ</button>
+  </div>
+</div>
+
+<script>
+let allStudents = [];
+let sortBy = 'days';
+
+function doLogin() {
+  const p = document.getElementById('passInp').value.trim();
+  const err = document.getElementById('loginErr');
+  if (p === TEACHER_PASS_LOCAL) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = '';
+    loadData();
+  } else {
+    err.textContent = '❌ รหัสไม่ถูกต้อง';
+  }
+}
+
+function logout() {
+  document.getElementById('loginScreen').style.display = '';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('passInp').value = '';
+}
+
+async function loadData() {
+  document.getElementById('loading').classList.add('show');
+  try {
+    let data;
+    data = await jsonpCall({action:'stats', teacher: TEACHER_PASS_LOCAL});
+
+    if (data.status !== 'ok') { alert('Error: ' + data.msg); return; }
+    allStudents = data.students;
+    renderStats();
+    renderPodium();
+    renderTable();
+    checkLeaderboardStatus();
+
+    const now = new Date().toLocaleTimeString('th-TH');
+    document.getElementById('lastSync').textContent = `อัปเดตล่าสุด: ${now}`;
+  } catch(e) {
+    alert('ไม่สามารถเชื่อมต่อได้: ' + e.message);
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+function renderStats() {
+  const total = allStudents.length;
+  const done30 = allStudents.filter(s => s.days_done >= 30).length;
+  const week1  = allStudents.filter(s => s.days_done >= 7).length;
+  const avg    = total ? Math.round(allStudents.reduce((a,s)=>a+s.days_done,0)/total) : 0;
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="scard"><div class="scard-n">${total}</div><div class="scard-l">นักเรียนทั้งหมด</div></div>
+    <div class="scard"><div class="scard-n">${done30}</div><div class="scard-l">เรียนครบ 30 วัน 🏆</div></div>
+    <div class="scard"><div class="scard-n">${week1}</div><div class="scard-l">ผ่าน Week 1 ✅</div></div>
+    <div class="scard"><div class="scard-n">${avg}</div><div class="scard-l">เฉลี่ยวัน/คน</div></div>`;
+}
+
+function renderPodium() {
+  const top3 = [...allStudents].sort((a,b)=>b.days_done-a.days_done).slice(0,3);
+  if (top3.length < 1) return;
+  document.getElementById('podiumWrap').style.display = '';
+
+  const order = top3.length >= 3 ? [top3[1], top3[0], top3[2]] : top3.length === 2 ? [top3[1], top3[0]] : [top3[0]];
+  const classes = top3.length >= 3 ? ['pod pod-2','pod pod-1','pod pod-3'] : ['pod pod-2','pod pod-1'];
+  const medals  = ['🥈','🥇','🥉'];
+
+  document.getElementById('podium').innerHTML = order.map((s,i) => `
+    <div class="${classes[i]}">
+      <div style="font-size:22px">${medals[i]}</div>
+      <div class="pod-name">${s.name}</div>
+      <div class="pod-days">${s.days_done} วัน</div>
+    </div>`).join('');
+}
+
+function setSort(by) {
+  sortBy = by;
+  document.getElementById('sortDays').classList.toggle('active', by==='days');
+  document.getElementById('sortName').classList.toggle('active', by==='name');
+  renderTable();
+}
+
+let lbOpen = false;
+
+async function checkLeaderboardStatus() {
+  try {
+    const data = await jsonpCall({ action: 'getLeaderboard' });
+    lbOpen = data.open || false;
+    updateLbUI();
+  } catch(e) {}
+}
+
+function updateLbUI() {
+  document.getElementById('lbStatus').textContent = lbOpen ? '🟢 เปิดอยู่ — นักเรียนเห็นอันดับแล้ว' : '🔴 ปิดอยู่ — นักเรียนยังไม่เห็น';
+  const btn = document.getElementById('lbToggleBtn');
+  btn.textContent = lbOpen ? '🔴 ปิด Leaderboard' : '🟢 เปิด Leaderboard';
+  btn.style.background = lbOpen ? '#FEF2F2' : '#D1FAE5';
+  btn.style.color = lbOpen ? '#C62828' : '#065F46';
+  btn.style.borderColor = lbOpen ? '#FCA5A5' : '#6EE7B7';
+}
+
+async function toggleLeaderboard() {
+  document.getElementById('loading').classList.add('show');
+  try {
+    const data = await jsonpCall({ action: 'toggleLeaderboard', teacher: TEACHER_PASS_LOCAL, open: lbOpen ? 'false' : 'true' });
+    if (data.status === 'ok') { lbOpen = data.open; updateLbUI(); }
+    else alert('❌ ' + (data.msg || 'ไม่สำเร็จ'));
+  } catch(e) {
+    alert('❌ เชื่อมต่อไม่ได้: ' + e.message);
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+async function addStudent() {
+  const code = document.getElementById('addCode').value.trim();
+  const note = document.getElementById('addNote').value.trim();
+  const result = document.getElementById('addResult');
+  result.textContent = '⏳ กำลังเพิ่ม...';
+  result.style.color = '#78909C';
+  try {
+    const params = { action: 'addStudent', teacher: TEACHER_PASS_LOCAL };
+    if (code) params.code = code;
+    if (note) params.note = note;
+    const data = await jsonpCall(params);
+    if (data.status === 'ok') {
+      result.textContent = `✅ เพิ่มสำเร็จ! รหัส: ${data.code} — แจ้งให้นักเรียนไปสมัครที่ progress.html`;
+      result.style.color = '#065F46';
+      document.getElementById('addCode').value = '';
+      document.getElementById('addNote').value = '';
+      loadData();
+    } else if (data.status === 'exists') {
+      result.textContent = `⚠️ รหัส ${data.code} มีอยู่แล้ว`;
+      result.style.color = '#92400E';
+    } else {
+      result.textContent = '❌ ' + (data.msg || 'เกิดข้อผิดพลาด');
+      result.style.color = '#C62828';
+    }
+  } catch(e) {
+    result.textContent = '❌ เชื่อมต่อไม่ได้: ' + e.message;
+    result.style.color = '#C62828';
+  }
+}
+
+async function editEmail(code, currentEmail) {
+  const newEmail = prompt(`แก้ไข email สำหรับรหัส ${code}\n(ปัจจุบัน: ${currentEmail||'ไม่มี'})`, currentEmail||'');
+  if (newEmail === null) return; // cancel
+  if (!newEmail || !newEmail.includes('@')) { alert('❌ email ไม่ถูกต้อง'); return; }
+  document.getElementById('loading').classList.add('show');
+  try {
+    const data = await jsonpCall({ action: 'updateEmail', teacher: TEACHER_PASS_LOCAL, code, email: newEmail.trim().toLowerCase() });
+    if (data.status === 'ok') {
+      loadData();
+    } else {
+      alert('❌ ' + (data.msg || 'แก้ไขไม่สำเร็จ'));
+    }
+  } catch(e) {
+    alert('❌ เชื่อมต่อไม่ได้: ' + e.message);
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+async function activateStudent(code, name) {
+  if (!confirm(`Activate นักเรียน "${name}" (รหัส ${code})?\nนักเรียนจะสามารถ login ได้ทันที`)) return;
+  try {
+    const data = await jsonpCall({ action: 'activateStudent', teacher: TEACHER_PASS_LOCAL, code });
+    if (data.status === 'ok') { alert(`✅ Activate "${name}" สำเร็จ!`); loadData(); }
+    else alert('❌ ' + (data.msg || 'ไม่สำเร็จ'));
+  } catch(e) { alert('❌ เชื่อมต่อไม่ได้'); }
+}
+
+async function deleteStudent(code, name) {
+  if (!confirm(`ลบนักเรียน "${name}" (รหัส ${code}) ออกจากระบบ?\n\nข้อมูลความคืบหน้าจะยังอยู่ใน Sheets แต่นักเรียนจะ login ไม่ได้อีก`)) return;
+  document.getElementById('loading').classList.add('show');
+  try {
+    const data = await jsonpCall({ action: 'deleteStudent', teacher: TEACHER_PASS_LOCAL, code });
+    if (data.status === 'ok') {
+      loadData();
+    } else {
+      alert('❌ ' + (data.msg || 'ลบไม่สำเร็จ'));
+    }
+  } catch(e) {
+    alert('❌ เชื่อมต่อไม่ได้: ' + e.message);
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+function renderTable() {
+  const q = document.getElementById('searchInp').value.toLowerCase();
+  let list = allStudents.filter(s =>
+    s.name.toLowerCase().includes(q) || s.code.includes(q)
+  );
+
+  if (sortBy === 'days') list.sort((a,b) => b.days_done - a.days_done);
+  else list.sort((a,b) => a.name.localeCompare(b.name, 'th'));
+
+  document.getElementById('tbody').innerHTML = list.map((s, i) => {
+    const pct = Math.round(s.days_done / 30 * 100);
+    const rankEl = i === 0 ? `<div class="rank gold">#1</div>`
+                 : i === 1 ? `<div class="rank silver">#2</div>`
+                 : i === 2 ? `<div class="rank bronze">#3</div>`
+                 :           `<div class="rank">#${i+1}</div>`;
+    const dayBadge = s.days_done >= 30 ? `<span class="day-badge badge-30">🏆 ครบแล้ว</span>`
+                   : s.days_done >= 14  ? `<span class="day-badge badge-hi">Week 2+ ✅</span>`
+                   : s.days_done >= 7   ? `<span class="day-badge badge-hi">Week 1 ✅</span>`
+                   : s.days_done > 0    ? `<span class="day-badge badge-lo">เริ่มแล้ว</span>`
+                   :                      `<span class="day-badge badge-0">ยังไม่เริ่ม</span>`;
+    const statusTag = s.status === 'pending'
+      ? `<span style="font-size:10px;background:#FEF3C7;color:#92400E;border-radius:6px;padding:2px 6px;font-weight:800">รอยืนยัน</span>`
+      : '';
+    return `<tr>
+      <td>${rankEl}</td>
+      <td><strong>${s.name}</strong> ${statusTag}</td>
+      <td>
+        <span style="font-family:'Courier New',monospace;color:#1D4ED8;font-weight:800">${s.code}</span><br>
+        <small style="color:#78909C">${s.email||'-'}</small>
+      </td>
+      <td>${dayBadge}<br><small style="color:#78909C">Day ${s.last_day} ล่าสุด</small></td>
+      <td>
+        <div style="font-size:12px;font-weight:800;color:#1D4ED8">${s.days_done}/30 (${pct}%)</div>
+        <div class="prog-mini"><div class="prog-mini-fill" style="width:${pct}%"></div></div>
+      </td>
+      <td style="white-space:nowrap">
+        ${s.status === 'pending' ? `<button onclick="activateStudent('${s.code}','${s.name}')"
+          style="background:#D1FAE5;border:1px solid #6EE7B7;color:#065F46;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:4px;display:block">
+          ✅ Activate</button>` : ''}
+        <button onclick="editEmail('${s.code}','${s.email||''}')"
+          style="background:#EFF6FF;border:1px solid #BFDBFE;color:#1E3A8A;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:4px">
+          ✏️ email</button><br>
+        <button onclick="deleteStudent('${s.code}','${s.name}')"
+          style="background:#FEF2F2;border:1px solid #FCA5A5;color:#C62828;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
+          🗑️ ลบ</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

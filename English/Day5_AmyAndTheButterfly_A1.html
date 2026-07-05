@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 5 — Amy and the Butterfly</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#F3E5F5;min-height:100vh;padding:14px;max-width:680px;margin:0 auto;color:#37474F}
+.page{display:none}.page.on{display:block}
+.hdr{background:linear-gradient(135deg,#AB47BC,#6A1B9A);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(171,71,188,0.4)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.cefr{background:rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#E1BEE7;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #CE93D8}
+.vbar label{font-size:13px;color:#6A1B9A;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #CE93D8;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#AB47BC}
+.vstatus{font-size:12px;color:#6A1B9A;font-weight:700}
+.score-bar{background:#E1BEE7;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#6A1B9A;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #CE93D8}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#AB47BC,#00897B);transition:width .4s}
+.strack{flex:1;height:9px;background:#F3E5F5;border-radius:5px;overflow:hidden;border:1px solid #CE93D8}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(0.96)}
+.btn-p{background:linear-gradient(135deg,#AB47BC,#6A1B9A);color:#fff;box-shadow:0 3px 8px rgba(171,71,188,0.4)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.navrow{display:flex;justify-content:space-between;margin-top:16px;gap:8px}
+.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#E1BEE7;border:2px solid #CE93D8;border-radius:12px;cursor:pointer;font-size:13px;color:#6A1B9A;font-weight:700;font-family:'Nunito',sans-serif}
+.tts:hover{background:#CE93D8}
+.vocab{font-weight:900;color:#00897B;background:#E0F2F1;padding:1px 5px;border-radius:6px}
+.sbox{background:#E1BEE7;border-radius:16px;padding:16px 18px;font-size:17px;line-height:2.4;color:#37474F;border:2px solid #CE93D8;font-weight:600}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#E1BEE7;border-radius:14px;border:2px solid #CE93D8;padding:12px 15px;margin-bottom:8px;font-size:17px;color:#37474F;font-weight:700}
+.dinp{width:100%;font-size:15px;padding:10px 13px;border-radius:12px;border:2.5px solid #CE93D8;background:#fff;color:#37474F;margin-top:6px;font-family:'Nunito',sans-serif;font-weight:600}
+.dinp:focus{outline:none;border-color:#AB47BC}
+.fb{font-size:14px;margin-top:5px;min-height:18px;font-weight:700}
+.ok{color:#2E7D32}.err{color:#C62828}
+.acrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.acard{background:#fff;border-radius:18px;padding:9px 11px;text-align:center;min-width:76px;border:2.5px solid #CE93D8;box-shadow:0 3px 8px rgba(0,0,0,0.07)}
+.acard .eng{font-size:13px;font-weight:900;color:#6A1B9A;margin-top:4px}
+.acard .th{font-size:11px;color:#78909C;margin-top:1px;font-weight:600}
+.step-label{font-size:17px;font-weight:900;color:#6A1B9A;margin-bottom:5px}
+.step-sub{font-size:13px;color:#78909C;margin-bottom:10px;font-weight:600}
+/* Scramble */
+.sc-card{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;border:2.5px solid #CE93D8}
+.sc-letters{font-size:20px;font-weight:900;color:#AB47BC;letter-spacing:5px;margin-bottom:8px;text-align:center;background:#E1BEE7;border-radius:10px;padding:8px}
+.sc-inp{width:100%;font-size:18px;padding:9px 13px;border-radius:12px;border:2.5px solid #CE93D8;background:#fff;color:#37474F;font-family:'Nunito',sans-serif;font-weight:700;text-align:center}
+.sc-inp:focus{outline:none;border-color:#AB47BC}
+/* Lock / Complete */
+.lock-screen{text-align:center;padding:40px 20px;background:#E1BEE7;border-radius:20px;border:3px solid #CE93D8;margin-top:10px}
+.lock-screen h2{font-size:22px;font-weight:900;color:#6A1B9A;margin:12px 0 8px}
+.d-code-input{width:100%;max-width:200px;font-size:22px;padding:12px 16px;border-radius:14px;border:3px solid #CE93D8;background:#fff;color:#37474F;text-align:center;font-family:'Courier New',monospace;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.unlock-btn{background:linear-gradient(135deg,#AB47BC,#6A1B9A);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+.unlock-err{color:#C62828;font-size:13px;font-weight:700;margin-top:6px;display:none}
+.complete-screen{display:none;text-align:center;padding:20px 16px;background:#E8F5E9;border-radius:20px;border:3px solid #A5D6A7;margin-top:12px}
+.complete-screen.show{display:block}
+.code-box{background:#fff;border:3px dashed #7CB342;border-radius:16px;padding:16px;margin:14px 0}
+.code-txt{font-size:32px;font-weight:900;color:#2E7D32;letter-spacing:4px;font-family:'Courier New',monospace}
+.copy-btn{background:#7CB342;color:#fff;border:none;border-radius:12px;padding:9px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+.already-done{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:10px 14px;font-size:13px;color:#2E7D32;font-weight:700;margin-bottom:10px;display:none}
+.already-done.show{display:block}
+@keyframes wv{0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-10deg)}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.wave{display:inline-block;animation:wv 1.2s ease 3;font-size:48px}
+.fin{animation:up .5s ease}
+
+/* Vocab grid cards (cover) */
+.acgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px 0}
+.ac{background:#fff;border-radius:16px;padding:14px 12px;text-align:center;border:2.5px solid #FFE082;box-shadow:0 3px 8px rgba(0,0,0,0.07);cursor:pointer;transition:all .15s}
+.ac:hover{border-color:#FF9800;background:#FFF3E0;transform:scale(1.02)}
+.ac-en{font-size:17px;font-weight:900;color:#E65100;margin-top:6px}
+.ac-ph{font-size:11px;color:#90A4AE;margin-top:2px;font-weight:600}
+.ac-th{font-size:14px;color:#37474F;font-weight:700;margin-top:2px}
+.ac-hint{font-size:10px;color:#FFB74D;font-weight:700;margin-top:3px}
+
+/* Speech Recognition */
+.rec-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#FF6F00;border:none;border-radius:12px;cursor:pointer;font-size:13px;color:#fff;font-weight:700;font-family:'Nunito',sans-serif}
+.rec-btn.recording{background:#E53935;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.rec-wrap{background:#fff;border-radius:12px;border:2px solid #FFE082;padding:10px 14px;margin-bottom:8px}
+.score-mini-wrap{height:8px;background:#FFE0B2;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.score-mini{height:100%;width:0%;border-radius:4px;transition:width .4s}
+.rec-label{font-size:13px;color:#78909C;font-weight:700}
+.rec-transcript{font-size:12px;color:#90A4AE;margin-top:3px;font-style:italic}
+
+/* Step4 Listen+Arrange */
+.s4w{background:#fff;border:1.5px solid #FFE082;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.s4w:hover{background:#FFF3E0}
+.s4w.used{opacity:.35;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <span class="hdr-l" id="lbl">🦋 Day 5 · Amy and the Butterfly</span>
+  <div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div>
+</div>
+<div class="already-done" id="alreadyDone">✅ เรียน Day 5 จบแล้ว! Code: <strong id="savedCode"></strong> — Day 6 ปลดล็อกแล้ว 🎉</div>
+<div class="score-bar">
+  <span>⭐ Score: <span id="totalSc">0</span> / 6</span>
+  <div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div>
+  <span id="starDisp">☆☆☆</span>
+</div>
+<div class="vbar">
+  <label>🔊</label>
+  <select id="vsel" onchange="setV(this.value)"></select>
+  <label>Speed:</label>
+  <input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'">
+  <span id="rv" style="font-size:13px;color:#6A1B9A;font-weight:800">0.85×</span>
+  <button class="tts" onclick="speak('butterfly insect color beautiful sit look')">▶ Test</button>
+  <span class="vstatus" id="vs">loading...</span>
+</div>
+<div class="lock-screen" id="lockScreen" style="display:none">
+  <div style="font-size:56px">🔒</div>
+  <h2>Day 5 ยังล็อกอยู่!</h2>
+  <p>ต้องเรียน <strong>Day 4 ให้จบก่อน</strong><br>กรอก Completion Code ของ Day 4</p>
+  <input class="d-code-input" id="codeInput" placeholder="D4-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 5</button>
+  <div class="unlock-err" id="unlockErr">❌ Code ไม่ถูกต้อง ลองใหม่</div>
+  <div style="margin-top:14px;font-size:12px;color:#78909C;font-weight:700">💡 ถ้าลืม Code → กลับไปเล่น Day 4 อีกครั้ง</div>
+</div>
+<div id="mainContent" style="display:none">
+<div class="page on fin" id="p0">
+  <div style="text-align:center;padding:16px 8px">
+    <div class="wave">🦋</div>
+    <div style="font-size:26px;font-weight:900;color:#6A1B9A;margin:9px 0 4px">Look at the butterfly!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 5 · Amy and the Butterfly — <strong style="color:#37474F">6 new words</strong>!</div>
+    <div class="acgrid" id="cvA"></div>
+    <button class="btn btn-p" onclick="go(1)" style="margin-top:20px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! →</button>
+  </div>
+</div>
+<div class="page" id="p1">
+  <div style="text-align:center;padding:10px 6px">
+    <div style="font-size:44px;margin-bottom:7px">🎧</div>
+    <div class="step-label">Step 1 · Listen First</div>
+    <p class="step-sub">Close your eyes and just listen!</p>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="tts" style="padding:10px 18px;font-size:14px" onclick="speak(STORY)">▶ Play Story</button>
+      <button class="tts" style="padding:10px 18px;font-size:14px" onclick="stopAll()">■ Stop</button>
+    </div>
+    <div style="border-radius:16px;overflow:hidden;border:2px solid #E1BEE7;background:#F3E5F5;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+      <img src="img_day5.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+    </div>
+        <div style="background:#E1BEE7;border-radius:14px;padding:11px 15px;font-size:14px;color:#6A1B9A;margin-top:10px;border:2px solid #CE93D8;font-weight:700">
+      💬 Think: <strong>What does Amy see in the garden?</strong>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
+</div>
+<div class="page" id="p2">
+  <div class="step-label">Step 2 · Read + Listen 📖</div>
+  <p class="step-sub"><span style="color:#00897B;font-weight:900;background:#E0F2F1;padding:2px 7px;border-radius:6px">Teal</span> = vocab words!</p>
+  <button class="tts" onclick="speak(STORY)" style="margin-bottom:11px">▶ Play Story</button>
+  <div class="sbox">
+    Amy is Mimi's little sister. One day, she sees a <span class="vocab">butterfly</span> in the garden.<br><br>
+    A <span class="vocab">butterfly</span> is an <span class="vocab">insect</span>. It has many <span class="vocab">colors</span> — red, yellow, and blue.<br><br>
+    Amy thinks it is very <span class="vocab">beautiful</span>. She <span class="vocab">sits</span> on a bench and <span class="vocab">looks</span> at it for a long time.<br><br>
+    Then the <span class="vocab">butterfly</span> <span class="vocab">sits</span> right on Amy's hand! She smiles. 🦋
+  </div>
+  
+  <div style="margin-top:12px;background:#FFF8E1;border:2px solid #FFE082;border-radius:16px;padding:14px 16px">
+    <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ ไมค์พร้อม — กด 🎤 อ่านออกเสียงได้เลย!</div>
+    <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 อ่านทั้งเรื่อง</button>
+    <div class="rec-wrap" style="margin-bottom:0">
+      <div class="score-mini-wrap"><div class="score-mini" id="r2bar"></div></div>
+      <div class="rec-label" id="r2lbl">— กด ▶ ฟังก่อน แล้วกด 🎤 อ่านเรื่องออกเสียง —</div>
+      <div class="rec-transcript" id="r2interim"></div>
+    </div>
+  </div>
+  <div id="s2summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(1)">← Back</button><button class="btn btn-p" onclick="go(3)">Next →</button></div>
+</div>
+<div class="page" id="p3">
+  <div class="step-label">Step 3 · Read + Speak 🗣️</div>
+  <p class="step-sub">Press play, then say it out loud!</p>
+  <div class="mic-ready" id="micStatus" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ ไมค์พร้อมใช้งาน — กด 🎤 พูดได้เลย!</div>
+  <div id="noRec" style="display:none;background:#FFF3E0;border:2px solid #FFB74D;border-radius:10px;padding:8px 12px;font-size:13px;color:#E65100;font-weight:700;margin-bottom:8px">⚠️ Browser นี้ไม่รองรับ Speech Recognition — ใช้ Chrome/Edge</div>
+  <div id="sl"></div>
+  <div id="s3summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(2)">← Back</button><button class="btn btn-p" onclick="go(4)">Next →</button></div>
+</div>
+<div class="page" id="p4">
+  <div class="step-label">Step 4 · Listen + Write ✏️</div>
+  <p class="step-sub">กด ▶ ฟัง → กดคำเรียงประโยค!</p>
+  <div id="s4area"></div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <button class="btn btn-p" onclick="checkS4()">Check ✓</button>
+    <button class="btn btn-o" onclick="buildS4()">Reset 🔄</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(3)">← Back</button><button class="btn btn-p" onclick="go(5)">Play Game! 🎮</button></div>
+</div>
+<div class="page" id="p5">
+  <div class="step-label">Step 5 · Word Scramble 🔀</div>
+  <p class="step-sub">เรียงตัวอักษรให้เป็นคำที่ถูกต้อง!</p>
+  <div style="background:#E1BEE7;border-radius:14px;padding:8px 14px;margin-bottom:10px;font-size:14px;color:#6A1B9A;font-weight:800;display:flex;align-items:center;gap:8px;border:2px solid #CE93D8">
+    ⭐ Score: <strong id="scsc">0</strong> / 6
+    <div style="flex:1;height:8px;background:#F3E5F5;border-radius:4px;overflow:hidden;border:1px solid #CE93D8"><div id="scfill" style="height:100%;width:0%;background:linear-gradient(90deg,#AB47BC,#00897B);transition:width .4s"></div></div>
+  </div>
+  <div id="scq"></div>
+  <div style="display:flex;gap:8px;margin-top:6px">
+    <button class="btn btn-p" onclick="chkSC()">Check All ✓</button>
+    <button class="btn btn-o" onclick="buildSC()">Reset 🔄</button>
+  </div>
+  <div class="complete-screen" id="completeScreen">
+    <div style="font-size:36px">🦋</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 5 Complete!</div>
+    <div class="code-box">
+      <div style="font-size:12px;color:#78909C;font-weight:700;margin-bottom:4px">🔑 Completion Code — Day 5</div>
+      <div class="code-txt" id="codeDisplay">D5-????</div>
+      <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+    </div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 6 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
+        <!-- 1-lesson/day recommendation (A1 level Day 1-60) -->
+    <div style="background:#FFF9C4;border:2px solid #F9A825;border-radius:12px;padding:10px 14px;margin:14px 0;font-size:13px;color:#795548;font-weight:700;line-height:1.6">
+      🌟 <strong>เคล็ดลับ:</strong> เรียน <strong>วันละ 1 เรื่อง</strong> ค่อยๆ สะสมทุกวัน ดีกว่าเรียนรวดเดียว!<br>
+      <span style="font-size:12px;color:#9E9E9E">แนะนำให้กลับมาเรียน Day 6 พรุ่งนี้ 😊</span>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
+      <a href="progress.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">
+        🏠 หน้าหลัก
+      </a>
+      <a href="Day6_RiverFriends_A1.html" style="display:inline-block;background:linear-gradient(135deg,#1D4ED8,#0891B2);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">
+        🐧 Day 6 →
+      </a>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+</div>
+</div>
+<script>
+
+
+const PREV_KEY='wla_d4',MY_KEY='wla_d5',PREV_PFX='D4-',MY_DAY=5;
+const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🔀'];
+const WORDS=[{e:'butterfly',t:'ผีเสื้อ'},{e:'insect',t:'แมลง'},{e:'color',t:'สี'},{e:'beautiful',t:'สวยงาม'},{e:'sit',t:'นั่ง'},{e:'look',t:'มอง'}];
+const SS=["Amy sees a butterfly in the garden.","A butterfly is an insect.","It has many colors — red, yellow, and blue.","The butterfly sits on Amy's hand."];
+const DS=["Amy sees a butterfly in the garden.","The butterfly has many colors.","She sits on a bench and looks at it."];
+const STORY="Amy is Mimi's little sister. One day, she sees a butterfly in the garden. A butterfly is an insect. It has many colors — red, yellow, and blue. Amy thinks it is very beautiful. She sits on a bench and looks at it for a long time. Then the butterfly sits right on Amy's hand! She smiles.";
+function scramble(w){const a=w.split('');for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.join('').toUpperCase();}
+function checkLock(){
+  if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000' || (v.startsWith(PREV_PFX)&&v.length===7)){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
+function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
+function initContent(){
+  const SV={butterfly:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="55" rx="8" ry="20" fill="#6A1B9A"/><ellipse cx="28" cy="42" rx="24" ry="16" fill="#AB47BC" transform="rotate(-20 28 42)"/><ellipse cx="72" cy="42" rx="24" ry="16" fill="#AB47BC" transform="rotate(20 72 42)"/><ellipse cx="24" cy="65" rx="18" ry="12" fill="#CE93D8" transform="rotate(15 24 65)"/><ellipse cx="76" cy="65" rx="18" ry="12" fill="#CE93D8" transform="rotate(-15 76 65)"/><circle cx="48" cy="35" r="8" fill="#37474F"/><circle cx="46" cy="33" r="2" fill="white"/></svg>`,
+  insect:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="35" rx="14" ry="12" fill="#558B2F"/><ellipse cx="50" cy="60" rx="12" ry="18" fill="#7CB342"/><circle cx="44" cy="30" r="4" fill="#37474F"/><circle cx="56" cy="30" r="4" fill="#37474F"/><line x1="28" y1="40" x2="14" y2="30" stroke="#37474F" stroke-width="2"/><line x1="28" y1="50" x2="12" y2="50" stroke="#37474F" stroke-width="2"/><line x1="28" y1="60" x2="14" y2="70" stroke="#37474F" stroke-width="2"/><line x1="72" y1="40" x2="86" y2="30" stroke="#37474F" stroke-width="2"/><line x1="72" y1="50" x2="88" y2="50" stroke="#37474F" stroke-width="2"/><line x1="72" y1="60" x2="86" y2="70" stroke="#37474F" stroke-width="2"/></svg>`,
+  color:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="50" r="38" fill="#fff" stroke="#E0E0E0" stroke-width="2"/><path d="M50 50 L50 12 A38 38 0 0 1 83 69Z" fill="#F44336"/><path d="M50 50 L83 69 A38 38 0 0 1 17 69Z" fill="#FDD835"/><path d="M50 50 L17 69 A38 38 0 0 1 50 12Z" fill="#42A5F5"/><circle cx="50" cy="50" r="12" fill="white"/></svg>`,
+  beautiful:`<svg viewBox="0 0 100 100" width="52" height="52"><polygon points="50,8 61,35 90,35 67,54 75,82 50,65 25,82 33,54 10,35 39,35" fill="#FDD835"/></svg>`,
+  sit:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="18" r="12" fill="#FFCCBC"/><path d="M50 30 Q48 48 46 58" stroke="#AB47BC" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M46 58 L30 72" stroke="#AB47BC" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M46 58 L62 72" stroke="#AB47BC" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M50 40 Q62 36 68 30" stroke="#AB47BC" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="15" y="72" width="70" height="8" rx="4" fill="#8D6E63"/></svg>`,
+  look:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="50" rx="40" ry="22" fill="#E1BEE7" stroke="#AB47BC" stroke-width="3"/><circle cx="50" cy="50" r="14" fill="#fff" stroke="#AB47BC" stroke-width="2"/><circle cx="50" cy="50" r="9" fill="#37474F"/><circle cx="54" cy="46" r="3" fill="white"/></svg>`};
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'></div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
+  const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+  buildSL();
+  buildS4();
+  buildSC();loadV();
+}
+function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🦋 Day 5 · '+STEPS[n];}
+let allV=[],curV=null;
+function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');const di=allV.findIndex(v=>v.default);if(di>=0)document.getElementById('vsel').value=di;curV=allV[parseInt(document.getElementById('vsel').value)]||allV[0];document.getElementById('vs').textContent=`✓ ${allV.length} voices`;}
+function setV(i){curV=allV[parseInt(i)]||null;}
+window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,400);setTimeout(loadV,1200);
+function speak(t){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(curV)u.voice=curV;u.rate=parseFloat(document.getElementById('rsl').value);u.onstart=()=>{document.getElementById('vs').textContent='🔊 speaking...'};u.onend=()=>{document.getElementById('vs').textContent=`✓ ${allV.length} voices`};window.speechSynthesis.speak(u);}
+function stopAll(){window.speechSynthesis.cancel();}
+// ── STEP 4: LISTEN + ARRANGE ──
+let s4picked=[],s4done=[],step4Score=null;
+function _s4d(){return typeof DS!=='undefined'?DS:(typeof DICT!=='undefined'?DICT:[]);}
+function buildS4(){
+  const data=_s4d();
+  s4picked=data.map(()=>[]);s4done=data.map(()=>false);
+  const area=document.getElementById('s4area');if(!area)return;
+  area.innerHTML=data.map((sent,i)=>{
+    const words=sent.replace(/[.,!?]/g,'').split(' ');
+    const sh=[...words].sort(()=>Math.random()-.5);
+    return `<div style="background:#fff;border:2px solid #FFE082;border-radius:14px;padding:10px 12px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <button class="tts" onclick="_s4speak(${i})" style="padding:5px 11px;font-size:13px">&#9654; ฟัง</button>
+        <span style="font-size:12px;color:#78909C;font-weight:700">ประโยคที่ ${i+1}</span>
+        <span id="s4fb${i}" style="font-size:12px;font-weight:800;margin-left:auto"></span>
+      </div>
+      <div id="s4tgt${i}" style="min-height:34px;background:#FFF8E1;border-radius:8px;padding:5px 9px;border:1.5px dashed #FFB74D;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;align-items:center"><span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span></div>
+      <div id="s4bank${i}" style="display:flex;flex-wrap:wrap;gap:6px">${sh.map((w)=>`<button class="s4w" data-si="${i}" data-word="${w}" onclick="pickS4(+this.dataset.si,this,this.dataset.word)">${w}</button>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+function _s4speak(i){speak(_s4d()[i]);}
+function pickS4(i,btn,word){
+  if(s4done[i])return;
+  s4picked[i].push(word);btn.disabled=true;btn.classList.add('used');
+  _renderS4(i);
+}
+function unpickS4(i,j){
+  if(s4done[i])return;
+  const w=s4picked[i].splice(j,1)[0];
+  const bank=document.getElementById('s4bank'+i);
+  for(const b of bank.querySelectorAll('.s4w')){if(b.dataset.word===w&&b.disabled){b.disabled=false;b.classList.remove('used');break;}}
+  _renderS4(i);
+}
+function _renderS4(i){
+  const tgt=document.getElementById('s4tgt'+i);if(!tgt)return;
+  tgt.innerHTML=s4picked[i].length
+    ?s4picked[i].map((w,j)=>`<span onclick="unpickS4(${i},${j})" style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:6px;padding:4px 9px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer">${w}</span>`).join('')
+    :'<span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span>';
+}
+function checkS4(){
+  const data=_s4d();let ok=0;
+  data.forEach((sent,i)=>{
+    const exp=sent.replace(/[.,!?]/g,'').split(' ');
+    const good=JSON.stringify(s4picked[i])===JSON.stringify(exp);
+    const fb=document.getElementById('s4fb'+i);
+    if(fb){fb.textContent=good?'✓ ถูกต้อง!':'✗ ลองใหม่';fb.style.color=good?'#2E7D32':'#C62828';}
+    if(good){s4done[i]=true;}
+    if(good)ok++;
+  });
+  step4Score=Math.round(ok/data.length*100);
+  speakFb(ok===data.length?'perfect':ok>0?'correct':'wrong');
+}
+
+// ── FEEDBACK SOUND ──
+function speakFb(type){
+  const msgs={
+    correct:['Correct!','Great job!','Well done!','Awesome!'],
+    wrong:  ['Try again!','Almost!','Keep trying!'],
+    perfect:['Perfect!','Amazing! All correct!','Excellent!']
+  };
+  const list=msgs[type]||msgs.correct;
+  const txt=list[Math.floor(Math.random()*list.length)];
+  const u=new SpeechSynthesisUtterance(txt);
+  if(curV)u.voice=curV;
+  u.rate=1.0;u.lang='en-US';
+  window.speechSynthesis.speak(u);
+}
+
+function chk4(){DS.forEach((s,i)=>{const v=document.getElementById('d'+i).value.trim().toLowerCase().replace(/[.,!?]/g,'');const a=s.toLowerCase().replace(/[.,!?]/g,'');const f=document.getElementById('f'+i);f.textContent=v===a?'✓ Correct!':'✗ Try again';f.className='fb '+(v===a?'ok':'err');});
+speakFb('correct');}
+function showA4(){DS.forEach((s,i)=>{document.getElementById('d'+i).value=s;document.getElementById('f'+i).textContent='';});}
+function scramble(w){const a=w.split('');for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.join('').toUpperCase();}
+function buildSC(){
+  document.getElementById('scsc').textContent=0;document.getElementById('scfill').style.width='0%';document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('scq').innerHTML=WORDS.map((w,i)=>`
+    <div class="sc-card">
+      <div style="font-size:13px;color:#6A1B9A;font-weight:700;margin-bottom:4px">คำที่ ${i+1}</div>
+      <div class="sc-letters">${scramble(w.e)}</div>
+      <input class="sc-inp" id="sc${i}" placeholder="Type the word..." oninput="this.value=this.value.toLowerCase()">
+      <div class="fb" id="scf${i}"></div>
+    </div>`).join('');
+}
+let scScore=0;
+function chkSC(){
+  scScore=0;
+  WORDS.forEach((w,i)=>{const v=document.getElementById('sc'+i).value.trim().toLowerCase();const f=document.getElementById('scf'+i);if(v===w.e){scScore++;f.textContent='✓ Correct!';f.className='fb ok';}else{f.textContent=`✗ Answer: ${w.e}`;f.className='fb err';}});
+  document.getElementById('scsc').textContent=scScore;document.getElementById('scfill').style.width=(scScore/6*100)+'%';
+  document.getElementById('totalSc').textContent=scScore;document.getElementById('sfill').style.width=(scScore/6*100)+'%';
+  document.getElementById('starDisp').textContent=scScore<=2?'☆☆☆':scScore<=4?'⭐☆☆':scScore<=5?'⭐⭐☆':'⭐⭐⭐';
+  if(scScore>=4)showCompletion();
+}
+function generateCode(d){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+d+'-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);document.getElementById('savedCode').textContent=code;document.getElementById('alreadyDone').classList.add('show');}syncToCloud(MY_DAY,code);document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
+function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
+checkLock();
+
+function addAdminBadge(){
+  const b=document.createElement('div');
+  b.style.cssText='position:fixed;bottom:12px;right:12px;background:#1565C0;color:#fff;border-radius:10px;padding:5px 12px;font-size:11px;font-weight:800;z-index:9999;font-family:Nunito,sans-serif';
+  b.textContent='🔧 Admin Mode';document.body.appendChild(b);
+}
+
+// ── STEP 2: READ WHOLE STORY — auto-stop + scoring ──
+let activeRec2=null, step2Score=null;
+let s2FullText='', s2SilenceTimer=null;
+function finishRec2(){
+  const txt=s2FullText.trim();
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดังๆ';return;}
+  const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  step2Score=avg;
+  const bar=document.getElementById('r2bar');
+  bar.style.width=avg+'%';bar.style.background=avg>=80?'#43A047':avg>=50?'#FFA726':'#E53935';
+  document.getElementById('r2lbl').textContent=avg+'% — '+(avg>=80?'อ่านได้เยี่ยมมาก! 🎉':avg>=50?'ดี! ลองอีกครั้ง':'ฟังแล้วลองใหม่นะ');
+  const stars=avg>=80?'⭐⭐⭐':avg>=60?'⭐⭐☆':'⭐☆☆';
+  const weak=SS.filter((_,i)=>scores[i]<70);
+  const el=document.getElementById('s2summary');if(!el)return;
+  el.style.display='block';
+  el.innerHTML=`<div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:14px 16px;margin-top:10px">
+    <div style="font-size:16px;font-weight:900;color:#1B5E20;margin-bottom:6px">${stars} คะแนน Step 2: ${avg}%</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      ${scores.map((sc,i)=>`<span style="background:${sc>=80?'#C8E6C9':sc>=50?'#FFF9C4':'#FFCDD2'};border-radius:8px;padding:3px 8px;font-size:12px;font-weight:800;color:#37474F">ประโยค ${i+1}: ${sc}%</span>`).join('')}
+    </div>
+    ${weak.length?`<div style="font-size:12px;color:#E65100;font-weight:700">🔁 ฝึกเพิ่ม: "${weak.join('" · "')}"</div>`:'<div style="font-size:12px;color:#2E7D32;font-weight:700">✅ อ่านได้ดีทุกประโยค!</div>'}
+  </div>`;
+}
+function stopRec2(){
+  if(s2SilenceTimer){clearTimeout(s2SilenceTimer);s2SilenceTimer=null;}
+  const btn=document.getElementById('r2recBtn');
+  btn.classList.remove('recording');btn.textContent='🎤 อ่านอีกครั้ง';btn.onclick=startRec2;
+  if(activeRec2){try{activeRec2.stop();}catch(e){}activeRec2=null;}
+  finishRec2();
+}
+function startRec2(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';return;}
+  if(activeRec2){stopRec2();return;}
+  if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('r2lbl').textContent='⏳ หยุดเสียงแล้ว... รอสักครู่';setTimeout(startRec2,1500);return;}
+  s2FullText='';
+  document.getElementById('r2bar').style.width='0%';
+  document.getElementById('s2summary').style.display='none';
+  const btn=document.getElementById('r2recBtn');
+  btn.classList.add('recording');btn.textContent='⏹ หยุด';
+  document.getElementById('r2lbl').textContent='🎙️ กำลังฟัง... อ่านเรื่องออกเสียงได้เลย!';
+  document.getElementById('r2interim').textContent='';
+  const rec=new SR();
+  rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=true;
+  activeRec2=rec;
+  rec.onresult=e=>{
+    let interim='';
+    for(let r of e.results){if(r.isFinal)s2FullText+=r[0].transcript+' ';else interim+=r[0].transcript;}
+    if(interim)document.getElementById('r2interim').textContent='🎙️ "'+interim+'"';
+    if(s2SilenceTimer)clearTimeout(s2SilenceTimer);
+    s2SilenceTimer=setTimeout(stopRec2,2500);
+  };
+  rec.onend=()=>{if(activeRec2){activeRec2=null;finishRec2();}};
+  rec.onerror=e=>{if(e.error==='no-speech')return;activeRec2=null;btn.classList.remove('recording');btn.textContent='🎤 อ่านทั้งเรื่อง';btn.onclick=startRec2;};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 อ่านทั้งเรื่อง';}
+  btn.onclick=startRec2;
+}
+
+// ── STEP 3: PER-SENTENCE RECORDING ──
+function buildSL(){
+  document.getElementById('sl').innerHTML=SS.map((s,i)=>`
+    <div class="srow">
+      <div style="font-size:11px;font-weight:900;color:#90A4AE;margin-bottom:4px">ประโยคที่ ${i+1}</div>
+      <div class="srow-text">${s}</div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="tts" onclick="speak('${s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">▶ ฟัง</button>
+        <button class="rec-btn" id="rec${i}" onclick="startRec(${i})">🎤 พูด</button>
+      </div>
+    </div>
+    <div class="rec-wrap" id="rw${i}">
+      <div class="score-mini-wrap"><div class="score-mini" id="bar${i}"></div></div>
+      <div class="rec-label" id="lbl${i}">— กด ▶ ฟังก่อน แล้วกด 🎤 พูดตาม —</div>
+      <div class="rec-transcript" id="tr${i}"></div>
+    </div>`).join('');
+}
+function calcScore(heard,target){
+  const h=heard.toLowerCase().replace(/[.,!?]/g,'').trim();
+  const t=target.toLowerCase().replace(/[.,!?]/g,'').trim();
+  if(h===t)return 100;
+  const hw=h.split(' '),tw=t.split(' ');
+  const match=hw.filter(w=>tw.includes(w)).length;
+  return Math.round(match/tw.length*100);
+}
+let recScores=new Array(99).fill(null);
+function checkSummary3(){
+  const done=recScores.slice(0,SS.length).filter(s=>s!==null);
+  if(!done.length)return;
+  const avg=Math.round(done.reduce((a,b)=>a+b,0)/done.length);
+  const el=document.getElementById('s3summary');if(!el)return;
+  const stars=avg>=80?'⭐⭐⭐':avg>=60?'⭐⭐☆':'⭐☆☆';
+  const weak=SS.filter((_,i)=>recScores[i]!==null&&recScores[i]<70);
+  el.innerHTML=`<div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:14px 16px;margin-top:12px">
+    <div style="font-size:16px;font-weight:900;color:#1B5E20;margin-bottom:6px">${stars} คะแนน Step 3: ${avg}%</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      ${recScores.slice(0,SS.length).map((sc,i)=>sc===null?'':`<span style="background:${sc>=80?'#C8E6C9':sc>=50?'#FFF9C4':'#FFCDD2'};border-radius:8px;padding:3px 8px;font-size:12px;font-weight:800;color:#37474F">ประโยค ${i+1}: ${sc}%</span>`).join('')}
+    </div>
+    ${weak.length?`<div style="font-size:12px;color:#E65100;font-weight:700">🔁 ฝึกเพิ่ม: "${weak.join('" · "')}"</div>`:'<div style="font-size:12px;color:#2E7D32;font-weight:700">✅ พูดได้ดีทุกประโยค!</div>'}
+  </div>`;
+  el.style.display='block';
+}
+if(navigator.mediaDevices){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
+    s.getTracks().forEach(t=>t.stop());
+    const el=document.getElementById('micStatus');if(el)el.style.display='block';
+    const el2=document.getElementById('micStatus2');if(el2)el2.style.display='block';
+  }).catch(()=>{});
+}
+let activeRec=null, activeIdx=-1;
+function startRec(i){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';return;}
+  if(activeRec){try{activeRec.abort();}catch(e){}activeRec=null;}
+  if(activeIdx>=0){const pb=document.getElementById('rec'+activeIdx);if(pb){pb.classList.remove('recording');pb.textContent='🎤 พูดใหม่';const _ci=activeIdx;pb.onclick=()=>startRec(_ci);}}
+  activeIdx=i;
+  const btn=document.getElementById('rec'+i);
+  btn.classList.add('recording');btn.textContent='⏹ หยุด';
+  document.getElementById('lbl'+i).textContent='🎙️ กำลังฟัง... พูดเลย!';
+  document.getElementById('tr'+i).textContent='';
+  const rec=new SR();
+  rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=false;
+  activeRec=rec;let finalResult='';
+  rec.onspeechstart=()=>{document.getElementById('tr'+i).textContent='🎙️ กำลังฟัง...';};
+  rec.onresult=e=>{let interim='',final='';for(let r of e.results){if(r.isFinal)final+=r[0].transcript;else interim+=r[0].transcript;}if(interim)document.getElementById('tr'+i).textContent='🎙️ "'+interim+'"';if(final)finalResult=final;};
+  rec.onend=()=>{
+    if(activeRec!==rec){btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);return;}
+    btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);activeRec=null;
+    const text=finalResult.trim();
+    if(text){
+      const sc=calcScore(text,SS[i]);
+      recScores[i]=sc;
+      const bar=document.getElementById('bar'+i);bar.style.width=sc+'%';bar.style.background=sc>=80?'#43A047':sc>=50?'#FFA726':'#E53935';
+      document.getElementById('lbl'+i).textContent=sc+'% — '+(sc>=80?'เยี่ยม! 🎉':sc>=50?'ดี ลองอีกครั้ง':'ฟังแล้วพูดอีกครั้ง');
+      document.getElementById('tr'+i).textContent='ได้ยิน: "'+text+'"';
+      checkSummary3();
+    } else {
+      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดังๆ';
+      document.getElementById('tr'+i).textContent='';
+    }
+  };
+  rec.onerror=e=>{if(e.error==='no-speech')return;if(activeRec===rec)activeRec=null;btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 พูด';}
+  btn.onclick=()=>{try{if(activeRec)activeRec.stop();}catch(e){}btn.onclick=()=>startRec(i);};
+}
+</script>
+<script>
+const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+</script>
+</body>
+</html>
