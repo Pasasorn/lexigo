@@ -365,35 +365,6 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
     <div class="sum-note" id="sumNote"></div>
   </div>
 
-  <!-- Contact info -->
-  <div class="card">
-    <div class="card-title">👤 ข้อมูลติดต่อ (สำหรับครูแจ้งผลการยืนยัน)</div>
-    <div class="row2">
-      <div class="field">
-        <label>ชื่อ <span class="req">*</span></label>
-        <input class="inp" id="pName" type="text" placeholder="ชื่อผู้ปกครอง / นักเรียน" maxlength="40">
-        <div class="ferr" id="eName">กรุณากรอก</div>
-      </div>
-      <div class="field">
-        <label>เบอร์โทร <span class="req">*</span></label>
-        <input class="inp" id="pPhone" type="tel" placeholder="0812345678" maxlength="10"
-          oninput="this.value=this.value.replace(/\D/g,'')">
-        <div class="ferr" id="ePhone">10 หลัก</div>
-      </div>
-    </div>
-    <div class="row2">
-      <div class="field">
-        <label>Line ID <span style="font-size:10px;color:#90A4AE;font-weight:700">(ถ้ามี)</span></label>
-        <input class="inp" id="pLine" type="text" placeholder="@line_id" maxlength="40">
-      </div>
-      <div class="field">
-        <label>Email <span class="req">*</span></label>
-        <input class="inp" id="pEmail" type="email" placeholder="email@gmail.com" maxlength="80">
-        <div class="ferr" id="eEmail">Email ไม่ถูกต้อง</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Bank transfer -->
   <div class="card">
     <div class="card-title">🏦 โอนเงินเข้าบัญชี</div>
@@ -558,10 +529,15 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
         <div class="ferr" id="eRPhone">10 หลัก</div>
       </div>
       <div class="field">
-        <label>Email <span class="req">*</span></label>
-        <input class="inp" id="rEmail" type="email" placeholder="email@gmail.com" maxlength="80">
-        <div class="ferr" id="eREmail">ไม่ถูกต้อง</div>
+        <label>Line ID <span style="font-size:10px;color:#90A4AE;font-weight:700">(ถ้ามี)</span></label>
+        <input class="inp" id="rLine" type="text" placeholder="@line_id" maxlength="40">
       </div>
+    </div>
+
+    <div class="field">
+      <label>Email <span class="req">*</span></label>
+      <input class="inp" id="rEmail" type="email" placeholder="email@gmail.com" maxlength="80">
+      <div class="ferr" id="eREmail">ไม่ถูกต้อง</div>
     </div>
 
     <div class="field">
@@ -810,30 +786,18 @@ function hideAlt(id){document.getElementById(id).classList.remove('on');}
 // ── STEP 1: Payment submit ──
 async function doPayment() {
   hideAlt('altPay');
-  const name  = document.getElementById('pName').value.trim();
-  const phone = document.getElementById('pPhone').value.trim();
-  const line  = document.getElementById('pLine').value.trim();
-  const email = document.getElementById('pEmail').value.trim();
 
-  let ok = true;
-  if(!name)                         ok &= fv('pName','eName',false,'กรุณากรอกชื่อ');
-  else                               fv('pName','eName',true,'');
-  if(!/^0\d{8,9}$/.test(phone))    ok &= fv('pPhone','ePhone',false,'10 หลัก ขึ้นต้น 0');
-  else                               fv('pPhone','ePhone',true,'');
-  // Line ID optional — ไม่บังคับ
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ok &= fv('pEmail','eEmail',false,'Email ไม่ถูกต้อง');
-  else                               fv('pEmail','eEmail',true,'');
-  if(!slipData){document.getElementById('eSlip').classList.add('on');ok=false;}
-
-  if(!ok){showAlt('altPay','⚠️ กรุณากรอกข้อมูลและแนบสลิปให้ครบ','warn');return;}
+  if(!slipData){ document.getElementById('eSlip').classList.add('on');
+    showAlt('altPay','⚠️ กรุณาแนบสลิปโอนเงินก่อน','warn'); return; }
 
   document.getElementById('btnPay').disabled=true;
   document.getElementById('ldPay').classList.add('on');
 
-  const data = { name, phone, line, email, ...selectedPkg, slipAttached: !!slipData };
+  const orderId = 'ORD-' + Date.now();
+  const data = { ...selectedPkg, orderId, slipAttached: true };
 
   try {
-    await jsonp({ action:'newPurchase', name, phone, line, email,
+    await jsonp({ action:'newPurchase', order_id: orderId,
       pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type });
     // Upload slip (no-cors + text/plain เพื่อข้าม CORS preflight)
     try {
@@ -841,7 +805,7 @@ async function doPayment() {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ action:'uploadSlip', phone, slip: slipData })
+        body: JSON.stringify({ action:'uploadSlip', order_id: orderId, slip: slipData })
       });
     } catch(e) {}
   } catch(e) { /* offline fallback */ }
@@ -863,11 +827,7 @@ function showPending(d) {
 }
 
 function gotoRegister(d) {
-  const fPhone  = document.getElementById('rPhone');
-  const fEmail  = document.getElementById('rEmail');
   const fCourse = document.getElementById('rCourse');
-  if (fPhone)  fPhone.value  = d.phone   || '';
-  if (fEmail)  fEmail.value  = d.email   || '';
   if (fCourse) fCourse.value = d.pkgName || '';
   setStep(3); go(3);
 }
@@ -938,6 +898,7 @@ async function doRegister() {
   const first = document.getElementById('rFirst').value.trim();
   const last  = document.getElementById('rLast').value.trim();
   const phone = document.getElementById('rPhone').value.trim();
+  const line  = document.getElementById('rLine') ? document.getElementById('rLine').value.trim() : '';
   const email = document.getElementById('rEmail').value.trim();
   const ref   = document.getElementById('rRef').value.trim().toUpperCase();
 
@@ -955,11 +916,11 @@ async function doRegister() {
   document.getElementById('ldReg').classList.add('on');
 
   const pd = JSON.parse(localStorage.getItem(PK)||'{}');
-  const course = document.getElementById('rCourse').value || pd.pkgName || '';
-  const ordPhone = pd.phone || phone;
+  const course  = document.getElementById('rCourse').value || pd.pkgName || '';
+  const orderId = pd.orderId || '';
 
   try {
-    const res = await jsonp({ action:'selfRegister', code, nick, first, last, phone, email, ref, course, ordPhone });
+    const res = await jsonp({ action:'selfRegister', code, nick, first, last, phone, line, email, ref, course, orderId });
     document.getElementById('ldReg').classList.remove('on');
 
     if(res.status==='ok') {
