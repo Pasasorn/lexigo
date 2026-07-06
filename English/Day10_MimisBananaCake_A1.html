@@ -35,8 +35,13 @@ body{background:#F1F8E9;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 .fb{font-size:14px;margin-top:5px;min-height:18px;font-weight:700}.ok{color:#2E7D32}.err{color:#C62828}
 .fib-box{background:#E8F5E9;border-radius:14px;padding:14px 16px;margin-bottom:12px;border:2px solid #A5D6A7}
 .fib-sent{font-size:17px;font-weight:700;color:#37474F;line-height:2}
-.blank-inp{font-size:17px;font-weight:800;color:#1B5E20;border:none;border-bottom:3px solid #43A047;background:transparent;text-align:center;min-width:80px;font-family:'Nunito',sans-serif;padding:0 4px}
-.blank-inp:focus{outline:none}
+.blank-slot{display:inline-block;min-width:90px;padding:2px 10px;border-bottom:3px solid #43A047;color:#1B5E20;font-weight:900;text-align:center;background:#E8F5E9;border-radius:6px;margin:0 4px;transition:all .2s}
+.fib-choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center}
+.choice-btn{padding:9px 20px;border-radius:14px;border:2.5px solid #A5D6A7;background:#fff;font-size:15px;font-weight:800;color:#37474F;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s}
+.choice-btn:hover{background:#E8F5E9;border-color:#43A047;color:#1B5E20}
+.choice-btn.selected{background:#E8F5E9;border-color:#43A047;color:#1B5E20;transform:scale(1.06)}
+.choice-btn.correct{background:#C8E6C9!important;border-color:#2E7D32!important;color:#1B5E20!important;pointer-events:none}
+.choice-btn.wrong{background:#FFCDD2!important;border-color:#C62828!important;color:#C62828!important;pointer-events:none}
 .acrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
 .acard{background:#fff;border-radius:18px;padding:9px 11px;text-align:center;min-width:76px;border:2.5px solid #A5D6A7;box-shadow:0 3px 8px rgba(0,0,0,0.07)}
 .acard .eng{font-size:13px;font-weight:900;color:#1B5E20;margin-top:4px}.acard .th{font-size:11px;color:#78909C;margin-top:1px;font-weight:600}
@@ -147,7 +152,7 @@ body{background:#F1F8E9;min-height:100vh;padding:14px;max-width:680px;margin:0 a
       <span style="font-size:12px;color:#9E9E9E">แนะนำให้กลับมาเรียน Day 11 พรุ่งนี้ 😊</span>
     </div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
-      <a href="progress.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
+      <a href="dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
       <a href="Day11_LeosChickenNoodle_A1.html" style="display:inline-block;background:linear-gradient(135deg,#1D4ED8,#0891B2);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🍗 Day 11 →</a>
     </div>
 </div>
@@ -166,11 +171,12 @@ const SS=["Mimi is hungry after school.","She wants to make a banana cake.","Mim
 const DS=["Mimi is hungry after school.","She starts to cook the banana cake.","Mimi is full and very happy."];
 const STORY="Mimi is hungry after school. She wants to make a banana cake. She takes three bananas and starts to cook. The cake smells wonderful! Mimi pours some juice into a glass. She is now full and happy. Tomorrow, Mimi will share her cake with Leo!";
 const FIBS=[
-  {sent:"Mimi is ___ after school.",ans:"hungry"},
-  {sent:"She wants to make a ___ cake.",ans:"banana"},
-  {sent:"Mimi pours some ___ into a glass.",ans:"juice"},
-  {sent:"She is now ___ and happy.",ans:"full"}
+  {sent:"Mimi is ___ after school.",      ans:"hungry", choices:["hungry","full","cook","cake"]},
+  {sent:"She wants to make a ___ cake.",  ans:"banana", choices:["juice","banana","full","cook"]},
+  {sent:"Mimi pours some ___ into a glass.", ans:"juice", choices:["banana","cake","juice","hungry"]},
+  {sent:"She is now ___ and happy.",       ans:"full",   choices:["cook","full","hungry","juice"]}
 ];
+function shuffle(a){return a.slice().sort(()=>Math.random()-.5);}
 
 function generateCode(day){{const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='D'+day+'-';for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code;}}
 function checkLock(){
@@ -201,9 +207,42 @@ function setV(i){curV=allV[parseInt(i)]||null;}
 window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,400);setTimeout(loadV,1200);
 function speak(t){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(curV)u.voice=curV;u.rate=parseFloat(document.getElementById('rsl').value);u.onstart=()=>{document.getElementById('vs').textContent='🔊 speaking...'};u.onend=()=>{document.getElementById('vs').textContent=`✓ ${allV.length} voices`};window.speechSynthesis.speak(u);}
 function stopAll(){window.speechSynthesis.cancel();}
-function buildFIB(){document.getElementById('fibq').innerHTML=FIBS.map((q,i)=>`<div class="fib-box"><div class="fib-sent">${q.sent.replace('___',`<input class="blank-inp" id="fib${i}" placeholder="___" oninput="this.style.width=Math.max(80,this.value.length*14+20)+'px'">`)}</div><div class="fb" id="fibf${i}"></div></div>`).join('');}
+function buildFIB(){
+  document.getElementById('fibq').innerHTML=FIBS.map((q,i)=>{
+    const opts=shuffle(q.choices).map(c=>`<button class="choice-btn" id="ch_${i}_${c}" onclick="pickChoice(${i},'${c}')">${c}</button>`).join('');
+    return `<div class="fib-box">
+      <div class="fib-sent">${q.sent.replace('___',`<span class="blank-slot" id="slot${i}">___</span>`)}</div>
+      <div class="fib-choices" id="choices${i}">${opts}</div>
+      <div class="fb" id="fibf${i}"></div>
+    </div>`;
+  }).join('');
+}
+function pickChoice(qi,val){
+  const slot=document.getElementById('slot'+qi);
+  slot.textContent=val; slot.dataset.val=val;
+  document.querySelectorAll('#choices'+qi+' .choice-btn').forEach(b=>b.classList.toggle('selected',b.textContent===val));
+}
 let fibScore=0;
-function chkFIB(){fibScore=0;FIBS.forEach((q,i)=>{const v=document.getElementById('fib'+i).value.trim().toLowerCase();const f=document.getElementById('fibf'+i);if(v===q.ans){fibScore++;f.textContent='✓ Correct!';f.className='fb ok';}else{f.textContent=`✗ Answer: ${q.ans}`;f.className='fb err';}});document.getElementById('totalSc').textContent=fibScore;document.getElementById('sfill').style.width=(fibScore/4*100)+'%';document.getElementById('starDisp').textContent=fibScore<=1?'☆☆☆':fibScore<=2?'⭐☆☆':fibScore<=3?'⭐⭐☆':'⭐⭐⭐';speakFb(fibScore===FIBS.length?'perfect':fibScore>0?'correct':'wrong');speakFb(fibScore>=FIBS.length?'perfect':fibScore>0?'correct':'wrong');if(fibScore>=3)showCompletion();}
+function chkFIB(){
+  fibScore=0;
+  FIBS.forEach((q,i)=>{
+    const slot=document.getElementById('slot'+i);
+    const val=(slot.dataset.val||'').toLowerCase();
+    const f=document.getElementById('fibf'+i);
+    const btns=document.querySelectorAll('#choices'+i+' .choice-btn');
+    btns.forEach(b=>{
+      if(b.textContent===q.ans) b.classList.add('correct');
+      else if(b.textContent===val && val!==q.ans) b.classList.add('wrong');
+    });
+    if(val===q.ans){fibScore++;f.textContent='✓ Correct!';f.className='fb ok';}
+    else if(!val){f.textContent='⚠️ กรุณาเลือกคำตอบ';f.className='fb err';}
+    else{f.textContent=`✗ คำตอบที่ถูก: ${q.ans}`;f.className='fb err';}
+  });
+  document.getElementById('totalSc').textContent=fibScore;
+  document.getElementById('sfill').style.width=(fibScore/4*100)+'%';
+  document.getElementById('starDisp').textContent=fibScore<=1?'☆☆☆':fibScore<=2?'⭐☆☆':fibScore<=3?'⭐⭐☆':'⭐⭐⭐';
+  if(fibScore>=3)showCompletion();
+}
 function resetFIB(){buildFIB();document.getElementById('totalSc').textContent=0;document.getElementById('sfill').style.width='0%';document.getElementById('starDisp').textContent='☆☆☆';document.getElementById('completeScreen').classList.remove('show');}
 function generateCode(day){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='D'+day+'-';for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code;}
 function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);syncToCloud(MY_DAY,code,fibScore);document.getElementById('savedCodeN').textContent=code;document.getElementById('alreadyDone').classList.add('show');}document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
