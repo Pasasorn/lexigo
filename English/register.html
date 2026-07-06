@@ -338,6 +338,22 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
 
   <div class="note">💡 สมัครตลอดชีพคุ้มกว่ามาก — ได้ครบ 15 Level ราคาเดียว ประหยัดถึง 71%!</div>
   <div class="foot">📞 สอบถาม Line: @LexiGo_TH</div>
+
+  <!-- ── คืนหน้าบ้าน: เข้าด้วยรหัสนักเรียน ── -->
+  <div style="margin-top:16px;background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+    <div style="font-size:13px;font-weight:900;color:#37474F;margin-bottom:10px">🔑 สมัครแล้ว? เข้าสู่ระบบด้วยรหัสนักเรียน</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input id="loginCode" type="tel" maxlength="6" placeholder="รหัส 6 หลัก เช่น 123456"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        style="flex:1;border:2px solid #BDBDBD;border-radius:12px;padding:10px 12px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;-webkit-appearance:none"
+        onkeydown="if(event.key==='Enter')loginWithCode()">
+      <button onclick="loginWithCode()"
+        style="background:linear-gradient(135deg,#1E88E5,#0D47A1);color:#fff;border:none;border-radius:12px;padding:11px 16px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap">
+        เข้าสู่ระบบ →</button>
+    </div>
+    <div id="loginErr" style="display:none;font-size:12px;font-weight:700;color:#C62828;margin-top:7px"></div>
+    <div id="loginLoad" style="display:none;font-size:12px;font-weight:700;color:#1E88E5;margin-top:7px">⏳ กำลังตรวจสอบ…</div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════
@@ -607,6 +623,49 @@ const TIERS = [
 ];
 let currentTier = 0, spotsLeft = 30, selectedPkg = null, selectedLevel = null, slipData = null;
 
+// ── Login with existing student code ──
+async function loginWithCode() {
+  const code   = document.getElementById('loginCode').value.trim();
+  const errEl  = document.getElementById('loginErr');
+  const loadEl = document.getElementById('loginLoad');
+  errEl.style.display  = 'none';
+  loadEl.style.display = 'none';
+
+  if (!/^\d{6}$/.test(code)) {
+    errEl.textContent = '⚠️ กรอกรหัส 6 หลักให้ครบ'; errEl.style.display = 'block'; return;
+  }
+  loadEl.style.display = 'block';
+  try {
+    const res = await jsonp({ action:'checkApproval', code });
+    loadEl.style.display = 'none';
+
+    if (res.status === 'not_found') {
+      errEl.textContent = '❌ ไม่พบรหัสนี้ในระบบ กรุณาตรวจสอบใหม่';
+      errEl.style.display = 'block'; return;
+    }
+    if (res.approval_status === 'active') {
+      // บันทึก minimal student data แล้วไป dashboard
+      const st = { code, pending_approval: false, nick:'', course:'' };
+      localStorage.setItem(SK, JSON.stringify(st));
+      location.href = 'dashboard.html';
+    } else if (res.approval_status === 'pending_approval') {
+      const st = { code, pending_approval: true };
+      localStorage.setItem(SK, JSON.stringify(st));
+      showSuccess(st);
+    } else if (res.approval_status === 'rejected') {
+      errEl.textContent = '❌ รหัสนี้ถูก reject กรุณาสมัครใหม่หรือติดต่อ Line: @LexiGo';
+      errEl.style.display = 'block';
+    } else {
+      errEl.textContent = '⚠️ สถานะไม่ถูกต้อง กรุณาลองใหม่';
+      errEl.style.display = 'block';
+    }
+  } catch(e) {
+    loadEl.style.display = 'none';
+    errEl.textContent = '⚠️ ไม่สามารถเชื่อมต่อได้ ลองใหม่อีกครั้ง';
+    errEl.style.display = 'block';
+  }
+}
+
 // ── Boot ──
 window.onload = function() {
   // Check if accessed via registration link (?mode=register&token=XXX)
@@ -627,7 +686,14 @@ window.onload = function() {
 
   // Already registered?
   const st = JSON.parse(localStorage.getItem(SK) || 'null');
-  if (st && st.code) { showSuccess(st); return; }
+  if (st && st.code) {
+    if (!st.pending_approval) {
+      // อนุมัติแล้ว → ไป dashboard โดยตรง
+      location.href = 'dashboard.html';
+      return;
+    }
+    showSuccess(st); return;
+  }
 
   // Pending purchase → go straight to p3
   const pd = JSON.parse(localStorage.getItem(PK) || 'null');
