@@ -587,6 +587,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
     <div style="background:#FFF8E1;border:1.5px solid #FFE082;border-radius:11px;padding:10px 13px;font-size:11px;font-weight:700;color:#E65100;margin-top:8px">
       💡 ยังไม่ได้รับการอนุมัติใน 24 ชม.? ทักมาที่ Line: <strong>@LexiGo</strong>
     </div>
+    <div id="approvalNotif" style="display:none;margin-top:10px"></div>
   </div>
   <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่</button>
   <div class="foot">🎓 ขอให้โชคดีในการเรียน!</div>
@@ -942,6 +943,8 @@ async function doRegister() {
 }
 
 // ── Show success ──
+let _approvalTimer = null;
+
 function showSuccess(st) {
   document.getElementById('succCode').textContent = st.code || '—';
   document.getElementById('succDetail').innerHTML = `
@@ -950,6 +953,43 @@ function showSuccess(st) {
     <div class="irow"><span class="ilbl">คอร์ส</span><span class="ival hi">${st.course||'—'}</span></div>
     <div class="irow"><span class="ilbl">Email</span><span class="ival">${st.email||'—'}</span></div>`;
   setStep(4); go(4);
+  // Poll สถานะทุก 30 วิ
+  if (_approvalTimer) clearInterval(_approvalTimer);
+  if (st.code) {
+    _approvalTimer = setInterval(() => checkApprovalStatus(st.code), 30000);
+  }
+}
+
+async function checkApprovalStatus(code) {
+  try {
+    const res = await jsonp({ action:'checkApproval', code });
+    if (res.status !== 'ok') return;
+    const notif = document.getElementById('approvalNotif');
+
+    if (res.approval_status === 'active') {
+      clearInterval(_approvalTimer);
+      if (notif) {
+        notif.style.display = 'block';
+        notif.innerHTML = `<div style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:11px;padding:12px 14px;font-size:13px;font-weight:800;color:#065F46;text-align:center;line-height:1.8">
+          🎉 ครูอนุมัติแล้ว! พร้อมเรียนได้เลย<br>
+          <a href="Day1_LeosBigDay_A1.html" style="display:inline-block;margin-top:8px;background:#1B5E20;color:#fff;border-radius:10px;padding:9px 22px;font-size:13px;font-weight:900;text-decoration:none">
+            🌟 เริ่มเรียน Day 1</a></div>`;
+      }
+    } else if (res.approval_status === 'rejected') {
+      clearInterval(_approvalTimer);
+      localStorage.removeItem(SK);
+      if (notif) {
+        notif.style.display = 'block';
+        notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:700;color:#C62828;text-align:center;line-height:1.8">
+          ❌ สลิปไม่ผ่านการตรวจสอบ<br>
+          <span style="font-size:11px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือทักครูทาง Line</span><br><br>
+          <button onclick="resetAll()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
+            🔄 สมัครใหม่</button>
+          <div style="margin-top:8px;font-size:11px">Line: <strong>@LexiGo</strong></div>
+        </div>`;
+      }
+    }
+  } catch(e) {}
 }
 
 // ── Navigation ──
