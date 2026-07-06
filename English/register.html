@@ -461,7 +461,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
 <div class="page" id="p2">
   <div class="hdr-sm">
     <div class="ico">📋</div>
-    <div><h2>รอตรวจสอบการชำระเงิน</h2><p>ทีมงานจะแจ้งผลภายใน 5–10 นาที</p></div>
+    <div><h2>ส่งสลิปเรียบร้อย! ✅</h2><p>กำลังพาไปหน้าลงทะเบียน...</p></div>
   </div>
 
   <div class="step-ind">
@@ -491,7 +491,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
     </div>
   </div>
 
-  <button class="btn btn-blue" onclick="go(3)">
+  <button class="btn btn-blue" id="btnGotLink" onclick="go(3)">
     ✅ ได้รับลิงค์แล้ว → กรอกข้อมูลนักเรียน
   </button>
   <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่ / แก้ไขข้อมูล</button>
@@ -510,13 +510,13 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
   <div class="step-ind">
     <div class="si"><div class="si-n dn">✓</div><div class="si-t dn">ชำระเงิน</div></div>
     <div class="si-line dn"></div>
-    <div class="si"><div class="si-n dn">✓</div><div class="si-t dn">ยืนยันแล้ว</div></div>
+    <div class="si"><div class="si-n dn">✓</div><div class="si-t dn">ส่งสลิป</div></div>
     <div class="si-line dn"></div>
     <div class="si"><div class="si-n act">3</div><div class="si-t act">ลงทะเบียน</div></div>
   </div>
 
   <div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:#2E7D32;line-height:1.6">
-    🎉 ครูยืนยันการชำระเงินแล้ว! กรอกข้อมูลนักเรียนเพื่อเปิดใช้งาน
+    📋 กรอกข้อมูลนักเรียนและตั้งรหัส เพื่อรอครูอนุมัติ
   </div>
 
   <div class="card">
@@ -524,9 +524,10 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
 
     <div class="field">
       <label>รหัสนักเรียน <span class="req">*</span></label>
-      <input class="inp" id="rCode" type="text" placeholder="รหัสที่ได้รับจากครู" maxlength="10"
-        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
-      <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:3px">ดูได้จาก Line หรือ Email ที่ครูส่งให้</div>
+      <input class="inp" id="rCode" type="tel" placeholder="ตั้งรหัส 6 หลัก เช่น 123456" maxlength="6"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        onblur="checkCodeUnique(this.value)">
+      <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:3px">ตัวเลข 6 หลักเท่านั้น — ใช้จำรหัสเข้าเรียน</div>
       <div class="ferr" id="eCode">กรุณากรอกรหัส</div>
     </div>
 
@@ -577,7 +578,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
   </div>
 
   <button class="btn btn-green" id="btnReg" onclick="doRegister()">
-    🚀 ยืนยันและเริ่มเรียน!
+    📋 ยืนยันการลงทะเบียน
   </button>
   <div class="ld" id="ldReg"><div class="spin"></div><span class="stt">กำลังเปิดใช้งาน...</span></div>
   <div class="alt" id="altReg"></div>
@@ -589,25 +590,28 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
 ══════════════════════════════ -->
 <div class="page" id="p4">
   <div class="hdr">
-    <div class="logo">🎉</div>
-    <h1>พร้อมเรียนแล้ว!</h1>
-    <p>ยินดีต้อนรับสู่ LexiGo</p>
+    <div class="logo">📋</div>
+    <h1>ลงทะเบียนสำเร็จ!</h1>
+    <p>รอครูอนุมัติ — ไม่นานนี้</p>
   </div>
 
   <div class="card">
     <div class="succ-hero">
-      <div style="font-size:48px;margin-bottom:6px">🌟</div>
-      <div style="font-size:16px;font-weight:900;color:#2E7D32;margin-bottom:4px">ลงทะเบียนสำเร็จ!</div>
+      <div style="font-size:48px;margin-bottom:6px">⏳</div>
+      <div style="font-size:16px;font-weight:900;color:#1565C0;margin-bottom:4px">รอครูอนุมัติ</div>
       <div style="font-size:12px;font-weight:700;color:#546E7A;margin-bottom:4px">รหัสนักเรียนของคุณ:</div>
       <div class="code-chip" id="succCode">—</div>
     </div>
     <div class="info-table" id="succDetail"></div>
+    <div style="background:#E3F2FD;border:1.5px solid #90CAF9;border-radius:11px;padding:11px 13px;font-size:12px;font-weight:700;color:#1565C0;line-height:1.7;margin-top:10px">
+      ✅ ข้อมูลได้รับแล้ว!<br>
+      ครูจะตรวจสอบสลิปและอนุมัติภายใน <strong>24 ชั่วโมง</strong><br>
+      เมื่ออนุมัติแล้วจะได้รับลิงค์เรียนทาง Line
+    </div>
+    <div style="background:#FFF8E1;border:1.5px solid #FFE082;border-radius:11px;padding:10px 13px;font-size:11px;font-weight:700;color:#E65100;margin-top:8px">
+      💡 ยังไม่ได้รับการอนุมัติใน 24 ชม.? ทักมาที่ Line: <strong>@LexiGo</strong>
+    </div>
   </div>
-
-  <a href="Day1_LeosBigDay_A1.html" class="btn btn-green"
-    style="display:block;text-align:center;text-decoration:none;border-radius:13px;padding:13px;font-size:15px;font-weight:900;margin-bottom:8px">
-    🌟 เริ่มเรียน Day 1 เลย!
-  </a>
   <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่</button>
   <div class="foot">🎓 ขอให้โชคดีในการเรียน!</div>
 </div>
@@ -648,9 +652,9 @@ window.onload = function() {
   const st = JSON.parse(localStorage.getItem(SK) || 'null');
   if (st && st.code) { showSuccess(st); return; }
 
-  // Pending purchase?
+  // Pending purchase → go straight to p3
   const pd = JSON.parse(localStorage.getItem(PK) || 'null');
-  if (pd && pd.name) { showPending(pd); return; }
+  if (pd && pd.name) { gotoRegister(pd); return; }
 
   // Default: package selection
   loadTiers();
@@ -848,20 +852,24 @@ async function doPayment() {
   showPending(data);
 }
 
-// ── STEP 2: Show pending ──
-let _checkTimer = null;
-
+// ── STEP 2: Show pending → redirect to p3 ──
 function showPending(d) {
   document.getElementById('pendTable').innerHTML = `
     <div class="irow"><span class="ilbl">ชื่อ</span><span class="ival">${d.name||'—'}</span></div>
     <div class="irow"><span class="ilbl">Package</span><span class="ival hi">${d.pkgName||'—'}</span></div>
-    <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿${Number(d.price||0).toLocaleString()}</span></div>
-    <div class="irow"><span class="ilbl">Line ID</span><span class="ival">${d.line||'—'}</span></div>
-    <div class="irow"><span class="ilbl">Email</span><span class="ival">${d.email||'—'}</span></div>`;
+    <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿${Number(d.price||0).toLocaleString()}</span></div>`;
   setStep(2); go(2);
-  // Auto-check สถานะทุก 30 วินาที
-  if (_checkTimer) clearInterval(_checkTimer);
-  _checkTimer = setInterval(() => checkOrderStatus(d), 30000);
+  setTimeout(() => gotoRegister(d), 1500);
+}
+
+function gotoRegister(d) {
+  const fPhone  = document.getElementById('rPhone');
+  const fEmail  = document.getElementById('rEmail');
+  const fCourse = document.getElementById('rCourse');
+  if (fPhone)  fPhone.value  = d.phone   || '';
+  if (fEmail)  fEmail.value  = d.email   || '';
+  if (fCourse) fCourse.value = d.pkgName || '';
+  setStep(3); go(3);
 }
 
 async function checkOrderStatus(d) {
@@ -881,6 +889,11 @@ async function checkOrderStatus(d) {
     } else if (res.order_status === 'rejected') {
       clearInterval(_checkTimer);
       localStorage.removeItem(PK);
+      // ซ่อนปุ่ม + steps
+      const btnGot = document.getElementById('btnGotLink');
+      if (btnGot) btnGot.style.display = 'none';
+      const stepsList = document.querySelector('#p2 .steps-list');
+      if (stepsList) stepsList.style.display = 'none';
       // แสดงหน้า rejected
       document.getElementById('pendTable').innerHTML = '';
       const notif = document.getElementById('pendNotif');
@@ -905,9 +918,22 @@ function retryPayment() {
 }
 
 // ── STEP 3: Register student ──
+async function checkCodeUnique(code) {
+  if (!/^\d{6}$/.test(code)) return;
+  const eEl = document.getElementById('eCode');
+  try {
+    const res = await jsonp({ action:'checkCode', code });
+    if (res.available === false) {
+      fv('rCode','eCode',false,'รหัสนี้ถูกใช้แล้ว กรุณาเลือกรหัสอื่น');
+    } else {
+      if (eEl) { eEl.textContent='✓ รหัสนี้ว่างอยู่'; eEl.style.color='#43A047'; eEl.style.display='block'; }
+    }
+  } catch {}
+}
+
 async function doRegister() {
   hideAlt('altReg');
-  const code  = document.getElementById('rCode').value.trim().toUpperCase();
+  const code  = document.getElementById('rCode').value.trim();
   const nick  = document.getElementById('rNick').value.trim();
   const first = document.getElementById('rFirst').value.trim();
   const last  = document.getElementById('rLast').value.trim();
@@ -916,8 +942,8 @@ async function doRegister() {
   const ref   = document.getElementById('rRef').value.trim().toUpperCase();
 
   let ok = true;
-  if(!code||code.length<4) ok&=fv('rCode','eCode',false,'กรุณากรอกรหัส (อย่างน้อย 4 ตัว)');
-  else fv('rCode','eCode',true,'');
+  if(!/^\d{6}$/.test(code)) ok&=fv('rCode','eCode',false,'รหัสต้องเป็นตัวเลข 6 หลัก');
+  else { const eEl=document.getElementById('eCode'); if(eEl){eEl.style.color='';} fv('rCode','eCode',true,''); }
   if(!nick)   ok&=fv('rNick','eNick',false,'กรุณากรอก');   else fv('rNick','eNick',true,'');
   if(!first)  ok&=fv('rFirst','eFirst',false,'กรุณากรอก'); else fv('rFirst','eFirst',true,'');
   if(!last)   ok&=fv('rLast','eLast',false,'กรุณากรอก');   else fv('rLast','eLast',true,'');
@@ -930,30 +956,26 @@ async function doRegister() {
 
   const pd = JSON.parse(localStorage.getItem(PK)||'{}');
   const course = document.getElementById('rCourse').value || pd.pkgName || '';
+  const ordPhone = pd.phone || phone;
 
   try {
-    const res = await jsonp({ action:'activateStudent', code, nick, first, last, phone, email, ref, course });
+    const res = await jsonp({ action:'selfRegister', code, nick, first, last, phone, email, ref, course, ordPhone });
     document.getElementById('ldReg').classList.remove('on');
 
-    if(res.status==='ok'||res.status==='already'){
-      const st = { code, nick, fullname:`${first} ${last}`, phone, email, course };
+    if(res.status==='ok') {
+      const st = { code, nick, fullname:`${first} ${last}`, phone, email, course, pending_approval: true };
       localStorage.setItem(SK, JSON.stringify(st));
       localStorage.removeItem(PK);
       showSuccess(st);
-    } else if(res.status==='not_found'||res.status==='invalid_code'){
-      fv('rCode','eCode',false,'รหัสไม่ถูกต้อง หรือยังไม่ได้รับการยืนยัน');
-      showAlt('altReg','❌ รหัส "'+code+'" ไม่พบในระบบ — ตรวจสอบอีกครั้งหรือแจ้งครู','err');
+    } else if(res.status==='code_taken') {
+      fv('rCode','eCode',false,'รหัสนี้ถูกใช้แล้ว กรุณาเลือกรหัสอื่น');
+      showAlt('altReg','❌ รหัส '+code+' ถูกใช้แล้ว','err');
     } else {
       showAlt('altReg','❌ '+(res.msg||'เกิดข้อผิดพลาด กรุณาลองใหม่'),'err');
     }
   } catch(e) {
     document.getElementById('ldReg').classList.remove('on');
-    // Offline: save locally
-    const st = { code, nick, fullname:`${first} ${last}`, phone, email, course };
-    localStorage.setItem(SK, JSON.stringify(st));
-    localStorage.removeItem(PK);
-    showSuccess(st);
-    setTimeout(()=>showAlt('altReg','⚠️ บันทึกออฟไลน์แล้ว (จะ sync เมื่อออนไลน์)','warn'),300);
+    showAlt('altReg','⚠️ ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่','err');
   }
   document.getElementById('btnReg').disabled=false;
 }

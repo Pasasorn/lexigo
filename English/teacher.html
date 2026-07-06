@@ -181,7 +181,7 @@ function jsonpCall(params) {
   <!-- Tab: Orders -->
   <div class="tab-pane active" id="paneOrders">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-      <div style="font-size:12px;color:#78909C;font-weight:700">ตรวจสลิป → Verify → ระบบสร้างรหัสนักเรียนให้อัตโนมัติ</div>
+      <div style="font-size:12px;color:#78909C;font-weight:700">นักเรียนลงทะเบียนเอง → ตรวจสลิป → กด Approve → นักเรียน active</div>
       <button class="refresh-btn" onclick="loadPurchases()" style="border-color:#FDE68A;color:#92400E">🔄 โหลด Orders</button>
     </div>
     <div id="ordersWrap"><div style="font-size:13px;color:#78909C;font-weight:700;text-align:center;padding:16px">กด "โหลด Orders" เพื่อดูรายการ</div></div>
@@ -379,7 +379,9 @@ function renderOrders() {
       ? '<span class="order-status st-verified">✅ Verified</span>'
       : o.status === 'rejected'
       ? '<span class="order-status st-rejected">❌ Rejected</span>'
-      : '<span class="order-status st-pending">⏳ รอตรวจ</span>';
+      : o.status === 'pending_approval'
+      ? '<span class="order-status" style="background:#EDE9FE;color:#5B21B6;border:1.5px solid #C4B5FD">📋 รอ Approve</span>'
+      : '<span class="order-status st-pending">⏳ รอลงทะเบียน</span>';
 
     const slipBtn = o.slip_url
       ? `<a href="${o.slip_url}" target="_blank" style="font-size:11px;font-weight:800;color:#1D4ED8;text-decoration:none">🖼️ ดูสลิป</a>`
@@ -395,15 +397,17 @@ function renderOrders() {
          </div>`
       : '';
 
-    const actionBtns = o.status === 'pending'
+    const actionBtns = o.status === 'pending_approval'
       ? `<div style="display:flex;gap:6px;margin-top:8px">
-          <button onclick="doVerify('${o.order_id}')"
+          <button onclick="doApprove('${o.student_code}')"
             style="flex:1;background:#D1FAE5;border:1.5px solid #6EE7B7;color:#065F46;border-radius:9px;padding:7px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
-            ✅ Verify</button>
+            ✅ Approve</button>
           <button onclick="doReject('${o.order_id}')"
             style="flex:1;background:#FEE2E2;border:1.5px solid #FCA5A5;color:#C62828;border-radius:9px;padding:7px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
             ❌ Reject</button>
          </div>`
+      : o.status === 'pending'
+      ? `<div style="font-size:11px;color:#78909C;font-weight:700;margin-top:8px;text-align:center">⏳ รอนักเรียนกรอกข้อมูล...</div>`
       : '';
 
     const date = o.created_at ? new Date(o.created_at).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'}) : '';
@@ -423,14 +427,15 @@ function renderOrders() {
   }).join('');
 }
 
-async function doVerify(orderId) {
-  if (!confirm('Verify order นี้?\nระบบจะสร้างรหัสนักเรียน 6 หลักอัตโนมัติ')) return;
+async function doApprove(studentCode) {
+  if (!studentCode) { alert('ไม่พบรหัสนักเรียน'); return; }
+  if (!confirm(`Approve นักเรียนรหัส ${studentCode}?\nนักเรียนจะเริ่มเรียนได้ทันที`)) return;
   document.getElementById('loading').classList.add('show');
   try {
-    const data = await jsonpCall({ action:'verifyPurchase', teacher: TEACHER_PASS_LOCAL, order_id: orderId });
+    const data = await jsonpCall({ action:'activateStudent', teacher: TEACHER_PASS_LOCAL, code: studentCode });
     if (data.status === 'ok') {
       await loadPurchases();
-      alert(`✅ Verify สำเร็จ!\nรหัสนักเรียน: ${data.student_code}\n\nกด "Copy ลิงก์" เพื่อส่งให้นักเรียน`);
+      alert(`✅ Approve สำเร็จ! รหัส ${studentCode} พร้อมเรียนแล้ว`);
     } else {
       alert('❌ ' + (data.msg || 'ไม่สำเร็จ'));
     }
