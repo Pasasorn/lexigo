@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LexiGo — เข้าสู่ระบบ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:380px}
+.logo-area{text-align:center;margin-bottom:24px}
+.logo-ico{font-size:72px;line-height:1}
+.logo-name{font-size:32px;font-weight:900;color:#FF6B35;margin-top:4px}
+.logo-tagline{font-size:13px;color:#90A4AE;font-weight:700;margin-top:2px}
+.card{background:#fff;border-radius:24px;padding:28px 24px;box-shadow:0 8px 32px rgba(255,107,53,.12)}
+.card h2{font-size:16px;font-weight:900;color:#37474F;margin-bottom:20px;text-align:center}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:900;color:#546E7A;margin-bottom:7px;letter-spacing:.3px}
+.inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;color:#1E3A5F;transition:border-color .2s;background:#FAFAFA}
+.inp:focus{border-color:#FF6B35;background:#fff}
+#codeInp{font-size:28px;letter-spacing:8px;text-align:center}
+.btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:15px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity .15s;letter-spacing:.3px}
+.btn:active{opacity:.85}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.err{display:none;margin-top:12px;font-size:13px;font-weight:800;color:#C62828;background:#FEE2E2;border-radius:12px;padding:10px 14px;text-align:center}
+.load{display:none;margin-top:10px;font-size:13px;font-weight:700;color:#1E88E5;text-align:center}
+.divider{border:none;border-top:1.5px dashed #E0E0E0;margin:20px 0}
+.register-link{text-align:center;font-size:13px;color:#90A4AE;font-weight:700}
+.register-link a{color:#FF6B35;font-weight:900;text-decoration:none}
+.pending-msg{display:none;margin-top:14px;background:#FFF8E1;border:1.5px solid #FFCC02;border-radius:14px;padding:16px;text-align:center}
+.pending-msg .p-ico{font-size:32px;margin-bottom:6px}
+.pending-msg h3{font-size:15px;font-weight:900;color:#E65100;margin-bottom:4px}
+.pending-msg p{font-size:12px;color:#78909C;font-weight:700;line-height:1.6}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="logo-area">
+    <div class="logo-ico">📚</div>
+    <div class="logo-name">LexiGo</div>
+    <div class="logo-tagline">Go ทุกวัน · Grow ทุกคำ</div>
+  </div>
+
+  <div class="card">
+    <h2>🔐 เข้าสู่ระบบ</h2>
+
+    <div class="field">
+      <label>รหัสนักเรียน 6 หลัก</label>
+      <input id="codeInp" class="inp" type="tel" maxlength="6" placeholder="• • • • • •"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        onkeydown="if(event.key==='Enter')document.getElementById('nickInp').focus()">
+    </div>
+
+    <div class="field">
+      <label>ชื่อเล่น (ที่ใช้สมัคร)</label>
+      <input id="nickInp" class="inp" type="text" maxlength="30" placeholder="เช่น มิมิ, Leo"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <div id="errMsg" class="err"></div>
+    <div id="loadMsg" class="load">⏳ กำลังตรวจสอบ…</div>
+
+    <button class="btn" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ →</button>
+
+    <div id="pendingMsg" class="pending-msg">
+      <div class="p-ico">📋</div>
+      <h3>รอครูอนุมัติอยู่นะ</h3>
+      <p>ครูจะตรวจสลิปและอนุมัติ<br>ภายใน 5–10 นาที<br>แล้วลองเข้าระบบใหม่อีกครั้ง</p>
+    </div>
+
+    <div class="divider"></div>
+    <div class="register-link">ยังไม่มีรหัส? <a href="register.html">สมัครเรียนที่นี่</a></div>
+  </div>
+</div>
+
+<script>
+const SK  = 'wla_student';
+const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+
+function jsonp(params) {
+  return new Promise((resolve, reject) => {
+    const cb = 'jpcb_' + Date.now();
+    const s  = document.createElement('script');
+    const q  = Object.entries(params).map(([k,v]) => k+'='+encodeURIComponent(v)).join('&');
+    window[cb] = d => { delete window[cb]; s.remove(); resolve(d); };
+    s.onerror  = () => { delete window[cb]; s.remove(); reject(new Error('JSONP error')); };
+    s.src = API + '?' + q + '&callback=' + cb;
+    document.body.appendChild(s);
+  });
+}
+
+async function doLogin() {
+  const code = document.getElementById('codeInp').value.trim();
+  const nick = document.getElementById('nickInp').value.trim();
+  const errEl  = document.getElementById('errMsg');
+  const loadEl = document.getElementById('loadMsg');
+  const btn    = document.getElementById('loginBtn');
+  const pendEl = document.getElementById('pendingMsg');
+
+  errEl.style.display  = 'none';
+  loadEl.style.display = 'none';
+  pendEl.style.display = 'none';
+
+  if (!/^\d{6}$/.test(code)) {
+    errEl.textContent = '⚠️ กรอกรหัส 6 หลักให้ครบ';
+    errEl.style.display = 'block'; return;
+  }
+  if (!nick) {
+    errEl.textContent = '⚠️ กรอกชื่อเล่นด้วยนะ';
+    errEl.style.display = 'block'; return;
+  }
+
+  btn.disabled = true;
+  loadEl.style.display = 'block';
+
+  try {
+    const res = await jsonp({ action: 'checkApproval', code });
+    loadEl.style.display = 'none';
+    btn.disabled = false;
+
+    if (res.status === 'not_found') {
+      errEl.textContent = '❌ ไม่พบรหัสนี้ในระบบ';
+      errEl.style.display = 'block'; return;
+    }
+
+    // Verify nickname (case-insensitive, trim)
+    const apiNick = (res.nick || '').toString().trim().toLowerCase();
+    const entNick = nick.toLowerCase();
+    if (apiNick && apiNick !== entNick) {
+      errEl.textContent = '❌ รหัสหรือชื่อเล่นไม่ถูกต้อง กรุณาลองใหม่';
+      errEl.style.display = 'block'; return;
+    }
+
+    if (res.approval_status === 'active') {
+      const st = {
+        code,
+        nick: res.nick || nick,
+        pending_approval: false,
+        course: '',
+        type: null,
+        level: null,
+        cefr: 'A1',
+        startDay: 1,
+        endDay: 448
+      };
+      localStorage.setItem(SK, JSON.stringify(st));
+      location.href = 'dashboard.html';
+
+    } else if (res.approval_status === 'pending_approval') {
+      pendEl.style.display = 'block';
+
+    } else if (res.approval_status === 'rejected') {
+      errEl.innerHTML = '❌ รหัสนี้ถูก reject<br><span style="font-size:11px;font-weight:700">ติดต่อ Line: <strong>@LexiGo</strong></span>';
+      errEl.style.display = 'block';
+
+    } else {
+      errEl.textContent = '⚠️ สถานะไม่ถูกต้อง ลองใหม่';
+      errEl.style.display = 'block';
+    }
+  } catch(e) {
+    loadEl.style.display = 'none';
+    btn.disabled = false;
+    errEl.textContent = '⚠️ ไม่สามารถเชื่อมต่อได้ ลองใหม่';
+    errEl.style.display = 'block';
+  }
+}
+
+// Auto-redirect if already logged in
+(function() {
+  const st = JSON.parse(localStorage.getItem(SK) || 'null');
+  if (st && st.code && !st.pending_approval) {
+    location.href = 'dashboard.html';
+  }
+})();
+</script>
+</body></html>

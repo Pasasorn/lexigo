@@ -76,46 +76,11 @@ body{background:#FFF8F0;min-height:100vh;padding:16px}
 .course-badge .course-name{font-size:13px;font-weight:900;color:#37474F}
 .course-badge .course-range{font-size:11px;color:#78909C;font-weight:700}
 
-/* ── Login screen ── */
-.login-screen{max-width:400px;margin:40px auto 0;text-align:center}
-.login-logo{font-size:64px;margin-bottom:8px}
-.login-title{font-size:26px;font-weight:900;color:#FF6B35;margin-bottom:4px}
-.login-sub{font-size:13px;color:#78909C;font-weight:700;margin-bottom:28px}
-.login-card{background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 4px 16px rgba(0,0,0,.10)}
-.login-card label{display:block;font-size:13px;font-weight:900;color:#37474F;margin-bottom:8px;text-align:left}
-.login-inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:14px 16px;font-size:28px;font-weight:900;font-family:'Nunito',sans-serif;text-align:center;letter-spacing:6px;outline:none;color:#1E3A5F;transition:border-color .2s}
-.login-inp:focus{border-color:#FF6B35}
-.login-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity .15s}
-.login-btn:active{opacity:.85}
-.login-btn:disabled{opacity:.5;cursor:not-allowed}
-.login-err{display:none;margin-top:10px;font-size:13px;font-weight:800;color:#C62828;background:#FEE2E2;border-radius:10px;padding:9px 12px}
-.login-load{display:none;margin-top:10px;font-size:13px;font-weight:700;color:#1E88E5}
-.login-new{margin-top:18px;font-size:12px;color:#90A4AE;font-weight:700}
-.login-new a{color:#FF6B35;font-weight:900;text-decoration:none}
 </style></head>
 <body>
 
-<!-- ── Login Screen ── -->
-<div id="loginScreen" style="display:none">
-  <div class="login-screen">
-    <div class="login-logo">📚</div>
-    <div class="login-title">LexiGo</div>
-    <div class="login-sub">Go ทุกวัน · Grow ทุกคำ</div>
-    <div class="login-card">
-      <label>🔑 กรอกรหัสนักเรียน 6 หลัก</label>
-      <input id="loginInp" class="login-inp" type="tel" maxlength="6" placeholder="• • • • • •"
-        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-        onkeydown="if(event.key==='Enter')doLogin()">
-      <div id="loginErr" class="login-err"></div>
-      <div id="loginLoad" class="login-load">⏳ กำลังตรวจสอบ…</div>
-      <button class="login-btn" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ →</button>
-    </div>
-    <div class="login-new">ยังไม่มีรหัส? <a href="register.html">สมัครเรียนที่นี่</a></div>
-  </div>
-</div>
-
-<!-- ── Dashboard (แสดงหลัง login) ── -->
-<div id="dashContent" style="display:none">
+<!-- ── Dashboard ── -->
+<div id="dashContent">
 
 <!-- Header (ใส่ข้อมูลด้วย JS) -->
 <div class="header">
@@ -336,63 +301,10 @@ function buildGrid(startDay, endDay) {
 function doLogout() {
   if (!confirm('ออกจากระบบ?')) return;
   localStorage.removeItem(SK);
-  document.getElementById('dashContent').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'block';
-  document.getElementById('loginInp').value = '';
-  document.getElementById('loginErr').style.display = 'none';
-}
-
-// ── Login with code ──
-async function doLogin() {
-  const code   = document.getElementById('loginInp').value.trim();
-  const errEl  = document.getElementById('loginErr');
-  const loadEl = document.getElementById('loginLoad');
-  const btn    = document.getElementById('loginBtn');
-  errEl.style.display  = 'none';
-  loadEl.style.display = 'none';
-
-  if (!/^\d{6}$/.test(code)) {
-    errEl.textContent = '⚠️ กรอกรหัส 6 หลักให้ครบ';
-    errEl.style.display = 'block'; return;
-  }
-  btn.disabled = true;
-  loadEl.style.display = 'block';
-  try {
-    const res = await jsonp({ action:'checkApproval', code });
-    loadEl.style.display = 'none';
-    btn.disabled = false;
-
-    if (res.status === 'not_found') {
-      errEl.textContent = '❌ ไม่พบรหัสนี้ในระบบ';
-      errEl.style.display = 'block'; return;
-    }
-    if (res.approval_status === 'active') {
-      const st = { code, pending_approval: false, nick:'', course:'' };
-      localStorage.setItem(SK, JSON.stringify(st));
-      showDashboard(st);
-    } else if (res.approval_status === 'pending_approval') {
-      const st = { code, pending_approval: true };
-      localStorage.setItem(SK, JSON.stringify(st));
-      errEl.textContent = '⏳ รอครูอนุมัติอยู่ กรุณารอสักครู่';
-      errEl.style.display = 'block';
-    } else if (res.approval_status === 'rejected') {
-      errEl.textContent = '❌ รหัสนี้ถูก reject — ติดต่อ Line: @LexiGo';
-      errEl.style.display = 'block';
-    } else {
-      errEl.textContent = '⚠️ สถานะไม่ถูกต้อง ลองใหม่อีกครั้ง';
-      errEl.style.display = 'block';
-    }
-  } catch(e) {
-    loadEl.style.display = 'none';
-    btn.disabled = false;
-    errEl.textContent = '⚠️ ไม่สามารถเชื่อมต่อได้ ลองใหม่';
-    errEl.style.display = 'block';
-  }
+  location.href = 'login.html';
 }
 
 function showDashboard(st) {
-  document.getElementById('loginScreen').style.display  = 'none';
-  document.getElementById('dashContent').style.display  = 'block';
 
   const nick = st.nick || st.fullname || 'นักเรียน';
   document.getElementById('greetText').textContent = nick ? 'สวัสดี, น้อง' + nick + '! 👋' : 'สวัสดี! 👋';
@@ -425,7 +337,7 @@ function showDashboard(st) {
 function init() {
   const st = JSON.parse(localStorage.getItem(SK) || 'null');
   if (!st || !st.code) {
-    document.getElementById('loginScreen').style.display = 'block';
+    location.href = 'login.html';
     return;
   }
   showDashboard(st);
