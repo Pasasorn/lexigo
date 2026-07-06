@@ -141,6 +141,7 @@ async function doLogin() {
         endDay: 448
       };
       localStorage.setItem(SK, JSON.stringify(st));
+      localStorage.removeItem('wla_admin'); // clear admin bypass
       location.href = 'dashboard.html';
 
     } else if (res.approval_status === 'pending_approval') {

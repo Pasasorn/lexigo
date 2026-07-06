@@ -259,17 +259,22 @@ function buildGrid(startDay, endDay) {
     return;
   }
 
+  // Strict sequential: find the last consecutively-done day
+  let frontier = startDay - 1;
+  for (const d of myDays) {
+    if (localStorage.getItem('wla_d' + d.n)) frontier = d.n;
+    else break;
+  }
+
   let doneCnt = 0;
 
   myDays.forEach((d, idx) => {
-    const isDone    = !!localStorage.getItem('wla_d' + d.n);
-    const prevDone  = d.n === startDay || !!localStorage.getItem('wla_d' + (d.n - 1));
+    const isDone    = d.n <= frontier && !!localStorage.getItem('wla_d' + d.n);
+    const isCurrent = d.n === frontier + 1; // only ONE current at a time
+    const isLocked  = !isDone && !isCurrent;
     const isReview  = !!d.review;
 
     if (isDone) doneCnt++;
-
-    const isCurrent = !isDone && prevDone;
-    const isLocked  = !isDone && !prevDone;
 
     let cls = '';
     let ico = '';
