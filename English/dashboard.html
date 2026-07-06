@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LexiGo — หน้าหลัก</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#FFF8F0;min-height:100vh;padding:16px}
+
+/* ── Header ── */
+.header{background:linear-gradient(135deg,#FF6B35,#FF9800);border-radius:20px;padding:18px 20px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:14px}
+.logo{font-size:36px;line-height:1}
+.header-text h1{font-size:20px;font-weight:900;margin-bottom:2px}
+.header-text p{font-size:13px;font-weight:700;opacity:.9}
+.header-badge{margin-left:auto;background:rgba(255,255,255,.25);border-radius:12px;padding:6px 12px;text-align:center;font-size:11px;font-weight:800}
+.header-badge .num{font-size:22px;font-weight:900;display:block;line-height:1.1}
+
+/* ── Stats row ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:#fff;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.stat-card .num{font-size:24px;font-weight:900;color:#FF6B35;display:block}
+.stat-card .lbl{font-size:11px;font-weight:800;color:#78909C}
+
+/* ── Section title ── */
+.sec-title{font-size:14px;font-weight:900;color:#37474F;margin-bottom:10px;padding-left:2px}
+
+/* ── Day grid ── */
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.day-card{border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;text-decoration:none;display:block;transition:all .15s;position:relative;border:2px solid transparent}
+
+/* completed */
+.day-card.done{background:#E8F5E9;border-color:#A5D6A7}
+.day-card.done .day-num{color:#2E7D32}
+.day-card.done .day-ico{color:#43A047;font-size:20px}
+
+/* current (next unlockable) */
+.day-card.current{background:#E3F2FD;border-color:#90CAF9;animation:pulse .8s ease-in-out infinite alternate}
+.day-card.current .day-num{color:#1565C0}
+.day-card.current .day-ico{color:#1E88E5;font-size:22px}
+@keyframes pulse{from{box-shadow:0 0 0 0 rgba(33,150,243,.3)}to{box-shadow:0 0 6px 4px rgba(33,150,243,.15)}}
+
+/* review */
+.day-card.review-done{background:#FFF8E1;border-color:#FFCC02}
+.day-card.review-done .day-num{color:#E65100}
+.day-card.review{background:#FFF3E0;border-color:#FFCC80}
+.day-card.review .day-num{color:#BF360C}
+.day-card.review .day-ico{font-size:20px}
+
+/* locked sequential */
+.day-card.locked{background:#F5F5F5;border-color:#E0E0E0;cursor:not-allowed;opacity:.7}
+.day-card.locked .day-num{color:#9E9E9E}
+
+/* out of range */
+.day-card.out{background:#F5F5F5;border-color:#E0E0E0;cursor:not-allowed;opacity:.45}
+.day-card.out .day-num{color:#BDBDBD}
+
+.day-num{font-size:13px;font-weight:900;margin-bottom:2px}
+.day-ico{font-size:18px;display:block;margin-bottom:2px}
+.day-title{font-size:9px;font-weight:700;color:#78909C;line-height:1.3;display:none}
+
+/* ── Pending screen ── */
+.pending-box{background:#fff;border-radius:20px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:16px}
+.pending-box .big-ico{font-size:56px;margin-bottom:14px}
+.pending-box h2{font-size:18px;font-weight:900;color:#1E3A5F;margin-bottom:6px}
+.pending-box p{font-size:13px;color:#546E7A;font-weight:700;line-height:1.6}
+.poll-note{font-size:11px;color:#90A4AE;margin-top:10px}
+#approvalNotif{margin-top:14px}
+
+/* ── Bottom bar ── */
+.bottom-bar{background:#fff;border-radius:16px;padding:14px 16px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:14px}
+.btn-progress{flex:1;background:linear-gradient(135deg,#5C6BC0,#3949AB);color:#fff;border:none;border-radius:12px;padding:11px;font-size:14px;font-weight:900;cursor:pointer;text-decoration:none;display:block;text-align:center;font-family:'Nunito',sans-serif}
+.btn-logout{background:#FFF3E0;border:2px solid #FFE0B2;color:#E65100;border-radius:12px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* ── Course badge ── */
+.course-badge{background:#fff;border-radius:14px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.cefr-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.course-badge .course-name{font-size:13px;font-weight:900;color:#37474F}
+.course-badge .course-range{font-size:11px;color:#78909C;font-weight:700}
+</style></head>
+<body>
+
+<!-- Header (ใส่ข้อมูลด้วย JS) -->
+<div class="header">
+  <div class="logo">📚</div>
+  <div class="header-text">
+    <h1 id="greetText">สวัสดี!</h1>
+    <p id="courseText">LexiGo — Oxford 3000</p>
+  </div>
+  <div class="header-badge">
+    <span class="num" id="streakNum">0</span>
+    🔥 วันติดกัน
+  </div>
+</div>
+
+<!-- Course badge -->
+<div class="course-badge" id="courseBadge" style="display:none">
+  <div class="cefr-dot" id="cefrDot"></div>
+  <div>
+    <div class="course-name" id="courseName">—</div>
+    <div class="course-range" id="courseRange">Day — – —</div>
+  </div>
+</div>
+
+<!-- Pending approval screen -->
+<div class="pending-box" id="pendingBox" style="display:none">
+  <div class="big-ico">📋</div>
+  <h2>รอครูอนุมัติอยู่นะ</h2>
+  <p>ครูจะตรวจสลิปและอนุมัติ<br>ภายใน 5–10 นาที</p>
+  <div id="approvalNotif"></div>
+  <p class="poll-note">ระบบตรวจสอบอัตโนมัติทุก 30 วินาที…</p>
+</div>
+
+<!-- Day grid (เมื่อ active) -->
+<div id="gridSection" style="display:none">
+  <div class="stats">
+    <div class="stat-card"><span class="num" id="statDone">0</span><span class="lbl">วันที่เรียนแล้ว</span></div>
+    <div class="stat-card"><span class="num" id="statTotal">0</span><span class="lbl">วันทั้งหมด</span></div>
+    <div class="stat-card"><span class="num" id="statPct">0%</span><span class="lbl">ความคืบหน้า</span></div>
+  </div>
+
+  <div class="sec-title">📅 บทเรียนของฉัน</div>
+  <div class="day-grid" id="dayGrid"></div>
+</div>
+
+<!-- Bottom bar -->
+<div class="bottom-bar" id="bottomBar" style="display:none">
+  <a class="btn-progress" href="progress.html">📊 ดู Progress</a>
+  <button class="btn-logout" onclick="doLogout()">🚪 ออก</button>
+</div>
+
+<script>
+const SK = 'wla_student';
+const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+
+// ── Day file map (Day 1–30, A1 Level 1) ──
+const ALL_DAYS = [
+  {n:1,  file:'Day1_LeosBigDay_A1.html',         title:"Leo's Big Day"},
+  {n:2,  file:'Day2_MimisGardenWalk_A1.html',     title:"Mimi's Garden Walk"},
+  {n:3,  file:'Day3_SamsFarmDay_A1.html',         title:"Sam's Farm Day"},
+  {n:4,  file:'Day4_DuckAtThePond_A1.html',       title:"Duck at the Pond"},
+  {n:5,  file:'Day5_AmyAndTheButterfly_A1.html',  title:"Amy & the Butterfly"},
+  {n:6,  file:'Day6_RiverFriends_A1.html',        title:"River Friends"},
+  {n:7,  file:'Day7_Week1Review_A1.html',         title:"Week 1 Review", review:true},
+  {n:8,  file:'Day8_LeosBigBreakfast_A1.html',    title:"Leo's Breakfast"},
+  {n:9,  file:'Day9_LeosTastyLunch_A1.html',      title:"Leo's Lunch"},
+  {n:10, file:'Day10_MimisBananaCake_A1.html',    title:"Mimi's Banana Cake"},
+  {n:11, file:'Day11_LeosChickenNoodle_A1.html',  title:"Chicken Noodle"},
+  {n:12, file:'Day12_MimisGrapeBowl_A1.html',     title:"Grape Bowl"},
+  {n:13, file:'Day13_LeosMealTime_A1.html',       title:"Leo's Meal Time"},
+  {n:14, file:'Day14_Week2FoodReview_A1.html',    title:"Week 2 Review", review:true},
+  {n:15, file:'Day15_WelcomeHome_A1.html',        title:"Welcome Home"},
+  {n:16, file:'Day16_TheLivingRoom_A1.html',      title:"The Living Room"},
+  {n:17, file:'Day17_TheKitchen_A1.html',         title:"The Kitchen"},
+  {n:18, file:'Day18_TheBedroom_A1.html',         title:"The Bedroom"},
+  {n:19, file:'Day19_MyFamily_A1.html',           title:"My Family"},
+  {n:20, file:'Day20_OurHouse_A1.html',           title:"Our House"},
+  {n:21, file:'Day21_Week3HomeReview_A1.html',    title:"Week 3 Review", review:true},
+  {n:22, file:'Day22_FirstDayAtSchool_A1.html',   title:"First Day at School"},
+  {n:23, file:'Day23_MyClassroom_A1.html',        title:"My Classroom"},
+  {n:24, file:'Day24_LeosSchoolBag_A1.html',      title:"Leo's School Bag"},
+  {n:25, file:'Day25_Playtime_A1.html',           title:"Playtime"},
+  {n:26, file:'Day26_MyTeacher_A1.html',          title:"My Teacher"},
+  {n:27, file:'Day27_LearningToCount_A1.html',    title:"Learning to Count"},
+  {n:28, file:'Day28_Week4SchoolReview_A1.html',  title:"Week 4 Review", review:true},
+  {n:29, file:'Day29_ColorsAroundUs_A1.html',     title:"Colors Around Us"},
+  {n:30, file:'Day30_ShapesEverywhere_A1.html',   title:"Shapes Everywhere"},
+];
+
+// ── Level → day range ──
+function getLevelRange(levelNum, type) {
+  if (type === 'lifetime' || !levelNum) return { startDay:1, endDay:448 };
+  const s = (parseInt(levelNum) - 1) * 30 + 1;
+  const e = parseInt(levelNum) === 15 ? 448 : parseInt(levelNum) * 30;
+  return { startDay: s, endDay: e };
+}
+
+// ── CEFR color ──
+const CEFR_COLOR = { A1:'#43A047', A2:'#1E88E5', B1:'#FB8C00', B2:'#E53935' };
+
+// ── Streak ──
+function calcStreak() {
+  let streak = 0;
+  for (let d = 30; d >= 1; d--) {
+    if (localStorage.getItem('wla_d' + d)) streak++;
+    else break;
+  }
+  return streak;
+}
+
+// ── JSONP ──
+function jsonp(params) {
+  return new Promise((resolve, reject) => {
+    const cb = 'jpcb_' + Date.now();
+    const s = document.createElement('script');
+    const q = Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+    window[cb] = d => { delete window[cb]; s.remove(); resolve(d); };
+    s.onerror = () => { delete window[cb]; s.remove(); reject(new Error('JSONP error')); };
+    s.src = API + '?' + q + '&callback=' + cb;
+    document.body.appendChild(s);
+  });
+}
+
+// ── Approval polling ──
+let _pollTimer = null;
+function startPoll(code) {
+  if (_pollTimer) clearInterval(_pollTimer);
+  _pollTimer = setInterval(() => checkApproval(code), 30000);
+}
+
+async function checkApproval(code) {
+  try {
+    const res = await jsonp({ action:'checkApproval', code });
+    if (res.status !== 'ok') return;
+    const notif = document.getElementById('approvalNotif');
+
+    if (res.approval_status === 'active') {
+      clearInterval(_pollTimer);
+      // Update localStorage: remove pending flag
+      const stored = JSON.parse(localStorage.getItem(SK) || '{}');
+      stored.pending_approval = false;
+      localStorage.setItem(SK, JSON.stringify(stored));
+      if (notif) {
+        notif.innerHTML = `<div style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:11px;padding:12px 14px;font-size:13px;font-weight:800;color:#065F46;line-height:1.8">
+          🎉 ครูอนุมัติแล้ว! รีโหลดเพื่อเริ่มเรียน<br>
+          <button onclick="location.reload()" style="margin-top:8px;background:#059669;color:#fff;border:none;border-radius:10px;padding:9px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif">
+            🌟 เริ่มเรียนเลย!</button></div>`;
+      }
+    } else if (res.approval_status === 'rejected') {
+      clearInterval(_pollTimer);
+      localStorage.removeItem(SK);
+      if (notif) {
+        notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:13px;font-weight:800;color:#C62828;line-height:1.8">
+          ❌ สลิปไม่ผ่านการตรวจสอบ<br>
+          <span style="font-size:12px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือสมัครใหม่</span><br>
+          <button onclick="location.href='register.html'" style="margin-top:8px;background:#C62828;color:#fff;border:none;border-radius:10px;padding:9px 22px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif">
+            🔄 สมัครใหม่</button>
+          <div style="margin-top:8px;font-size:11px">ติดต่อ Line: <strong>@LexiGo</strong></div></div>`;
+      }
+    }
+  } catch(e) {}
+}
+
+// ── Build day grid ──
+function buildGrid(startDay, endDay) {
+  const grid = document.getElementById('dayGrid');
+  grid.innerHTML = '';
+
+  // Filter to only days within purchased range that have files
+  const myDays = ALL_DAYS.filter(d => d.n >= startDay && d.n <= endDay);
+
+  if (myDays.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px;color:#90A4AE;font-size:13px;font-weight:700">
+      📦 บทเรียน Level นี้กำลังเตรียม…<br><span style="font-size:11px">ติดตามได้เร็วๆ นี้</span></div>`;
+    return;
+  }
+
+  let doneCnt = 0;
+
+  myDays.forEach((d, idx) => {
+    const isDone    = !!localStorage.getItem('wla_d' + d.n);
+    const prevDone  = d.n === startDay || !!localStorage.getItem('wla_d' + (d.n - 1));
+    const isReview  = !!d.review;
+
+    if (isDone) doneCnt++;
+
+    const isCurrent = !isDone && prevDone;
+    const isLocked  = !isDone && !prevDone;
+
+    let cls = '';
+    let ico = '';
+    if (isDone && isReview)   { cls = 'review-done'; ico = '🌟'; }
+    else if (isDone)          { cls = 'done';         ico = '✅'; }
+    else if (isCurrent && isReview) { cls = 'review current'; ico = '⭐'; }
+    else if (isCurrent)       { cls = 'current';      ico = '🎯'; }
+    else if (isReview)        { cls = 'review locked'; ico = '🔒'; }
+    else                      { cls = 'locked';        ico = '🔒'; }
+
+    const card = document.createElement(isCurrent || isDone ? 'a' : 'div');
+    card.className = 'day-card ' + cls;
+    if (isCurrent || isDone) card.href = d.file;
+    card.innerHTML = `
+      <span class="day-ico">${ico}</span>
+      <div class="day-num">Day ${d.n}</div>
+      <div class="day-title">${d.title}</div>`;
+    grid.appendChild(card);
+  });
+
+  // Stats
+  const total = myDays.length;
+  const pct   = total ? Math.round(doneCnt / total * 100) : 0;
+  document.getElementById('statDone').textContent  = doneCnt;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPct').textContent   = pct + '%';
+}
+
+// ── MAIN ──
+function init() {
+  const st = JSON.parse(localStorage.getItem(SK) || 'null');
+
+  // ถ้าไม่มีข้อมูลนักเรียน → ไปลงทะเบียน
+  if (!st || !st.code) {
+    location.href = 'register.html';
+    return;
+  }
+
+  // Greeting
+  const nick = st.nick || st.fullname || 'นักเรียน';
+  document.getElementById('greetText').textContent = 'สวัสดี, น้อง' + nick + '! 👋';
+
+  // Streak
+  document.getElementById('streakNum').textContent = calcStreak();
+
+  // Level range
+  const { startDay, endDay } = getLevelRange(st.level, st.type);
+
+  // Course badge
+  const cefr = st.cefr || (st.type === 'lifetime' ? 'A1' : 'A1');
+  document.getElementById('cefrDot').style.background = CEFR_COLOR[cefr] || '#43A047';
+  document.getElementById('courseName').textContent   = st.course || 'Oxford 3000';
+  document.getElementById('courseRange').textContent  = 'Day ' + startDay + '–' + Math.min(endDay, 448);
+  document.getElementById('courseBadge').style.display = 'flex';
+
+  // Pending approval?
+  if (st.pending_approval) {
+    document.getElementById('pendingBox').style.display = 'block';
+    document.getElementById('courseText').textContent = st.course || 'กำลังรอ approve';
+    document.getElementById('bottomBar').style.display = 'flex';
+    startPoll(st.code);
+    return;
+  }
+
+  // Active student
+  document.getElementById('courseText').textContent = st.course || 'Oxford 3000';
+
+  // Seed unlock key ถ้าซื้อ level ที่ไม่ใช่ Day 1
+  // ทำให้ Day แรกของ level ปลดล็อคอัตโนมัติ
+  if (startDay > 1 && !localStorage.getItem('wla_d' + (startDay - 1))) {
+    localStorage.setItem('wla_d' + (startDay - 1), 'LEVEL-START');
+  }
+
+  // Show grid
+  document.getElementById('gridSection').style.display = 'block';
+  document.getElementById('bottomBar').style.display = 'flex';
+  buildGrid(startDay, endDay);
+}
+
+function doLogout() {
+  if (!confirm('ออกจากระบบ? ข้อมูลการเรียนยังคงอยู่ในเครื่อง')) return;
+  localStorage.removeItem(SK);
+  location.href = 'register.html';
+}
+
+init();
+</script>
+</body></html>
