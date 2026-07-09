@@ -123,12 +123,12 @@ body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 a
       <span style="background:#FFF9C4;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#F57F17">🌱 Day20: Garden</span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-      <button class="game-btn" style="background:linear-gradient(135deg,#7CB342,#33691E)" onclick="initLC();go(1)">👂 Listen &amp;<br><span style="font-size:10px;font-weight:700;opacity:0.85">Select</span></button>
-      <button class="game-btn" style="background:linear-gradient(135deg,#00ACC1,#006064)" onclick="initLP();go(2)">👂 Listen &amp;<br><span style="font-size:10px;font-weight:700;opacity:0.85">Pick</span></button>
-      <button class="game-btn" style="background:linear-gradient(135deg,#AB47BC,#6A1B9A)" onclick="initSQ();go(3)">⚡ Speed<br><span style="font-size:10px;font-weight:700;opacity:0.85">Quiz</span></button>
-      <button class="game-btn" style="background:linear-gradient(135deg,#43A047,#1B5E20)" onclick="initBP();go(4)">🎈 Balloon<br><span style="font-size:10px;font-weight:700;opacity:0.85">Pop</span></button>
-      <button class="game-btn" style="background:linear-gradient(135deg,#E91E63,#880E4F)" onclick="initWA();go(5)">🔨 Whack-a-<br><span style="font-size:10px;font-weight:700;opacity:0.85">Word</span></button>
-      <button class="game-btn" style="background:linear-gradient(135deg,#1E88E5,#0D47A1)" onclick="initSB();go(6)">🧩 Sentence<br><span style="font-size:10px;font-weight:700;opacity:0.85">Builder</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#7CB342,#33691E)" onclick="go(1);initLC()">👂 Listen &amp;<br><span style="font-size:10px;font-weight:700;opacity:0.85">Select</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#00ACC1,#006064)" onclick="go(2);initLP()">👂 Listen &amp;<br><span style="font-size:10px;font-weight:700;opacity:0.85">Pick</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#AB47BC,#6A1B9A)" onclick="go(3);initSQ()">⚡ Speed<br><span style="font-size:10px;font-weight:700;opacity:0.85">Quiz</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#43A047,#1B5E20)" onclick="go(4);initBP()">🎈 Balloon<br><span style="font-size:10px;font-weight:700;opacity:0.85">Pop</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#E91E63,#880E4F)" onclick="go(5);initWA()">🔨 Whack-a-<br><span style="font-size:10px;font-weight:700;opacity:0.85">Word</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#1E88E5,#0D47A1)" onclick="go(6);initSB()">🧩 Sentence<br><span style="font-size:10px;font-weight:700;opacity:0.85">Builder</span></button>
     </div>
     <button class="btn btn-p" style="margin-top:14px;width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 3 Results!</button>
   </div>
@@ -150,7 +150,7 @@ body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <div style="font-size:26px;font-weight:900;margin:6px 0" id="lcResult">0/100 pts</div>
     <button class="btn btn-p" onclick="initLC()" style="margin-top:8px">Play Again 🔄</button>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initLP();go(2)">Listen &amp; Pick →</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="go(2);initLP()">Listen &amp; Pick →</button></div>
 </div>
 
 <!-- p2: Listen & Pick -->
@@ -169,7 +169,7 @@ body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <div style="font-size:26px;font-weight:900;margin:6px 0" id="lpResult">0/80 pts</div>
     <button class="btn btn-p" onclick="initLP()" style="margin-top:8px">Play Again 🔄</button>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initSQ();go(3)">Speed Quiz →</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="go(3);initSQ()">Speed Quiz →</button></div>
 </div>
 
 <!-- p3: Speed Quiz -->
@@ -184,7 +184,7 @@ body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <div style="font-size:26px;font-weight:900;margin:6px 0" id="sqResult">0/75 pts</div>
     <button class="btn btn-p" onclick="initSQ()" style="margin-top:8px;background:linear-gradient(135deg,#AB47BC,#6A1B9A)">Play Again 🔄</button>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initBP();go(4)">Balloon Pop →</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="go(4);initBP()">Balloon Pop →</button></div>
 </div>
 
 <!-- p4: Balloon Pop -->
@@ -205,7 +205,7 @@ body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <div style="font-size:24px;font-weight:900;margin:6px 0" id="bpResult">0/15</div>
     <button class="btn btn-p" onclick="startBP()" style="margin-top:8px">Play Again 🔄</button>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initWA();go(5)">Whack-a-Word →</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="go(5);initWA()">Whack-a-Word →</button></div>
 </div>
 
 <!-- p5: Whack-a-Word -->
@@ -226,7 +226,7 @@ body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <div style="font-size:24px;font-weight:900;margin:6px 0" id="waResult">0/12</div>
     <button class="btn btn-p" onclick="initWA();startWA()" style="margin-top:8px;background:linear-gradient(135deg,#E91E63,#880E4F)">Play Again 🔄</button>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initSB();go(6)">Sentence Builder →</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="go(6);initSB()">Sentence Builder →</button></div>
 </div>
 
 <!-- p6: Sentence Builder -->
@@ -406,8 +406,8 @@ function renderLC(){
 }
 function checkLC(correct,btn,grid){
   grid.querySelectorAll('.lc-card').forEach(b=>b.onclick=null);
-  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';lcScore+=5;updateScore();setTimeout(()=>{lcIdx++;renderLC();},600);}
-  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{lcIdx++;renderLC();},800);}
+  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';lcScore+=5;updateScore();setTimeout(()=>{if(curPage===1){lcIdx++;renderLC();}},600);}
+  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{if(curPage===1){lcIdx++;renderLC();}},800);}
 }
 function endLC(){document.getElementById('lcResult').textContent=lcScore+'/100 pts';document.getElementById('lcDone').style.display='block';}
 
@@ -430,8 +430,8 @@ function renderLP(){
 }
 function checkLP(correct,btn){
   document.querySelectorAll('.lp-opt').forEach(b=>b.onclick=null);
-  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';lpScore+=5;updateScore();setTimeout(()=>{lpIdx++;renderLP();},600);}
-  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{lpIdx++;renderLP();},800);}
+  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';lpScore+=5;updateScore();setTimeout(()=>{if(curPage===2){lpIdx++;renderLP();}},600);}
+  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{if(curPage===2){lpIdx++;renderLP();}},800);}
 }
 function endLP(){document.getElementById('lpResult').textContent=lpScore+'/80 pts';document.getElementById('lpDone').style.display='block';}
 
@@ -456,8 +456,8 @@ function renderSQ(){
 }
 function checkSQ(correct,btn,opts){
   opts.querySelectorAll('.sq-opt').forEach(b=>b.onclick=null);
-  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';sqScore+=5;updateScore();setTimeout(()=>{sqIdx++;renderSQ();},500);}
-  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{sqIdx++;renderSQ();},700);}
+  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';sqScore+=5;updateScore();setTimeout(()=>{if(curPage===3){sqIdx++;renderSQ();}},500);}
+  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{if(curPage===3){sqIdx++;renderSQ();}},700);}
 }
 function endSQ(){document.getElementById('sqResult').textContent=sqScore+'/75 pts';document.getElementById('sqDone').style.display='block';}
 
@@ -577,8 +577,8 @@ function sbClear(){sbSelected=[];renderSB();}
 function sbCheck(){
   const s=sbList[sbIdx];const correct=sbSelected.join(' ')===s.w.join(' ');
   const fb=document.getElementById('sbFb');
-  if(correct){fb.textContent='✅ Correct! "'+s.w.join(' ')+'"';fb.style.color='#2E7D32';sbScore+=20;updateScore();setTimeout(()=>{sbIdx++;renderSB();},1000);}
-  else{fb.textContent='❌ Try again!';fb.style.color='#C62828';setTimeout(sbClear,1200);}
+  if(correct){fb.textContent='✅ Correct! "'+s.w.join(' ')+'"';fb.style.color='#2E7D32';sbScore+=20;updateScore();setTimeout(()=>{if(curPage===6){sbIdx++;renderSB();}},1000);}
+  else{fb.textContent='❌ Try again!';fb.style.color='#C62828';setTimeout(()=>{if(curPage===6)sbClear();},1200);}
 }
 function endSB(){document.getElementById('sbResult').textContent=sbScore+'/'+(SB_LIST.length*20)+' pts';document.getElementById('sbDone').style.display='block';}
 
