@@ -1,433 +1,621 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Day 21 — Week 3 Review &#x1F4DD;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 21 — Week 3 Home Review!</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
-body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 auto;color:#37474F}
-.hdr{background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(230,74,25,.35)}
-.hdr-l{font-weight:900;font-size:15px;color:#fff}
-.cefr{background:rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
-.dots{display:flex;gap:5px;margin-left:8px}
-.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:.2s}
-.dot.on{background:#fff}
-.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#FFF3E0;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #FFAB91}
-.vbar label{font-size:13px;color:#E64A19;font-weight:700}
-.vbar select{font-size:13px;border:2px solid #FFAB91;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
-.vbar input[type=range]{width:65px;accent-color:#E64A19}
-.score-bar{background:#FFF3E0;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#E64A19;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #FFAB91}
-.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#FF8A65,#E64A19);transition:width .4s}
-.strack{flex:1;height:9px;background:#FFE0B2;border-radius:5px;overflow:hidden}
-.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
-.btn:active{transform:scale(.96)}
-.btn-p{background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;box-shadow:0 3px 8px rgba(230,74,25,.35)}
-.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
-.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#FFF3E0;border:2px solid #FFAB91;border-radius:12px;cursor:pointer;font-size:13px;color:#E64A19;font-weight:700;font-family:'Nunito',sans-serif}
-.tts:hover{background:#FFE0B2}
+body{background:#E8F5E9;min-height:100vh;padding:14px;max-width:720px;margin:0 auto;color:#37474F}
 .page{display:none}.page.on{display:block}
-.step-label{font-size:17px;font-weight:900;color:#BF360C;margin-bottom:4px}
-.step-sub{font-size:13px;color:#78909C;font-weight:700;margin-bottom:12px}
-.navrow{display:flex;gap:10px;margin-top:16px}
-/* Flash cards */
-.fc-card{background:#fff;border:2.5px solid #FFAB91;border-radius:18px;padding:22px 16px;text-align:center;cursor:pointer;margin-bottom:10px;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .2s;user-select:none}
-.fc-card:active{transform:scale(.97)}
-.fc-en{font-size:28px;font-weight:900;color:#E64A19;margin-bottom:4px}
-.fc-ph{font-size:13px;color:#FF7043;font-weight:600;margin-bottom:6px}
-.fc-th{font-size:22px;font-weight:900;color:#BF360C;display:none}
-.fc-hint{font-size:11px;color:#FFAB91;font-weight:700}
-.fc-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
-.fc-count{font-size:13px;font-weight:800;color:#78909C}
-/* Word grid for cover */
-.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
-.wchip{background:#fff;border:1.5px solid #FFAB91;border-radius:10px;padding:6px 8px;text-align:center;cursor:pointer}
-.wchip-en{font-size:13px;font-weight:900;color:#E64A19}
-.wchip-th{font-size:11px;color:#BF360C;font-weight:700}
-/* Quiz */
-.qcard{background:#fff;border:2px solid #FFAB91;border-radius:16px;padding:16px;margin-bottom:12px}
-.qword{font-size:24px;font-weight:900;color:#E64A19;margin-bottom:12px;text-align:center}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.opt{padding:10px;border-radius:12px;border:2px solid #FFAB91;font-size:14px;font-weight:800;cursor:pointer;text-align:center;font-family:'Nunito',sans-serif;background:#FFF3E0;color:#37474F;transition:all .15s}
-.opt:hover{background:#FFE0B2}
-.opt.correct{background:#C8E6C9;border-color:#43A047;color:#1B5E20;pointer-events:none}
-.opt.wrong{background:#FFCDD2;border-color:#E53935;color:#B71C1C;pointer-events:none}
-.opt.disabled{pointer-events:none;opacity:.6}
-/* Sentence Builder */
-.sb-sent{font-size:14px;font-weight:700;color:#546E7A;margin-bottom:8px;line-height:1.6}
-.sb-target{min-height:38px;background:#FFF8E1;border:1.5px dashed #FFB74D;border-radius:8px;padding:6px 10px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:8px}
-.sb-bank{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
-.sb-word{background:#fff;border:1.5px solid #FFAB91;border-radius:8px;padding:5px 11px;font-size:13px;font-weight:800;color:#E64A19;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s}
-.sb-word:hover{background:#FFE0B2}
-.sb-word.used{opacity:.3;pointer-events:none}
-/* Lock */
-.lock-screen{text-align:center;padding:40px 20px;background:#FFF8E1;border-radius:20px;border:3px solid #FFAB91;margin-top:10px}
-.lock-screen h2{font-size:22px;font-weight:900;color:#E65100;margin:12px 0 8px}
-.lock-screen p{font-size:14px;color:#546E7A;font-weight:700;line-height:1.7;margin-bottom:16px}
-.code-inp{padding:11px 16px;border-radius:14px;border:3px solid #FFAB91;font-size:18px;font-weight:800;text-align:center;letter-spacing:3px;font-family:'Nunito',sans-serif;width:220px}
-.code-inp:focus{outline:none;border-color:#E64A19}
-.unlock-btn{background:linear-gradient(135deg,#FF8A65,#E64A19);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px}
+.hdr{background:linear-gradient(135deg,#43A047,#00ACC1,#1E88E5,#7B1FA2,#E91E63);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 12px rgba(0,0,0,0.25)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,0.4)}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.cefr{background:rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:5px}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#F1F8E9;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #81C784}
+.vbar label{font-size:13px;color:#2E7D32;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #81C784;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#43A047}
+.score-bar{background:#F1F8E9;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#2E7D32;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #81C784}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#43A047,#00ACC1,#1E88E5);transition:width .4s}
+.strack{flex:1;height:9px;background:#C8E6C9;border-radius:5px;overflow:hidden;border:1px solid #81C784}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(0.96)}
+.btn-p{background:linear-gradient(135deg,#43A047,#00ACC1);color:#fff;box-shadow:0 3px 8px rgba(67,160,71,0.4)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.navrow{display:flex;justify-content:space-between;margin-top:14px;gap:8px}
+.step-label{font-size:17px;font-weight:900;color:#2E7D32;margin-bottom:5px}
+.step-sub{font-size:13px;color:#78909C;margin-bottom:10px;font-weight:600}
+.lock-screen{text-align:center;padding:40px 20px;background:#F1F8E9;border-radius:20px;border:3px solid #81C784;margin-top:10px}
+.lock-screen h2{font-size:22px;font-weight:900;color:#2E7D32;margin:12px 0 8px}
+.d-code-input{width:100%;max-width:200px;font-size:22px;padding:12px 16px;border-radius:14px;border:3px solid #81C784;background:#fff;color:#37474F;text-align:center;font-family:'Courier New',monospace;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.unlock-btn{background:linear-gradient(135deg,#43A047,#00ACC1);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
 .unlock-err{color:#C62828;font-size:13px;font-weight:700;margin-top:6px;display:none}
-.already-done{background:linear-gradient(135deg,#43A047,#2E7D32);color:#fff;border-radius:12px;padding:9px 14px;font-size:13px;font-weight:700;margin-bottom:9px;display:none}
+.already-done{background:#E3F2FD;border:2px solid #90CAF9;border-radius:14px;padding:10px 14px;font-size:13px;color:#1565C0;font-weight:700;margin-bottom:10px;display:none}
 .already-done.show{display:block}
-.complete-screen{background:linear-gradient(135deg,#FFF3E0,#FFE0B2);border-radius:20px;padding:22px 18px;text-align:center;margin-top:16px;border:3px solid #FFAB91;display:none}
+.complete-screen{display:none;text-align:center;padding:20px 16px;background:#E8F5E9;border-radius:20px;border:3px solid #A5D6A7;margin-top:12px}
 .complete-screen.show{display:block}
-.code-box{background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:16px;padding:16px;margin:12px 0}
-.code-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:4px}
-.code-txt{font-size:32px;font-weight:900;color:#fff;letter-spacing:4px}
-.copy-btn{background:#fff;color:#E64A19;border:none;border-radius:12px;padding:9px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
-.wave{display:inline-block;animation:wv 1.4s ease 2;font-size:48px}
-@keyframes wv{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.code-box{background:#fff;border:3px dashed #43A047;border-radius:16px;padding:16px;margin:14px 0}
+.code-txt{font-size:28px;font-weight:900;color:#2E7D32;letter-spacing:3px;font-family:'Courier New',monospace}
+.copy-btn{background:#43A047;color:#fff;border:none;border-radius:12px;padding:9px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fin{animation:up .5s ease}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.bounce{animation:bounce 1s ease infinite}
+@keyframes floatUp{0%{transform:translateY(60px) scale(0.8);opacity:0}15%{opacity:1;transform:translateY(0) scale(1)}85%{opacity:1;transform:translateY(-8px) scale(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.balloon-btn{animation:floatUp 0.5s ease forwards,sway 2s ease-in-out infinite 0.5s!important}
+.lc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+.lc-card{background:#fff;border:2.5px solid #E0E0E0;border-radius:12px;padding:10px 4px;font-size:12px;font-weight:900;text-align:center;cursor:pointer;transition:.15s;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#37474F;font-family:'Nunito',sans-serif;line-height:1.4}
+.lc-card:hover{background:#F1F8E9;border-color:#81C784}
+.lp-play{background:linear-gradient(135deg,#43A047,#00ACC1);border:none;border-radius:50%;width:68px;height:68px;font-size:28px;cursor:pointer;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin:10px 0}
+.lp-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.lp-opt{padding:13px;border-radius:14px;border:2.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:16px;font-weight:800;text-align:center;transition:.2s;font-family:'Nunito',sans-serif}
+.lp-opt:hover{background:#F1F8E9;border-color:#81C784}
+.sq-info{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;font-weight:800;color:#2E7D32}
+.sq-q{background:#fff;border-radius:18px;padding:18px;border:2.5px solid #81C784;text-align:center;margin-bottom:10px}
+.sq-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.sq-opt{padding:12px;border-radius:12px;border:2.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:15px;font-weight:800;text-align:center;transition:.2s;font-family:'Nunito',sans-serif}
+.sq-opt:hover{background:#F1F8E9;border-color:#81C784}
+.bp-prompt{background:#F1F8E9;border:2px solid #81C784;border-radius:12px;padding:10px 14px;margin-bottom:8px;text-align:center;font-size:20px;font-weight:900;color:#2E7D32}
+.bp-area{background:linear-gradient(180deg,#E8F5E9,#C8E6C9);border-radius:20px;padding:14px;margin-bottom:10px;min-height:170px;border:2px solid #A5D6A7}
+.wa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.wa-hole{background:#E0E0E0;border-radius:50%;height:70px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;user-select:none}
+.wa-prompt{background:#F1F8E9;border:2px solid #81C784;border-radius:12px;padding:8px 14px;margin-bottom:8px;text-align:center;font-size:15px;font-weight:900;color:#2E7D32}
+.sb-target{background:#F1F8E9;border:2.5px solid #81C784;border-radius:14px;padding:12px 14px;min-height:50px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.sb-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sb-fb{font-size:15px;font-weight:900;text-align:center;margin:8px 0;min-height:22px}
+.game-btn{padding:14px 8px;border-radius:18px;font-size:13px;cursor:pointer;font-weight:900;border:none;color:#fff;font-family:'Nunito',sans-serif;transition:transform .1s;line-height:1.4}
+.game-btn:active{transform:scale(0.95)}
 </style>
 </head>
 <body>
+
 <div class="hdr">
-  <span class="hdr-l" id="lbl">&#x1F4DD; Day 21 &middot; Week 3 Review</span>
-  <div style="display:flex;align-items:center;gap:8px">
-    <span class="cefr">&#x1F7E0; A1</span>
-    <div class="dots" id="dots"></div>
-  </div>
+  <span class="hdr-l">🏠 Day 21 · Week 3 Home Review!</span>
+  <div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div>
 </div>
-<div class="already-done" id="alreadyDone">&#x2705; เรียน Day 21 จบแล้ว! Code: <strong id="savedCode"></strong> &mdash; Week 3 ครบแล้ว! &#x1F389;</div>
-<div class="lock-screen" id="lockScreen" style="display:none">
-  <div style="font-size:56px">&#x1F512;</div>
-  <h2>Day 21 ยังล็อกอยู่!</h2>
-  <p>ต้องเรียน <strong>Day 20 ให้จบก่อน</strong><br>แล้วกรอก Completion Code ของ Day 20</p>
-  <input class="code-inp" id="codeInput" placeholder="D20-XXXX" maxlength="10" oninput="this.value=this.value.toUpperCase()">
-  <br><button class="unlock-btn" onclick="tryUnlock()">&#x1F513; Unlock Day 21</button>
-  <div class="unlock-err" id="unlockErr">&#x274C; Code ไม่ถูกต้อง ลองใหม่</div>
-</div>
-<div id="mainContent" style="display:none">
+<div class="already-done" id="alreadyDone">✅ Week 3 Home Review Done! Code: <strong id="savedCode"></strong> 🏠</div>
 <div class="score-bar">
-  <span>&#x2B50; Score: <span id="totalSc">0</span> / 36</span>
+  <span>⭐ Score: <span id="totalSc">0</span></span>
   <div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div>
-  <span id="starDisp">&#x2606;&#x2606;&#x2606;</span>
+  <span id="starDisp">☆☆☆</span>
 </div>
 <div class="vbar">
-  <label>&#x1F50A;</label>
-  <select id="vsel"></select>
+  <label>🔊</label>
+  <select id="vsel" onchange="setV(this.value)"></select>
   <label>Speed:</label>
-  <input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'x'">
-  <span id="rv" style="font-size:13px;color:#E64A19;font-weight:800">0.85x</span>
+  <input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85"
+    oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'">
+  <span id="rv" style="font-size:13px;color:#2E7D32;font-weight:800">0.85×</span>
+  <span id="vs" style="font-size:12px;color:#2E7D32;font-weight:700">loading...</span>
 </div>
 
-<!-- p0: Cover — All 36 Words -->
-<div class="page on" id="p0">
-  <div style="text-align:center;padding:14px 8px 10px">
-    <div class="wave">&#x1F3E0;</div>
-    <div style="font-size:24px;font-weight:900;color:#BF360C;margin:8px 0 4px">Week 3 Review Day!</div>
-    <div style="font-size:14px;color:#78909C;font-weight:700;margin-bottom:14px">ทบทวน <strong style="color:#E64A19">36 คำ</strong> จาก Day 15–20 ทั้งหมด</div>
-    <div style="background:#FFF3E0;border-radius:14px;padding:10px 12px;margin-bottom:12px;border:2px solid #FFAB91">
-      <div style="font-size:12px;font-weight:900;color:#BF360C;margin-bottom:8px">&#x1F4DA; Week 3 Vocabulary — คลิกฟัง</div>
-      <div class="wgrid" id="allWordGrid"></div>
+<div class="lock-screen" id="lockScreen" style="display:none">
+  <div style="font-size:56px">🔒</div>
+  <h2>Day 21 ยังล็อกอยู่!</h2>
+  <p>ต้องเรียน <strong>Day 20 ให้จบก่อน</strong><br>กรอก Completion Code ของ Day 20</p>
+  <input class="d-code-input" id="codeInput" placeholder="D20-????" maxlength="10"
+    oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 21</button>
+  <div class="unlock-err" id="unlockErr">❌ Code ไม่ถูกต้อง ลองใหม่</div>
+  <div style="margin-top:14px;font-size:12px;color:#78909C;font-weight:700">💡 ลืม Code → กลับไปเล่น Day 20 อีกครั้ง</div>
+</div>
+
+<div id="mainContent" style="display:none">
+
+<!-- p0: Cover -->
+<div class="page on fin" id="p0">
+  <div style="text-align:center;padding:10px 6px">
+    <div class="bounce" style="font-size:48px">🏠</div>
+    <div style="font-size:22px;font-weight:900;background:linear-gradient(90deg,#43A047,#00ACC1,#1E88E5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:6px 0 3px">Week 3 Home Review!</div>
+    <div style="font-size:13px;color:#78909C;margin-bottom:12px;font-weight:700">Review <strong style="color:#37474F">36 home words</strong> from 6 days — pick a game!</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px">
+      <span style="background:#E8F5E9;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#1B5E20">🏠 Day15: Home</span>
+      <span style="background:#E3F2FD;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#0D47A1">🛋️ Day16: Living Room</span>
+      <span style="background:#FFF3E0;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#E65100">🍳 Day17: Kitchen</span>
+      <span style="background:#FCE4EC;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#880E4F">🛏️ Day18: Bedroom</span>
+      <span style="background:#F3E5F5;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#4A148C">👨‍👩‍👧‍👦 Day19: Family</span>
+      <span style="background:#FFF9C4;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#F57F17">🌱 Day20: Garden</span>
     </div>
-    <button class="btn btn-p" onclick="go(1)" style="margin-top:8px;padding:13px 30px;font-size:17px;border-radius:18px">Start Review! &#x2192;</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <button class="game-btn" style="background:linear-gradient(135deg,#7CB342,#33691E)" onclick="initLC();go(1)">👂 Listen &amp;<br><span style="font-size:10px;font-weight:700;opacity:0.85">Select</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#00ACC1,#006064)" onclick="initLP();go(2)">👂 Listen &amp;<br><span style="font-size:10px;font-weight:700;opacity:0.85">Pick</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#AB47BC,#6A1B9A)" onclick="initSQ();go(3)">⚡ Speed<br><span style="font-size:10px;font-weight:700;opacity:0.85">Quiz</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#43A047,#1B5E20)" onclick="initBP();go(4)">🎈 Balloon<br><span style="font-size:10px;font-weight:700;opacity:0.85">Pop</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#E91E63,#880E4F)" onclick="initWA();go(5)">🔨 Whack-a-<br><span style="font-size:10px;font-weight:700;opacity:0.85">Word</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#1E88E5,#0D47A1)" onclick="initSB();go(6)">🧩 Sentence<br><span style="font-size:10px;font-weight:700;opacity:0.85">Builder</span></button>
+    </div>
+    <button class="btn btn-p" style="margin-top:14px;width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 3 Results!</button>
   </div>
 </div>
 
-<!-- p1: Flashcard Review -->
+<!-- p1: Listen & Select -->
 <div class="page" id="p1">
-  <div class="step-label">&#x1F4DA; Vocab Flashcard Review</div>
-  <p class="step-sub">กดการ์ดเพื่อพลิกดูคำแปล → กด &#x25B6; ฟังเสียง</p>
-  <div class="fc-card" id="fcCard" onclick="flipCard()">
-    <div class="fc-en" id="fcEn">-</div>
-    <div class="fc-ph" id="fcPh">-</div>
-    <div class="fc-th" id="fcTh">-</div>
-    <div class="fc-hint" id="fcHint">กดเพื่อดูคำแปล &#x1F447;</div>
+  <div class="step-label">👂 Listen &amp; Select</div>
+  <p class="step-sub">Hear the word — click the matching card!</p>
+  <div style="font-size:13px;color:#78909C;font-weight:700;margin-bottom:6px">Q <span id="lcQ">1</span>/20 &nbsp;✓ <span id="lcSc">0</span> pts</div>
+  <div id="lcPrompt" style="background:#F1F8E9;border:2px solid #81C784;border-radius:12px;padding:14px;text-align:center;font-size:42px;margin-bottom:6px">🔊</div>
+  <div style="text-align:center;margin-bottom:10px">
+    <button class="btn btn-o" style="font-size:13px;padding:6px 14px" onclick="if(lcCurrent!==null)speak(lcDeck[lcCurrent].e,0.85)">🔊 Again</button>
   </div>
-  <div class="fc-nav">
-    <button class="btn btn-o" onclick="fcNav(-1)" style="padding:9px 16px">&#x2190; Prev</button>
-    <span class="fc-count"><span id="fcIdx">1</span> / <span id="fcTotal">36</span></span>
-    <button class="btn btn-p" onclick="fcNav(1)" style="padding:9px 16px">Next &#x2192;</button>
+  <div class="lc-grid" id="lcGrid"></div>
+  <div id="lcDone" style="display:none;text-align:center;padding:14px;background:#E8F5E9;border-radius:16px;border:2px solid #A5D6A7;margin-top:10px">
+    <div style="font-size:30px">🎧</div>
+    <div style="font-size:18px;font-weight:900;color:#2E7D32">Done!</div>
+    <div style="font-size:26px;font-weight:900;margin:6px 0" id="lcResult">0/100 pts</div>
+    <button class="btn btn-p" onclick="initLC()" style="margin-top:8px">Play Again 🔄</button>
   </div>
-  <div style="display:flex;gap:8px;margin-top:10px;justify-content:center">
-    <button class="tts" onclick="speakFC()">&#x25B6; ฟังเสียง</button>
-    <button class="tts" onclick="shuffleFC()">&#x1F500; สุ่มใหม่</button>
-  </div>
-  <div style="margin-top:12px;background:#FFF3E0;border-radius:12px;padding:10px 14px;font-size:12px;color:#78909C;font-weight:700;border:1.5px solid #FFAB91">
-    &#x2139;&#xFE0F; เป้าหมาย: จำให้ได้ทุกคำ ก่อนทำ Quiz ในหน้าต่อไป
-  </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(0)">&#x2190; Back</button><button class="btn btn-p" onclick="go(2)">Quiz! &#x1F3AE;</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initLP();go(2)">Listen &amp; Pick →</button></div>
 </div>
 
-<!-- p2: Vocabulary Quiz -->
+<!-- p2: Listen & Pick -->
 <div class="page" id="p2">
-  <div class="step-label">&#x1F9E0; Vocabulary Quiz</div>
-  <p class="step-sub">เลือกคำแปลที่ถูกต้อง 10 ข้อ!</p>
-  <div id="qProgressBar" style="height:8px;background:#FFE0B2;border-radius:5px;overflow:hidden;margin-bottom:12px"><div id="qFill" style="height:100%;width:0%;background:#E64A19;transition:width .4s"></div></div>
-  <div id="qarea"></div>
-  <div id="qResult" style="display:none;background:#E8F5E9;border:2px solid #A5D6A7;border-radius:16px;padding:14px;text-align:center;margin-top:10px">
-    <div style="font-size:20px;font-weight:900;color:#1B5E20" id="qScore"></div>
+  <div class="step-label">👂 Listen &amp; Pick</div>
+  <p class="step-sub">Press 🔊 to hear — pick the right card!</p>
+  <div style="font-size:15px;font-weight:800;color:#2E7D32;margin-bottom:8px">Q <span id="lpQ">1</span>/16 &nbsp;✓ <span id="lpSc">0</span> pts</div>
+  <div id="lpCard" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #81C784;text-align:center">
+    <button class="lp-play" onclick="lpPlay()">🔊</button>
+    <div style="font-size:13px;color:#78909C;font-weight:700;margin-bottom:4px">Press 🔊 then pick!</div>
+    <div class="lp-opts" id="lpOpts"></div>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(1)">&#x2190; Back</button><button class="btn btn-p" onclick="go(3)">Sentences! &#x270F;&#xFE0F;</button></div>
+  <div id="lpDone" style="display:none;text-align:center;padding:16px;background:#E8F5E9;border-radius:16px;border:2px solid #A5D6A7;margin-top:10px">
+    <div style="font-size:30px">🎧</div>
+    <div style="font-size:18px;font-weight:900;color:#2E7D32">Done!</div>
+    <div style="font-size:26px;font-weight:900;margin:6px 0" id="lpResult">0/80 pts</div>
+    <button class="btn btn-p" onclick="initLP()" style="margin-top:8px">Play Again 🔄</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initSQ();go(3)">Speed Quiz →</button></div>
 </div>
 
-<!-- p3: Sentence Builder -->
+<!-- p3: Speed Quiz -->
 <div class="page" id="p3">
-  <div class="step-label">&#x270F;&#xFE0F; Sentence Builder</div>
-  <p class="step-sub">เรียงคำให้เป็นประโยค 5 ข้อ!</p>
-  <div id="sbarea"></div>
-  <div style="margin-top:10px;display:flex;gap:8px">
-    <button class="btn btn-p" onclick="checkSB()">Check &#x2713;</button>
-    <button class="btn btn-o" onclick="buildSB()">Reset &#x1F504;</button>
+  <div class="step-label">⚡ Speed Quiz</div>
+  <p class="step-sub">See the emoji — pick the English word!</p>
+  <div class="sq-info"><span>Q <span id="sqQ">1</span>/15</span><span>⭐ <span id="sqSc">0</span> pts</span></div>
+  <div id="sqArea"></div>
+  <div id="sqDone" style="display:none;text-align:center;padding:16px;background:#F3E5F5;border-radius:16px;border:2px solid #CE93D8;margin-top:10px">
+    <div style="font-size:30px">⚡</div>
+    <div style="font-size:18px;font-weight:900;color:#6A1B9A">Speed Quiz Done!</div>
+    <div style="font-size:26px;font-weight:900;margin:6px 0" id="sqResult">0/75 pts</div>
+    <button class="btn btn-p" onclick="initSQ()" style="margin-top:8px;background:linear-gradient(135deg,#AB47BC,#6A1B9A)">Play Again 🔄</button>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(2)">&#x2190; Back</button><button class="btn btn-p" onclick="go(4)">Finish! &#x1F3C6;</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initBP();go(4)">Balloon Pop →</button></div>
 </div>
 
-<!-- p4: Completion -->
+<!-- p4: Balloon Pop -->
 <div class="page" id="p4">
-  <div style="text-align:center;padding:16px 8px">
-    <div style="font-size:48px;margin-bottom:8px">&#x1F3C6;</div>
-    <div style="font-size:22px;font-weight:900;color:#BF360C;margin-bottom:6px">Week 3 Complete!</div>
-    <div style="font-size:15px;color:#546E7A;font-weight:700;margin-bottom:16px">คุณเรียน <strong style="color:#E64A19">36 คำ</strong> ใน 7 วัน เก่งมากเลย!</div>
-    <div id="w3Summary" style="background:#fff;border:2px solid #FFAB91;border-radius:16px;padding:14px 16px;margin:0 0 14px;text-align:left"></div>
-    <div style="background:linear-gradient(135deg,#FF8A65,#E64A19);border-radius:16px;padding:16px;margin:0 0 14px">
-      <div style="font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-bottom:4px">&#x1F511; Completion Code &mdash; Day 21</div>
-      <div class="code-txt" id="codeDisplay">D21-????</div>
-      <button class="copy-btn" onclick="copyCode()">&#x1F4CB; Copy Code</button>
-    </div>
-    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.8;margin-bottom:16px">&#x26A0;&#xFE0F; จดเก็บไว้!<br><strong style="color:#2E7D32">Week 4 School ปลดล็อกแล้ว &#x1F393;</strong></div>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-      <a href="progress.html" style="background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">&#x1F3E0; หน้าหลัก</a>
-      <a href="Day22_FirstDayAtSchool_A1.html" style="background:linear-gradient(135deg,#1E88E5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">&#x1F393; Week 4 &#x2192;</a>
-    </div>
+  <div class="step-label">🎈 Balloon Pop</div>
+  <div class="bp-prompt" id="bpPrompt">Press Start to play!</div>
+  <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:#2E7D32;margin-bottom:8px">
+    <span>💥 Pop: <span id="bpHit">0</span></span>
+    <span>Round: <span id="bpRound">0</span>/15</span>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(3)">&#x2190; Back</button></div>
+  <div class="bp-area" id="bpArea"></div>
+  <div style="text-align:center;margin-top:8px">
+    <button class="btn btn-p" onclick="startBP()" style="font-size:16px">🎈 Start!</button>
+  </div>
+  <div id="bpDone" style="display:none;text-align:center;padding:14px;background:#E8F5E9;border-radius:16px;border:2px solid #A5D6A7;margin-top:8px">
+    <div style="font-size:30px">🎈</div>
+    <div style="font-size:18px;font-weight:900;color:#2E7D32">Balloon Pop Done!</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="bpResult">0/15</div>
+    <button class="btn btn-p" onclick="startBP()" style="margin-top:8px">Play Again 🔄</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initWA();go(5)">Whack-a-Word →</button></div>
 </div>
+
+<!-- p5: Whack-a-Word -->
+<div class="page" id="p5">
+  <div class="step-label">🔨 Whack-a-Word</div>
+  <div class="wa-prompt" id="waPrompt">Press Start to play!</div>
+  <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:#2E7D32;margin-bottom:6px">
+    <span>✓ Hit: <span id="waHit">0</span></span>
+    <span>Round: <span id="waRound">0</span>/12</span>
+  </div>
+  <div class="wa-grid" id="waGrid"></div>
+  <div style="text-align:center;margin-top:6px">
+    <button class="btn btn-p" onclick="startWA()" style="background:linear-gradient(135deg,#E91E63,#880E4F);font-size:16px">🔨 Start!</button>
+  </div>
+  <div id="waDone" style="display:none;text-align:center;padding:14px;background:#FCE4EC;border-radius:16px;border:2px solid #F48FB1;margin-top:8px">
+    <div style="font-size:30px">🔨</div>
+    <div style="font-size:18px;font-weight:900;color:#880E4F">Whack-a-Word Done!</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="waResult">0/12</div>
+    <button class="btn btn-p" onclick="initWA();startWA()" style="margin-top:8px;background:linear-gradient(135deg,#E91E63,#880E4F)">Play Again 🔄</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="initSB();go(6)">Sentence Builder →</button></div>
+</div>
+
+<!-- p6: Sentence Builder -->
+<div class="page" id="p6">
+  <div class="step-label">🧩 Sentence Builder</div>
+  <p class="step-sub">Tap words to build the sentence!</p>
+  <div style="font-size:13px;color:#78909C;font-weight:700;margin-bottom:8px">Sentence <span id="sbNum">1</span>/<span id="sbTotal">5</span> &nbsp;✓ <span id="sbSc">0</span> pts</div>
+  <div style="text-align:center;margin-bottom:6px">
+    <button class="btn btn-o" style="font-size:13px;padding:6px 14px" onclick="if(sbList[sbIdx])speak(sbList[sbIdx].w.join(' '),0.8)">🔊 Again</button>
+  </div>
+  <div class="sb-target" id="sbTarget"></div>
+  <div class="sb-pool" id="sbPool"></div>
+  <div class="sb-fb" id="sbFb"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-o" onclick="sbClear()">↩ Clear</button>
+    <button class="btn btn-p" onclick="sbCheck()">✓ Check!</button>
+  </div>
+  <div id="sbDone" style="display:none;text-align:center;padding:14px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9;margin-top:10px">
+    <div style="font-size:30px">🧩</div>
+    <div style="font-size:18px;font-weight:900;color:#1565C0">Sentence Builder Done!</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="sbResult">0/100 pts</div>
+    <button class="btn btn-p" onclick="initSB()" style="margin-top:8px;background:linear-gradient(135deg,#1E88E5,#0D47A1)">Play Again 🔄</button>
+    <button class="btn btn-p" onclick="showCompletion()" style="margin-top:8px">🏆 Results!</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
+</div>
+
+</div><!-- end mainContent -->
+
+<div class="complete-screen" id="completeScreen">
+  <div style="font-size:36px">🏠🏆</div>
+  <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Week 3 Home Review Complete!</div>
+  <div style="font-size:14px;color:#78909C;margin-bottom:10px;font-weight:700">All 6 games done! 🎉</div>
+  <div style="font-size:22px;font-weight:900;color:#2E7D32;margin:8px 0">⭐ Total: <span id="finalSc">0</span> pts</div>
+  <div id="starFinal" style="font-size:32px;margin:6px 0">☆☆☆</div>
+  <div class="code-box">
+    <div style="font-size:12px;color:#78909C;font-weight:700;margin-bottom:4px">🔑 Week 3 Completion Code</div>
+    <div class="code-txt" id="codeDisplay">D21-????</div>
+    <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+  </div>
+  <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">
+    🏅 จดรหัสนี้เพื่อยืนยันการแข่งขัน!<br>
+    <strong style="color:#2E7D32">Week 3 เสร็จสิ้นสมบูรณ์! 🏠</strong>
+  </div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+    <a href="dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
+    <a href="Day22_FirstDayAtSchool_A1.html" style="display:inline-block;background:linear-gradient(135deg,#43A047,#00ACC1);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🏫 Week 4 →</a>
+  </div>
 </div>
 
 <script>
-const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
-const DAY=21, LOCK_KEY='wla_d21', PREV_KEY='wla_d20';
-const STEPS=['Cover','Flashcards','Quiz','Sentences','Complete'];
-/* All 36 Week 3 words — Day 15-20 */
-const ALL_WORDS=[
-  /* Day 15 — Living Room */
-  {e:'home',    t:'บ้าน',         ph:'/hohm/'},
-  {e:'room',    t:'ห้อง',         ph:'/room/'},
-  {e:'door',    t:'ประตู',        ph:'/dor/'},
-  {e:'window',  t:'หน้าต่าง',     ph:'/win-doh/'},
-  {e:'floor',   t:'พื้น',         ph:'/flor/'},
-  {e:'wall',    t:'ผนัง',         ph:'/wawl/'},
-  /* Day 16 — Living Room */
-  {e:'chair',   t:'เก้าอี้',      ph:'/chair/'},
-  {e:'table',   t:'โต๊ะ',        ph:'/tay-bul/'},
-  {e:'sofa',    t:'โซฟา',        ph:'/soh-fah/'},
-  {e:'lamp',    t:'โคมไฟ',       ph:'/lamp/'},
-  {e:'sit',     t:'นั่ง',         ph:'/sit/'},
-  {e:'watch',   t:'ดู',           ph:'/woch/'},
-  /* Day 17 — Kitchen */
-  {e:'kitchen', t:'ห้องครัว',     ph:'/kitch-en/'},
-  {e:'cup',     t:'ถ้วย',        ph:'/kup/'},
-  {e:'plate',   t:'จาน',         ph:'/playt/'},
-  {e:'spoon',   t:'ช้อน',        ph:'/spoon/'},
-  {e:'clean',   t:'สะอาด',       ph:'/kleen/'},
-  {e:'help',    t:'ช่วย',         ph:'/help/'},
-  /* Day 18 — Bedroom */
-  {e:'bed',     t:'เตียง',       ph:'/bed/'},
-  {e:'pillow',  t:'หมอน',        ph:'/pil-oh/'},
-  {e:'toy',     t:'ของเล่น',     ph:'/toy/'},
-  {e:'book',    t:'หนังสือ',     ph:'/book/'},
-  {e:'sleep',   t:'นอนหลับ',     ph:'/sleep/'},
-  {e:'quiet',   t:'เงียบ',       ph:'/kwai-et/'},
-  /* Day 19 — Family */
-  {e:'family',  t:'ครอบครัว',    ph:'/fam-uh-lee/'},
-  {e:'mother',  t:'แม่',          ph:'/muh-ther/'},
-  {e:'father',  t:'พ่อ',          ph:'/fah-ther/'},
-  {e:'sister',  t:'พี่/น้องสาว', ph:'/sis-ter/'},
-  {e:'brother', t:'พี่/น้องชาย', ph:'/bruh-ther/'},
-  {e:'love',    t:'รัก',          ph:'/luhv/'},
-  /* Day 20 — Our House */
-  {e:'garden',  t:'สวน',         ph:'/gar-den/'},
-  {e:'roof',    t:'หลังคา',      ph:'/roof/'},
-  {e:'stairs',  t:'บันได',       ph:'/stairz/'},
-  {e:'small',   t:'เล็ก',         ph:'/smawl/'},
-  {e:'big',     t:'ใหญ่',         ph:'/big/'},
-  {e:'tidy',    t:'เป็นระเบียบ',  ph:'/ty-dee/'}
+const WORDS = [
+  // Day 15: Welcome Home
+  {e:'home',    day:15, icon:'🏠'},
+  {e:'room',    day:15, icon:'🏡'},
+  {e:'door',    day:15, icon:'🚪'},
+  {e:'window',  day:15, icon:'🪟'},
+  {e:'floor',   day:15, icon:'🦶'},
+  {e:'wall',    day:15, icon:'🧱'},
+  // Day 16: Living Room
+  {e:'chair',   day:16, icon:'🪑'},
+  {e:'table',   day:16, icon:'📋'},
+  {e:'sofa',    day:16, icon:'🛋️'},
+  {e:'lamp',    day:16, icon:'💡'},
+  {e:'sit',     day:16, icon:'🧘'},
+  {e:'watch',   day:16, icon:'👀'},
+  // Day 17: Kitchen
+  {e:'kitchen', day:17, icon:'🍳'},
+  {e:'cup',     day:17, icon:'☕'},
+  {e:'plate',   day:17, icon:'🍽️'},
+  {e:'spoon',   day:17, icon:'🥄'},
+  {e:'clean',   day:17, icon:'🧹'},
+  {e:'help',    day:17, icon:'🤝'},
+  // Day 18: Bedroom
+  {e:'bed',     day:18, icon:'🛏️'},
+  {e:'pillow',  day:18, icon:'🌙'},
+  {e:'toy',     day:18, icon:'🧸'},
+  {e:'book',    day:18, icon:'📚'},
+  {e:'sleep',   day:18, icon:'😴'},
+  {e:'quiet',   day:18, icon:'🤫'},
+  // Day 19: Family
+  {e:'family',  day:19, icon:'👨‍👩‍👧‍👦'},
+  {e:'mother',  day:19, icon:'👩'},
+  {e:'father',  day:19, icon:'👨'},
+  {e:'sister',  day:19, icon:'👧'},
+  {e:'brother', day:19, icon:'👦'},
+  {e:'love',    day:19, icon:'❤️'},
+  // Day 20: Our House
+  {e:'garden',  day:20, icon:'🌱'},
+  {e:'roof',    day:20, icon:'🏘️'},
+  {e:'stairs',  day:20, icon:'🪜'},
+  {e:'small',   day:20, icon:'🔹'},
+  {e:'big',     day:20, icon:'🔵'},
+  {e:'tidy',    day:20, icon:'✨'},
 ];
-/* 5 review sentences from Week 3 */
-const SB_SENTS=[
-  'Leo sits on the sofa.',
-  'Mimi helps clean the kitchen.',
-  'The bed is big and soft.',
-  'Father reads a book at night.',
-  'Our house has a big garden.'
+
+const SB_LIST = [
+  {w:['My','family','sits','on','the','sofa']},
+  {w:['She','reads','a','book','in','bed']},
+  {w:['Help','me','clean','the','kitchen']},
+  {w:['The','toy','is','on','the','table']},
+  {w:['I','love','my','home']},
 ];
-/* TTS */
-var voices=[];
-function loadVoices(){voices=window.speechSynthesis.getVoices();var sel=document.getElementById('vsel');sel.innerHTML='';var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});pool.forEach(function(v,i){var o=document.createElement('option');o.value=i;o.textContent=v.name+' ('+v.lang+')';sel.appendChild(o);if(v.name.indexOf('Zira')>=0||v.name.indexOf('Libby')>=0)sel.value=i;});}
-if(typeof speechSynthesis!=='undefined'){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
-setTimeout(loadVoices,300);setTimeout(loadVoices,900);setTimeout(loadVoices,2000);
-function getSpeed(){return parseFloat(document.getElementById('rsl').value)||0.85;}
-function speak(text,cb){speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});var idx=parseInt(document.getElementById('vsel').value)||0;u.voice=pool[idx]||null;u.rate=getSpeed();u.lang='en-US';if(cb)u.onend=cb;speechSynthesis.speak(u);}
 
-/* Navigation */
-var cur=0;
-function go(n){document.getElementById('p'+cur).classList.remove('on');cur=n;document.getElementById('p'+n).classList.add('on');document.getElementById('lbl').textContent='Day 21 - '+STEPS[n];document.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===n);});window.scrollTo(0,0);if(n===1)initFC();if(n===2)buildQuiz();if(n===3)buildSB();if(n===4)buildFinalScreen();}
+const LOCK_KEY = 'wla_d21';
+const PREV_KEY = 'wla_d20';
+const PREV_PFX = 'D20-';
+const API_URL_SYNC = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
 
-/* All Words Grid */
-function buildWordGrid(){
-  var el=document.getElementById('allWordGrid');if(!el)return;
-  el.innerHTML=ALL_WORDS.map(function(w){
-    return '<div class="wchip" onclick="speak(\''+w.e+'\')">'
-      +'<div class="wchip-en">&#x1F50A; '+w.e+'</div>'
-      +'<div class="wchip-th">'+w.t+'</div>'
-      +'</div>';
-  }).join('');
+let totalScore=0;
+let lcScore=0,lpScore=0,sqScore=0,bpScore=0,waScore=0,sbScore=0;
+let lcDeck=[],lcIdx=0,lcCurrent=null;
+let lpDeck=[],lpIdx=0;
+let sqDeck=[],sqIdx=0;
+let bpActive=false,bpTimeout=null,bpHit=0,bpRound=0;
+let waActive=false,waTimers=[],waHit=0,waCount=0;
+let sbList=[],sbIdx=0,sbSelected=[];
+
+const synth=window.speechSynthesis;
+let voices=[];
+function loadVoices(){
+  voices=synth.getVoices().filter(v=>v.lang.startsWith('en'));
+  const sel=document.getElementById('vsel');if(!sel)return;
+  sel.innerHTML='';
+  voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.name.slice(0,20);sel.appendChild(o);});
+  document.getElementById('vs').textContent=voices.length?'✅':'❌';
+}
+if(synth.onvoiceschanged!==undefined)synth.onvoiceschanged=loadVoices;
+setTimeout(loadVoices,500);
+function speak(text,rate){
+  rate=rate||parseFloat(document.getElementById('rsl').value)||0.85;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  const vi=parseInt(document.getElementById('vsel')?.value||0);
+  if(voices[vi])u.voice=voices[vi];
+  u.rate=rate;u.lang='en-US';synth.speak(u);
+}
+function setV(i){speak('Hello!',0.85);}
+
+let curPage=0;
+function go(n){
+  synth.cancel();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const pg=document.getElementById('p'+n);if(pg)pg.classList.add('on');
+  curPage=n;
+  const dots=document.getElementById('dots');
+  if(dots){dots.innerHTML='';[0,1,2,3,4,5,6].forEach(i=>{const d=document.createElement('div');d.className='dot'+(i===n?' on':'');d.onclick=()=>go(i);dots.appendChild(d);});}
+}
+function shuffle(arr){return arr.slice().sort(()=>Math.random()-.5);}
+function pick(arr,n){return shuffle(arr).slice(0,n);}
+function updateScore(){
+  const total=lcScore+lpScore+sqScore+bpScore+waScore+sbScore;
+  totalScore=total;
+  document.getElementById('totalSc').textContent=total;
+  const pct=Math.min(100,Math.round(total/6));
+  const fill=document.getElementById('sfill');if(fill)fill.style.width=pct+'%';
+  const stars=total>=450?'⭐⭐⭐':total>=300?'⭐⭐☆':'⭐☆☆';
+  const sd=document.getElementById('starDisp');if(sd)sd.textContent=stars;
 }
 
-/* Flashcards */
-var fcOrder=[],fcCur=0,fcShowing=false;
-function initFC(){
-  if(fcOrder.length===0){fcOrder=ALL_WORDS.slice().sort(function(){return Math.random()-.5;});}
-  document.getElementById('fcTotal').textContent=fcOrder.length;
-  showFC(0);
-}
-function showFC(i){
-  fcCur=i;fcShowing=false;
-  var w=fcOrder[i];
-  document.getElementById('fcEn').textContent=w.e;
-  document.getElementById('fcPh').textContent=w.ph;
-  document.getElementById('fcTh').textContent=w.t;
-  document.getElementById('fcTh').style.display='none';
-  document.getElementById('fcHint').textContent='กดเพื่อดูคำแปล';
-  document.getElementById('fcIdx').textContent=i+1;
-  document.getElementById('fcCard').style.background='#fff';
-}
-function flipCard(){
-  fcShowing=!fcShowing;
-  document.getElementById('fcTh').style.display=fcShowing?'block':'none';
-  document.getElementById('fcHint').textContent=fcShowing?'กด Next เพื่อต่อไป':'กดเพื่อดูคำแปล';
-  document.getElementById('fcCard').style.background=fcShowing?'#FFF3E0':'#fff';
-  if(fcShowing)speak(fcOrder[fcCur].e);
-}
-function fcNav(dir){
-  var next=fcCur+dir;
-  if(next<0)next=fcOrder.length-1;
-  if(next>=fcOrder.length)next=0;
-  showFC(next);
-  /* count progress */
-  var pct=Math.round((fcCur+1)/ALL_WORDS.length*100);
-  document.getElementById('sfill').style.width=pct+'%';
-  document.getElementById('totalSc').textContent=fcCur+1;
-}
-function shuffleFC(){fcOrder=ALL_WORDS.slice().sort(function(){return Math.random()-.5;});showFC(0);}
-function speakFC(){speak(fcOrder[fcCur].e);}
-
-/* Vocab Quiz — 10 random questions */
-var qData=[],qCur=0,qCorrect=0;
-function buildQuiz(){
-  qCorrect=0;
-  document.getElementById('qResult').style.display='none';
-  document.getElementById('qFill').style.width='0%';
-  /* pick 10 random words */
-  var pool=ALL_WORDS.slice().sort(function(){return Math.random()-.5;}).slice(0,10);
-  qData=pool.map(function(w){
-    /* 3 wrong options from remaining pool */
-    var wrong=ALL_WORDS.filter(function(x){return x.e!==w.e;}).sort(function(){return Math.random()-.5;}).slice(0,3);
-    var opts=[{t:w.t,correct:true}].concat(wrong.map(function(x){return{t:x.t,correct:false};})).sort(function(){return Math.random()-.5;});
-    return{w:w,opts:opts,done:false};
+// Game 1: Listen & Select
+function initLC(){lcScore=0;lcIdx=0;lcDeck=shuffle(WORDS).slice(0,20);document.getElementById('lcDone').style.display='none';renderLC();}
+function renderLC(){
+  if(lcIdx>=lcDeck.length){endLC();return;}
+  lcCurrent=lcIdx;const w=lcDeck[lcIdx];
+  document.getElementById('lcQ').textContent=lcIdx+1;
+  document.getElementById('lcSc').textContent=lcScore;
+  document.getElementById('lcPrompt').textContent=w.icon;
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  const grid=document.getElementById('lcGrid');grid.innerHTML='';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');btn.className='lc-card';
+    btn.textContent=c.e;
+    btn.onclick=()=>checkLC(c.e===w.e,btn,grid);grid.appendChild(btn);
   });
-  qCur=0;
-  renderQ();
+  speak(w.e,0.85);
 }
-function renderQ(){
-  var area=document.getElementById('qarea');
-  if(qCur>=qData.length){showQResult();return;}
-  var q=qData[qCur];
-  area.innerHTML='<div class="qcard">'
-    +'<div style="font-size:11px;font-weight:900;color:#90A4AE;margin-bottom:6px">ข้อที่ '+(qCur+1)+' / '+qData.length+'</div>'
-    +'<button class="tts" onclick="speak(\''+q.w.e+'\')" style="margin-bottom:10px">&#x25B6; '+q.w.e+'</button>'
-    +'<div class="opts">'
-    +q.opts.map(function(o,i){return '<button class="opt" onclick="pickQ('+i+')" id="opt'+i+'">'+o.t+'</button>';}).join('')
-    +'</div></div>';
+function checkLC(correct,btn,grid){
+  grid.querySelectorAll('.lc-card').forEach(b=>b.onclick=null);
+  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';lcScore+=5;updateScore();setTimeout(()=>{lcIdx++;renderLC();},600);}
+  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{lcIdx++;renderLC();},800);}
 }
-function pickQ(idx){
-  var q=qData[qCur];
-  if(q.done)return;q.done=true;
-  for(var i=0;i<q.opts.length;i++){
-    var btn=document.getElementById('opt'+i);
-    if(btn){btn.classList.add(q.opts[i].correct?'correct':'disabled');}
+function endLC(){document.getElementById('lcResult').textContent=lcScore+'/100 pts';document.getElementById('lcDone').style.display='block';}
+
+// Game 2: Listen & Pick
+function initLP(){lpScore=0;lpIdx=0;lpDeck=shuffle(WORDS).slice(0,16);document.getElementById('lpDone').style.display='none';renderLP();}
+function lpPlay(){if(lpIdx<lpDeck.length)speak(lpDeck[lpIdx].e,0.85);}
+function renderLP(){
+  if(lpIdx>=lpDeck.length){endLP();return;}
+  const w=lpDeck[lpIdx];
+  document.getElementById('lpQ').textContent=lpIdx+1;
+  document.getElementById('lpSc').textContent=lpScore;
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  const opts=document.getElementById('lpOpts');opts.innerHTML='';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');btn.className='lp-opt';
+    btn.textContent=c.icon+' '+c.e;
+    btn.onclick=()=>checkLP(c.e===w.e,btn);opts.appendChild(btn);
+  });
+  speak(w.e,0.85);
+}
+function checkLP(correct,btn){
+  document.querySelectorAll('.lp-opt').forEach(b=>b.onclick=null);
+  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';lpScore+=5;updateScore();setTimeout(()=>{lpIdx++;renderLP();},600);}
+  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{lpIdx++;renderLP();},800);}
+}
+function endLP(){document.getElementById('lpResult').textContent=lpScore+'/80 pts';document.getElementById('lpDone').style.display='block';}
+
+// Game 3: Speed Quiz
+function initSQ(){sqScore=0;sqIdx=0;sqDeck=shuffle(WORDS).slice(0,15);document.getElementById('sqDone').style.display='none';renderSQ();}
+function renderSQ(){
+  if(sqIdx>=sqDeck.length){endSQ();return;}
+  const w=sqDeck[sqIdx];
+  document.getElementById('sqQ').textContent=sqIdx+1;
+  document.getElementById('sqSc').textContent=sqScore;
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  const area=document.getElementById('sqArea');area.innerHTML='';
+  const card=document.createElement('div');card.className='sq-q';
+  card.innerHTML='<div style="font-size:52px;margin-bottom:4px">'+w.icon+'</div><div style="font-size:12px;color:#78909C;font-weight:700">What English word?</div>';
+  area.appendChild(card);speak(w.e,1.0);
+  const optsDiv=document.createElement('div');optsDiv.className='sq-opts';optsDiv.style.marginTop='10px';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');btn.className='sq-opt';btn.textContent=c.e;
+    btn.onclick=()=>checkSQ(c.e===w.e,btn,optsDiv);optsDiv.appendChild(btn);
+  });
+  area.appendChild(optsDiv);
+}
+function checkSQ(correct,btn,opts){
+  opts.querySelectorAll('.sq-opt').forEach(b=>b.onclick=null);
+  if(correct){btn.style.background='#E8F5E9';btn.style.borderColor='#A5D6A7';sqScore+=5;updateScore();setTimeout(()=>{sqIdx++;renderSQ();},500);}
+  else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';setTimeout(()=>{sqIdx++;renderSQ();},700);}
+}
+function endSQ(){document.getElementById('sqResult').textContent=sqScore+'/75 pts';document.getElementById('sqDone').style.display='block';}
+
+// Game 4: Balloon Pop
+function initBP(){
+  bpScore=0;bpHit=0;bpRound=0;bpActive=false;
+  document.getElementById('bpArea').innerHTML='<div style="text-align:center;padding:24px;color:#78909C;font-size:13px;font-weight:700">Press Start!</div>';
+  document.getElementById('bpHit').textContent=0;document.getElementById('bpRound').textContent=0;
+  document.getElementById('bpDone').style.display='none';
+  document.getElementById('bpPrompt').textContent='Press Start to play!';
+}
+function startBP(){bpActive=true;bpRound=0;bpHit=0;bpScore=0;nextBalloon();}
+function nextBalloon(){
+  if(bpRound>=15){endBP();return;}
+  bpRound++;document.getElementById('bpRound').textContent=bpRound;
+  const area=document.getElementById('bpArea');area.innerHTML='';
+  const w=WORDS[Math.floor(Math.random()*WORDS.length)];
+  document.getElementById('bpPrompt').textContent=w.icon+' '+w.e;
+  speak(w.e,0.9);
+  const grid=document.createElement('div');grid.style='display:grid;grid-template-columns:1fr 1fr;gap:10px';
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  const colors=['#B3F0FF','#C8FFB3','#FFB3BA','#FFDDB3'];
+  choices.forEach((c,i)=>{
+    const btn=document.createElement('button');
+    btn.textContent='🎈 '+c.e;
+    btn.className='balloon-btn';
+    btn.style='padding:16px 8px;border-radius:20px;font-size:15px;font-weight:900;border:none;cursor:pointer;background:'+colors[i%4]+';font-family:\'Nunito\',sans-serif;animation-delay:'+(i*0.1)+'s,'+((i*0.1)+0.5)+'s';
+    btn.onclick=()=>popBalloon(c.e===w.e,btn,area);grid.appendChild(btn);
+  });
+  area.appendChild(grid);
+  if(bpTimeout)clearTimeout(bpTimeout);
+  bpTimeout=setTimeout(()=>{if(bpActive)nextBalloon();},4000);
+}
+function popBalloon(correct,btn,area){
+  if(bpTimeout)clearTimeout(bpTimeout);
+  area.querySelectorAll('button').forEach(b=>b.onclick=null);
+  if(correct){btn.textContent='💥 Pop!';btn.style.background='#E8F5E9';bpHit++;bpScore+=10;updateScore();document.getElementById('bpHit').textContent=bpHit;}
+  else{btn.textContent='❌';btn.style.background='#FFEBEE';}
+  setTimeout(nextBalloon,600);
+}
+function endBP(){bpActive=false;document.getElementById('bpResult').textContent=bpHit+'/15';document.getElementById('bpDone').style.display='block';}
+
+// Game 5: Whack-a-Word
+const waHoles=9;
+function initWA(){
+  waScore=0;waHit=0;waCount=0;waActive=false;
+  waTimers.forEach(t=>clearTimeout(t));waTimers=[];
+  const grid=document.getElementById('waGrid');grid.innerHTML='';
+  for(let i=0;i<waHoles;i++){const h=document.createElement('div');h.className='wa-hole';h.id='wh'+i;h.textContent='🕳️';grid.appendChild(h);}
+  document.getElementById('waDone').style.display='none';
+  document.getElementById('waHit').textContent=0;document.getElementById('waRound').textContent=0;
+  document.getElementById('waPrompt').textContent='Press Start to play!';
+}
+function startWA(){
+  waActive=true;waHit=0;waCount=0;waScore=0;
+  waTimers.forEach(t=>clearTimeout(t));waTimers=[];
+  document.getElementById('waDone').style.display='none';
+  document.getElementById('waHit').textContent=0;document.getElementById('waRound').textContent=0;
+  showNextWA();
+}
+function showNextWA(){
+  if(waCount>=12){setTimeout(endWA,1000);return;}
+  waCount++;document.getElementById('waRound').textContent=waCount;
+  const w=WORDS[Math.floor(Math.random()*WORDS.length)];
+  document.getElementById('waPrompt').textContent='👂 Whack: '+w.e+'!';
+  speak(w.e,1.0);
+  for(let i=0;i<waHoles;i++){
+    const h=document.getElementById('wh'+i);
+    if(h){h.textContent='🕳️';h.style.cssText='background:#E0E0E0;border-radius:50%;height:70px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;user-select:none';h.onclick=null;}
   }
-  var btn=document.getElementById('opt'+idx);
-  if(q.opts[idx].correct){qCorrect++;btn.classList.add('correct');}
-  else btn.classList.add('wrong');
-  document.getElementById('qFill').style.width=Math.round((qCur+1)/qData.length*100)+'%';
-  setTimeout(function(){qCur++;renderQ();},900);
-}
-function showQResult(){
-  var el=document.getElementById('qResult');el.style.display='block';
-  var pct=Math.round(qCorrect/qData.length*100);
-  document.getElementById('qScore').innerHTML=(pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐')+' '+qCorrect+'/'+qData.length+' ถูก ('+pct+'%)';
-  document.getElementById('qarea').innerHTML='';
-}
-
-/* Sentence Builder */
-var sbPicked=[],sbDone=[];
-function buildSB(){
-  sbPicked=SB_SENTS.map(function(){return[];});
-  sbDone=SB_SENTS.map(function(){return false;});
-  var area=document.getElementById('sbarea');if(!area)return;
-  area.innerHTML=SB_SENTS.map(function(sent,i){
-    var words=sent.replace(/[.,!?]/g,'').split(' ');
-    var sh=words.slice().sort(function(){return Math.random()-.5;});
-    return '<div style="background:#fff;border:2px solid #FFAB91;border-radius:14px;padding:10px 12px;margin-bottom:10px">'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'
-      +'<button class="tts" onclick="speak(SB_SENTS['+i+'])" style="padding:5px 11px;font-size:13px">&#x25B6; ฟัง</button>'
-      +'<span style="font-size:12px;color:#78909C;font-weight:700">ประโยคที่ '+(i+1)+'</span>'
-      +'<span id="sbfb'+i+'" style="font-size:12px;font-weight:800;margin-left:auto"></span>'
-      +'</div>'
-      +'<div id="sbtgt'+i+'" class="sb-target"><span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span></div>'
-      +'<div id="sbbank'+i+'" class="sb-bank">'
-      +sh.map(function(w){return '<button class="sb-word" data-si="'+i+'" data-word="'+w+'" onclick="pickSB(+this.dataset.si,this,this.dataset.word)">'+w+'</button>';}).join('')
-      +'</div></div>';
-  }).join('');
-}
-function pickSB(i,btn,word){if(sbDone[i])return;sbPicked[i].push(word);btn.disabled=true;btn.classList.add('used');_renderSB(i);}
-function unpickSB(i,j){if(sbDone[i])return;var w=sbPicked[i].splice(j,1)[0];var bank=document.getElementById('sbbank'+i);var btns=bank.querySelectorAll('.sb-word');for(var b=0;b<btns.length;b++){if(btns[b].dataset.word===w&&btns[b].disabled){btns[b].disabled=false;btns[b].classList.remove('used');break;}}_renderSB(i);}
-function _renderSB(i){var tgt=document.getElementById('sbtgt'+i);if(!tgt)return;tgt.innerHTML=sbPicked[i].length?sbPicked[i].map(function(w,j){return '<span onclick="unpickSB('+i+','+j+')" style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:6px;padding:4px 9px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer">'+w+'</span>';}).join(''):'<span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span>';}
-var sbScore=null;
-function checkSB(){
-  var ok=0;
-  SB_SENTS.forEach(function(sent,i){
-    var exp=sent.replace(/[.,!?]/g,'').split(' ');
-    var good=JSON.stringify(sbPicked[i])===JSON.stringify(exp);
-    var fb=document.getElementById('sbfb'+i);
-    if(fb){fb.textContent=good?'✓':'✗';fb.style.color=good?'#2E7D32':'#C62828';}
-    if(good){sbDone[i]=true;ok++;}
+  const active=shuffle([...Array(waHoles).keys()]).slice(0,4);
+  active.forEach((hi,idx)=>{
+    const word=idx===0?w:WORDS[Math.floor(Math.random()*WORDS.length)];
+    const h=document.getElementById('wh'+hi);
+    if(h){
+      h.innerHTML=word.icon+'<br><span style="font-size:10px;font-weight:900">'+word.e+'</span>';
+      h.style.cssText='background:#F1F8E9;border:2px solid #81C784;border-radius:12px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;cursor:pointer;text-align:center;user-select:none;padding:2px';
+      const isCorrect=idx===0;
+      h.onclick=()=>whack(isCorrect,h,active,showNextWA);
+    }
   });
-  sbScore=Math.round(ok/SB_SENTS.length*100);
-  var u=new SpeechSynthesisUtterance(ok===SB_SENTS.length?'Excellent! Perfect score!':'Good job! Keep going!');
-  var pool=voices.filter(function(v){return v.lang.startsWith('en')&&v.localService;});
-  var idx=parseInt(document.getElementById('vsel').value)||0;
-  u.voice=pool[idx]||null;u.rate=1.0;u.lang='en-US';
-  window.speechSynthesis.speak(u);
+  waTimers.push(setTimeout(()=>{if(waActive)whack(false,null,active,showNextWA);},2500));
 }
+function whack(correct,btn,holes,next){
+  waTimers.forEach(t=>clearTimeout(t));waTimers=[];
+  holes.forEach(hi=>{const h=document.getElementById('wh'+hi);if(h)h.onclick=null;});
+  if(correct&&btn){btn.style.background='#E8F5E9';btn.innerHTML='💥';waHit++;waScore+=10;updateScore();document.getElementById('waHit').textContent=waHit;}
+  else if(btn){btn.style.background='#FFEBEE';}
+  waTimers.push(setTimeout(next,700));
+}
+function endWA(){waActive=false;document.getElementById('waResult').textContent=waHit+'/12';document.getElementById('waDone').style.display='block';}
 
-/* Completion */
-function generateCode(day){var c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';var code='D'+day+'-';for(var i=0;i<4;i++)code+=c[Math.floor(Math.random()*c.length)];return code;}
-function buildFinalScreen(){
-  var code=localStorage.getItem(LOCK_KEY);
-  if(!code){code=generateCode(DAY);localStorage.setItem(LOCK_KEY,code);syncToCloud(DAY,code,sbScore||80);document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=code;}
+// Game 6: Sentence Builder
+function initSB(){sbScore=0;sbIdx=0;sbList=shuffle(SB_LIST);document.getElementById('sbTotal').textContent=sbList.length;document.getElementById('sbDone').style.display='none';renderSB();}
+function renderSB(){
+  if(sbIdx>=sbList.length){endSB();return;}
+  sbSelected=[];const s=sbList[sbIdx];
+  document.getElementById('sbNum').textContent=sbIdx+1;
+  document.getElementById('sbSc').textContent=sbScore;
+  document.getElementById('sbFb').textContent='';
+  document.getElementById('sbTarget').innerHTML='';
+  const pool=document.getElementById('sbPool');pool.innerHTML='';
+  shuffle(s.w).forEach(word=>{
+    const btn=document.createElement('button');
+    btn.style='padding:8px 14px;margin:4px;border-radius:10px;border:2px solid #81C784;background:#F1F8E9;font-size:15px;font-weight:800;cursor:pointer;font-family:\'Nunito\',sans-serif';
+    btn.textContent=word;btn.onclick=()=>sbSelect(word,btn);pool.appendChild(btn);
+  });
+  speak(s.w.join(' '),0.8);
+}
+function sbSelect(word,btn){
+  sbSelected.push(word);btn.style.opacity='0.4';btn.onclick=null;
+  const chip=document.createElement('span');chip.textContent=word+' ';
+  chip.style='font-size:15px;font-weight:800;background:#C8E6C9;border-radius:8px;padding:4px 8px;margin:2px;display:inline-block';
+  document.getElementById('sbTarget').appendChild(chip);
+}
+function sbClear(){sbSelected=[];renderSB();}
+function sbCheck(){
+  const s=sbList[sbIdx];const correct=sbSelected.join(' ')===s.w.join(' ');
+  const fb=document.getElementById('sbFb');
+  if(correct){fb.textContent='✅ Correct! "'+s.w.join(' ')+'"';fb.style.color='#2E7D32';sbScore+=20;updateScore();setTimeout(()=>{sbIdx++;renderSB();},1000);}
+  else{fb.textContent='❌ Try again!';fb.style.color='#C62828';setTimeout(sbClear,1200);}
+}
+function endSB(){document.getElementById('sbResult').textContent=sbScore+'/'+(SB_LIST.length*20)+' pts';document.getElementById('sbDone').style.display='block';}
+
+function generateCode(day){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='D'+day+'-';for(let i=0;i<4;i++)c+=chars[Math.floor(Math.random()*chars.length)];return c;}
+function showCompletion(){
+  let code=localStorage.getItem(LOCK_KEY);
+  if(!code){code=generateCode(21);localStorage.setItem(LOCK_KEY,code);syncToCloud(21,code,totalScore);}
   document.getElementById('codeDisplay').textContent=code;
-  var el=document.getElementById('w3Summary');if(!el)return;
-  var rows=[['Flashcard Review','36 คำ'],['Vocab Quiz',qCorrect+'/10 ข้อ'],['Sentence Builder',sbScore!==null?sbScore+'%':'—'],['Week 3 Words','Day 15–20 ✓']];
-  el.innerHTML=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #FFE0B2"><span style="font-size:13px;font-weight:700;color:#546E7A">'+r[0]+'</span><span style="font-size:13px;font-weight:900;color:#E64A19">'+r[1]+'</span></div>';}).join('');
+  document.getElementById('savedCode').textContent=code;
+  document.getElementById('alreadyDone').classList.add('show');
+  document.getElementById('finalSc').textContent=totalScore;
+  document.getElementById('starFinal').textContent=totalScore>=450?'⭐⭐⭐':totalScore>=300?'⭐⭐☆':'⭐☆☆';
+  document.getElementById('completeScreen').classList.add('show');
 }
-function copyCode(){var code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){alert('Copied: '+code);});else alert('Code: '+code);}
-function syncToCloud(day,code,score){try{var st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;var cb='jpc_'+Date.now();var s=document.createElement('script');window[cb]=function(){delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+(score||80)+'&callback='+cb;document.body.appendChild(s);}catch(e){}}
-function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}var mine=localStorage.getItem(LOCK_KEY);var prev=localStorage.getItem(PREV_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
-function tryUnlock(){var v=document.getElementById('codeInput').value.trim().toUpperCase();var prev=localStorage.getItem(PREV_KEY);if(v===prev||(v&&v.indexOf('D'+(DAY-1)+'-')===0)){localStorage.setItem(PREV_KEY,v);document.getElementById('lockScreen').style.display='none';unlockContent();}else{document.getElementById('unlockErr').style.display='block';}}
-function unlockContent(){document.getElementById('mainContent').style.display='block';}
-
-window.addEventListener('DOMContentLoaded',function(){
-  checkLock();
-  var dots=document.getElementById('dots');
-  STEPS.forEach(function(_,i){var d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=function(){go(i);};dots.appendChild(d);});
-  loadVoices();
-  buildWordGrid();
-});
+function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copied! Code: '+code));else alert('Code: '+code);}
+function syncToCloud(day,code,score){
+  try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;
+  const cb='jpc_'+Date.now();const s=document.createElement('script');
+  window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
+  s.onerror=()=>{delete window[cb];};
+  s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+'&callback='+cb;
+  document.body.appendChild(s);}catch(e){}
+}
+function checkLock(){
+  if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}
+  const prev=localStorage.getItem(PREV_KEY);const cur=localStorage.getItem(LOCK_KEY);
+  if(cur){document.getElementById('savedCode').textContent=cur;document.getElementById('alreadyDone').classList.add('show');unlockContent();return;}
+  if(prev){unlockContent();return;}
+  document.getElementById('lockScreen').style.display='block';
+}
+function tryUnlock(){
+  const input=document.getElementById('codeInput').value.trim().toUpperCase();
+  if(input==='ADMIN-0000'){unlockContent();return;}
+  if(input.startsWith(PREV_PFX)&&input.length===7){localStorage.setItem(PREV_KEY,input);document.getElementById('unlockErr').style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
+  else{document.getElementById('unlockErr').style.display='block';}
+}
+function unlockContent(){document.getElementById('lockScreen').style.display='none';document.getElementById('mainContent').style.display='block';go(0);}
+window.onload=()=>{checkLock();};
 </script>
-</body>
-</html>
+</body></html>
