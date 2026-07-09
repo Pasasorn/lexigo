@@ -437,6 +437,12 @@ let curPage = 0;
 function go(n){
   synth.cancel();
   spListening = false;
+  // Stop BP timers
+  bpActive = false;
+  if(bpTimeout) { clearTimeout(bpTimeout); bpTimeout=null; }
+  // Stop WA timers
+  waActive = false;
+  if(waTimers && waTimers.length){ waTimers.forEach(t=>clearTimeout(t)); waTimers=[]; }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   const pg = document.getElementById('p'+n);
   if(pg) pg.classList.add('on');
@@ -666,7 +672,7 @@ function popBalloon(correct,btn,area){
     btn.style.animationFillMode='forwards';btn.style.background='#FF6B6B';
     const m=document.getElementById('bpMiss');if(m)m.textContent=parseInt(m.textContent||0)+1;
   }
-  setTimeout(nextBalloon,700);
+  setTimeout(()=>{ if(bpActive) nextBalloon(); },700);
 }
 function endBP(){
   bpActive=false;

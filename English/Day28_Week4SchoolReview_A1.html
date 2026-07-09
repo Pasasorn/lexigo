@@ -375,10 +375,9 @@ let bpActive=false,bpTimeout=null,bpHit=0,bpRound=0;
 let waActive=false,waTimers=[],waHit=0,waCount=0;
 let sbList=[],sbIdx=0,sbSelected=[];
 let spSentList=[],spIdx=0,spListening=false;
-const SR_API=SR;
 
 const synth=window.speechSynthesis;
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const SR_API=window.SpeechRecognition||window.webkitSpeechRecognition;
 let voices=[];
 function loadVoices(){
   voices=synth.getVoices().filter(v=>v.lang.startsWith('en'));
@@ -402,6 +401,8 @@ function setV(){speak('Hello!',0.85);}
 let curPage=0;
 function go(n){
   synth.cancel();spListening=false;
+  bpActive=false;if(bpTimeout){clearTimeout(bpTimeout);bpTimeout=null;}
+  waActive=false;if(waTimers&&waTimers.length){waTimers.forEach(t=>clearTimeout(t));waTimers=[];}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   const pg=document.getElementById('p'+n);if(pg)pg.classList.add('on');
   curPage=n;
@@ -525,7 +526,7 @@ function popBalloon(correct,btn,area){
   }else{
     btn.style.animationName='pop';btn.style.animationDuration='0.35s';btn.style.animationFillMode='forwards';btn.style.background='#FF6B6B';
   }
-  setTimeout(nextBalloon,700);
+  setTimeout(()=>{ if(bpActive) nextBalloon(); },700);
 }
 function endBP(){bpActive=false;document.getElementById('bpResult').textContent=bpHit+'/15';document.getElementById('bpDone').style.display='block';}
 
