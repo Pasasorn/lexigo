@@ -477,6 +477,7 @@ function initLC(){
   lcScore = 0;
   lcDeck = shuffle(WORDS).slice(0,20);
   lcIdx = 0;
+  document.getElementById('lcDone').style.display='none';
   renderLC();
 }
 function renderLC(){
@@ -485,7 +486,7 @@ function renderLC(){
   const w = lcDeck[lcIdx];
   document.getElementById('lcQ').textContent = lcIdx+1;
   document.getElementById('lcSc').textContent = lcScore;
-  document.getElementById('lcPrompt').textContent = w.icon + ' ' + w.t;
+  document.getElementById('lcPrompt').textContent = '🔊 ' + w.icon + '  Which word?';
   // 4 choices: correct + 3 random
   const choices = [w, ...pick(WORDS.filter(x=>x.e!==w.e), 3)];
   const shuffled = shuffle(choices);
@@ -498,7 +499,7 @@ function renderLC(){
     btn.onclick = ()=>checkLC(c.e===w.e, btn, grid);
     grid.appendChild(btn);
   });
-  speak(w.t, 0.85);
+  speak(w.e, 0.85);
 }
 function checkLC(correct, btn, grid){
   grid.querySelectorAll('.lc-card').forEach(b=>b.onclick=null);
@@ -522,6 +523,7 @@ function endLC(){
 function initLP(){
   lpScore = 0; lpIdx = 0;
   lpDeck = shuffle(WORDS).slice(0,16);
+  document.getElementById('lpDone').style.display='none';
   renderLP();
 }
 function lpPlay(){
@@ -533,18 +535,19 @@ function renderLP(){
   document.getElementById('lpQ').textContent = lpIdx+1;
   document.getElementById('lpSc').textContent = lpScore;
   const choices = shuffle([w, ...pick(WORDS.filter(x=>x.e!==w.e),3)]);
-  const btns = document.querySelectorAll('.lp-btn');
-  choices.forEach((c,i)=>{
-    if(btns[i]){
-      btns[i].textContent = c.icon+' '+c.e;
-      btns[i].style.background='';
-      btns[i].onclick = ()=>checkLP(c.e===w.e, btns[i]);
-    }
+  const opts = document.getElementById('lpOpts');
+  opts.innerHTML = '';
+  choices.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'lp-opt';
+    btn.textContent = c.icon+' '+c.e;
+    btn.onclick = ()=>checkLP(c.e===w.e, btn);
+    opts.appendChild(btn);
   });
   speak(w.e, 0.85);
 }
 function checkLP(correct, btn){
-  document.querySelectorAll('.lp-btn').forEach(b=>b.onclick=null);
+  document.querySelectorAll('.lp-opt').forEach(b=>b.onclick=null);
   if(correct){
     btn.style.background='#E8F5E9';
     lpScore += 5; updateScore();
@@ -565,6 +568,7 @@ function endLP(){
 function initSQ(){
   sqScore = 0; sqIdx = 0;
   sqDeck = shuffle(WORDS).slice(0,15);
+  document.getElementById('sqDone').style.display='none';
   renderSQ();
 }
 function renderSQ(){
@@ -572,20 +576,21 @@ function renderSQ(){
   const w = sqDeck[sqIdx];
   document.getElementById('sqQ').textContent = sqIdx+1;
   document.getElementById('sqSc').textContent = sqScore;
-  document.getElementById('sqWord').textContent = w.icon+' '+w.e;
   const choices = shuffle([w, ...pick(WORDS.filter(x=>x.e!==w.e),3)]);
-  const btns = document.querySelectorAll('.sq-btn');
-  choices.forEach((c,i)=>{
-    if(btns[i]){
-      btns[i].textContent = c.e;
-      btns[i].style.background='';
-      btns[i].onclick = ()=>checkSQ(c.e===w.e, btns[i]);
-    }
+  const area = document.getElementById('sqArea');
+  area.innerHTML = `<div class="sq-q"><h3>${w.icon} Which word?</h3><div class="sq-opts" id="sqOpts"></div></div>`;
+  const grid = document.getElementById('sqOpts');
+  choices.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'sq-opt';
+    btn.textContent = c.e;
+    btn.onclick = ()=>checkSQ(c.e===w.e, btn);
+    grid.appendChild(btn);
   });
   speak(w.e, 1.0);
 }
 function checkSQ(correct, btn){
-  document.querySelectorAll('.sq-btn').forEach(b=>b.onclick=null);
+  document.querySelectorAll('.sq-opt').forEach(b=>b.onclick=null);
   if(correct){
     btn.style.background='#E8F5E9';
     sqScore += 5; updateScore();
