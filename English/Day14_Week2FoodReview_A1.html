@@ -46,9 +46,10 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 .fin{animation:up .5s ease}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .bounce{animation:bounce 1s ease infinite}
-@keyframes floatUp{0%{transform:translateY(60px) scale(0.8);opacity:0}15%{opacity:1;transform:translateY(0) scale(1)}85%{opacity:1;transform:translateY(-8px) scale(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
-.balloon-btn{animation:floatUp 0.5s ease forwards,sway 2s ease-in-out infinite 0.5s!important}
+@keyframes floatUp{from{bottom:-110px}to{bottom:105%}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.5)}100%{transform:scale(0);opacity:0}}
+.balloon{position:absolute;width:74px;height:88px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:900;text-align:center;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,0.4);user-select:none;padding:6px}
+.balloon::after{content:'';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:2px;height:14px;background:#666}
 .lc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
 .lc-card{background:#fff;border:2.5px solid #E0E0E0;border-radius:12px;padding:10px 4px;font-size:12px;font-weight:900;text-align:center;cursor:pointer;transition:.15s;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#37474F;font-family:'Nunito',sans-serif;line-height:1.4}
 .lc-card:hover{background:#FFF8E1;border-color:#FFB300}
@@ -62,7 +63,7 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 .sq-opt{padding:12px;border-radius:12px;border:2.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:15px;font-weight:800;text-align:center;transition:.2s;font-family:'Nunito',sans-serif}
 .sq-opt:hover{background:#FFF8E1;border-color:#FFB300}
 .bp-prompt{background:#FFF8E1;border:2px solid #FFB300;border-radius:12px;padding:10px 14px;margin-bottom:8px;text-align:center;font-size:20px;font-weight:900;color:#E65100}
-.bp-area{background:linear-gradient(180deg,#FFF3E0,#FFCCBC);border-radius:20px;padding:14px;margin-bottom:10px;min-height:170px;border:2px solid #FFAB91}
+.bp-arena{position:relative;height:300px;background:linear-gradient(180deg,#FFF3E0 0%,#FFCCBC 60%,#FFAB91 100%);border-radius:20px;overflow:hidden;margin-bottom:10px;border:2px solid #FFAB91}
 .wa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
 .wa-hole{background:#E0E0E0;border-radius:50%;height:70px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;user-select:none}
 .wa-prompt{background:#FFF8E1;border:2px solid #FFB300;border-radius:12px;padding:8px 14px;margin-bottom:8px;text-align:center;font-size:15px;font-weight:900;color:#E65100}
@@ -130,7 +131,8 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:720px;margin:0 a
       <button class="game-btn" style="background:linear-gradient(135deg,#E91E63,#880E4F)" onclick="go(5);initWA()">🔨 Whack-a-<br><span style="font-size:10px;font-weight:700;opacity:0.85">Word</span></button>
       <button class="game-btn" style="background:linear-gradient(135deg,#1E88E5,#0D47A1)" onclick="go(6);initSB()">🧩 Sentence<br><span style="font-size:10px;font-weight:700;opacity:0.85">Builder</span></button>
     </div>
-    <button class="btn btn-p" style="margin-top:14px;width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 2 Results!</button>
+    <button class="game-btn" style="background:linear-gradient(135deg,#9C27B0,#4A148C);width:100%;padding:18px;font-size:15px;border-radius:18px;margin-top:8px" onclick="go(7);initSP()">🎤 Speak Up! — Read sentences aloud!<br><span style="font-size:11px;opacity:0.85">NEW · 150 pts · Chrome needed for voice recognition</span></button>
+    <button class="btn btn-p" style="margin-top:10px;width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 2 Results!</button>
   </div>
 </div>
 
@@ -195,7 +197,7 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <span>💥 Pop: <span id="bpHit">0</span></span>
     <span>Round: <span id="bpRound">0</span>/15</span>
   </div>
-  <div class="bp-area" id="bpArea"></div>
+  <div class="bp-arena" id="bpArena"></div>
   <div style="text-align:center;margin-top:8px">
     <button class="btn btn-p" onclick="startBP()" style="font-size:16px">🎈 Start!</button>
   </div>
@@ -250,6 +252,35 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:720px;margin:0 a
     <div style="font-size:24px;font-weight:900;margin:6px 0" id="sbResult">0/100 pts</div>
     <button class="btn btn-p" onclick="initSB()" style="margin-top:8px;background:linear-gradient(135deg,#1E88E5,#0D47A1)">Play Again 🔄</button>
     <button class="btn btn-p" onclick="showCompletion()" style="margin-top:8px">🏆 Results!</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="go(7);initSP()">Speak Up! →</button></div>
+</div>
+
+<!-- p7: Speak Up! -->
+<div class="page" id="p7">
+  <div class="step-label">🎤 Speak Up!</div>
+  <p class="step-sub">Read the sentence aloud — scored on accuracy!</p>
+  <div style="font-size:13px;color:#78909C;font-weight:700;margin-bottom:8px">Sentence <span id="spNum">1</span>/<span id="spTotal">5</span> · ⭐ <span id="spSc">0</span> pts</div>
+  <div id="spCard" style="background:#fff;border-radius:18px;padding:20px;border:2.5px solid #AB47BC;text-align:center;margin-bottom:10px">
+    <div id="spSentence" style="font-size:18px;font-weight:900;color:#37474F;margin:0 0 14px;line-height:1.7">—</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px">
+      <button class="btn btn-o" style="font-size:13px;padding:7px 16px" onclick="spHear()">🔊 Hear</button>
+      <button id="spRecord" class="btn btn-p" onclick="startSP()" style="background:linear-gradient(135deg,#9C27B0,#4A148C)">🎤 Speak!</button>
+    </div>
+    <div style="background:#F3E5F5;border-radius:8px;height:12px;overflow:hidden;margin-bottom:8px">
+      <div id="spBar" style="height:100%;width:0%;background:#9C27B0;border-radius:8px;transition:width .5s"></div>
+    </div>
+    <div id="spFb" style="font-size:14px;font-weight:800;color:#6A1B9A;min-height:22px"></div>
+  </div>
+  <div id="spAlt" style="display:none;background:#FFF3E0;border:2px solid #FFB300;border-radius:12px;padding:10px 14px;text-align:center;font-size:13px;color:#E65100;font-weight:700;margin-bottom:10px">
+    ⚠️ Voice needs Chrome — tap to score manually!
+    <button class="btn btn-p" style="display:block;margin:8px auto 0;font-size:13px;padding:7px 16px;background:linear-gradient(135deg,#9C27B0,#4A148C)" onclick="spManual()">✅ I said it! (+10)</button>
+  </div>
+  <div id="spDone" style="display:none;text-align:center;padding:14px;background:#F3E5F5;border-radius:16px;border:2px solid #CE93D8;margin-top:8px">
+    <div style="font-size:30px">🎤</div>
+    <div style="font-size:18px;font-weight:900;color:#6A1B9A">Speak Up Done!</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="spFinalScore">0/150 pts</div>
+    <button class="btn btn-p" onclick="go(7);initSP()" style="margin-top:8px;background:linear-gradient(135deg,#9C27B0,#4A148C)">Play Again 🔄</button>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
 </div>
@@ -325,7 +356,9 @@ const PREV_PFX = 'D13-';
 const API_URL_SYNC = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
 
 let totalScore=0;
-let lcScore=0,lpScore=0,sqScore=0,bpScore=0,waScore=0,sbScore=0;
+let lcScore=0,lpScore=0,sqScore=0,bpScore=0,waScore=0,sbScore=0,spScore=0;
+let spIdx=0,spSentList=[],spListening=false;
+const SR_API=window.SpeechRecognition||window.webkitSpeechRecognition;
 let lcDeck=[],lcIdx=0,lcCurrent=null;
 let lpDeck=[],lpIdx=0;
 let sqDeck=[],sqIdx=0;
@@ -358,21 +391,22 @@ function setV(i){speak('Hello!',0.85);}
 let curPage=0;
 function go(n){
   synth.cancel();
+  spListening=false;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   const pg=document.getElementById('p'+n);if(pg)pg.classList.add('on');
   curPage=n;
   const dots=document.getElementById('dots');
-  if(dots){dots.innerHTML='';[0,1,2,3,4,5,6].forEach(i=>{const d=document.createElement('div');d.className='dot'+(i===n?' on':'');d.onclick=()=>go(i);dots.appendChild(d);});}
+  if(dots){dots.innerHTML='';[0,1,2,3,4,5,6,7].forEach(i=>{const d=document.createElement('div');d.className='dot'+(i===n?' on':'');d.onclick=()=>go(i);dots.appendChild(d);});}
 }
 function shuffle(arr){return arr.slice().sort(()=>Math.random()-.5);}
 function pick(arr,n){return shuffle(arr).slice(0,n);}
 function updateScore(){
-  const total=lcScore+lpScore+sqScore+bpScore+waScore+sbScore;
+  const total=lcScore+lpScore+sqScore+bpScore+waScore+sbScore+spScore;
   totalScore=total;
   document.getElementById('totalSc').textContent=total;
-  const pct=Math.min(100,Math.round(total/6));
+  const pct=Math.min(100,Math.round(total/7.75));
   const fill=document.getElementById('sfill');if(fill)fill.style.width=pct+'%';
-  const stars=total>=450?'⭐⭐⭐':total>=300?'⭐⭐☆':'⭐☆☆';
+  const stars=total>=550?'⭐⭐⭐':total>=375?'⭐⭐☆':'⭐☆☆';
   const sd=document.getElementById('starDisp');if(sd)sd.textContent=stars;
 }
 
@@ -453,7 +487,7 @@ function endSQ(){document.getElementById('sqResult').textContent=sqScore+'/75 pt
 // Game 4: Balloon Pop — see/hear English word → pop balloon with matching word
 function initBP(){
   bpScore=0;bpHit=0;bpRound=0;bpActive=false;
-  document.getElementById('bpArea').innerHTML='<div style="text-align:center;padding:24px;color:#78909C;font-size:13px;font-weight:700">Press Start!</div>';
+  document.getElementById('bpArena').innerHTML='';
   document.getElementById('bpHit').textContent=0;document.getElementById('bpRound').textContent=0;
   document.getElementById('bpDone').style.display='none';
   document.getElementById('bpPrompt').textContent='Press Start to play!';
@@ -462,30 +496,35 @@ function startBP(){bpActive=true;bpRound=0;bpHit=0;bpScore=0;nextBalloon();}
 function nextBalloon(){
   if(bpRound>=15){endBP();return;}
   bpRound++;document.getElementById('bpRound').textContent=bpRound;
-  const area=document.getElementById('bpArea');area.innerHTML='';
+  const area=document.getElementById('bpArena');area.innerHTML='';
   const w=WORDS[Math.floor(Math.random()*WORDS.length)];
-  document.getElementById('bpPrompt').textContent=w.icon+' '+w.e;
-  speak(w.e,0.9);
-  const grid=document.createElement('div');grid.style='display:grid;grid-template-columns:1fr 1fr;gap:10px';
+  document.getElementById('bpPrompt').textContent=w.icon+' What is this?';
+  speak(w.e);
   const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
-  const colors=['#FFB3BA','#FFDDB3','#B3F0FF','#C8FFB3'];
+  const colors=['#FF6B9D','#FFB347','#87CEEB','#98E89A'];
+  const lefts=[5,28,52,72];
   choices.forEach((c,i)=>{
-    const btn=document.createElement('button');
-    btn.textContent='🎈 '+c.e;
-    btn.className='balloon-btn';
-    btn.style='padding:16px 8px;border-radius:20px;font-size:15px;font-weight:900;border:none;cursor:pointer;background:'+colors[i%4]+';font-family:\'Nunito\',sans-serif;animation-delay:'+(i*0.1)+'s,'+((i*0.1)+0.5)+'s';
-    btn.onclick=()=>popBalloon(c.e===w.e,btn,area);grid.appendChild(btn);
+    const b=document.createElement('div');
+    b.className='balloon';b.textContent=c.e;
+    b.style.background=colors[i];b.style.left=lefts[i]+'%';
+    b.style.animationName='floatUp';b.style.animationDuration=(5+i*0.4)+'s';
+    b.style.animationTimingFunction='linear';b.style.animationFillMode='forwards';
+    b.onclick=()=>popBalloon(c.e===w.e,b,area);
+    area.appendChild(b);
   });
-  area.appendChild(grid);
   if(bpTimeout)clearTimeout(bpTimeout);
-  bpTimeout=setTimeout(()=>{if(bpActive)nextBalloon();},4000);
+  bpTimeout=setTimeout(()=>{if(bpActive)nextBalloon();},6500);
 }
 function popBalloon(correct,btn,area){
   if(bpTimeout)clearTimeout(bpTimeout);
-  area.querySelectorAll('button').forEach(b=>b.onclick=null);
-  if(correct){btn.textContent='💥 Pop!';btn.style.background='#E8F5E9';bpHit++;bpScore+=10;updateScore();document.getElementById('bpHit').textContent=bpHit;}
-  else{btn.textContent='❌';btn.style.background='#FFEBEE';}
-  setTimeout(nextBalloon,600);
+  area.querySelectorAll('.balloon').forEach(b=>b.onclick=null);
+  if(correct){
+    btn.style.animationName='pop';btn.style.animationDuration='0.35s';btn.style.animationFillMode='forwards';btn.style.background='#90EE90';
+    bpHit++;bpScore+=10;updateScore();document.getElementById('bpHit').textContent=bpHit;
+  }else{
+    btn.style.animationName='pop';btn.style.animationDuration='0.35s';btn.style.animationFillMode='forwards';btn.style.background='#FF6B6B';
+  }
+  setTimeout(nextBalloon,700);
 }
 function endBP(){bpActive=false;document.getElementById('bpResult').textContent=bpHit+'/15';document.getElementById('bpDone').style.display='block';}
 
@@ -583,6 +622,92 @@ function showCompletion(){
   document.getElementById('completeScreen').classList.add('show');
 }
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copied! Code: '+code));else alert('Code: '+code);}
+// ══════════════════════════════════
+// Game 7: Speak Up! (SP) — sentence-based
+// ══════════════════════════════════
+function initSP(){
+  spScore=0;spIdx=0;spListening=false;
+  spSentList=shuffle(SB_LIST);
+  document.getElementById('spDone').style.display='none';
+  document.getElementById('spSc').textContent=0;
+  document.getElementById('spFb').textContent='';
+  document.getElementById('spBar').style.width='0%';
+  document.getElementById('spTotal').textContent=spSentList.length;
+  if(!SR_API){document.getElementById('spAlt').style.display='block';}
+  else{document.getElementById('spAlt').style.display='none';}
+  renderSP();
+}
+function renderSP(){
+  if(spIdx>=spSentList.length){endSP();return;}
+  const s=spSentList[spIdx];
+  document.getElementById('spNum').textContent=spIdx+1;
+  document.getElementById('spSentence').textContent='"'+s.w.join(' ')+'"';
+  document.getElementById('spFb').textContent='';
+  document.getElementById('spBar').style.width='0%';
+  document.getElementById('spBar').style.background='#9C27B0';
+  const rb=document.getElementById('spRecord');
+  if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
+  speak(s.w.join(' '),0.8);
+}
+function spHear(){
+  if(spIdx<spSentList.length)speak(spSentList[spIdx].w.join(' '),0.75);
+}
+function spManual(){
+  if(spIdx>=spSentList.length)return;
+  spScore+=10;updateScore();
+  document.getElementById('spSc').textContent=spScore;
+  document.getElementById('spFb').textContent='✅ +10 pts!';
+  document.getElementById('spBar').style.width='33%';
+  setTimeout(()=>{if(curPage===7){spIdx++;renderSP();}},1000);
+}
+function startSP(){
+  if(!SR_API){document.getElementById('spAlt').style.display='block';return;}
+  if(spListening)return;
+  spListening=true;
+  const rb=document.getElementById('spRecord');
+  if(rb){rb.textContent='🔴 Listening…';rb.disabled=true;}
+  const rec=new SR_API();
+  rec.lang='en-US';rec.interimResults=false;rec.maxAlternatives=5;
+  const timer=setTimeout(()=>{try{rec.stop();}catch(e){}
+    spListening=false;
+    if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
+    document.getElementById('spFb').textContent='⏱ Timed out — try again!';
+  },7000);
+  rec.onresult=(e)=>{
+    clearTimeout(timer);spListening=false;
+    if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
+    const s=spSentList[spIdx];
+    const target=s.w.map(w=>w.toLowerCase());
+    let bestPct=0;
+    for(let i=0;i<e.results[0].length;i++){
+      const heard=e.results[0][i].transcript.toLowerCase().replace(/[^a-z\s]/g,'').trim().split(/\s+/);
+      let m=0;target.forEach(tw=>{if(heard.includes(tw))m++;});
+      const pct=Math.round((m/target.length)*100);
+      if(pct>bestPct)bestPct=pct;
+    }
+    const pts=Math.round((bestPct/100)*30);
+    spScore+=pts;updateScore();
+    document.getElementById('spSc').textContent=spScore;
+    const bar=document.getElementById('spBar');
+    bar.style.width=bestPct+'%';
+    bar.style.background=bestPct>=80?'#4CAF50':bestPct>=50?'#FF9800':'#F44336';
+    const em=bestPct>=80?'🌟 ':bestPct>=50?'😊 ':'😅 ';
+    document.getElementById('spFb').textContent=em+bestPct+'% accurate — +'+pts+' pts!';
+    setTimeout(()=>{if(curPage===7){spIdx++;renderSP();}},1800);
+  };
+  rec.onerror=(e)=>{
+    clearTimeout(timer);spListening=false;
+    if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
+    document.getElementById('spFb').textContent='❌ Mic error: '+e.error;
+  };
+  rec.start();
+}
+function endSP(){
+  spListening=false;
+  document.getElementById('spDone').style.display='block';
+  document.getElementById('spFinalScore').textContent=spScore+'/'+spSentList.length*30+' pts';
+}
+
 function syncToCloud(day,code,score){
   try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;
   const cb='jpc_'+Date.now();const s=document.createElement('script');
