@@ -114,3 +114,53 @@ localStorage.removeItem('wla_admin')
 # ดู student info ที่ login อยู่:
 JSON.parse(localStorage.getItem('wla_student'))
 ```
+
+---
+
+## 📗 Level 2 (A1 ต่อ, Day 31–60)
+
+B=https://pasasorn.github.io/lexigo/English/Level2/
+
+### Week 5 — Body & Senses
+| Day | หัวเรื่อง | URL |
+|-----|----------|-----|
+| 31 | My Face | .../Level2/Day31_MyFace_A1.html |
+| 32 | My Body | .../Level2/Day32_MyBody_A1.html |
+| 33 | Smile and Laugh | .../Level2/Day33_SmileAndLaugh_A1.html |
+| 34 | Five Senses | .../Level2/Day34_FiveSenses_A1.html |
+| 35 | Move Your Body | .../Level2/Day35_MoveYourBody_A1.html |
+| 36 | Strong and Tall | .../Level2/Day36_StrongAndTall_A1.html |
+| 37 | ⭐ Week 5 Review | .../Level2/Day37_Week5Review_A1.html |
+
+### Week 6 — Clothes & Colors
+| 38 | What to Wear | .../Level2/Day38_WhatToWear_A1.html |
+| 39 | More Clothes | .../Level2/Day39_MoreClothes_A1.html |
+| 40 | Getting Dressed | .../Level2/Day40_GettingDressed_A1.html |
+| 41 | Dark Colors | .../Level2/Day41_DarkColors_A1.html |
+| 42 | Pretty and Nice | .../Level2/Day42_PrettyAndNice_A1.html |
+| 43 | At the Clothes Shop | .../Level2/Day43_AtTheClothesShop_A1.html |
+| 44 | ⭐ Week 6 Review | .../Level2/Day44_Week6Review_A1.html |
+
+### Week 7 — Weather & Seasons
+| 45 | Look at the Sky | .../Level2/Day45_LookAtTheSky_A1.html |
+| 46 | Four Seasons | .../Level2/Day46_FourSeasons_A1.html |
+| 47 | Nature Wonders | .../Level2/Day47_NatureWonders_A1.html |
+| 48 | Weather Actions | .../Level2/Day48_WeatherActions_A1.html |
+| 49 | Warm and Cool | .../Level2/Day49_WarmAndCool_A1.html |
+| 50 | Day by Day | .../Level2/Day50_DayByDay_A1.html |
+| 51 | ⭐ Week 7 Review | .../Level2/Day51_Week7Review_A1.html |
+
+### Week 8 — My Town
+| 52 | Around Town | .../Level2/Day52_AroundTown_A1.html |
+| 53 | Big Buildings | .../Level2/Day53_BigBuildings_A1.html |
+| 54 | Find the Way | .../Level2/Day54_FindTheWay_A1.html |
+| 55 | Let's Go | .../Level2/Day55_LetsGo_A1.html |
+| 56 | Near and Far | .../Level2/Day56_NearAndFar_A1.html |
+| 57 | People in Town | .../Level2/Day57_PeopleInTown_A1.html |
+| 58 | ⭐ Week 8 Review | .../Level2/Day58_Week8Review_A1.html |
+
+### Transport (เริ่ม)
+| 59 | Things That Go | .../Level2/Day59_ThingsThatGo_A1.html |
+| 60 | Let's Travel | .../Level2/Day60_LetsTravel_A1.html |
+
+> `.../` = https://pasasorn.github.io/lexigo/English/

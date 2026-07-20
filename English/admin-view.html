@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Access — Oxford Word Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif}
+  body{background:linear-gradient(135deg,#283593,#1E88E5);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:#fff;border-radius:22px;padding:34px 28px;max-width:360px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.25);text-align:center}
+  .icon{font-size:52px;margin-bottom:8px}
+  h1{font-size:22px;font-weight:900;color:#283593;margin-bottom:4px}
+  p{font-size:13px;color:#78909C;font-weight:700;margin-bottom:20px}
+  input{width:100%;padding:13px 16px;border:2.5px solid #C5CAE9;border-radius:14px;font-size:16px;font-weight:800;color:#283593;text-align:center;letter-spacing:1px;margin-bottom:12px;outline:none}
+  input:focus{border-color:#3949AB}
+  button{width:100%;background:linear-gradient(135deg,#3949AB,#1E88E5);color:#fff;border:none;border-radius:14px;padding:13px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(57,73,171,.4)}
+  button:active{transform:scale(.98)}
+  .err{color:#E53935;font-size:13px;font-weight:800;margin-top:10px;display:none}
+  .off{margin-top:16px;font-size:12px;color:#90A4AE;font-weight:700;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🔐</div>
+    <h1>Admin Access</h1>
+    <p>ใส่รหัส admin เพื่อดูทุก Level</p>
+    <input id="pw" type="password" placeholder="Admin password" autocomplete="off">
+    <button onclick="tryAdmin()">🔓 เข้าสู่ระบบ Admin</button>
+    <div class="err" id="err">❌ รหัสไม่ถูกต้อง ลองใหม่</div>
+    <div class="off" onclick="turnOff()">ปิด Admin mode (กลับเป็นนักเรียนปกติ)</div>
+  </div>
+<script>
+  const ADMIN_SECRET = 'Gift0142'; // 🔑 ต้องตรงกับใน dashboard.html
+  function tryAdmin(){
+    const v = document.getElementById('pw').value.trim();
+    if (v === ADMIN_SECRET){
+      localStorage.setItem('wla_admin','1');
+      location.href = 'dashboard.html';
+    } else {
+      document.getElementById('err').style.display = 'block';
+    }
+  }
+  function turnOff(){
+    localStorage.removeItem('wla_admin');
+    alert('✅ ปิด Admin mode แล้ว');
+    location.href = 'dashboard.html';
+  }
+  document.getElementById('pw').addEventListener('keydown',e=>{ if(e.key==='Enter') tryAdmin(); });
+</script>
+</body></html>

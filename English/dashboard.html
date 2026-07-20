@@ -399,7 +399,19 @@ function showDashboard(st) {
 }
 
 // ── MAIN ──
+const ADMIN_SECRET = 'Gift0142'; // 🔑 เปลี่ยนรหัสนี้เพื่อความปลอดภัย
+
 function init() {
+  // Admin via URL: dashboard.html?admin=SECRET  (ปิด: ?admin=off)
+  const qp = new URLSearchParams(location.search);
+  if (qp.has('admin')) {
+    const v = qp.get('admin');
+    if (v === ADMIN_SECRET) localStorage.setItem('wla_admin', '1');
+    else if (v === 'off' || v === '0') localStorage.removeItem('wla_admin');
+    // ล้าง param ออกจาก URL ไม่ให้รหัสค้างในแถบ address
+    history.replaceState(null, '', location.pathname);
+  }
+
   let st = JSON.parse(localStorage.getItem(SK) || 'null');
   // Admin can view without a student login
   if ((!st || !st.code) && localStorage.getItem('wla_admin') === '1') {
