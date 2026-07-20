@@ -276,11 +276,17 @@ async function checkApproval(code) {
 }
 
 // ── Build day grid ──
-function buildGrid(startDay, endDay) {
+// ── Level helpers ──
+function dayLevel(n){ return Math.min(15, Math.ceil(n / 30)); }
+function levelRangeOf(L){ const s=(L-1)*30+1; const e=(L===15)?448:L*30; return {s,e}; }
+function levelCefr(L){ return L<=3?'A1':L<=6?'A2':L<=10?'B1':'B2'; }
+const LEVEL_EMOJI={A1:'🟢',A2:'🔵',B1:'🟡',B2:'🔴'};
+
+function buildGrid(startDay, endDay, isAdmin) {
   const grid = document.getElementById('dayGrid');
   grid.innerHTML = '';
 
-  // Filter to only days within purchased range that have files
+  // Filter to only days within range that have files
   const myDays = ALL_DAYS.filter(d => d.n >= startDay && d.n <= endDay);
 
   if (myDays.length === 0) {
@@ -289,7 +295,7 @@ function buildGrid(startDay, endDay) {
     return;
   }
 
-  // Strict sequential: find the last consecutively-done day
+  // Strict sequential: find the last consecutively-done day (skipped for admin)
   let frontier = startDay - 1;
   for (const d of myDays) {
     if (localStorage.getItem('wla_d' + d.n)) frontier = d.n;
@@ -297,27 +303,45 @@ function buildGrid(startDay, endDay) {
   }
 
   let doneCnt = 0;
+  let curLevel = null;
 
-  myDays.forEach((d, idx) => {
-    const isDone    = d.n <= frontier && !!localStorage.getItem('wla_d' + d.n);
-    const isCurrent = d.n === frontier + 1; // only ONE current at a time
-    const isLocked  = !isDone && !isCurrent;
+  myDays.forEach((d) => {
+    // Level header when crossing into a new level
+    const L = dayLevel(d.n);
+    if (L !== curLevel) {
+      curLevel = L;
+      const {s,e} = levelRangeOf(L);
+      const cefr = levelCefr(L);
+      const hdr = document.createElement('div');
+      hdr.style.cssText = 'grid-column:1/-1;margin:14px 0 4px;padding:8px 14px;background:linear-gradient(135deg,#E8EAF6,#E3F2FD);border-radius:12px;font-weight:900;color:#283593;font-size:14px;display:flex;align-items:center;gap:8px';
+      hdr.innerHTML = `${LEVEL_EMOJI[cefr]} Level ${L} · ${cefr} <span style="font-weight:700;color:#78909C;font-size:12px">(Day ${s}–${e})</span>`;
+      grid.appendChild(hdr);
+    }
+
     const isReview  = !!d.review;
+    let isDone, isCurrent, unlocked;
+    if (isAdmin) {
+      // Admin sees everything, all clickable, marked as preview
+      isDone = false; isCurrent = false; unlocked = true;
+    } else {
+      isDone    = d.n <= frontier && !!localStorage.getItem('wla_d' + d.n);
+      isCurrent = d.n === frontier + 1;
+      unlocked  = isDone || isCurrent;
+      if (isDone) doneCnt++;
+    }
 
-    if (isDone) doneCnt++;
-
-    let cls = '';
-    let ico = '';
-    if (isDone && isReview)   { cls = 'review-done'; ico = '🌟'; }
-    else if (isDone)          { cls = 'done';         ico = '✅'; }
+    let cls = '', ico = '';
+    if (isAdmin)                    { cls = 'done';           ico = isReview?'🌟':'👁️'; }
+    else if (isDone && isReview)    { cls = 'review-done';    ico = '🌟'; }
+    else if (isDone)                { cls = 'done';           ico = '✅'; }
     else if (isCurrent && isReview) { cls = 'review current'; ico = '⭐'; }
-    else if (isCurrent)       { cls = 'current';      ico = '🎯'; }
-    else if (isReview)        { cls = 'review locked'; ico = '🔒'; }
-    else                      { cls = 'locked';        ico = '🔒'; }
+    else if (isCurrent)             { cls = 'current';        ico = '🎯'; }
+    else if (isReview)              { cls = 'review locked';  ico = '🔒'; }
+    else                            { cls = 'locked';         ico = '🔒'; }
 
-    const card = document.createElement(isCurrent || isDone ? 'a' : 'div');
+    const card = document.createElement(unlocked ? 'a' : 'div');
     card.className = 'day-card ' + cls;
-    if (isCurrent || isDone) card.href = d.file;
+    if (unlocked) card.href = d.file;
     card.innerHTML = `
       <span class="day-ico">${ico}</span>
       <div class="day-num">Day ${d.n}</div>
@@ -328,9 +352,9 @@ function buildGrid(startDay, endDay) {
   // Stats
   const total = myDays.length;
   const pct   = total ? Math.round(doneCnt / total * 100) : 0;
-  document.getElementById('statDone').textContent  = doneCnt;
+  document.getElementById('statDone').textContent  = isAdmin ? '—' : doneCnt;
   document.getElementById('statTotal').textContent = total;
-  document.getElementById('statPct').textContent   = pct + '%';
+  document.getElementById('statPct').textContent   = isAdmin ? 'ADMIN' : pct + '%';
 }
 
 function doLogout() {
@@ -345,10 +369,16 @@ function showDashboard(st) {
   document.getElementById('greetText').textContent = nick ? 'สวัสดี, น้อง' + nick + '! 👋' : 'สวัสดี! 👋';
   document.getElementById('streakNum').textContent = calcStreak();
 
-  const { startDay, endDay } = getLevelRange(st.level, st.type);
+  const isAdmin = localStorage.getItem('wla_admin') === '1';
+  let { startDay, endDay } = getLevelRange(st.level, st.type);
+  if (isAdmin) {
+    // Admin sees every day that currently has a file
+    startDay = 1;
+    endDay   = Math.max(...ALL_DAYS.map(d => d.n));
+  }
   const cefr = st.cefr || 'A1';
   document.getElementById('cefrDot').style.background   = CEFR_COLOR[cefr] || '#43A047';
-  document.getElementById('courseName').textContent     = st.course || 'Oxford 3000';
+  document.getElementById('courseName').textContent     = isAdmin ? '🔑 ADMIN — All Levels' : (st.course || 'Oxford 3000');
   document.getElementById('courseRange').textContent    = 'Day ' + startDay + '–' + Math.min(endDay, 448);
   document.getElementById('courseBadge').style.display  = 'flex';
   document.getElementById('courseText').textContent     = st.course || 'Oxford 3000';
@@ -360,17 +390,21 @@ function showDashboard(st) {
     return;
   }
 
-  if (startDay > 1 && !localStorage.getItem('wla_d' + (startDay - 1))) {
+  if (!isAdmin && startDay > 1 && !localStorage.getItem('wla_d' + (startDay - 1))) {
     localStorage.setItem('wla_d' + (startDay - 1), 'LEVEL-START');
   }
   document.getElementById('gridSection').style.display = 'block';
   document.getElementById('bottomBar').style.display   = 'flex';
-  buildGrid(startDay, endDay);
+  buildGrid(startDay, endDay, isAdmin);
 }
 
 // ── MAIN ──
 function init() {
-  const st = JSON.parse(localStorage.getItem(SK) || 'null');
+  let st = JSON.parse(localStorage.getItem(SK) || 'null');
+  // Admin can view without a student login
+  if ((!st || !st.code) && localStorage.getItem('wla_admin') === '1') {
+    st = { nick: 'Admin', code: 'ADMIN', type: 'lifetime', cefr: 'A1' };
+  }
   if (!st || !st.code) {
     location.href = 'login.html';
     return;
