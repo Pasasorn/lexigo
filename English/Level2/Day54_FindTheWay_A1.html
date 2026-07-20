@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Day 54 — Find the Way</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 auto;color:#37474F}
+.page{display:none}.page.on{display:block}
+.hdr{background:linear-gradient(135deg,#42A5F5,#1565C0);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(66,165,245,0.35)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.cefr{background:rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#BBDEFB;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #90CAF9}
+.vbar label{font-size:13px;color:#0D47A1;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #90CAF9;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#1976D2}
+.vstatus{font-size:12px;color:#0D47A1;font-weight:700}
+.score-bar{background:#BBDEFB;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#0D47A1;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #90CAF9}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#42A5F5,#1565C0);transition:width .4s}
+.strack{flex:1;height:9px;background:#BBDEFB;border-radius:5px;overflow:hidden}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(0.96)}
+.btn-p{background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;box-shadow:0 3px 8px rgba(66,165,245,0.35)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.navrow{display:flex;justify-content:space-between;margin-top:16px;gap:8px}
+.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#E3F2FD;border:2px solid #90CAF9;border-radius:12px;cursor:pointer;font-size:13px;color:#1565C0;font-weight:700;font-family:'Nunito',sans-serif}
+.tts:hover{background:#BBDEFB}
+.vocab{font-weight:900;color:#1565C0;background:#BBDEFB;padding:1px 5px;border-radius:6px}
+.sbox{background:#fff;border-radius:16px;padding:16px 18px;font-size:17px;line-height:2.4;color:#37474F;border:2px solid #90CAF9;font-weight:600}
+.srow{display:flex;flex-direction:column;align-items:flex-start;background:#E3F2FD;border-radius:14px;border:2px solid #90CAF9;padding:12px 15px;margin-bottom:8px;gap:8px}
+.srow-text{font-size:16px;color:#37474F;font-weight:700}
+.dinp{width:100%;font-size:15px;padding:10px 13px;border-radius:12px;border:2.5px solid #90CAF9;background:#fff;color:#37474F;margin-top:6px;font-family:'Nunito',sans-serif;font-weight:600}
+.dinp:focus{outline:none;border-color:#1976D2}
+.fb{font-size:14px;margin-top:5px;min-height:18px;font-weight:700}
+.ok{color:#2E7D32}.err{color:#C62828}
+.ma{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.mcol{display:flex;flex-direction:column;gap:8px}
+.mw{padding:13px;background:#fff;border:2.5px solid #90CAF9;border-radius:16px;cursor:pointer;font-size:16px;text-align:center;transition:all .15s;user-select:none;font-weight:700;color:#37474F}
+.mw:hover{border-color:#1976D2;background:#E3F2FD}
+.mw.sel{border-color:#1976D2;background:#E3F2FD;color:#1565C0}
+.mw.cor{border-color:#43A047;background:#E8F5E9;color:#1B5E20;pointer-events:none}
+.mw.bad{border-color:#E53935;background:#FFEBEE;animation:sh .3s}
+@keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.acgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px 0}
+.ac{background:#fff;border-radius:16px;padding:14px 12px;text-align:center;border:2.5px solid #90CAF9;box-shadow:0 3px 8px rgba(0,0,0,0.07);cursor:pointer;transition:all .15s}
+.ac:hover{border-color:#1976D2;background:#E3F2FD;transform:scale(1.02)}
+.ac-em{font-size:28px;margin-bottom:4px}
+.ac-en{font-size:17px;font-weight:900;color:#1565C0;margin-top:4px}
+.ac-ph{font-size:11px;color:#90A4AE;margin-top:2px;font-weight:600}
+.ac-th{font-size:14px;color:#37474F;font-weight:700;margin-top:2px}
+.ac-hint{font-size:10px;color:#90CAF9;font-weight:700;margin-top:3px}
+.step-label{font-size:17px;font-weight:900;color:#1565C0;margin-bottom:5px}
+.step-sub{font-size:13px;color:#78909C;margin-bottom:10px;font-weight:600}
+.rec-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#1976D2;border:none;border-radius:12px;cursor:pointer;font-size:13px;color:#fff;font-weight:700;font-family:'Nunito',sans-serif}
+.rec-btn.recording{background:#E53935;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.rec-wrap{background:#fff;border-radius:12px;border:2px solid #90CAF9;padding:10px 14px;margin-bottom:8px}
+.score-mini-wrap{height:8px;background:#BBDEFB;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.score-mini{height:100%;width:0%;border-radius:4px;transition:width .4s}
+.rec-label{font-size:13px;color:#78909C;font-weight:700}
+.rec-transcript{font-size:12px;color:#90A4AE;margin-top:3px;font-style:italic}
+.mic-ready{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-bottom:8px;display:none}
+.complete-screen{display:none;text-align:center;padding:20px 16px;background:#E8F5E9;border-radius:20px;border:3px solid #A5D6A7;margin-top:12px}
+.complete-screen.show{display:block}
+.code-box{background:#fff;border:3px dashed #7CB342;border-radius:16px;padding:16px;margin:14px 0}
+.code-txt{font-size:32px;font-weight:900;color:#2E7D32;letter-spacing:4px;font-family:'Courier New',monospace}
+.copy-btn{background:#7CB342;color:#fff;border:none;border-radius:12px;padding:9px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+.already-done{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:10px 14px;font-size:13px;color:#2E7D32;font-weight:700;margin-bottom:10px;display:none}
+.already-done.show{display:block}
+.lock-screen{text-align:center;padding:40px 20px;background:#BBDEFB;border-radius:20px;border:3px solid #90CAF9;margin-top:10px}
+.lock-screen h2{font-size:22px;font-weight:900;color:#1565C0;margin:12px 0 8px}
+.d-code-input{width:100%;max-width:200px;font-size:20px;padding:12px 16px;border-radius:14px;border:3px solid #90CAF9;background:#fff;color:#37474F;text-align:center;font-family:'Courier New',monospace;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.unlock-btn{background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border:none;border-radius:14px;padding:12px 28px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+.unlock-err{color:#C62828;font-size:13px;font-weight:700;margin-top:6px;display:none}
+@keyframes wv{0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-10deg)}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.wave{display:inline-block;animation:wv 1.2s ease 3;font-size:48px}
+.fin{animation:up .5s ease}
+
+/* Step5 games */
+.mfc{background:#E3F2FD;border:2px solid #90CAF9;border-radius:10px;padding:10px 6px;text-align:center;font-size:13px;font-weight:800;color:#1565C0;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:center;word-break:break-word;transition:background .2s}
+.mfc:hover{background:#BBDEFB}
+.ft-blank{display:inline-block;min-width:64px;border-bottom:2.5px solid #42A5F5;text-align:center;cursor:pointer;font-weight:800;color:#1565C0;padding:2px 8px;border-radius:4px;background:#E3F2FD;font-size:13px;margin:0 2px}
+.ft-blank.filled{background:#C8E6C9;border-bottom-color:#43A047;color:#1B5E20}
+.ft-word{background:#fff;border:2px solid #90CAF9;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:800;color:#1565C0;cursor:pointer;transition:all .2s}
+.ft-word:hover{background:#E3F2FD}
+.ft-word.used{opacity:.35;pointer-events:none}
+.ft-word.active{background:#BBDEFB;border-color:#1565C0}
+.ss-word{background:#fff;border:2px solid #90CAF9;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:800;color:#1565C0;cursor:pointer;transition:all .2s}
+.ss-word:hover{background:#E3F2FD}
+.ss-word.used{opacity:.35;pointer-events:none}
+.ss-bw{background:#E3F2FD;border:1.5px solid #90CAF9;border-radius:6px;padding:4px 10px;font-size:13px;font-weight:800;color:#1565C0;cursor:pointer;margin:2px}
+
+/* Step4 Listen+Arrange */
+.s4w{background:#fff;border:1.5px solid #90CAF9;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:800;color:#1565C0;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.s4w:hover{background:#E3F2FD}
+.s4w.used{opacity:.35;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="hdr"><span class="hdr-l" id="lbl">🗺️ Day 54 · Find the Way</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
+<div class="already-done" id="alreadyDone">✅ เรียน Day 54 จบแล้ว! Code: <strong id="savedCode54"></strong> — Day 55 ปลดล็อกแล้ว 🎉</div>
+<div class="score-bar"><span>⭐ Score: <span id="totalSc">0</span> / 6</span><div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div><span id="starDisp">☆☆☆</span></div>
+<div class="vbar"><label>🔊</label><select id="vsel" onchange="setV(this.value)"></select><label>Speed:</label><input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'"><span id="rv" style="font-size:13px;color:#0D47A1;font-weight:800">0.85×</span><button class="tts" onclick="speak(WORDS.map(w=>w.e).join(' '))">▶ Test</button><span class="vstatus" id="vs">loading...</span></div>
+<div class="lock-screen" id="lockScreen" style="display:none">
+  <div style="font-size:56px">🔒</div><h2>Day 54 ยังล็อกอยู่!</h2>
+  <p>เรียน <strong>Day 21 ให้จบก่อน</strong> แล้วกรอก Code</p>
+  <input class="d-code-input" id="codeInput" placeholder="D53-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 54</button>
+  <div class="unlock-err" id="unlockErr">❌ Wrong code — try again!</div>
+  <div style="margin-top:12px;font-size:12px;color:#78909C;font-weight:700">💡 ถ้าลืม Code → กลับไปเล่น Day 21 อีกครั้ง</div>
+</div>
+<div id="mainContent" style="display:none">
+<div class="page on fin" id="p0">
+  <div style="text-align:center;padding:16px 8px">
+    <div class="wave">🏫</div>
+    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">Find the Way!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 54 · Town — <strong style="color:#37474F">6 new words</strong>!</div>
+    <div class="acgrid" id="cvA"></div>
+    <button class="btn btn-p" onclick="go(1)" style="margin-top:20px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! →</button>
+  </div>
+</div>
+<div class="page" id="p1">
+  <div style="text-align:center;padding:10px 6px">
+    <div style="font-size:44px;margin-bottom:7px">🎧</div>
+    <div class="step-label">Step 1 · Listen First</div>
+    <p class="step-sub">Close your eyes and listen — don't look at the text yet!</p>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="tts" style="padding:10px 18px;font-size:14px" onclick="speak(STORY)">▶ Play Story</button>
+      <button class="tts" style="padding:10px 18px;font-size:14px" onclick="stopAll()">■ Stop</button>
+    </div>
+    <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+      <img src="img_day22.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+    </div>
+    <div style="background:#BBDEFB;border-radius:14px;padding:11px 15px;font-size:14px;color:#1565C0;margin-top:10px;border:2px solid #90CAF9;font-weight:700">
+      💬 Think: <strong>What does Leo do on his first day at school?</strong>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
+</div>
+<div class="page" id="p2">
+  <div class="step-label">Step 2 · Read + Speak 📖</div>
+  <p class="step-sub"><span style="color:#1565C0;font-weight:900;background:#BBDEFB;padding:2px 7px;border-radius:6px">Blue</span> = vocab words! Tap ▶ listen, then 🎤 read the story aloud!</p>
+  <div style="display:flex;gap:8px;margin-bottom:11px"><button class="tts" onclick="speak(STORY)">▶ Play Story</button><button class="tts" onclick="stopAll()">■ Stop</button></div>
+  <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
+    <img src="img_day22.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+  </div>
+  <div class="sbox">Leo wakes up early. It is his first day at <span class="vocab">school</span>!<br><br>He walks into a big <span class="vocab">class</span>. His <span class="vocab">teacher</span> says, "Hello!"<br><br>Leo sits at his <span class="vocab">desk</span> on a <span class="vocab">chair</span>. He sees many <span class="vocab">students</span>.<br><br>"I like school!" says Leo. 🎒</div>
+  <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
+    <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
+    <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
+    <div class="rec-wrap" style="margin-bottom:0">
+      <div class="score-mini-wrap"><div class="score-mini" id="r2bar"></div></div>
+      <div class="rec-label" id="r2lbl">— Tap ▶ listen first, then 🎤 read aloud —</div>
+      <div class="rec-transcript" id="r2interim"></div>
+    </div>
+  </div>
+  <div id="s2summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(1)">← Back</button><button class="btn btn-p" onclick="go(3)">Next →</button></div>
+</div>
+<div class="page" id="p3">
+  <div class="step-label">Step 3 · Read + Speak 🗣️</div>
+  <p class="step-sub">Tap ▶ listen → 🎤 speak → see your score!</p>
+  <div class="mic-ready" id="micStatus">✅ Mic ready — tap 🎤 to speak!</div>
+  <div id="noRec" style="display:none;background:#FFF3E0;border:2px solid #FFB74D;border-radius:10px;padding:8px 12px;font-size:13px;color:#E65100;font-weight:700;margin-bottom:8px">⚠️ Speech Recognition needs Chrome or Edge browser</div>
+  <div id="sl"></div>
+  <div id="s3summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(2)">← Back</button><button class="btn btn-p" onclick="go(4)">Next →</button></div>
+</div>
+<div class="page" id="p4">
+  <div class="step-label">Step 4 · Listen + Write ✏️</div>
+  <p class="step-sub">Tap ▶ listen → tap words to build the sentence!</p>
+  <div id="s4area"></div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <button class="btn btn-p" onclick="checkS4()">Check ✓</button>
+    <button class="btn btn-o" onclick="buildS4()">Reset 🔄</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(3)">← Back</button><button class="btn btn-p" onclick="go(5)">Play Game! 🎮</button></div>
+</div>
+<div class="page" id="p5">
+
+
+  <div class="step-label">Step 5 · Fill the Blank! ✏️</div>
+  <p class="step-sub">See the hint → tap letters to complete the word!</p>
+  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Q <span id="g5q">1</span>/<span id="g5tot">6</span> · ⭐ <span id="g5sc">0</span></div>
+  <div id="g5card" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #90CAF9;text-align:center">
+    <div id="g5hint" style="font-size:44px;margin-bottom:4px"></div>
+    <div id="g5thai" style="font-size:16px;color:#546E7A;font-weight:700;margin-bottom:12px"></div>
+    <div id="g5blanks" style="font-size:28px;font-weight:900;letter-spacing:6px;color:#1565C0;margin-bottom:14px;min-height:42px"></div>
+    <div id="g5tiles" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px"></div>
+    <div id="g5feedback" style="min-height:28px;margin-top:10px;font-size:18px;font-weight:900"></div>
+  </div>
+  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
+    <div style="font-size:30px">✏️</div>
+    <div style="font-size:18px;font-weight:900;color:#1565C0">Spelling Star! 🌟</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
+    <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
+  </div>
+  
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
+</div>
+
+<div class="complete-screen" id="completeScreen">
+    <div style="font-size:36px">🎉</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 54 Complete!</div>
+    <div id="daySummary" style="background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;text-align:left;border:2px solid #A5D6A7"></div>
+    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 54</div><div class="code-txt" id="codeDisplay">D54-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
+    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode54"></span></div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 55 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+      <a href="../dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
+      <a href="Day55_LetsGo_A1.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🗺️ Day 55 →</a>
+    </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+  </div>
+</div>
+
+</div>
+<script>
+const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🔤'];
+const WORDS=[
+  {e:'building',t:'อาคาร',ph:'/ˈbɪldɪŋ/',em:'🏢'},
+  {e:'bridge',t:'สะพาน',ph:'/brɪdʒ/',em:'🌉'},
+  {e:'corner',t:'หัวมุม',ph:'/ˈkɔːnə/',em:'📐'},
+  {e:'map',t:'แผนที่',ph:'/mæp/',em:'🗺️'},
+  {e:'sign',t:'ป้าย',ph:'/saɪn/',em:'🪧'},
+  {e:'place',t:'สถานที่',ph:'/pleɪs/',em:'📍'}
+];
+const SS=[
+  "Leo makes a secret map.",
+  "He walks to a tall building.",
+  "He crosses the bridge.",
+  "The shop is at the corner.",
+  "Leo reads the sign to find the place."
+];
+const DS=[
+  "He walks to a tall building.",
+  "He crosses the bridge.",
+  "Leo reads the sign to find the place."
+];
+const STORY="Leo makes a secret map for a game. He walks to a tall building. He crosses the long bridge. The toy shop is at the corner. Leo reads the sign. This is the place! X marks the spot. Mimi and Leo find the hidden treasure!";
+const PREV_KEY='wla_d53',MY_KEY='wla_d54',PREV_PFX='D53-',MY_DAY=54;
+function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode54').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(v.startsWith(PREV_PFX)&&v.length===8)){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
+function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
+function initContent(){
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick="speak('${w.e}')"><div class='ac-em'>${w.em}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph}</div><div class='ac-hint'>Tap to hear</div></div>`).join('');
+  const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+  buildSL();
+  buildS4();
+  loadV();buildG();
+}
+function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🗺️ Day 54 · '+STEPS[n];if(n===4)buildS4();
+  if(n===5)buildG();}
+let allV=[],curV=null;
+function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');const di=allV.findIndex(v=>v.default);if(di>=0)document.getElementById('vsel').value=di;curV=allV[parseInt(document.getElementById('vsel').value)]||allV[0];document.getElementById('vs').textContent=`✓ ${allV.length} voices`;}
+function setV(i){curV=allV[parseInt(i)]||null;}
+window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,400);setTimeout(loadV,1200);
+function speak(t){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(curV)u.voice=curV;u.rate=parseFloat(document.getElementById('rsl').value);window.speechSynthesis.speak(u);}
+function stopAll(){window.speechSynthesis.cancel();if(typeof activeRec2!=='undefined'&&activeRec2)activeRec2.stop();if(typeof activeRec!=='undefined'&&activeRec)activeRec.stop();}
+// ── STEP 4: LISTEN + ARRANGE ──
+let s4picked=[],s4done=[],step4Score=null;
+function _s4d(){return typeof DS!=='undefined'?DS:(typeof DICT!=='undefined'?DICT:[]);}
+function buildS4(){
+  const data=_s4d();
+  s4picked=data.map(()=>[]);s4done=data.map(()=>false);
+  const area=document.getElementById('s4area');if(!area)return;
+  area.innerHTML=data.map((sent,i)=>{
+    const words=sent.replace(/[.,!?]/g,'').split(' ');
+    const sh=[...words].sort(()=>Math.random()-.5);
+    const bank=sh.map((w)=>'<button class="s4w" data-si="'+i+'" data-word="'+w+'" onclick="pickS4(+this.dataset.si,this,this.dataset.word)">'+w+'</button>').join('');
+    return '<div style="background:#fff;border:2px solid #90CAF9;border-radius:14px;padding:10px 12px;margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'
+      +'<button class="tts" onclick="_s4speak('+i+')" style="padding:5px 11px;font-size:13px">&#9654; Listen</button>'
+      +'<span style="font-size:12px;color:#78909C;font-weight:700">ประโยคที่ '+(i+1)+'</span>'
+      +'<span id="s4fb'+i+'" style="font-size:12px;font-weight:800;margin-left:auto"></span>'
+      +'</div>'
+      +'<div id="s4tgt'+i+'" style="min-height:34px;background:#BBDEFB;border-radius:8px;padding:5px 9px;border:1.5px dashed #1976D2;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;align-items:center"><span style="font-size:11px;color:#BDBDBD;font-weight:700">Build here...</span></div>'
+      +'<div id="s4bank'+i+'" style="display:flex;flex-wrap:wrap;gap:6px">'+bank+'</div>'
+      +'</div>';
+  }).join('');
+}
+function _s4speak(i){speak(_s4d()[i]);}
+function pickS4(i,btn,word){
+  if(s4done[i])return;
+  s4picked[i].push(word);btn.disabled=true;btn.classList.add('used');
+  _renderS4(i);
+}
+function unpickS4(i,j){
+  if(s4done[i])return;
+  const w=s4picked[i].splice(j,1)[0];
+  const bank=document.getElementById('s4bank'+i);
+  for(const b of bank.querySelectorAll('.s4w')){if(b.dataset.word===w&&b.disabled){b.disabled=false;b.classList.remove('used');break;}}
+  _renderS4(i);
+}
+function _renderS4(i){
+  const tgt=document.getElementById('s4tgt'+i);if(!tgt)return;
+  tgt.innerHTML=s4picked[i].length
+    ?s4picked[i].map((w,j)=>'<span onclick="unpickS4('+i+','+j+')" style="background:#E3F2FD;border:1.5px solid #90CAF9;border-radius:6px;padding:4px 9px;font-size:13px;font-weight:800;color:#1565C0;cursor:pointer">'+w+'</span>').join('')
+    :'<span style="font-size:11px;color:#BDBDBD;font-weight:700">Build here...</span>';
+}
+function checkS4(){
+  const data=_s4d();let ok=0;
+  data.forEach((sent,i)=>{
+    const exp=sent.replace(/[.,!?]/g,'').split(' ');
+    const good=JSON.stringify(s4picked[i])===JSON.stringify(exp);
+    const fb=document.getElementById('s4fb'+i);
+    if(fb){fb.textContent=good?'✓ Correct!':'✗ Try again!';fb.style.color=good?'#2E7D32':'#C62828';}
+    if(good){s4done[i]=true;}
+    if(good)ok++;
+  });
+  step4Score=Math.round(ok/data.length*100);
+  if(typeof updScore==='function')updScore(ok+3,6);
+  speakFb(ok===data.length?'perfect':ok>0?'correct':'wrong');
+}
+
+let g5deck=[],g5idx=0,g5score=0,g5blanks=[],g5answer='',g5filled=[];
+function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
+function g5render(){
+  if(g5idx>=g5deck.length){g5end();return;}
+  const w=g5deck[g5idx];g5answer=w.e.toLowerCase();
+  document.getElementById('g5q').textContent=g5idx+1;
+  document.getElementById('g5sc').textContent=g5score;
+  document.getElementById('g5hint').textContent=w.em||'📝';
+  document.getElementById('g5thai').textContent=w.t;
+  document.getElementById('g5feedback').textContent='';
+  const len=g5answer.length;
+  const nb=len<=3?1:len<=5?2:3;
+  const pos=[];while(pos.length<nb){const p=Math.floor(Math.random()*len);if(!pos.includes(p))pos.push(p);}
+  pos.sort((a,b)=>a-b);g5blanks=pos;g5filled=new Array(len).fill(null);
+  g5updateDisplay();
+  const missing=pos.map(p=>g5answer[p]);
+  const pool='abcdefghijklmnoprstuw'.split('').filter(c=>!missing.includes(c));
+  pool.sort(()=>Math.random()-.5);
+  const opts=[...missing,...pool.slice(0,4)].sort(()=>Math.random()-.5);
+  const tiles=document.getElementById('g5tiles');tiles.innerHTML='';
+  opts.forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});
+}
+function g5updateDisplay(){
+  const d=g5answer.split('').map((c,i)=>{
+    if(!g5blanks.includes(i))return'<span style="color:#1565C0">'+c.toUpperCase()+'</span>';
+    if(g5filled[i])return'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5filled[i].toUpperCase()+'</span>';
+    return'<span style="color:#bbb">_</span>';
+  }).join('<span style="margin:0 3px"> </span>');
+  document.getElementById('g5blanks').innerHTML=d;
+}
+function g5tap(c,btn){
+  const nb=g5blanks.find(p=>!g5filled[p]);if(nb===undefined)return;
+  const ok=g5answer[nb]===c;
+  if(ok){g5filled[nb]=c;btn.style.opacity='0.35';btn.onclick=null;g5updateDisplay();
+    if(g5blanks.every(p=>g5filled[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(()=>g5render(),900);}
+  } else {
+    btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';
+    setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},700);
+  }
+}
+function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
+
+function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${s}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}
+function calcScore(heard,target){const hw=heard.toLowerCase().split(/\s+/).filter(Boolean),tw=target.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);if(!tw.length)return 0;return Math.min(100,Math.round(hw.filter(w=>tw.includes(w)).length/tw.length*100));}
+function checkSummary3(){const valid=recScores.slice(0,SS.length).filter(x=>x!==null);if(!valid.length)return;const avg=Math.round(valid.reduce((a,b)=>a+b,0)/valid.length);const sumEl=document.getElementById('s3summary');sumEl.style.display='block';sumEl.innerHTML=`<div style="background:#E3F2FD;border:2px solid #90CAF9;border-radius:14px;padding:12px 14px;margin-top:10px"><div style="font-size:13px;font-weight:900;color:#1565C0;margin-bottom:5px">📊 Step 3 Result (${valid.length}/${SS.length})</div><div style="background:#fff;border-radius:6px;overflow:hidden;height:9px"><div style="height:100%;width:${avg}%;background:${avg>=80?'#43A047':avg>=50?'#F9A825':'#E53935'};transition:width .5s"></div></div><div style="font-size:12px;font-weight:800;color:${avg>=80?'#2E7D32':avg>=50?'#E65100':'#C62828'};margin-top:4px">Avg: ${avg}%</div></div>`;updScore(Math.round(avg/100*2)+2,6);}
+function startRec(i){if(activeRec){activeRec.stop();activeRec=null;if(activeIdx===i){document.getElementById('rb'+i).classList.remove('recording');document.getElementById('rb'+i).textContent='🎤 Speak';return;}}if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){document.getElementById('noRec').style.display='block';return;}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;activeRec=new SR();activeIdx=i;activeRec.lang='en-US';activeRec.continuous=false;activeRec.interimResults=true;const target=SS[i];let heard='';activeRec.onresult=e=>{let fin='',intr='';for(let r=e.resultIndex;r<e.results.length;r++){if(e.results[r].isFinal)fin+=e.results[r][0].transcript;else intr+=e.results[r][0].transcript;}if(fin)heard+=fin;document.getElementById('rt'+i).textContent='Heard: '+(heard||intr);};activeRec.onend=()=>{const sc=calcScore(heard,target);recScores[i]=sc;document.getElementById('sm'+i).style.width=sc+'%';document.getElementById('sm'+i).style.background=sc>=80?'#43A047':sc>=50?'#F9A825':'#E53935';document.getElementById('rl'+i).textContent=`${sc}% ${sc>=80?'🌟 Perfect!':sc>=50?'👍 Good!':'💪 Try again!'}`;document.getElementById('rb'+i).classList.remove('recording');document.getElementById('rb'+i).textContent='🎤 Speak';activeRec=null;activeIdx=-1;checkSummary3();};activeRec.onerror=()=>{document.getElementById('rb'+i).classList.remove('recording');document.getElementById('rb'+i).textContent='🎤 Speak';activeRec=null;activeIdx=-1;};activeRec.start();document.getElementById('rb'+i).classList.add('recording');document.getElementById('rb'+i).textContent='■ Stop';document.getElementById('rl'+i).textContent='🎤 Listening...';document.getElementById('micStatus').style.display='block';}
+navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{s.getTracks().forEach(t=>t.stop());document.getElementById('micStatus').style.display='block';}).catch(()=>{});
+function updScore(n,tot){const pct=Math.round(n/(tot||6)*100);const sf=document.getElementById('sfill');if(sf)sf.style.width=pct+'%';const sc=document.getElementById('totalSc');if(sc)sc.textContent=n;const sd=document.getElementById('starDisp');if(sd)sd.textContent=pct>=80?'⭐⭐⭐':pct>=50?'⭐⭐☆':'⭐☆☆';}
+function generateCode(day){const ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='D'+day+'-';for(let i=0;i<4;i++)c+=ch[Math.floor(Math.random()*ch.length)];return c;}
+function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);syncToCloud(MY_DAY,code,100);}document.getElementById('codeDisplay').textContent=code;const cs=document.getElementById('completeScreen');cs.classList.add('show');window.scrollTo(0,document.body.scrollHeight);}
+function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copied! Code: '+code));else alert('Code: '+code);}
+checkLock();
+</script>
+<script>
+const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+</script>
+</body>
+</html>
