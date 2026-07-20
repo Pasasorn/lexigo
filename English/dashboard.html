@@ -169,6 +169,36 @@ const ALL_DAYS = [
   {n:28, file:'Level1/Day28_Week4SchoolReview_A1.html',  title:"Week 4 Review", review:true},
   {n:29, file:'Level1/Day29_ColorsAroundUs_A1.html',     title:"Colors Around Us"},
   {n:30, file:'Level1/Day30_ShapesEverywhere_A1.html',   title:"Shapes Everywhere"},
+  {n:31, file:'Level2/Day31_MyFace_A1.html', title:"My Face"},
+  {n:32, file:'Level2/Day32_MyBody_A1.html', title:"My Body"},
+  {n:33, file:'Level2/Day33_SmileAndLaugh_A1.html', title:"Smile and Laugh"},
+  {n:34, file:'Level2/Day34_FiveSenses_A1.html', title:"Five Senses"},
+  {n:35, file:'Level2/Day35_MoveYourBody_A1.html', title:"Move Your Body"},
+  {n:36, file:'Level2/Day36_StrongAndTall_A1.html', title:"Strong and Tall"},
+  {n:37, file:'Level2/Day37_Week5Review_A1.html', title:"Week 5 Review", review:true},
+  {n:38, file:'Level2/Day38_WhatToWear_A1.html', title:"What to Wear"},
+  {n:39, file:'Level2/Day39_MoreClothes_A1.html', title:"More Clothes"},
+  {n:40, file:'Level2/Day40_GettingDressed_A1.html', title:"Getting Dressed"},
+  {n:41, file:'Level2/Day41_DarkColors_A1.html', title:"Dark Colors"},
+  {n:42, file:'Level2/Day42_PrettyAndNice_A1.html', title:"Pretty and Nice"},
+  {n:43, file:'Level2/Day43_AtTheClothesShop_A1.html', title:"At the Clothes Shop"},
+  {n:44, file:'Level2/Day44_Week6Review_A1.html', title:"Week 6 Review", review:true},
+  {n:45, file:'Level2/Day45_LookAtTheSky_A1.html', title:"Look at the Sky"},
+  {n:46, file:'Level2/Day46_FourSeasons_A1.html', title:"Four Seasons"},
+  {n:47, file:'Level2/Day47_NatureWonders_A1.html', title:"Nature Wonders"},
+  {n:48, file:'Level2/Day48_WeatherActions_A1.html', title:"Weather Actions"},
+  {n:49, file:'Level2/Day49_WarmAndCool_A1.html', title:"Warm and Cool"},
+  {n:50, file:'Level2/Day50_DayByDay_A1.html', title:"Day by Day"},
+  {n:51, file:'Level2/Day51_Week7Review_A1.html', title:"Week 7 Review", review:true},
+  {n:52, file:'Level2/Day52_AroundTown_A1.html', title:"Around Town"},
+  {n:53, file:'Level2/Day53_BigBuildings_A1.html', title:"Big Buildings"},
+  {n:54, file:'Level2/Day54_FindTheWay_A1.html', title:"Find the Way"},
+  {n:55, file:'Level2/Day55_LetsGo_A1.html', title:"Let's Go"},
+  {n:56, file:'Level2/Day56_NearAndFar_A1.html', title:"Near and Far"},
+  {n:57, file:'Level2/Day57_PeopleInTown_A1.html', title:"People in Town"},
+  {n:58, file:'Level2/Day58_Week8Review_A1.html', title:"Week 8 Review", review:true},
+  {n:59, file:'Level2/Day59_ThingsThatGo_A1.html', title:"Things That Go"},
+  {n:60, file:'Level2/Day60_LetsTravel_A1.html', title:"Let's Travel"},
 ];
 
 // ── Level → day range ──
@@ -185,7 +215,7 @@ const CEFR_COLOR = { A1:'#43A047', A2:'#1E88E5', B1:'#FB8C00', B2:'#E53935' };
 // ── Streak ──
 function calcStreak() {
   let streak = 0;
-  for (let d = 30; d >= 1; d--) {
+  for (let d = 448; d >= 1; d--) {
     if (localStorage.getItem('wla_d' + d)) streak++;
     else break;
   }
