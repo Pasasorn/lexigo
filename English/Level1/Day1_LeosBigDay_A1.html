@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Day 1 — Leo's Big Day</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 auto;color:#37474F}
+.page{display:none}.page.on{display:block}
+.hdr{background:linear-gradient(135deg,#FF9800,#FF6F00);border-radius:20px;padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(255,152,0,0.35)}
+.hdr-l{font-weight:900;font-size:15px;color:#fff}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.cefr{background:rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:12px}
+.dots{display:flex;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:.2s}
+.dot.on{background:#fff}
+.vbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#FFF8E1;border-radius:16px;padding:8px 13px;margin-bottom:9px;border:2px solid #FFE082}
+.vbar label{font-size:13px;color:#E65100;font-weight:700}
+.vbar select{font-size:13px;border:2px solid #FFE082;border-radius:10px;padding:5px 8px;background:#fff;color:#37474F;max-width:165px;font-family:'Nunito',sans-serif}
+.vbar input[type=range]{width:65px;accent-color:#FF9800}
+.vstatus{font-size:12px;color:#E65100;font-weight:700}
+.score-bar{background:#FFF8E1;border-radius:14px;padding:9px 14px;margin-bottom:9px;font-size:14px;color:#E65100;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #FFE082}
+.sfill{height:9px;border-radius:5px;background:linear-gradient(90deg,#FF9800,#7C4DFF);transition:width .4s}
+.strack{flex:1;height:9px;background:#FFE0B2;border-radius:5px;overflow:hidden}
+.btn{padding:11px 20px;border-radius:16px;font-size:15px;cursor:pointer;font-weight:800;border:none;transition:transform .1s;font-family:'Nunito',sans-serif}
+.btn:active{transform:scale(0.96)}
+.btn-p{background:linear-gradient(135deg,#FF9800,#FF6F00);color:#fff;box-shadow:0 3px 8px rgba(255,152,0,0.35)}
+.btn-o{background:#fff;border:2.5px solid #BDBDBD;color:#37474F}
+.navrow{display:flex;justify-content:space-between;margin-top:16px;gap:8px}
+.tts{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#FFF3E0;border:2px solid #FFB74D;border-radius:12px;cursor:pointer;font-size:13px;color:#E65100;font-weight:700;font-family:'Nunito',sans-serif}
+.tts:hover{background:#FFE0B2}
+.vocab{font-weight:900;color:#7C4DFF;background:#EDE7F6;padding:1px 5px;border-radius:6px}
+.sbox{background:#FFF8E1;border-radius:16px;padding:16px 18px;font-size:17px;line-height:2.4;color:#37474F;border:2px solid #FFE082;font-weight:600}
+.srow{display:flex;flex-direction:column;align-items:flex-start;background:#FFF3E0;border-radius:14px;border:2px solid #FFB74D;padding:12px 15px;margin-bottom:8px;gap:8px}
+.srow-text{font-size:16px;color:#37474F;font-weight:700}
+.dinp{width:100%;font-size:15px;padding:10px 13px;border-radius:12px;border:2.5px solid #FFB74D;background:#fff;color:#37474F;margin-top:6px;font-family:'Nunito',sans-serif;font-weight:600}
+.dinp:focus{outline:none;border-color:#FF9800}
+.fb{font-size:14px;margin-top:5px;min-height:18px;font-weight:700}
+.ok{color:#2E7D32}.err{color:#C62828}
+/* Word Match Game */
+.ma{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.mcol{display:flex;flex-direction:column;gap:8px}
+.mw{padding:13px;background:#fff;border:2.5px solid #FFE082;border-radius:16px;cursor:pointer;font-size:16px;text-align:center;transition:all .15s;user-select:none;font-weight:700;color:#37474F}
+.mw:hover{border-color:#FF9800;background:#FFF3E0}
+.mw.sel{border-color:#FF9800;background:#FFF3E0;color:#E65100}
+.mw.cor{border-color:#43A047;background:#E8F5E9;color:#1B5E20;pointer-events:none}
+.mw.bad{border-color:#E53935;background:#FFEBEE;animation:sh .3s}
+@keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+/* Vocab grid cards (cover) */
+.acgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px 0}
+.ac{background:#fff;border-radius:16px;padding:14px 12px;text-align:center;border:2.5px solid #FFE082;box-shadow:0 3px 8px rgba(0,0,0,0.07);cursor:pointer;transition:all .15s}
+.ac:hover{border-color:#FF9800;background:#FFF3E0;transform:scale(1.02)}
+.ac-en{font-size:17px;font-weight:900;color:#E65100;margin-top:6px}
+.ac-ph{font-size:11px;color:#90A4AE;margin-top:2px;font-weight:600}
+.ac-th{font-size:14px;color:#37474F;font-weight:700;margin-top:2px}
+.ac-hint{font-size:10px;color:#FFB74D;font-weight:700;margin-top:3px}
+.step-label{font-size:17px;font-weight:900;color:#E65100;margin-bottom:5px}
+.step-sub{font-size:13px;color:#78909C;margin-bottom:10px;font-weight:600}
+/* Speech rec */
+.rec-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;background:#FF6F00;border:none;border-radius:12px;cursor:pointer;font-size:13px;color:#fff;font-weight:700;font-family:'Nunito',sans-serif}
+.rec-btn.recording{background:#E53935;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.rec-wrap{background:#fff;border-radius:12px;border:2px solid #FFE082;padding:10px 14px;margin-bottom:8px}
+.score-mini-wrap{height:8px;background:#FFE0B2;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.score-mini{height:100%;width:0%;border-radius:4px;transition:width .4s}
+.rec-label{font-size:13px;color:#78909C;font-weight:700}
+.rec-transcript{font-size:12px;color:#90A4AE;margin-top:3px;font-style:italic}
+.mic-ready{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-bottom:8px;display:none}
+/* Completion */
+.complete-screen{display:none;text-align:center;padding:20px 16px;background:#E8F5E9;border-radius:20px;border:3px solid #A5D6A7;margin-top:12px}
+.complete-screen.show{display:block}
+.code-box{background:#fff;border:3px dashed #7CB342;border-radius:16px;padding:16px;margin:14px 0}
+.code-txt{font-size:32px;font-weight:900;color:#2E7D32;letter-spacing:4px;font-family:'Courier New',monospace}
+.code-label{font-size:12px;color:#78909C;font-weight:700;margin-bottom:4px}
+.copy-btn{background:#7CB342;color:#fff;border:none;border-radius:12px;padding:9px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:8px}
+.already-done{background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:10px 14px;font-size:13px;color:#2E7D32;font-weight:700;margin-bottom:10px;display:none}
+.already-done.show{display:block}
+@keyframes wv{0%,100%{transform:rotate(0)}25%{transform:rotate(18deg)}75%{transform:rotate(-10deg)}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.wave{display:inline-block;animation:wv 1.2s ease 3;font-size:48px}
+.fin{animation:up .5s ease}
+
+/* Step4 Listen+Arrange */
+.s4w{background:#fff;border:1.5px solid #FFE082;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.s4w:hover{background:#FFF3E0}
+.s4w.used{opacity:.35;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <span class="hdr-l" id="lbl">🐱 Day 1 · Leo's Big Day</span>
+  <div class="hdr-r">
+    <span class="cefr">🟢 A1</span>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<!-- Already done -->
+<div class="already-done" id="alreadyDone">
+  ✅ เรียน Day 1 จบแล้ว! Code: <strong id="savedCode"></strong> — Day 2 ปลดล็อกแล้ว 🎉
+</div>
+
+<!-- Score -->
+<div class="score-bar">
+  <span>⭐ Score: <span id="totalSc">0</span> / 6</span>
+  <div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div>
+  <span id="starDisp">☆☆☆</span>
+</div>
+
+<!-- Voice bar -->
+<div class="vbar">
+  <label>🔊</label>
+  <select id="vsel" onchange="setV(this.value)"></select>
+  <label>Speed:</label>
+  <input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'">
+  <span id="rv" style="font-size:13px;color:#E65100;font-weight:800">0.85×</span>
+  <button class="tts" onclick="speak('cat dog bird fish big small')">▶ Test</button>
+  <span class="vstatus" id="vs">loading...</span>
+</div>
+
+<!-- p0 Cover -->
+<div class="page on fin" id="p0">
+  <div style="text-align:center;padding:16px 8px">
+    <div class="wave">🐱</div>
+    <div style="font-size:26px;font-weight:900;color:#E65100;margin:9px 0 4px">Leo's Big Day!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 1 · Animals — <strong style="color:#37474F">6 new words</strong></div>
+    <div class="acgrid" id="cvA"></div>
+    <button class="btn btn-p" onclick="go(1)" style="margin-top:16px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! →</button>
+  </div>
+</div>
+
+<!-- p1 Step 1: Listen -->
+<div class="page" id="p1">
+  <div style="text-align:center;padding:10px 6px">
+    <div style="font-size:44px;margin-bottom:7px">🎧</div>
+    <div class="step-label">Step 1 · Listen First</div>
+    <p class="step-sub">ปิดตาแล้วฟังเรื่องก่อน — ยังไม่ต้องดูตัวหนังสือ!</p>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="tts" style="padding:10px 18px;font-size:14px" onclick="speak(STORY)">▶ Play Story</button>
+      <button class="tts" style="padding:10px 18px;font-size:14px" onclick="stopAll()">■ Stop</button>
+    </div>
+    <div style="border-radius:16px;overflow:hidden;border:2px solid #E1BEE7;background:#F3E5F5;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+      <img src="img_day1.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+    </div>
+    <div style="background:#FFF3E0;border-radius:14px;padding:11px 15px;font-size:14px;color:#E65100;margin-top:10px;border:2px solid #FFB74D;font-weight:700">
+      💬 Think: <strong>How many animals does Leo have?</strong>
+    </div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
+</div>
+
+<!-- p2 Step 2: Read + Listen -->
+<div class="page" id="p2">
+  <div class="step-label">Step 2 · Read + Speak 📖</div>
+  <p class="step-sub"><span style="color:#7C4DFF;font-weight:900;background:#EDE7F6;padding:2px 7px;border-radius:6px">Purple</span> = vocab words! กด ▶ ฟังก่อน แล้วกด 🎤 อ่านทั้งเรื่องออกเสียง</p>
+  <div style="display:flex;gap:8px;margin-bottom:11px">
+    <button class="tts" onclick="speak(STORY)">▶ Play Story</button>
+    <button class="tts" onclick="stopAll()">■ Stop</button>
+  </div>
+  <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #E1BEE7;background:#F3E5F5;min-height:160px;display:flex;align-items:center;justify-content:center">
+    <img src="img_day1.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.innerHTML='<div style=\'padding:20px;text-align:center;color:#9C27B0;font-size:13px;font-weight:700\'>🖼️ วางไฟล์ img_day1.png ในโฟลเดอร์เดียวกัน<br><span style=\'font-size:11px;color:#BA68C8\'>สร้างด้วย Canva Magic Media</span></div>'">
+  </div>
+  <div class="sbox">
+    Leo has a <span class="vocab">cat</span>. Her name is Nala. Nala is <span class="vocab">small</span> and white.<br><br>
+    Leo also has a <span class="vocab">dog</span>. His name is Boon. Boon is <span class="vocab">big</span> and brown.<br><br>
+    One day, Leo sees a <span class="vocab">bird</span> in the garden. The bird is yellow and <span class="vocab">small</span>.<br><br>
+    He looks at the pond and sees a <span class="vocab">fish</span>! It is orange and <span class="vocab">small</span>.<br><br>
+    Leo smiles. He loves all his animals. 🤩
+  </div>
+  <div style="margin-top:12px;background:#FFF8E1;border:2px solid #FFE082;border-radius:16px;padding:14px 16px">
+    <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ ไมค์พร้อม — กด 🎤 อ่านออกเสียงได้เลย!</div>
+    <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 อ่านทั้งเรื่อง</button>
+    <div class="rec-wrap" style="margin-bottom:0">
+      <div class="score-mini-wrap"><div class="score-mini" id="r2bar"></div></div>
+      <div class="rec-label" id="r2lbl">— กด ▶ ฟังก่อน แล้วกด 🎤 อ่านเรื่องออกเสียง —</div>
+      <div class="rec-transcript" id="r2interim"></div>
+    </div>
+  </div>
+  <div id="s2summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(1)">← Back</button><button class="btn btn-p" onclick="go(3)">Next →</button></div>
+</div>
+
+<!-- p3 Step 3: Read + Speak + Record -->
+<div class="page" id="p3">
+  <div class="step-label">Step 3 · Read + Speak 🗣️</div>
+  <p class="step-sub">กด ▶ ฟัง → กด 🎤 แล้วพูดตาม → ดูคะแนน!</p>
+  <div class="mic-ready" id="micStatus">✅ ไมค์พร้อมใช้งาน — กด 🎤 พูดได้เลย!</div>
+  <div id="noRec" style="display:none;background:#FFF3E0;border:2px solid #FFB74D;border-radius:10px;padding:8px 12px;font-size:13px;color:#E65100;font-weight:700;margin-bottom:8px">⚠️ Browser นี้ไม่รองรับ Speech Recognition — ใช้ Chrome/Edge</div>
+  <div id="sl"></div>
+  <div id="s3summary" style="display:none"></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(2)">← Back</button><button class="btn btn-p" onclick="go(4)">Next →</button></div>
+</div>
+
+<!-- p4 Step 4: Dictation -->
+<div class="page" id="p4">
+  <div class="step-label">Step 4 · Listen + Write ✏️</div>
+  <p class="step-sub">กด ▶ ฟัง → กดคำเรียงประโยค!</p>
+  <div id="s4area"></div>
+  <div style="margin-top:10px;display:flex;gap:8px">
+    <button class="btn btn-p" onclick="checkS4()">Check ✓</button>
+    <button class="btn btn-o" onclick="buildS4()">Reset 🔄</button>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(3)">← Back</button><button class="btn btn-p" onclick="go(5)">Play Game! 🎮</button></div>
+</div>
+<div class="page" id="p5">
+  <div class="step-label">Step 5 · Word Match 🎮</div>
+  <p class="step-sub">กดคำภาษาอังกฤษ → แล้วกดคำแปลที่ตรงกัน!</p>
+  <div style="background:#FFF8E1;border-radius:14px;padding:9px 14px;margin-bottom:10px;font-size:14px;color:#E65100;font-weight:800;display:flex;align-items:center;gap:9px;border:2px solid #FFE082">
+    ⭐ Score: <strong id="sc">0</strong> / 6
+    <div style="flex:1;height:9px;background:#FFE0B2;border-radius:5px;overflow:hidden"><div id="gfill" style="height:100%;width:0%;background:linear-gradient(90deg,#FF9800,#7C4DFF);transition:width .4s"></div></div>
+    <span id="pct" style="font-size:12px">0%</span>
+  </div>
+  <div class="ma"><div class="mcol" id="ec"></div><div class="mcol" id="tc"></div></div>
+  <button class="btn btn-o" onclick="buildG()" style="margin-top:5px;font-size:13px;padding:8px 14px">Reset 🔄</button>
+
+  <div class="complete-screen" id="completeScreen">
+    <div style="font-size:36px">🎉</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 1 Complete!</div>
+    <!-- Day Summary -->
+    <div id="daySummary" style="background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;text-align:left;border:2px solid #A5D6A7"></div>
+    <div style="font-size:14px;color:#546E7A;font-weight:700;margin-bottom:4px">บันทึก Completion Code ของคุณไว้ด้วยนะ!</div>
+    <div class="code-box">
+      <div class="code-label">🔑 Completion Code — Day 1</div>
+      <div class="code-txt" id="codeDisplay">D1-????</div>
+      <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+    </div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">
+      ⚠️ จดหรือ screenshot เก็บไว้!<br>
+      <strong style="color:#2E7D32">Day 2 ปลดล็อกอัตโนมัติแล้วในเครื่องนี้ ✓</strong>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+      <a href="../admin.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
+      <a href="Day2_MimisGardenWalk_A1.html" style="display:inline-block;background:linear-gradient(135deg,#7CB342,#558B2F);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🌸 Day 2 →</a>
+    </div>
+  </div>
+
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+</div>
+
+<script>
+const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🎮'];
+const WORDS=[
+  {e:'cat',t:'แมว',ph:'/kæt/'},
+  {e:'dog',t:'สุนัข',ph:'/dɒɡ/'},
+  {e:'bird',t:'นก',ph:'/bɜːd/'},
+  {e:'fish',t:'ปลา',ph:'/fɪʃ/'},
+  {e:'big',t:'ใหญ่',ph:'/bɪɡ/'},
+  {e:'small',t:'เล็ก',ph:'/smɔːl/'}
+];
+const SS=[
+  "Leo has a cat.",
+  "Nala is small and white.",
+  "Boon is big and brown.",
+  "Leo loves all his animals."
+];
+const DS=[
+  "Leo has a cat.",
+  "Boon is big and brown.",
+  "Leo loves all his animals."
+];
+const STORY="Leo has a cat. Her name is Nala. Nala is small and white. Leo also has a dog. His name is Boon. Boon is big and brown. One day, Leo sees a bird in the garden. The bird is yellow and small. He looks at the pond and sees a fish. It is orange and small. Leo smiles. He loves all his animals.";
+
+const SV={
+  cat:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="55" r="30" fill="#FFCCBC"/><circle cx="50" cy="50" r="28" fill="#FFCCBC"/><polygon points="25,30 35,10 42,30" fill="#FF8A65"/><polygon points="75,30 65,10 58,30" fill="#FF8A65"/><circle cx="40" cy="48" r="5" fill="#37474F"/><circle cx="60" cy="48" r="5" fill="#37474F"/><circle cx="42" cy="46" r="2" fill="#fff"/><circle cx="62" cy="46" r="2" fill="#fff"/><ellipse cx="50" cy="58" rx="5" ry="3" fill="#FF8A65"/><path d="M30 55 Q50 52 70 55" stroke="#BDBDBD" stroke-width="1.5" fill="none"/></svg>`,
+  dog:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="52" r="28" fill="#BCAAA4"/><ellipse cx="30" cy="38" rx="10" ry="14" fill="#A1887F" transform="rotate(-15,30,38)"/><ellipse cx="70" cy="38" rx="10" ry="14" fill="#A1887F" transform="rotate(15,70,38)"/><circle cx="40" cy="50" r="5" fill="#37474F"/><circle cx="60" cy="50" r="5" fill="#37474F"/><circle cx="42" cy="48" r="2" fill="#fff"/><circle cx="62" cy="48" r="2" fill="#fff"/><ellipse cx="50" cy="60" rx="8" ry="5" fill="#FF8A65"/><path d="M38 65 Q50 72 62 65" stroke="#37474F" stroke-width="2" fill="none"/></svg>`,
+  bird:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="58" rx="22" ry="18" fill="#FDD835"/><circle cx="50" cy="38" r="16" fill="#FDD835"/><polygon points="62,36 78,30 62,42" fill="#FF8A65"/><circle cx="44" cy="34" r="4" fill="#37474F"/><circle cx="45" cy="33" r="1.5" fill="#fff"/><path d="M35 70 Q50 80 65 70" stroke="#FF8A65" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+  fish:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="48" cy="50" rx="32" ry="18" fill="#FF8A65"/><polygon points="80,50 95,35 95,65" fill="#FF7043"/><circle cx="28" cy="46" r="5" fill="#37474F"/><circle cx="29" cy="45" r="2" fill="#fff"/><path d="M38 44 Q48 40 58 44" stroke="#fff" stroke-width="1.5" fill="none"/><path d="M38 52 Q48 56 58 52" stroke="#fff" stroke-width="1.5" fill="none"/></svg>`,
+  big:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="60" rx="35" ry="25" fill="#90A4AE"/><circle cx="50" cy="38" r="18" fill="#90A4AE"/><rect x="20" y="78" width="10" height="18" fill="#78909C"/><rect x="35" y="78" width="10" height="18" fill="#78909C"/><rect x="55" y="78" width="10" height="18" fill="#78909C"/><rect x="70" y="78" width="10" height="18" fill="#78909C"/><path d="M32 28 Q50 18 68 28" stroke="#78909C" stroke-width="4" fill="none"/><circle cx="40" cy="38" r="4" fill="#37474F"/><circle cx="60" cy="38" r="4" fill="#37474F"/></svg>`,
+  small:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="55" r="18" fill="#BDBDBD"/><circle cx="50" cy="38" r="12" fill="#BDBDBD"/><ellipse cx="35" cy="30" rx="6" ry="10" fill="#BDBDBD"/><ellipse cx="65" cy="30" rx="6" ry="10" fill="#BDBDBD"/><circle cx="45" cy="37" r="3" fill="#37474F"/><circle cx="55" cy="37" r="3" fill="#37474F"/><path d="M40 60 Q50 65 60 60" fill="none" stroke="#37474F" stroke-width="2"/><path d="M62 55 Q75 52 80 48" stroke="#BDBDBD" stroke-width="2" fill="none"/><path d="M62 58 Q75 58 82 55" stroke="#BDBDBD" stroke-width="2" fill="none"/></svg>`
+};
+
+// ── LOCK SYSTEM ──
+const LOCK_KEY='wla_d1';
+function checkLock(){
+  if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}
+  const done=localStorage.getItem(LOCK_KEY);
+  if(done){
+    document.getElementById('alreadyDone').classList.add('show');
+    document.getElementById('savedCode').textContent=done;
+  }
+  // Day 1 always unlocked
+  unlockContent();
+}
+function unlockContent(){
+  initContent();
+}
+
+// ── INIT ──
+function initContent(){
+  // Vocab grid cards (cover)
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${w.e}')">${SV[w.e]}<div class="ac-en">🔊 ${w.e}</div><div class="ac-ph">${w.ph}</div><div class="ac-th">${w.t}</div><div class="ac-hint">กดฟัง</div></div>`).join('');
+  // Step 1 preview
+  const s1El=document.getElementById('s1A');if(s1El)s1El.innerHTML=WORDS.slice(0,4).map(w=>`<div style="font-size:36px">${SV[w.e]}</div>`).join('');
+
+  // Dots
+  const dotsEl=document.getElementById('dots');
+  STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+
+  // Step 3: Speak rows (built by buildSL on go(3))
+  buildS4();
+
+  loadV();
+  buildG();
+}
+
+function go(n){
+  document.querySelector('.page.on').classList.remove('on');
+  document.getElementById('p'+n).classList.add('on');
+  document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));
+  document.getElementById('lbl').textContent='🐱 Day 1 · '+STEPS[n];
+  if(n===3) buildSL();
+  if(n===4)buildS4();
+  if(n===5) buildG();
+}
+
+// ── TTS ──
+let allV=[],curV=null;
+const vsel=()=>document.getElementById('vsel');
+const rsl=()=>document.getElementById('rsl');
+const vs=()=>document.getElementById('vs');
+function loadV(){
+  const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
+  allV=raw.filter(v=>v.lang.startsWith('en')&&v.localService);if(!allV.length)allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;
+  const sel=vsel();if(!sel)return;
+  sel.innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+  const di=allV.findIndex(v=>v.default);if(di>=0)sel.value=di;
+  curV=allV[parseInt(sel.value)]||allV[0];
+  const vsEl=vs();if(vsEl)vsEl.textContent=`✓ ${allV.length} voices`;
+}
+function setV(i){curV=allV[parseInt(i)]||null;}
+window.speechSynthesis.onvoiceschanged=loadV;
+loadV();setTimeout(loadV,300);setTimeout(loadV,800);setTimeout(loadV,2000);
+function speak(t,cb){
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  // ถ้า voices ยังไม่โหลด ลองโหลดก่อน
+  if(!curV){loadV();}
+  if(curV)u.voice=curV;
+  const rslEl=rsl();u.rate=rslEl?parseFloat(rslEl.value):0.85;
+  u.lang='en-US';
+  if(cb)u.onend=cb;
+  window.speechSynthesis.speak(u);
+}
+function stopAll(){window.speechSynthesis.cancel();}
+
+// ── SCORE ──
+function updScore(n){
+  document.getElementById('totalSc').textContent=n;
+  document.getElementById('sfill').style.width=(n/6*100)+'%';
+  document.getElementById('starDisp').textContent=n<=2?'☆☆☆':n<=4?'⭐☆☆':n<=5?'⭐⭐☆':'⭐⭐⭐';
+}
+
+// ── STEP 2: READ WHOLE STORY — auto-stop + full-transcript scoring ──
+let activeRec2=null, step2Score=null;
+let s2FullText='', s2SilenceTimer=null;
+function finishRec2(){
+  const txt=s2FullText.trim();
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดังๆ';return;}
+  // score each sentence against the full transcript
+  const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  step2Score=avg;
+  const bar=document.getElementById('r2bar');
+  bar.style.width=avg+'%';bar.style.background=avg>=80?'#43A047':avg>=50?'#FFA726':'#E53935';
+  document.getElementById('r2lbl').textContent=avg+'% — '+(avg>=80?'อ่านได้เยี่ยมมาก! 🎉':avg>=50?'ดี! ลองอีกครั้ง':'ฟังแล้วลองใหม่นะ');
+  const stars=avg>=80?'⭐⭐⭐':avg>=60?'⭐⭐☆':'⭐☆☆';
+  const weak=SS.filter((_,i)=>scores[i]<70);
+  const el=document.getElementById('s2summary');if(!el)return;
+  el.style.display='block';
+  el.innerHTML=`<div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:14px 16px;margin-top:10px">
+    <div style="font-size:16px;font-weight:900;color:#1B5E20;margin-bottom:6px">${stars} คะแนน Step 2: ${avg}%</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      ${scores.map((sc,i)=>`<span style="background:${sc>=80?'#C8E6C9':sc>=50?'#FFF9C4':'#FFCDD2'};border-radius:8px;padding:3px 8px;font-size:12px;font-weight:800;color:#37474F">ประโยค ${i+1}: ${sc}%</span>`).join('')}
+    </div>
+    ${weak.length?`<div style="font-size:12px;color:#E65100;font-weight:700">🔁 ฝึกเพิ่ม: "${weak.join('" · "')}"</div>`:'<div style="font-size:12px;color:#2E7D32;font-weight:700">✅ อ่านได้ดีทุกประโยค!</div>'}
+  </div>`;
+}
+function stopRec2(){
+  if(s2SilenceTimer){clearTimeout(s2SilenceTimer);s2SilenceTimer=null;}
+  const btn=document.getElementById('r2recBtn');
+  btn.classList.remove('recording');btn.textContent='🎤 อ่านอีกครั้ง';btn.onclick=startRec2;
+  if(activeRec2){try{activeRec2.stop();}catch(e){}activeRec2=null;}
+  finishRec2();
+}
+function startRec2(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';return;}
+  if(activeRec2){stopRec2();return;}
+  if(window.speechSynthesis.speaking){
+    window.speechSynthesis.cancel();
+    document.getElementById('r2lbl').textContent='⏳ หยุดเสียงแล้ว... รอสักครู่แล้วพูดเลย!';
+    setTimeout(startRec2,1500);return;
+  }
+  s2FullText='';
+  document.getElementById('r2bar').style.width='0%';
+  document.getElementById('s2summary').style.display='none';
+  const btn=document.getElementById('r2recBtn');
+  btn.classList.add('recording');btn.textContent='⏹ หยุด';
+  document.getElementById('r2lbl').textContent='🎙️ กำลังฟัง... อ่านเรื่องออกเสียงได้เลย!';
+  document.getElementById('r2interim').textContent='';
+  const rec=new SR();
+  rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=true;
+  activeRec2=rec;
+  rec.onresult=e=>{
+    let interim='';
+    for(let r of e.results){
+      if(r.isFinal)s2FullText+=r[0].transcript+' ';
+      else interim+=r[0].transcript;
+    }
+    if(interim)document.getElementById('r2interim').textContent='🎙️ "'+interim+'"';
+    // auto-stop 2.5s after last speech (silence detection)
+    if(s2SilenceTimer)clearTimeout(s2SilenceTimer);
+    s2SilenceTimer=setTimeout(stopRec2,2500);
+  };
+  rec.onend=()=>{if(activeRec2){activeRec2=null;finishRec2();}};
+  rec.onerror=e=>{if(e.error==='no-speech')return;activeRec2=null;btn.classList.remove('recording');btn.textContent='🎤 อ่านทั้งเรื่อง';btn.onclick=startRec2;};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 อ่านทั้งเรื่อง';}
+  btn.onclick=startRec2;
+}
+
+// ── STEP 3: SPEAK + RECORD ──
+function buildSL(){
+  document.getElementById('sl').innerHTML=SS.map((s,i)=>`
+    <div class="srow">
+      <div style="font-size:11px;font-weight:900;color:#90A4AE">ประโยคที่ ${i+1}</div>
+      <div class="srow-text">${s}</div>
+      <div style="display:flex;gap:8px">
+        <button class="tts" onclick="speak('${s.replace(/'/g,"\\'")}')">▶ ฟัง</button>
+        <button class="rec-btn" id="rec${i}" onclick="startRec(${i})">🎤 พูด</button>
+      </div>
+    </div>
+    <div class="rec-wrap" id="rw${i}">
+      <div class="score-mini-wrap"><div class="score-mini" id="bar${i}"></div></div>
+      <div class="rec-label" id="lbl${i}">— กด ▶ ฟังก่อน แล้วกด 🎤 พูดตาม —</div>
+      <div class="rec-transcript" id="tr${i}"></div>
+    </div>`).join('');
+}
+
+// Speech Recognition
+let micGranted=false;
+if(navigator.mediaDevices){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
+    s.getTracks().forEach(t=>t.stop());
+    micGranted=true;
+    const el=document.getElementById('micStatus');if(el)el.style.display='block';
+    const el2=document.getElementById('micStatus2');if(el2)el2.style.display='block';
+  }).catch(()=>{});
+}
+let activeRec=null, activeIdx=-1;
+let recScores=new Array(SS.length).fill(null); // track per-sentence scores
+function calcScore(heard,target){
+  const h=heard.toLowerCase().replace(/[.,!?]/g,'').trim();
+  const t=target.toLowerCase().replace(/[.,!?]/g,'').trim();
+  if(h===t)return 100;
+  const hw=h.split(' '), tw=t.split(' ');
+  const match=hw.filter(w=>tw.includes(w)).length;
+  return Math.round(match/tw.length*100);
+}
+function checkSummary3(){
+  const done=recScores.filter(s=>s!==null);
+  if(done.length===0)return;
+  const avg=Math.round(done.reduce((a,b)=>a+b,0)/done.length);
+  const el=document.getElementById('s3summary');
+  if(!el)return;
+  const stars=avg>=80?'⭐⭐⭐':avg>=60?'⭐⭐☆':'⭐☆☆';
+  const weak=SS.filter((_,i)=>recScores[i]!==null&&recScores[i]<70);
+  el.innerHTML=`
+    <div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:14px 16px;margin-top:12px">
+      <div style="font-size:16px;font-weight:900;color:#1B5E20;margin-bottom:6px">${stars} คะแนน Step 3: ${avg}%</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        ${recScores.map((sc,i)=>sc===null?'':`<span style="background:${sc>=80?'#C8E6C9':sc>=50?'#FFF9C4':'#FFCDD2'};border-radius:8px;padding:3px 8px;font-size:12px;font-weight:800;color:#37474F">ประโยค ${i+1}: ${sc}%</span>`).join('')}
+      </div>
+      ${weak.length?`<div style="font-size:12px;color:#E65100;font-weight:700">🔁 ฝึกเพิ่ม: "${weak.join('" · "')}"</div>`:'<div style="font-size:12px;color:#2E7D32;font-weight:700">✅ พูดได้ดีทุกประโยค!</div>'}
+    </div>`;
+  el.style.display='block';
+  // Save progress to localStorage
+  const prog=JSON.parse(localStorage.getItem('wla_progress')||'{}');
+  prog['d1']={step3avg:avg,scores:recScores,date:new Date().toISOString().slice(0,10),day:1,title:"Leo's Big Day"};
+  localStorage.setItem('wla_progress',JSON.stringify(prog));
+}
+function startRec(i){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';return;}
+  if(activeRec){try{activeRec.abort();}catch(e){} activeRec=null;}
+  if(activeIdx>=0){const pb=document.getElementById('rec'+activeIdx);if(pb){pb.classList.remove('recording');pb.textContent='🎤 พูดใหม่';const _ci=activeIdx;pb.onclick=()=>startRec(_ci);}}
+  activeIdx=i;
+  const btn=document.getElementById('rec'+i);
+  btn.classList.add('recording');btn.textContent='⏹ หยุด';
+  document.getElementById('lbl'+i).textContent='🎙️ กำลังฟัง... พูดเลย!';
+  document.getElementById('tr'+i).textContent='';
+  const rec=new SR();
+  rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=false;
+  activeRec=rec;let finalResult='';
+  rec.onspeechstart=()=>{document.getElementById('tr'+i).textContent='🎙️ กำลังฟัง...';};
+  rec.onresult=e=>{let interim='',final='';for(let r of e.results){if(r.isFinal)final+=r[0].transcript;else interim+=r[0].transcript;}if(interim)document.getElementById('tr'+i).textContent='🎙️ "'+interim+'"';if(final)finalResult=final;};
+  rec.onend=()=>{
+    if(activeRec!==rec){btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);return;}
+    btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);activeRec=null;
+    const text=finalResult.trim();
+    if(text){
+      const sc=calcScore(text,SS[i]);
+      recScores[i]=sc; // track score
+      const bar=document.getElementById('bar'+i);bar.style.width=sc+'%';bar.style.background=sc>=80?'#43A047':sc>=50?'#FFA726':'#E53935';
+      document.getElementById('lbl'+i).textContent=sc+'% — '+(sc>=80?'เยี่ยม! 🎉':sc>=50?'ดี ลองอีกครั้ง':'ฟังแล้วพูดอีกครั้ง');
+      document.getElementById('tr'+i).textContent='ได้ยิน: "'+text+'"';
+      checkSummary3();
+    } else {
+      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดังๆ';document.getElementById('tr'+i).textContent='';
+    }
+  };
+  rec.onerror=e=>{if(e.error==='no-speech')return;if(activeRec===rec)activeRec=null;btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);document.getElementById('lbl'+i).textContent='Error: '+e.error+' — ลองใหม่';};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 พูด';}
+  btn.onclick=()=>{try{if(activeRec)activeRec.stop();}catch(e){}btn.onclick=()=>startRec(i);};
+}
+
+// ── STEP 4: LISTEN + ARRANGE ──
+let s4picked=[],s4done=[],step4Score=null;
+function _s4d(){return typeof DS!=='undefined'?DS:(typeof DICT!=='undefined'?DICT:[]);}
+function buildS4(){
+  const data=_s4d();
+  s4picked=data.map(()=>[]);s4done=data.map(()=>false);
+  const area=document.getElementById('s4area');if(!area)return;
+  area.innerHTML=data.map((sent,i)=>{
+    const words=sent.replace(/[.,!?]/g,'').split(' ');
+    const sh=[...words].sort(()=>Math.random()-.5);
+    return `<div style="background:#fff;border:2px solid #FFE082;border-radius:14px;padding:10px 12px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <button class="tts" onclick="_s4speak(${i})" style="padding:5px 11px;font-size:13px">&#9654; ฟัง</button>
+        <span style="font-size:12px;color:#78909C;font-weight:700">ประโยคที่ ${i+1}</span>
+        <span id="s4fb${i}" style="font-size:12px;font-weight:800;margin-left:auto"></span>
+      </div>
+      <div id="s4tgt${i}" style="min-height:34px;background:#FFF8E1;border-radius:8px;padding:5px 9px;border:1.5px dashed #FFB74D;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;align-items:center"><span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span></div>
+      <div id="s4bank${i}" style="display:flex;flex-wrap:wrap;gap:6px">${sh.map((w)=>`<button class="s4w" data-si="${i}" data-word="${w}" onclick="pickS4(+this.dataset.si,this,this.dataset.word)">${w}</button>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+function _s4speak(i){speak(_s4d()[i]);}
+function pickS4(i,btn,word){
+  if(s4done[i])return;
+  s4picked[i].push(word);btn.disabled=true;btn.classList.add('used');
+  _renderS4(i);
+}
+function unpickS4(i,j){
+  if(s4done[i])return;
+  const w=s4picked[i].splice(j,1)[0];
+  const bank=document.getElementById('s4bank'+i);
+  for(const b of bank.querySelectorAll('.s4w')){if(b.dataset.word===w&&b.disabled){b.disabled=false;b.classList.remove('used');break;}}
+  _renderS4(i);
+}
+function _renderS4(i){
+  const tgt=document.getElementById('s4tgt'+i);if(!tgt)return;
+  tgt.innerHTML=s4picked[i].length
+    ?s4picked[i].map((w,j)=>`<span onclick="unpickS4(${i},${j})" style="background:#FFF3E0;border:1.5px solid #FFB74D;border-radius:6px;padding:4px 9px;font-size:13px;font-weight:800;color:#E65100;cursor:pointer">${w}</span>`).join('')
+    :'<span style="font-size:11px;color:#BDBDBD;font-weight:700">เรียงคำที่นี่...</span>';
+}
+function checkS4(){
+  const data=_s4d();let ok=0;
+  data.forEach((sent,i)=>{
+    const exp=sent.replace(/[.,!?]/g,'').split(' ');
+    const good=JSON.stringify(s4picked[i])===JSON.stringify(exp);
+    const fb=document.getElementById('s4fb'+i);
+    if(fb){fb.textContent=good?'✓ ถูกต้อง!':'✗ ลองใหม่';fb.style.color=good?'#2E7D32':'#C62828';}
+    if(good){s4done[i]=true;}
+    if(good)ok++;
+  });
+  step4Score=Math.round(ok/data.length*100);
+  speakFb(ok===data.length?'perfect':ok>0?'correct':'wrong');
+}
+
+// ── FEEDBACK SOUND ──
+function speakFb(type){
+  const msgs={
+    correct:['Correct!','Great job!','Well done!','Awesome!'],
+    wrong:  ['Try again!','Almost!','Keep trying!'],
+    perfect:['Perfect!','Amazing! All correct!','Excellent!']
+  };
+  const list=msgs[type]||msgs.correct;
+  const txt=list[Math.floor(Math.random()*list.length)];
+  const u=new SpeechSynthesisUtterance(txt);
+  if(curV)u.voice=curV;
+  u.rate=1.0;u.lang='en-US';
+  window.speechSynthesis.speak(u);
+}
+
+// ── STEP 5: WORD MATCH ──
+let selE=null,selT=null,matchScore=0,step5Score=null;
+function buildG(){
+  matchScore=0;selE=null;selT=null;
+  document.getElementById('sc').textContent=0;
+  document.getElementById('gfill').style.width='0%';
+  document.getElementById('pct').textContent='0%';
+  document.getElementById('completeScreen').classList.remove('show');
+  const sh=[...WORDS].sort(()=>Math.random()-.5);
+  const thSh=[...WORDS].sort(()=>Math.random()-.5);
+  document.getElementById('ec').innerHTML=sh.map(w=>`<div class="mw" id="e_${w.e}" onclick="pickE('${w.e}')">${w.e}</div>`).join('');
+  document.getElementById('tc').innerHTML=thSh.map(w=>`<div class="mw" id="t_${w.e}" onclick="pickT('${w.e}')">${w.t}</div>`).join('');
+}
+function pickE(k){
+  if(document.getElementById('e_'+k).classList.contains('cor'))return;
+  document.querySelectorAll('#ec .mw.sel').forEach(el=>el.classList.remove('sel'));
+  selE=k;document.getElementById('e_'+k).classList.add('sel');
+  if(selT)checkMatch();
+}
+function pickT(k){
+  if(document.getElementById('t_'+k).classList.contains('cor'))return;
+  document.querySelectorAll('#tc .mw.sel').forEach(el=>el.classList.remove('sel'));
+  selT=k;document.getElementById('t_'+k).classList.add('sel');
+  if(selE)checkMatch();
+}
+function checkMatch(){
+  const eEl=document.getElementById('e_'+selE);
+  const tEl=document.getElementById('t_'+selT);
+  if(selE===selT){
+    eEl.classList.remove('sel');eEl.classList.add('cor');
+    tEl.classList.remove('sel');tEl.classList.add('cor');
+    matchScore++;
+    document.getElementById('sc').textContent=matchScore;
+    const pct=Math.round(matchScore/6*100);
+    document.getElementById('gfill').style.width=pct+'%';
+    document.getElementById('pct').textContent=pct+'%';
+    updScore(matchScore);
+    step5Score=Math.round(matchScore/WORDS.length*100);
+    speakFb('correct');
+    if(matchScore>=4)setTimeout(showCompletion,400);
+  } else {
+    eEl.classList.add('bad');tEl.classList.add('bad');
+    speakFb('wrong');
+    setTimeout(()=>{eEl.classList.remove('sel','bad');tEl.classList.remove('sel','bad');},600);
+  }
+  selE=null;selT=null;
+}
+
+// ── COMPLETION ──
+function generateCode(day){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='D'+day+'-';for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code;}
+function showCompletion(){
+  let code=localStorage.getItem(LOCK_KEY);
+  if(!code){code=generateCode(1);localStorage.setItem(LOCK_KEY,code);syncToCloud(1,code);}
+  document.getElementById('codeDisplay').textContent=code;
+  document.getElementById('savedCode').textContent=code;
+  document.getElementById('alreadyDone').classList.add('show');
+  buildDaySummary();
+  document.getElementById('completeScreen').classList.add('show');
+}
+function buildDaySummary(){
+  const el=document.getElementById('daySummary');if(!el)return;
+  const s3scores=recScores.filter(s=>s!==null);
+  const s3avg=s3scores.length?Math.round(s3scores.reduce((a,b)=>a+b,0)/s3scores.length):null;
+  const steps=[
+    {label:'📖 Step 2 อ่านออกเสียง', val:step2Score},
+    {label:'🗣️ Step 3 พูดตาม',        val:s3avg},
+    {label:'✏️ Step 4 Dictation',     val:step4Score},
+    {label:'🎮 Step 5 Word Match',    val:step5Score},
+  ];
+  const scores=steps.map(s=>s.val).filter(s=>s!==null);
+  const overall=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+  const stars=overall>=80?'⭐⭐⭐':overall>=60?'⭐⭐☆':overall!==null?'⭐☆☆':'';
+  const weakIdx=recScores.map((sc,i)=>sc!==null&&sc<70?i:-1).filter(i=>i>=0);
+  const weakSentences=weakIdx.map(i=>`"${SS[i]}"`).join(', ');
+  const barRow=({label,val})=>val===null?'':`
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:11px;font-weight:800;color:#546E7A;width:130px;flex-shrink:0">${label}</span>
+      <div style="flex:1;height:9px;background:#E0E0E0;border-radius:5px;overflow:hidden">
+        <div style="width:${val}%;height:100%;background:${val>=80?'#43A047':val>=60?'#FFA726':'#E53935'};border-radius:5px"></div>
+      </div>
+      <span style="font-size:13px;font-weight:900;min-width:36px;text-align:right;color:${val>=80?'#2E7D32':val>=60?'#E65100':'#C62828'}">${val}%</span>
+    </div>`;
+  el.innerHTML=`
+    <div style="font-size:14px;font-weight:900;color:#1B5E20;margin-bottom:10px">${stars} สรุปผลการเรียนวันนี้ ${overall!==null?'(เฉลี่ย '+overall+'%)':''}</div>
+    <div style="display:flex;flex-direction:column;gap:7px">${steps.map(barRow).join('')}</div>
+    ${weakSentences?`<div style="margin-top:10px;background:#FFF8E1;border-radius:10px;padding:9px 12px;font-size:12px;color:#E65100;font-weight:700">🔁 <strong>ฝึกเพิ่มนะ:</strong> ${weakSentences}</div>`
+    :s3scores.length?`<div style="margin-top:10px;background:#E8F5E9;border-radius:10px;padding:9px 12px;font-size:12px;color:#2E7D32;font-weight:700">✅ ทำได้ดีทุกขั้นตอน วันนี้เก่งมาก!</div>`:''}
+    ${scores.length===0?'<div style="color:#90A4AE;font-size:12px;margin-top:6px">ลองกลับไปทำ Step 2-4 ด้วยนะ เพื่อดูคะแนน!</div>':''}
+  `;
+  // Save all scores to localStorage
+  const prog=JSON.parse(localStorage.getItem('wla_progress')||'{}');
+  prog['d1']={
+    step2:step2Score, step3:s3avg, step4:step4Score, step5:step5Score,
+    overall, date:new Date().toISOString().slice(0,10),
+    day:1, week:1, month:new Date().getMonth()+1, year:new Date().getFullYear(),
+    title:"Leo's Big Day"
+  };
+  localStorage.setItem('wla_progress',JSON.stringify(prog));
+}
+function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
+
+// ── API SYNC ──
+const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
+function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+
+// ── START ──
+checkLock();
+</script>
+
+<!-- mainContent wrapper needed for lock system -->
+<script>
+// Day 1 has no lock — wrap content check
+document.addEventListener('DOMContentLoaded',()=>{
+  if(!document.getElementById('mainContent')){
+    // already visible, just run
+  }
+});
+</script>
+</body>
+</html>
