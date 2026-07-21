@@ -721,12 +721,12 @@ function generateCode(day){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+
 // ── Coding Bonus (robot) ──
 var cbMap=[['S','.','.','#','.'],['.','#','.','#','.'],['.','#','.','.','.'],['.','.','.','#','.'],['#','.','.','.','G']];
 var cbStart={r:0,c:0}, cbPos={r:0,c:0}, cbProgram=[], cbTargetWord=null;
-var CB_ARR={up:'\u2b06\ufe0f',down:'\u2b07\ufe0f',left:'\u2b05\ufe0f',right:'\u27a1\ufe0f'};
+var CB_ARR={up:'⬆️',down:'⬇️',left:'⬅️',right:'➡️'};
 function cbInit(){
   cbProgram=[]; cbPos={r:0,c:0};
   var w=WORDS[Math.floor(Math.random()*WORDS.length)];
   cbTargetWord=w;
-  document.getElementById('cbGoal').innerHTML='\U0001f3af Code \U0001f981 to '+(w.icon||'\u2b50')+' <strong>'+w.e+'</strong>';
+  document.getElementById('cbGoal').innerHTML='🎯 Code 🦁 to '+(w.icon||'⭐')+' <strong>'+w.e+'</strong>';
   cbRenderProg(); cbDraw(); document.getElementById('cbMsg').textContent='';
 }
 function cbDraw(){
@@ -734,31 +734,31 @@ function cbDraw(){
   for(var r=0;r<5;r++)for(var c=0;c<5;c++){
     var d=document.createElement('div');
     d.style.cssText='aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:22px;background:'+(cbMap[r][c]==='#'?'#CFD8DC':'#F1F8E9')+';border:1.5px solid '+(cbMap[r][c]==='#'?'#B0BEC5':'#DCEDC8');
-    if(cbPos.r===r&&cbPos.c===c)d.textContent='\U0001f981';
-    else if(cbMap[r][c]==='G')d.textContent=(cbTargetWord&&cbTargetWord.icon)||'\u2b50';
-    else if(cbMap[r][c]==='#')d.textContent='\U0001f9f1';
+    if(cbPos.r===r&&cbPos.c===c)d.textContent='🦁';
+    else if(cbMap[r][c]==='G')d.textContent=(cbTargetWord&&cbTargetWord.icon)||'⭐';
+    else if(cbMap[r][c]==='#')d.textContent='🧱';
     g.appendChild(d);
   }
 }
 function cbAdd(dir){cbProgram.push(dir);cbRenderProg();}
 function cbRenderProg(){
   var p=document.getElementById('cbProg');p.innerHTML='';
-  if(!cbProgram.length){p.innerHTML='<span style="color:#B0BEC5;font-size:12px;font-weight:700">\u2b07\ufe0f Tap arrows to build code</span>';return;}
+  if(!cbProgram.length){p.innerHTML='<span style="color:#B0BEC5;font-size:12px;font-weight:700">Tap arrows to build code</span>';return;}
   cbProgram.forEach(function(d,i){var s=document.createElement('span');s.textContent=CB_ARR[d];s.style.cssText='background:#E0F2F1;border:2px solid #4DB6AC;border-radius:8px;padding:4px 8px;font-size:16px;cursor:pointer';s.onclick=function(){cbProgram.splice(i,1);cbRenderProg();};p.appendChild(s);});
 }
 function cbClear(){cbProgram=[];cbPos=Object.assign({},cbStart);cbRenderProg();cbDraw();document.getElementById('cbMsg').textContent='';}
 function cbRun(){
   cbPos=Object.assign({},cbStart);cbDraw();
-  var msg=document.getElementById('cbMsg');msg.textContent='\U0001f916 Running...';
+  var msg=document.getElementById('cbMsg');msg.textContent='🤖 Running...';
   var i=0;
   function stepFn(){
-    if(i>=cbProgram.length){msg.textContent='\U0001f914 Not there yet \u2014 add more steps!';return;}
+    if(i>=cbProgram.length){msg.textContent='🤔 Not there yet — add more steps!';return;}
     var step=cbProgram[i++];var nr=cbPos.r,nc=cbPos.c;
     if(step==='up')nr--;if(step==='down')nr++;if(step==='left')nc--;if(step==='right')nc++;
-    if(nr<0||nr>4||nc<0||nc>4){msg.textContent='\U0001f4a5 Off the grid! Try again';return;}
-    if(cbMap[nr][nc]==='#'){msg.textContent='\U0001f9f1 Hit a wall! Fix your code';return;}
+    if(nr<0||nr>4||nc<0||nc>4){msg.textContent='💥 Off the grid! Try again';return;}
+    if(cbMap[nr][nc]==='#'){msg.textContent='🧱 Hit a wall! Fix your code';return;}
     cbPos={r:nr,c:nc};cbDraw();
-    if(cbMap[nr][nc]==='G'){msg.innerHTML='\U0001f389 Great job! \U0001f981 found <strong>'+cbTargetWord.e+'</strong>!';return;}
+    if(cbMap[nr][nc]==='G'){msg.innerHTML='🎉 Great job! 🦁 found <strong>'+cbTargetWord.e+'</strong>!';return;}
     setTimeout(stepFn,420);
   }
   setTimeout(stepFn,420);
