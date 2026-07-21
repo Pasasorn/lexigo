@@ -260,7 +260,23 @@ function initContent(){
 function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🏢 Day 53 · '+STEPS[n];if(n===4)buildS4();
   if(n===5)buildG();}
 let allV=[],curV=null;
-function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');const di=allV.findIndex(v=>v.default);if(di>=0)document.getElementById('vsel').value=di;curV=allV[parseInt(document.getElementById('vsel').value)]||allV[0];document.getElementById('vs').textContent=`✓ ${allV.length} voices`;}
+function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
+  const BAD=/(whisper|bad news|good news|boing|bubbles|bells|cellos|deranged|jester|organ|pipe organ|superstar|trinoids|wobble|zarvox|albert|bahh|hysterical|novelty|zombie|ghost|robot|sing|song|music|bell)/i;
+  let en=raw.filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
+  let good=en.filter(v=>!BAD.test(v.name));
+  if(!good.length)good=en.length?en:raw;
+  const rank=v=>{const n=v.name.toLowerCase();let s=0;
+    if(/google|natural|neural|premium|enhanced|online|siri/.test(n))s+=6;
+    if(/microsoft/.test(n))s+=3;
+    if(/samantha|daniel|karen|moira|tessa|serena|aaron|nicky|allison|ava|joanna/.test(n))s+=2;
+    const lg=v.lang.toLowerCase();
+    if(lg==='en-us')s+=2;else if(lg==='en-gb')s+=1;
+    return -s;};
+  good.sort((a,b)=>rank(a)-rank(b));
+  allV=good;
+  document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+  curV=allV[0];document.getElementById('vsel').value=0;
+  document.getElementById('vs').textContent=`✓ ${allV.length} เสียงคน`;}
 function setV(i){curV=allV[parseInt(i)]||null;}
 window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,400);setTimeout(loadV,1200);
 function speak(t){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(curV)u.voice=curV;u.rate=parseFloat(document.getElementById('rsl').value);window.speechSynthesis.speak(u);}
@@ -349,7 +365,7 @@ function g5clearAns(){g5typed=[];g5updateAns();document.getElementById('g5feedba
 function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
 
 function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${s}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}
-function calcScore(heard,target){const hw=heard.toLowerCase().split(/\s+/).filter(Boolean),tw=target.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);if(!tw.length)return 0;return Math.min(100,Math.round(hw.filter(w=>tw.includes(w)).length/tw.length*100));}
+function calcScore(heard,target){const norm=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);const hw=new Set(norm(heard)),tw=norm(target);if(!tw.length)return 0;const hit=tw.filter(w=>hw.has(w)).length;return Math.min(100,Math.round(hit/tw.length*100));}
 function checkSummary3(){const valid=recScores.slice(0,SS.length).filter(x=>x!==null);if(!valid.length)return;const avg=Math.round(valid.reduce((a,b)=>a+b,0)/valid.length);const sumEl=document.getElementById('s3summary');sumEl.style.display='block';sumEl.innerHTML=`<div style="background:#E3F2FD;border:2px solid #90CAF9;border-radius:14px;padding:12px 14px;margin-top:10px"><div style="font-size:13px;font-weight:900;color:#1565C0;margin-bottom:5px">📊 Step 3 Result (${valid.length}/${SS.length})</div><div style="background:#fff;border-radius:6px;overflow:hidden;height:9px"><div style="height:100%;width:${avg}%;background:${avg>=80?'#43A047':avg>=50?'#F9A825':'#E53935'};transition:width .5s"></div></div><div style="font-size:12px;font-weight:800;color:${avg>=80?'#2E7D32':avg>=50?'#E65100':'#C62828'};margin-top:4px">Avg: ${avg}%</div></div>`;updScore(Math.round(avg/100*2)+2,6);}
 function startRec(i){if(activeRec){activeRec.stop();activeRec=null;if(activeIdx===i){document.getElementById('rb'+i).classList.remove('recording');document.getElementById('rb'+i).textContent='🎤 Speak';return;}}if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){document.getElementById('noRec').style.display='block';return;}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;activeRec=new SR();activeIdx=i;activeRec.lang='en-US';activeRec.continuous=false;activeRec.interimResults=true;const target=SS[i];let heard='';activeRec.onresult=e=>{let fin='',intr='';for(let r=e.resultIndex;r<e.results.length;r++){if(e.results[r].isFinal)fin+=e.results[r][0].transcript;else intr+=e.results[r][0].transcript;}if(fin)heard+=fin;document.getElementById('rt'+i).textContent='Heard: '+(heard||intr);};activeRec.onend=()=>{const sc=calcScore(heard,target);recScores[i]=sc;document.getElementById('sm'+i).style.width=sc+'%';document.getElementById('sm'+i).style.background=sc>=80?'#43A047':sc>=50?'#F9A825':'#E53935';document.getElementById('rl'+i).textContent=`${sc}% ${sc>=80?'🌟 Perfect!':sc>=50?'👍 Good!':'💪 Try again!'}`;document.getElementById('rb'+i).classList.remove('recording');document.getElementById('rb'+i).textContent='🎤 Speak';activeRec=null;activeIdx=-1;checkSummary3();};activeRec.onerror=()=>{document.getElementById('rb'+i).classList.remove('recording');document.getElementById('rb'+i).textContent='🎤 Speak';activeRec=null;activeIdx=-1;};activeRec.start();document.getElementById('rb'+i).classList.add('recording');document.getElementById('rb'+i).textContent='■ Stop';document.getElementById('rl'+i).textContent='🎤 Listening...';document.getElementById('micStatus').style.display='block';}
 navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{s.getTracks().forEach(t=>t.stop());document.getElementById('micStatus').style.display='block';}).catch(()=>{});

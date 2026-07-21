@@ -202,7 +202,23 @@ function initContent(){
 }
 function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🍰 Day 10 · '+STEPS[n];}
 let allV=[],curV=null;
-function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');const di=allV.findIndex(v=>v.default);if(di>=0)document.getElementById('vsel').value=di;curV=allV[parseInt(document.getElementById('vsel').value)]||allV[0];document.getElementById('vs').textContent=`✓ ${allV.length} voices`;}
+function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
+  const BAD=/(whisper|bad news|good news|boing|bubbles|bells|cellos|deranged|jester|organ|pipe organ|superstar|trinoids|wobble|zarvox|albert|bahh|hysterical|novelty|zombie|ghost|robot|sing|song|music|bell)/i;
+  let en=raw.filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
+  let good=en.filter(v=>!BAD.test(v.name));
+  if(!good.length)good=en.length?en:raw;
+  const rank=v=>{const n=v.name.toLowerCase();let s=0;
+    if(/google|natural|neural|premium|enhanced|online|siri/.test(n))s+=6;
+    if(/microsoft/.test(n))s+=3;
+    if(/samantha|daniel|karen|moira|tessa|serena|aaron|nicky|allison|ava|joanna/.test(n))s+=2;
+    const lg=v.lang.toLowerCase();
+    if(lg==='en-us')s+=2;else if(lg==='en-gb')s+=1;
+    return -s;};
+  good.sort((a,b)=>rank(a)-rank(b));
+  allV=good;
+  document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+  curV=allV[0];document.getElementById('vsel').value=0;
+  document.getElementById('vs').textContent=`✓ ${allV.length} เสียงคน`;}
 function setV(i){curV=allV[parseInt(i)]||null;}
 window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,400);setTimeout(loadV,1200);
 function speak(t){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(curV)u.voice=curV;u.rate=parseFloat(document.getElementById('rsl').value);u.onstart=()=>{document.getElementById('vs').textContent='🔊 speaking...'};u.onend=()=>{document.getElementById('vs').textContent=`✓ ${allV.length} voices`};window.speechSynthesis.speak(u);}
@@ -400,14 +416,7 @@ function buildSL(){
       <div class="rec-transcript" id="tr${i}"></div>
     </div>`).join('');
 }
-function calcScore(heard,target){
-  const h=heard.toLowerCase().replace(/[.,!?]/g,'').trim();
-  const t=target.toLowerCase().replace(/[.,!?]/g,'').trim();
-  if(h===t)return 100;
-  const hw=h.split(' '),tw=t.split(' ');
-  const match=hw.filter(w=>tw.includes(w)).length;
-  return Math.round(match/tw.length*100);
-}
+function calcScore(heard,target){const norm=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);const hw=new Set(norm(heard)),tw=norm(target);if(!tw.length)return 0;const hit=tw.filter(w=>hw.has(w)).length;return Math.min(100,Math.round(hit/tw.length*100));}
 let recScores=new Array(99).fill(null);
 function checkSummary3(){
   const done=recScores.slice(0,SS.length).filter(s=>s!==null);

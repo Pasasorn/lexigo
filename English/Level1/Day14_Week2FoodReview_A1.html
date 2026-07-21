@@ -369,11 +369,16 @@ let sbList=[],sbIdx=0,sbSelected=[];
 const synth=window.speechSynthesis;
 let voices=[];
 function loadVoices(){
-  voices=synth.getVoices().filter(v=>v.lang.startsWith('en'));
-  const sel=document.getElementById('vsel');
-  if(!sel)return;
+  const raw=synth.getVoices(); if(!raw.length) return;
+  const BAD=/(whisper|bad news|good news|boing|bubbles|bells|cellos|deranged|jester|organ|superstar|trinoids|wobble|zarvox|albert|bahh|hysterical|novelty|zombie|ghost|robot|sing|song|music|bell)/i;
+  let en=raw.filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
+  let good=en.filter(v=>!BAD.test(v.name)); if(!good.length)good=en.length?en:raw;
+  const rank=v=>{const n=v.name.toLowerCase();let s=0;if(/google|natural|neural|premium|enhanced|online|siri/.test(n))s+=6;if(/microsoft/.test(n))s+=3;if(/samantha|daniel|karen|moira|tessa|serena|allison|ava/.test(n))s+=2;const lg=v.lang.toLowerCase();if(lg==='en-us')s+=2;else if(lg==='en-gb')s+=1;return -s;};
+  good.sort((a,b)=>rank(a)-rank(b)); voices=good;
+  const sel=document.getElementById('vsel'); if(!sel)return;
   sel.innerHTML='';
   voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.name.slice(0,20);sel.appendChild(o);});
+  sel.value=0;
   document.getElementById('vs').textContent=voices.length?'✅':'❌';
 }
 if(synth.onvoiceschanged!==undefined)synth.onvoiceschanged=loadVoices;

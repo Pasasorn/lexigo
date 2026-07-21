@@ -310,16 +310,16 @@ const STORY="It is bedtime. Leo puts his toy on the shelf. Mimi hugs her soft pi
 // ── TTS ──────────────────────────────────────────────
 let voices=[];
 function loadVoices(){
-  voices=window.speechSynthesis.getVoices();
-  const sel=document.getElementById('vsel');
+  const raw=window.speechSynthesis.getVoices(); if(!raw.length)return;
+  const BAD=/(whisper|bad news|good news|boing|bubbles|bells|cellos|deranged|jester|organ|superstar|trinoids|wobble|zarvox|albert|bahh|hysterical|novelty|zombie|ghost|robot|sing|song|music|bell)/i;
+  let en=raw.filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
+  let good=en.filter(v=>!BAD.test(v.name)); if(!good.length)good=en.length?en:raw;
+  const rank=v=>{const n=v.name.toLowerCase();let s=0;if(/google|natural|neural|premium|enhanced|online|siri/.test(n))s+=6;if(/microsoft/.test(n))s+=3;if(/samantha|daniel|karen|moira|tessa|serena|zira|libby/.test(n))s+=2;const lg=v.lang.toLowerCase();if(lg==='en-us')s+=2;else if(lg==='en-gb')s+=1;return -s;};
+  good.sort((a,b)=>rank(a)-rank(b)); voices=good;
+  const sel=document.getElementById('vsel'); if(!sel)return;
   sel.innerHTML='';
-  const pool=voices.filter(v=>v.lang.startsWith('en')&&v.localService);
-  pool.forEach((v,i)=>{
-    const o=document.createElement('option');
-    o.value=i;o.textContent=v.name+' ('+v.lang+')';
-    sel.appendChild(o);
-    if(v.name.includes('Zira')||v.name.includes('Libby'))sel.value=i;
-  });
+  voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.name+' ('+v.lang+')';sel.appendChild(o);});
+  sel.value=0;
 }
 if(typeof speechSynthesis!=='undefined'){speechSynthesis.onvoiceschanged=loadVoices;loadVoices();}
 function setV(i){}
@@ -671,13 +671,7 @@ function updScore(n){
   const sc=document.getElementById('totalSc');if(sc)sc.textContent=n;
   const sd=document.getElementById('starDisp');if(sd)sd.textContent=pct>=80?'⭐⭐⭐':pct>=50?'⭐⭐☆':'⭐☆☆';
 }
-function calcScore(heard,target){
-  const h=heard.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);
-  const t=target.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);
-  if(!t.length)return 0;
-  let match=0;t.forEach(w=>{const i=h.indexOf(w);if(i>=0){match++;h.splice(i,1);}});
-  return Math.round(match/t.length*100);
-}
+function calcScore(heard,target){const norm=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);const hw=new Set(norm(heard)),tw=norm(target);if(!tw.length)return 0;const hit=tw.filter(w=>hw.has(w)).length;return Math.min(100,Math.round(hit/tw.length*100));}
 
 // ── INIT ─────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{

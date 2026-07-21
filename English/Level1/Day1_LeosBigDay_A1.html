@@ -322,15 +322,23 @@ let allV=[],curV=null;
 const vsel=()=>document.getElementById('vsel');
 const rsl=()=>document.getElementById('rsl');
 const vs=()=>document.getElementById('vs');
-function loadV(){
-  const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
-  allV=raw.filter(v=>v.lang.startsWith('en')&&v.localService);if(!allV.length)allV=raw.filter(v=>v.lang.startsWith('en'));if(!allV.length)allV=raw;
-  const sel=vsel();if(!sel)return;
-  sel.innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');
-  const di=allV.findIndex(v=>v.default);if(di>=0)sel.value=di;
-  curV=allV[parseInt(sel.value)]||allV[0];
-  const vsEl=vs();if(vsEl)vsEl.textContent=`✓ ${allV.length} voices`;
-}
+function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
+  const BAD=/(whisper|bad news|good news|boing|bubbles|bells|cellos|deranged|jester|organ|pipe organ|superstar|trinoids|wobble|zarvox|albert|bahh|hysterical|novelty|zombie|ghost|robot|sing|song|music|bell)/i;
+  let en=raw.filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
+  let good=en.filter(v=>!BAD.test(v.name));
+  if(!good.length)good=en.length?en:raw;
+  const rank=v=>{const n=v.name.toLowerCase();let s=0;
+    if(/google|natural|neural|premium|enhanced|online|siri/.test(n))s+=6;
+    if(/microsoft/.test(n))s+=3;
+    if(/samantha|daniel|karen|moira|tessa|serena|aaron|nicky|allison|ava|joanna/.test(n))s+=2;
+    const lg=v.lang.toLowerCase();
+    if(lg==='en-us')s+=2;else if(lg==='en-gb')s+=1;
+    return -s;};
+  good.sort((a,b)=>rank(a)-rank(b));
+  allV=good;
+  document.getElementById('vsel').innerHTML=allV.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+  curV=allV[0];document.getElementById('vsel').value=0;
+  document.getElementById('vs').textContent=`✓ ${allV.length} เสียงคน`;}
 function setV(i){curV=allV[parseInt(i)]||null;}
 window.speechSynthesis.onvoiceschanged=loadV;
 loadV();setTimeout(loadV,300);setTimeout(loadV,800);setTimeout(loadV,2000);
@@ -452,14 +460,7 @@ if(navigator.mediaDevices){
 }
 let activeRec=null, activeIdx=-1;
 let recScores=new Array(SS.length).fill(null); // track per-sentence scores
-function calcScore(heard,target){
-  const h=heard.toLowerCase().replace(/[.,!?]/g,'').trim();
-  const t=target.toLowerCase().replace(/[.,!?]/g,'').trim();
-  if(h===t)return 100;
-  const hw=h.split(' '), tw=t.split(' ');
-  const match=hw.filter(w=>tw.includes(w)).length;
-  return Math.round(match/tw.length*100);
-}
+function calcScore(heard,target){const norm=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);const hw=new Set(norm(heard)),tw=norm(target);if(!tw.length)return 0;const hit=tw.filter(w=>hw.has(w)).length;return Math.min(100,Math.round(hit/tw.length*100));}
 function checkSummary3(){
   const done=recScores.filter(s=>s!==null);
   if(done.length===0)return;
