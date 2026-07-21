@@ -246,6 +246,72 @@ const DS=[
 ];
 const STORY="Mimi has a strong body! She has soft hair on her head. She waves her hand and lifts her two arms. Her legs are strong. Mimi runs fast on her two feet. Look at me go, says Mimi!";
 const PREV_KEY='wla_d31',MY_KEY='wla_d32',PREV_PFX='D31-',MY_DAY=32;
+let activeRec2=null, step2Score=null;
+let s2FullText='', s2SilenceTimer=null;
+function finishRec2(){
+  const txt=s2FullText.trim();
+  if(!txt){document.getElementById('r2lbl').textContent='No sound heard — tap again and speak up';return;}
+  // score each sentence against the full transcript
+  const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  step2Score=avg;
+  const bar=document.getElementById('r2bar');
+  bar.style.width=avg+'%';bar.style.background=avg>=80?'#43A047':avg>=50?'#FFA726':'#E53935';
+  document.getElementById('r2lbl').textContent=avg+'% — '+(avg>=80?'Excellent reading! 🎉':avg>=50?'Good! Try again':'Listen and try again');
+  const stars=avg>=80?'⭐⭐⭐':avg>=60?'⭐⭐☆':'⭐☆☆';
+  const weak=SS.filter((_,i)=>scores[i]<70);
+  const el=document.getElementById('s2summary');if(!el)return;
+  el.style.display='block';
+  el.innerHTML=`<div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:14px;padding:14px 16px;margin-top:10px">
+    <div style="font-size:16px;font-weight:900;color:#1B5E20;margin-bottom:6px">${stars} Step 2 Score: ${avg}%</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      ${scores.map((sc,i)=>`<span style="background:${sc>=80?'#C8E6C9':sc>=50?'#FFF9C4':'#FFCDD2'};border-radius:8px;padding:3px 8px;font-size:12px;font-weight:800;color:#37474F">Sentence ${i+1}: ${sc}%</span>`).join('')}
+    </div>
+    ${weak.length?`<div style="font-size:12px;color:#E65100;font-weight:700">🔁 Practice: "${weak.join('" · "')}"</div>`:'<div style="font-size:12px;color:#2E7D32;font-weight:700">✅ Great reading!</div>'}
+  </div>`;
+}
+function stopRec2(){
+  if(s2SilenceTimer){clearTimeout(s2SilenceTimer);s2SilenceTimer=null;}
+  const btn=document.getElementById('r2recBtn');
+  btn.classList.remove('recording');btn.textContent='🎤 Read again';btn.onclick=startRec2;
+  if(activeRec2){try{activeRec2.stop();}catch(e){}activeRec2=null;}
+  finishRec2();
+}
+function startRec2(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('noRec').style.display='block';return;}
+  if(activeRec2){stopRec2();return;}
+  if(window.speechSynthesis.speaking){
+    window.speechSynthesis.cancel();
+    document.getElementById('r2lbl').textContent='⏳ Audio stopped... speak now!';
+    setTimeout(startRec2,1500);return;
+  }
+  s2FullText='';
+  document.getElementById('r2bar').style.width='0%';
+  document.getElementById('s2summary').style.display='none';
+  const btn=document.getElementById('r2recBtn');
+  btn.classList.add('recording');btn.textContent='⏹ Stop';
+  document.getElementById('r2lbl').textContent='🎙️ Listening... read the story aloud!';
+  document.getElementById('r2interim').textContent='';
+  const rec=new SR();
+  rec.lang='en-US';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=true;
+  activeRec2=rec;
+  rec.onresult=e=>{
+    let interim='';
+    for(let r of e.results){
+      if(r.isFinal)s2FullText+=r[0].transcript+' ';
+      else interim+=r[0].transcript;
+    }
+    if(interim)document.getElementById('r2interim').textContent='🎙️ "'+interim+'"';
+    // auto-stop 2.5s after last speech (silence detection)
+    if(s2SilenceTimer)clearTimeout(s2SilenceTimer);
+    s2SilenceTimer=setTimeout(stopRec2,2500);
+  };
+  rec.onend=()=>{if(activeRec2){activeRec2=null;finishRec2();}};
+  rec.onerror=e=>{if(e.error==='no-speech')return;activeRec2=null;btn.classList.remove('recording');btn.textContent='🎤 Read aloud';btn.onclick=startRec2;};
+  try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 Read aloud';}
+  btn.onclick=startRec2;
+}
 function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode32').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
 function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(v.startsWith(PREV_PFX)&&v.length===8)){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
