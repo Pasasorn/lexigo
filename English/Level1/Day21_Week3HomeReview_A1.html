@@ -654,7 +654,7 @@ function endSB(){document.getElementById('sbResult').textContent=sbScore+'/'+(SB
 function generateCode(day){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='D'+day+'-';for(let i=0;i<4;i++)c+=chars[Math.floor(Math.random()*chars.length)];return c;}
 
 // ── Coding Bonus (robot) ──
-var cbMap=[['S','.','.','#','.'],['.','#','.','#','.'],['.','#','.','.','.'],['.','.','.','#','.'],['#','.','.','.','G']];
+var cbMap=[['S','#','.','.','.'],['.','#','.','#','.'],['.','.','.','#','.'],['#','#','.','#','.'],['.','.','.','.','G']];
 var cbStart={r:0,c:0}, cbPos={r:0,c:0}, cbProgram=[], cbTargetWord=null;
 var CB_ARR={up:'⬆️',down:'⬇️',left:'⬅️',right:'➡️'};
 function cbInit(){

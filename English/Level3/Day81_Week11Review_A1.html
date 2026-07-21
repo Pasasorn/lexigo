@@ -719,11 +719,11 @@ function endSP(){
 function generateCode(day){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+day+'-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
 
 // ── Coding Bonus (robot) ──
-var cbMap=[['S','.','.','#','.'],['.','#','.','#','.'],['.','#','.','.','.'],['.','.','.','#','.'],['#','.','.','.','G']];
-var cbStart={r:0,c:0}, cbPos={r:0,c:0}, cbProgram=[], cbTargetWord=null;
+var cbMap=[['.','.','.','.','S'],['.','#','#','#','.'],['.','.','G','.','.'],['#','#','#','#','.'],['.','.','.','.','.']];
+var cbStart={r:0,c:4}, cbPos={r:0,c:4}, cbProgram=[], cbTargetWord=null;
 var CB_ARR={up:'⬆️',down:'⬇️',left:'⬅️',right:'➡️'};
 function cbInit(){
-  cbProgram=[]; cbPos={r:0,c:0};
+  cbProgram=[]; cbPos={r:0,c:4};
   var w=WORDS[Math.floor(Math.random()*WORDS.length)];
   cbTargetWord=w;
   document.getElementById('cbGoal').innerHTML='🎯 Code 🦁 to '+(w.icon||'⭐')+' <strong>'+w.e+'</strong>';
