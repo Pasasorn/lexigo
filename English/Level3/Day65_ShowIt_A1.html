@@ -138,9 +138,6 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
       <img src="img_day65.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
     </div>
-    <div style="background:#BBDEFB;border-radius:14px;padding:11px 15px;font-size:14px;color:#1565C0;margin-top:10px;border:2px solid #90CAF9;font-weight:700">
-      💬 Think: <strong>What happens in today's story?</strong>
-    </div>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
 </div>
@@ -152,6 +149,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <img src="img_day65.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
   <div class="sbox">We can show our feelings! Do not <span class="vocab">shout</span>, please. Mimi likes to <span class="vocab">whisper</span> a secret. Leo waves his hand hello. He nods his head to say yes. They <span class="vocab">clap</span> and <span class="vocab">point</span> with joy. So many ways to show how we feel!</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What happens in today's story?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ We can show our feelings! Do not shout, please.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -197,12 +195,10 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <div id="g5feedback" style="min-height:28px;margin-top:10px;font-size:18px;font-weight:900"></div>
   </div>
   <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
-    <div style="font-size:30px">✏️</div>
-    <div style="font-size:18px;font-weight:900;color:#1565C0">Spelling Star! 🌟</div>
+    <div style="font-size:30px">✏️</div><div style="font-size:18px;font-weight:900;color:#1565C0">Spelling Star! 🌟</div>
     <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
     <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
   </div>
-  
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
 </div>
 
@@ -404,44 +400,9 @@ function checkS4(){
 
 let g5deck=[],g5idx=0,g5score=0,g5blanks=[],g5answer='',g5filled=[];
 function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
-function g5render(){
-  if(g5idx>=g5deck.length){g5end();return;}
-  const w=g5deck[g5idx];g5answer=w.e.toLowerCase();
-  document.getElementById('g5q').textContent=g5idx+1;
-  document.getElementById('g5sc').textContent=g5score;
-  document.getElementById('g5hint').textContent=w.em||'📝';
-  document.getElementById('g5thai').textContent=w.t;
-  document.getElementById('g5feedback').textContent='';
-  const len=g5answer.length;
-  const nb=len<=3?1:len<=5?2:3;
-  const pos=[];while(pos.length<nb){const p=Math.floor(Math.random()*len);if(!pos.includes(p))pos.push(p);}
-  pos.sort((a,b)=>a-b);g5blanks=pos;g5filled=new Array(len).fill(null);
-  g5updateDisplay();
-  const missing=pos.map(p=>g5answer[p]);
-  const pool='abcdefghijklmnoprstuw'.split('').filter(c=>!missing.includes(c));
-  pool.sort(()=>Math.random()-.5);
-  const opts=[...missing,...pool.slice(0,4)].sort(()=>Math.random()-.5);
-  const tiles=document.getElementById('g5tiles');tiles.innerHTML='';
-  opts.forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});
-}
-function g5updateDisplay(){
-  const d=g5answer.split('').map((c,i)=>{
-    if(!g5blanks.includes(i))return'<span style="color:#1565C0">'+c.toUpperCase()+'</span>';
-    if(g5filled[i])return'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5filled[i].toUpperCase()+'</span>';
-    return'<span style="color:#bbb">_</span>';
-  }).join('<span style="margin:0 3px"> </span>');
-  document.getElementById('g5blanks').innerHTML=d;
-}
-function g5tap(c,btn){
-  const nb=g5blanks.find(p=>!g5filled[p]);if(nb===undefined)return;
-  const ok=g5answer[nb]===c;
-  if(ok){g5filled[nb]=c;btn.style.opacity='0.35';btn.onclick=null;g5updateDisplay();
-    if(g5blanks.every(p=>g5filled[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(()=>g5render(),900);}
-  } else {
-    btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';
-    setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},700);
-  }
-}
+function g5render(){if(g5idx>=g5deck.length){g5end();return;}const w=g5deck[g5idx];g5answer=w.e.toLowerCase();document.getElementById('g5q').textContent=g5idx+1;document.getElementById('g5sc').textContent=g5score;document.getElementById('g5hint').textContent=w.em||'📝';document.getElementById('g5thai').textContent=w.t;document.getElementById('g5feedback').textContent='';const len=g5answer.length;const nb=len<=3?1:len<=5?2:3;const pos=[];while(pos.length<nb){const p=Math.floor(Math.random()*len);if(!pos.includes(p))pos.push(p);}pos.sort((a,b)=>a-b);g5blanks=pos;g5filled=new Array(len).fill(null);g5upd();const miss=pos.map(p=>g5answer[p]);const pool='abcdefghijklmnoprstuw'.split('').filter(c=>!miss.includes(c));pool.sort(()=>Math.random()-.5);const opts=[...miss,...pool.slice(0,4)].sort(()=>Math.random()-.5);const tiles=document.getElementById('g5tiles');tiles.innerHTML='';opts.forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});}
+function g5upd(){document.getElementById('g5blanks').innerHTML=g5answer.split('').map((c,i)=>!g5blanks.includes(i)?'<span style="color:#1565C0">'+c.toUpperCase()+'</span>':g5filled[i]?'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5filled[i].toUpperCase()+'</span>':'<span style="color:#bbb">_</span>').join('<span style="margin:0 3px"> </span>');}
+function g5tap(c,btn){const nb=g5blanks.find(p=>!g5filled[p]);if(nb===undefined)return;if(g5answer[nb]===c){g5filled[nb]=c;btn.style.opacity='0.35';btn.onclick=null;g5upd();if(g5blanks.every(p=>g5filled[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(g5render,900);}}else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},700);}}
 function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
 
 function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${s}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}

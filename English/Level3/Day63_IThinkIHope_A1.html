@@ -138,9 +138,6 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
       <img src="img_day63.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
     </div>
-    <div style="background:#BBDEFB;border-radius:14px;padding:11px 15px;font-size:14px;color:#1565C0;margin-top:10px;border:2px solid #90CAF9;font-weight:700">
-      💬 Think: <strong>What happens in today's story?</strong>
-    </div>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
 </div>
@@ -152,6 +149,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <img src="img_day63.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
   <div class="sbox">Leo has a big <span class="vocab">hope</span>. He makes a <span class="vocab">wish</span> on a star. Mimi has a sweet <span class="vocab">dream</span> at night. They <span class="vocab">believe</span> in each other. Leo tries hard to <span class="vocab">remember</span> his words. Do not <span class="vocab">forget</span>, says Mimi! Dreams can come true.</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What happens in today's story?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ Leo has a big hope. He makes a wish on a star.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -186,23 +184,16 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page" id="p5">
 
 
-  <div class="step-label">Step 5 · Fill the Blank! ✏️</div>
-  <p class="step-sub">See the hint → tap letters to complete the word!</p>
-  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Q <span id="g5q">1</span>/<span id="g5tot">6</span> · ⭐ <span id="g5sc">0</span></div>
-  <div id="g5card" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #90CAF9;text-align:center">
-    <div id="g5hint" style="font-size:44px;margin-bottom:4px"></div>
-    <div id="g5thai" style="font-size:16px;color:#546E7A;font-weight:700;margin-bottom:12px"></div>
-    <div id="g5blanks" style="font-size:28px;font-weight:900;letter-spacing:6px;color:#1565C0;margin-bottom:14px;min-height:42px"></div>
-    <div id="g5tiles" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px"></div>
-    <div id="g5feedback" style="min-height:28px;margin-top:10px;font-size:18px;font-weight:900"></div>
-  </div>
-  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
-    <div style="font-size:30px">✏️</div>
-    <div style="font-size:18px;font-weight:900;color:#1565C0">Spelling Star! 🌟</div>
-    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
+  <div class="step-label">Step 5 · Word Search! 🔍</div>
+  <p class="step-sub">Tap the first and last letter of each word to find it!</p>
+  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Found <span id="g5found">0</span>/6</div>
+  <div id="g5grid" style="display:grid;gap:3px;justify-content:center;margin-bottom:10px"></div>
+  <div id="g5words" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center"></div>
+  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9;margin-top:10px">
+    <div style="font-size:30px">🔍</div><div style="font-size:18px;font-weight:900;color:#1565C0">Word Finder! 🎉</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">6/6</div>
     <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
   </div>
-  
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
 </div>
 
@@ -402,47 +393,10 @@ function checkS4(){
   speakFb(ok===data.length?'perfect':ok>0?'correct':'wrong');
 }
 
-let g5deck=[],g5idx=0,g5score=0,g5blanks=[],g5answer='',g5filled=[];
-function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
-function g5render(){
-  if(g5idx>=g5deck.length){g5end();return;}
-  const w=g5deck[g5idx];g5answer=w.e.toLowerCase();
-  document.getElementById('g5q').textContent=g5idx+1;
-  document.getElementById('g5sc').textContent=g5score;
-  document.getElementById('g5hint').textContent=w.em||'📝';
-  document.getElementById('g5thai').textContent=w.t;
-  document.getElementById('g5feedback').textContent='';
-  const len=g5answer.length;
-  const nb=len<=3?1:len<=5?2:3;
-  const pos=[];while(pos.length<nb){const p=Math.floor(Math.random()*len);if(!pos.includes(p))pos.push(p);}
-  pos.sort((a,b)=>a-b);g5blanks=pos;g5filled=new Array(len).fill(null);
-  g5updateDisplay();
-  const missing=pos.map(p=>g5answer[p]);
-  const pool='abcdefghijklmnoprstuw'.split('').filter(c=>!missing.includes(c));
-  pool.sort(()=>Math.random()-.5);
-  const opts=[...missing,...pool.slice(0,4)].sort(()=>Math.random()-.5);
-  const tiles=document.getElementById('g5tiles');tiles.innerHTML='';
-  opts.forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});
-}
-function g5updateDisplay(){
-  const d=g5answer.split('').map((c,i)=>{
-    if(!g5blanks.includes(i))return'<span style="color:#1565C0">'+c.toUpperCase()+'</span>';
-    if(g5filled[i])return'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5filled[i].toUpperCase()+'</span>';
-    return'<span style="color:#bbb">_</span>';
-  }).join('<span style="margin:0 3px"> </span>');
-  document.getElementById('g5blanks').innerHTML=d;
-}
-function g5tap(c,btn){
-  const nb=g5blanks.find(p=>!g5filled[p]);if(nb===undefined)return;
-  const ok=g5answer[nb]===c;
-  if(ok){g5filled[nb]=c;btn.style.opacity='0.35';btn.onclick=null;g5updateDisplay();
-    if(g5blanks.every(p=>g5filled[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(()=>g5render(),900);}
-  } else {
-    btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';
-    setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},700);
-  }
-}
-function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
+let g5N=8,g5g=[],g5place=[],g5found=0,g5sel=null;
+function buildG(){g5found=0;g5sel=null;document.getElementById('g5done').style.display='none';document.getElementById('g5found').textContent=0;const words=WORDS.map(w=>w.e.toUpperCase().replace(/[^A-Z]/g,'')).filter(w=>w.length<=g5N).slice(0,6);let ok=false,tr=0;while(!ok&&tr<40){tr++;g5g=Array.from({length:g5N},()=>Array(g5N).fill(''));g5place=[];ok=true;for(const w of words){let placed=false;for(let a=0;a<30&&!placed;a++){const dir=Math.floor(Math.random()*2),r=Math.floor(Math.random()*g5N),c=Math.floor(Math.random()*g5N),dr=dir===0?0:1,dc=dir===0?1:0;if(r+dr*(w.length-1)>=g5N||c+dc*(w.length-1)>=g5N)continue;let fit=true;for(let k=0;k<w.length;k++){const cell=g5g[r+dr*k][c+dc*k];if(cell&&cell!==w[k]){fit=false;break;}}if(!fit)continue;for(let k=0;k<w.length;k++)g5g[r+dr*k][c+dc*k]=w[k];g5place.push({w,cells:Array.from({length:w.length},(_,k)=>[r+dr*k,c+dc*k]),found:false});placed=true;}if(!placed){ok=false;break;}}}for(let r=0;r<g5N;r++)for(let c=0;c<g5N;c++)if(!g5g[r][c])g5g[r][c]='ABCDEFGHIJKLMNOPRSTUW'[Math.floor(Math.random()*21)];const g=document.getElementById('g5grid');g.style.gridTemplateColumns='repeat('+g5N+',1fr)';g.innerHTML='';for(let r=0;r<g5N;r++)for(let c=0;c<g5N;c++){const b=document.createElement('button');b.id='ws'+r+'_'+c;b.textContent=g5g[r][c];b.style.cssText='width:34px;height:34px;border-radius:7px;border:2px solid #BBDEFB;background:#fff;font-size:15px;font-weight:900;cursor:pointer;color:#1565C0;padding:0';b.onclick=()=>g5cell(r,c);g.appendChild(b);}const wl=document.getElementById('g5words');wl.innerHTML='';g5place.forEach((p,i)=>{const s=document.createElement('span');s.id='wl'+i;s.textContent=p.w;s.style.cssText='background:#E3F2FD;border:1.5px solid #90CAF9;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:800;color:#1565C0';wl.appendChild(s);});}
+function g5cell(r,c){const b=document.getElementById('ws'+r+'_'+c);if(!g5sel){g5sel=[r,c];b.style.background='#FFF59D';return;}const r0=g5sel[0],c0=g5sel[1];document.getElementById('ws'+r0+'_'+c0).style.background='#fff';g5sel=null;for(let i=0;i<g5place.length;i++){const p=g5place[i];if(p.found)continue;const f=p.cells[0],l=p.cells[p.cells.length-1];if((f[0]===r0&&f[1]===c0&&l[0]===r&&l[1]===c)||(f[0]===r&&f[1]===c&&l[0]===r0&&l[1]===c0)){p.found=true;g5found++;document.getElementById('g5found').textContent=g5found;document.getElementById('wl'+i).style.cssText='background:#C8E6C9;border:1.5px solid #7CB342;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:800;color:#2E7D32;text-decoration:line-through';p.cells.forEach(x=>{document.getElementById('ws'+x[0]+'_'+x[1]).style.background='#C8E6C9';});updScore(g5found,6);if(g5found>=g5place.length)g5end();return;}}}
+function g5end(){document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5found+'/'+g5place.length;updScore(6,6);}
 
 function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${s}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}
 function calcScore(heard,target){const norm=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);const hw=new Set(norm(heard)),tw=norm(target);if(!tw.length)return 0;const hit=tw.filter(w=>hw.has(w)).length;return Math.min(100,Math.round(hit/tw.length*100));}

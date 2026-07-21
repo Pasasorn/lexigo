@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coding Demo — Move the Robot 🤖</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif}
+  body{background:#E3F2FD;min-height:100vh;padding:16px;max-width:520px;margin:0 auto}
+  .hdr{background:linear-gradient(135deg,#42A5F5,#1565C0);border-radius:18px;padding:14px 18px;color:#fff;text-align:center;margin-bottom:12px}
+  .hdr h1{font-size:20px;font-weight:900}
+  .hdr p{font-size:13px;opacity:.9;font-weight:700}
+  .goal{background:#FFF3E0;border:2px solid #FFCC80;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:800;color:#E65100;text-align:center;margin-bottom:12px}
+  #grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:#fff;border-radius:14px;padding:10px;margin-bottom:12px;border:2px solid #90CAF9}
+  .cell{aspect-ratio:1;border-radius:8px;background:#F1F8E9;display:flex;align-items:center;justify-content:center;font-size:26px;border:1.5px solid #DCEDC8}
+  .cell.wall{background:#CFD8DC;border-color:#B0BEC5}
+  .palette{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+  .cmd{background:#42A5F5;color:#fff;border:none;border-radius:12px;padding:12px 14px;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 6px rgba(66,165,245,.35)}
+  .cmd:active{transform:scale(.92)}
+  .cmd.small{font-size:15px;padding:10px 12px}
+  #program{min-height:56px;background:#fff;border:2px dashed #90CAF9;border-radius:12px;padding:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  #program:empty::before{content:'\2b07\fe0f แตะคำสั่งด้านบนมาเรียงตรงนี้';color:#B0BEC5;font-size:13px;font-weight:700}
+  .pcmd{background:#E3F2FD;border:2px solid #64B5F6;border-radius:10px;padding:6px 10px;font-size:18px;font-weight:900;color:#1565C0;cursor:pointer}
+  .btns{display:flex;gap:8px}
+  .btn{flex:1;border:none;border-radius:12px;padding:12px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+  .run{background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff}
+  .clr{background:#FFF3E0;border:2px solid #FFE0B2;color:#E65100}
+  #msg{text-align:center;font-size:16px;font-weight:900;margin-top:12px;min-height:26px}
+</style>
+</head>
+<body>
+  <div class="hdr">
+    <h1>🤖 Move the Robot</h1>
+    <p>เขียนโค้ดพา Leo ไปหาคำศัพท์!</p>
+  </div>
+  <div class="goal">🎯 พา 🦁 ไปเก็บ 🍎 <strong>apple</strong> — หลบกำแพง!</div>
+
+  <div id="grid"></div>
+
+  <div class="palette">
+    <button class="cmd" onclick="add('up')" title="up">⬆️</button>
+    <button class="cmd" onclick="add('down')" title="down">⬇️</button>
+    <button class="cmd" onclick="add('left')" title="left">⬅️</button>
+    <button class="cmd" onclick="add('right')" title="right">➡️</button>
+  </div>
+  <div id="program"></div>
+  <div class="btns">
+    <button class="btn run" onclick="run()">▶ Run Code</button>
+    <button class="btn clr" onclick="clearProg()">🗑 Clear</button>
+  </div>
+  <div id="msg"></div>
+
+<script>
+// ── Grid setup: 5x5. S=start, G=goal(apple), #=wall ──
+const MAP=[
+  ['S','.','.','#','.'],
+  ['.','#','.','#','.'],
+  ['.','#','.','.','.'],
+  ['.','.','.','#','.'],
+  ['#','.','.','.','G'],
+];
+let start={r:0,c:0}, pos={r:0,c:0}, program=[];
+const ARROWS={up:'⬆️',down:'⬇️',left:'⬅️',right:'➡️'};
+
+function draw(){
+  const g=document.getElementById('grid'); g.innerHTML='';
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    const d=document.createElement('div'); d.className='cell';
+    const v=MAP[r][c];
+    if(v==='#'){d.classList.add('wall');}
+    if(pos.r===r&&pos.c===c) d.textContent='🦁';
+    else if(v==='G') d.textContent='🍎';
+    else if(v==='#') d.textContent='🧱';
+    g.appendChild(d);
+  }
+}
+function add(dir){ program.push(dir); renderProg(); }
+function renderProg(){
+  const p=document.getElementById('program');
+  p.innerHTML='';
+  program.forEach((d,i)=>{const s=document.createElement('span');s.className='pcmd';s.textContent=ARROWS[d];s.title='ลบ';s.onclick=()=>{program.splice(i,1);renderProg();};p.appendChild(s);});
+}
+function clearProg(){ program=[]; pos={...start}; renderProg(); draw(); document.getElementById('msg').textContent=''; }
+
+async function run(){
+  pos={...start}; draw();
+  const msg=document.getElementById('msg'); msg.textContent='🤖 กำลังรันโค้ด...';
+  for(const step of program){
+    await new Promise(r=>setTimeout(r,450));
+    let nr=pos.r, nc=pos.c;
+    if(step==='up')nr--; if(step==='down')nr++; if(step==='left')nc--; if(step==='right')nc++;
+    if(nr<0||nr>4||nc<0||nc>4){ msg.textContent='💥 ออกนอกตาราง! ลองใหม่นะ'; return; }
+    if(MAP[nr][nc]==='#'){ msg.textContent='🧱 ชนกำแพง! แก้โค้ดแล้วลองใหม่'; return; }
+    pos={r:nr,c:nc}; draw();
+    if(MAP[nr][nc]==='G'){ msg.innerHTML='🎉 เก่งมาก! Leo เจอ <strong>apple</strong> แล้ว! 🍎'; return; }
+  }
+  msg.textContent='🤔 ยังไม่ถึงเป้า — เพิ่มคำสั่งอีกหน่อย!';
+}
+draw();
+</script>
+</body></html>

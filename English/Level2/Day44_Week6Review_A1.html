@@ -288,6 +288,27 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 
 </div><!-- end mainContent -->
 
+<div class="page" id="p8">
+  <div style="text-align:center">
+    <div style="font-size:20px;font-weight:900;color:#004D40;margin:4px 0">🤖 Coding Bonus</div>
+    <div id="cbGoal" style="background:#E0F2F1;border:2px solid #80CBC4;border-radius:12px;padding:8px 12px;font-size:14px;font-weight:800;color:#00695C;margin-bottom:10px"></div>
+    <div id="cbGrid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:#fff;border-radius:12px;padding:8px;margin-bottom:10px;border:2px solid #80CBC4"></div>
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:8px">
+      <button onclick="cbAdd('up')" style="background:#26A69A;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-size:18px;cursor:pointer">⬆️</button>
+      <button onclick="cbAdd('down')" style="background:#26A69A;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-size:18px;cursor:pointer">⬇️</button>
+      <button onclick="cbAdd('left')" style="background:#26A69A;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-size:18px;cursor:pointer">⬅️</button>
+      <button onclick="cbAdd('right')" style="background:#26A69A;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-size:18px;cursor:pointer">➡️</button>
+    </div>
+    <div id="cbProg" style="min-height:44px;background:#fff;border:2px dashed #80CBC4;border-radius:10px;padding:8px;display:flex;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="cbRun()" style="flex:1;background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff;border:none;border-radius:10px;padding:11px;font-size:15px;font-weight:900;cursor:pointer">▶ Run</button>
+      <button onclick="cbClear()" style="background:#FFF3E0;border:2px solid #FFE0B2;color:#E65100;border-radius:10px;padding:11px 16px;font-size:14px;font-weight:800;cursor:pointer">🗑 Clear</button>
+    </div>
+    <div id="cbMsg" style="min-height:24px;font-size:15px;font-weight:900;margin-top:8px"></div>
+  </div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Menu</button></div>
+</div>
+
 <div class="complete-screen" id="completeScreen">
   <div style="font-size:36px">🏫🏆</div>
   <div style="font-size:20px;font-weight:900;color:#283593;margin:8px 0">Week 6 Clothes Review Complete!</div>
@@ -696,6 +717,53 @@ function endSP(){
 }
 
 function generateCode(day){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+day+'-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+
+// ── Coding Bonus (robot) ──
+var cbMap=[['S','.','.','#','.'],['.','#','.','#','.'],['.','#','.','.','.'],['.','.','.','#','.'],['#','.','.','.','G']];
+var cbStart={r:0,c:0}, cbPos={r:0,c:0}, cbProgram=[], cbTargetWord=null;
+var CB_ARR={up:'\u2b06\ufe0f',down:'\u2b07\ufe0f',left:'\u2b05\ufe0f',right:'\u27a1\ufe0f'};
+function cbInit(){
+  cbProgram=[]; cbPos={r:0,c:0};
+  var w=WORDS[Math.floor(Math.random()*WORDS.length)];
+  cbTargetWord=w;
+  document.getElementById('cbGoal').innerHTML='\U0001f3af Code \U0001f981 to '+(w.icon||'\u2b50')+' <strong>'+w.e+'</strong>';
+  cbRenderProg(); cbDraw(); document.getElementById('cbMsg').textContent='';
+}
+function cbDraw(){
+  var g=document.getElementById('cbGrid'); g.innerHTML='';
+  for(var r=0;r<5;r++)for(var c=0;c<5;c++){
+    var d=document.createElement('div');
+    d.style.cssText='aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:22px;background:'+(cbMap[r][c]==='#'?'#CFD8DC':'#F1F8E9')+';border:1.5px solid '+(cbMap[r][c]==='#'?'#B0BEC5':'#DCEDC8');
+    if(cbPos.r===r&&cbPos.c===c)d.textContent='\U0001f981';
+    else if(cbMap[r][c]==='G')d.textContent=(cbTargetWord&&cbTargetWord.icon)||'\u2b50';
+    else if(cbMap[r][c]==='#')d.textContent='\U0001f9f1';
+    g.appendChild(d);
+  }
+}
+function cbAdd(dir){cbProgram.push(dir);cbRenderProg();}
+function cbRenderProg(){
+  var p=document.getElementById('cbProg');p.innerHTML='';
+  if(!cbProgram.length){p.innerHTML='<span style="color:#B0BEC5;font-size:12px;font-weight:700">\u2b07\ufe0f Tap arrows to build code</span>';return;}
+  cbProgram.forEach(function(d,i){var s=document.createElement('span');s.textContent=CB_ARR[d];s.style.cssText='background:#E0F2F1;border:2px solid #4DB6AC;border-radius:8px;padding:4px 8px;font-size:16px;cursor:pointer';s.onclick=function(){cbProgram.splice(i,1);cbRenderProg();};p.appendChild(s);});
+}
+function cbClear(){cbProgram=[];cbPos=Object.assign({},cbStart);cbRenderProg();cbDraw();document.getElementById('cbMsg').textContent='';}
+function cbRun(){
+  cbPos=Object.assign({},cbStart);cbDraw();
+  var msg=document.getElementById('cbMsg');msg.textContent='\U0001f916 Running...';
+  var i=0;
+  function stepFn(){
+    if(i>=cbProgram.length){msg.textContent='\U0001f914 Not there yet \u2014 add more steps!';return;}
+    var step=cbProgram[i++];var nr=cbPos.r,nc=cbPos.c;
+    if(step==='up')nr--;if(step==='down')nr++;if(step==='left')nc--;if(step==='right')nc++;
+    if(nr<0||nr>4||nc<0||nc>4){msg.textContent='\U0001f4a5 Off the grid! Try again';return;}
+    if(cbMap[nr][nc]==='#'){msg.textContent='\U0001f9f1 Hit a wall! Fix your code';return;}
+    cbPos={r:nr,c:nc};cbDraw();
+    if(cbMap[nr][nc]==='G'){msg.innerHTML='\U0001f389 Great job! \U0001f981 found <strong>'+cbTargetWord.e+'</strong>!';return;}
+    setTimeout(stepFn,420);
+  }
+  setTimeout(stepFn,420);
+}
+
 function showCompletion(){
   let code=localStorage.getItem(LOCK_KEY);
   if(!code){code=generateCode(44);localStorage.setItem(LOCK_KEY,code);syncToCloud(44,code,totalScore);}

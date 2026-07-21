@@ -138,9 +138,6 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
       <img src="img_day73.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
     </div>
-    <div style="background:#BBDEFB;border-radius:14px;padding:11px 15px;font-size:14px;color:#1565C0;margin-top:10px;border:2px solid #90CAF9;font-weight:700">
-      💬 Think: <strong>What happens in today's story?</strong>
-    </div>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
 </div>
@@ -152,6 +149,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <img src="img_day73.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
   <div class="sbox">Today is Leo's <span class="vocab">birthday</span>! There is a big <span class="vocab">party</span> at his house. Tomorrow is a <span class="vocab">holiday</span>, so everyone can come. Mimi brings a <span class="vocab">gift</span> for Leo. Blow the <span class="vocab">candle</span>, Leo! Look at the red <span class="vocab">balloon</span>. Happy <span class="vocab">birthday</span> to you!</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What happens in today's story?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ Today is Leo's birthday! There is a big party at his house.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -186,24 +184,15 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page" id="p5">
 
 
-  <div class="step-label">Step 5 · Word Scramble! 🔀</div>
-  <p class="step-sub">Tap letters in the right order to spell the word!</p>
-  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Q <span id="g5q">1</span>/<span id="g5tot">6</span> · ⭐ <span id="g5sc">0</span></div>
-  <div id="g5card" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #90CAF9;text-align:center">
-    <div id="g5hint" style="font-size:44px;margin-bottom:4px"></div>
-    <div id="g5thai" style="font-size:16px;color:#546E7A;font-weight:700;margin-bottom:10px"></div>
-    <div id="g5answer" style="min-height:46px;background:#F5F5F5;border-radius:12px;padding:8px;font-size:24px;font-weight:900;letter-spacing:4px;color:#1565C0;margin-bottom:10px;display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap"></div>
-    <div id="g5tiles" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px"></div>
-    <div id="g5feedback" style="min-height:28px;margin-top:8px;font-size:18px;font-weight:900"></div>
-    <button onclick="g5clearAns()" style="margin-top:8px;padding:6px 18px;border-radius:10px;border:2px solid #90CAF9;background:#fff;color:#1565C0;font-weight:800;cursor:pointer;font-size:14px">Clear ↩</button>
-  </div>
-  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
-    <div style="font-size:30px">🔀</div>
-    <div style="font-size:18px;font-weight:900;color:#1565C0">Scramble Master! 🎉</div>
-    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
+  <div class="step-label">Step 5 · Memory Match! 🧠</div>
+  <p class="step-sub">Flip cards → match each word with its picture!</p>
+  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Pairs <span id="g5pairs">0</span>/6 · Tries <span id="g5tries">0</span></div>
+  <div id="g5grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
+  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9;margin-top:10px">
+    <div style="font-size:30px">🧠</div><div style="font-size:18px;font-weight:900;color:#1565C0">Memory Master! 🎉</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0</div>
     <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
   </div>
-  
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
 </div>
 
@@ -404,31 +393,10 @@ function checkS4(){
 }
 
 const SR5=window.SpeechRecognition||window.webkitSpeechRecognition;
-let g5deck=[],g5idx=0,g5score=0,g5typed=[],g5scr=[];
-function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
-function g5scramble(w){const a=w.split('');let r;do{r=[...a].sort(()=>Math.random()-.5);}while(r.join('')===w&&w.length>1);return r;}
-function g5render(){
-  if(g5idx>=g5deck.length){g5end();return;}
-  const w=g5deck[g5idx];g5typed=[];g5scr=g5scramble(w.e.toLowerCase());
-  document.getElementById('g5q').textContent=g5idx+1;
-  document.getElementById('g5sc').textContent=g5score;
-  document.getElementById('g5hint').textContent=w.em||'📝';
-  document.getElementById('g5thai').textContent=w.t;
-  document.getElementById('g5answer').innerHTML='<span style="color:#aaa;font-size:15px">Tap letters ↓</span>';
-  document.getElementById('g5feedback').textContent='';
-  const tiles=document.getElementById('g5tiles');tiles.innerHTML='';
-  g5scr.forEach((c,i)=>{const b=document.createElement('button');b.id='t5_'+i;b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});
-}
-function g5updateAns(){const box=document.getElementById('g5answer');if(!g5typed.length){box.innerHTML='<span style="color:#aaa;font-size:15px">Tap letters ↓</span>';return;}box.innerHTML=g5typed.map(t=>'<span style="background:#fff;border:2px solid #42A5F5;border-radius:8px;padding:2px 8px">'+t.c.toUpperCase()+'</span>').join('');}
-function g5tap(c,btn){if(btn.disabled)return;btn.disabled=true;btn.style.opacity='0.35';g5typed.push({c});g5updateAns();
-  const ans=g5deck[g5idx].e.toLowerCase();
-  if(g5typed.length===ans.length){const att=g5typed.map(t=>t.c).join('');
-    if(att===ans){g5score+=5;document.getElementById('g5feedback').textContent='✅ Correct!';document.getElementById('g5sc').textContent=g5score;g5idx++;updScore(g5idx,g5deck.length);setTimeout(()=>g5render(),900);}
-    else{document.getElementById('g5feedback').textContent='❌ Try again!';setTimeout(()=>g5clearAns(),700);}
-  }
-}
-function g5clearAns(){g5typed=[];g5updateAns();document.getElementById('g5feedback').textContent='';document.querySelectorAll('[id^=t5_]').forEach(b=>{b.disabled=false;b.style.opacity='1';});}
-function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
+let g5cards=[],g5flip=[],g5pairs=0,g5tries=0,g5lock=false;
+function buildG(){g5pairs=0;g5tries=0;g5flip=[];g5lock=false;document.getElementById('g5done').style.display='none';const deck=[];WORDS.forEach((w,i)=>{deck.push({id:i,label:w.e});deck.push({id:i,label:w.em});});g5cards=deck.sort(()=>Math.random()-.5);document.getElementById('g5pairs').textContent=0;document.getElementById('g5tries').textContent=0;const g=document.getElementById('g5grid');g.innerHTML='';g5cards.forEach((c,idx)=>{const b=document.createElement('button');b.id='mc'+idx;b.style.cssText='aspect-ratio:1;border-radius:12px;border:2.5px solid #90CAF9;background:#42A5F5;font-size:16px;cursor:pointer;color:#fff;font-weight:900;padding:2px;word-break:break-word';b.textContent='?';b.onclick=()=>g5tap(idx);g.appendChild(b);});}
+function g5tap(i){if(g5lock)return;const c=g5cards[i],b=document.getElementById('mc'+i);if(b.dataset.done||g5flip.find(f=>f.i===i))return;b.textContent=c.label;b.style.background='#fff';b.style.color='#1565C0';g5flip.push({i,c});if(g5flip.length===2){g5tries++;document.getElementById('g5tries').textContent=g5tries;g5lock=true;const a=g5flip[0],d=g5flip[1];if(a.c.id===d.c.id){setTimeout(()=>{['mc'+a.i,'mc'+d.i].forEach(id=>{const e=document.getElementById(id);e.style.background='#E8F5E9';e.style.borderColor='#7CB342';e.dataset.done=1;});g5pairs++;document.getElementById('g5pairs').textContent=g5pairs;updScore(g5pairs,6);g5flip=[];g5lock=false;if(g5pairs===6)g5end();},450);}else{setTimeout(()=>{['mc'+a.i,'mc'+d.i].forEach(id=>{const e=document.getElementById(id);e.textContent='?';e.style.background='#42A5F5';e.style.color='#fff';});g5flip=[];g5lock=false;},850);}}}
+function g5end(){document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5tries+' tries';updScore(6,6);}
 
 function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${s}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}
 function calcScore(heard,target){const norm=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);const hw=new Set(norm(heard)),tw=norm(target);if(!tw.length)return 0;const hit=tw.filter(w=>hw.has(w)).length;return Math.min(100,Math.round(hit/tw.length*100));}
