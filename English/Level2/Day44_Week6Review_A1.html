@@ -137,6 +137,8 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
       <button class="game-btn" style="background:linear-gradient(135deg,#1E88E5,#0D47A1)" onclick="go(6);initSB()">🧩 Sentence<br><span style="font-size:10px;opacity:0.85">Builder</span></button>
     </div>
     <button class="game-btn" style="background:linear-gradient(135deg,#3949AB,#7B1FA2);width:100%;padding:18px;font-size:16px;border-radius:18px;margin-bottom:8px" onclick="go(7);initSP()">🎤 Speak Up! — Read sentences aloud!<br><span style="font-size:11px;opacity:0.85">NEW · 150 pts · Chrome needed for voice recognition</span></button>
+      <button class="game-btn" style="background:linear-gradient(135deg,#26A69A,#004D40);width:100%;padding:16px;font-size:15px;border-radius:18px;margin-bottom:8px" onclick="go(8);cbInit()">🤖 Coding Bonus! — Code the robot to the word!<br><span style="font-size:11px;opacity:0.85">NEW · Sequence + Debug</span></button>
+
     <button class="btn btn-p" style="width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 6 Results!</button>
   </div>
 </div>
@@ -671,6 +673,7 @@ function spManual(){
 function startSP(){
   if(!SR_API){document.getElementById('spAlt').style.display='block';return;}
   if(spListening)return;
+  if(window.speechSynthesis&&window.speechSynthesis.speaking)window.speechSynthesis.cancel();
   spListening=true;
   const rb=document.getElementById('spRecord');
   if(rb){rb.textContent='🔴 Listening…';rb.disabled=true;}
@@ -680,7 +683,7 @@ function startSP(){
     spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
     document.getElementById('spFb').textContent='⏱ Timed out — try again!';
-  },7000);
+  },10000);
   rec.onresult=(e)=>{
     clearTimeout(timer);spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
@@ -706,7 +709,7 @@ function startSP(){
   rec.onerror=(e)=>{
     clearTimeout(timer);spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
-    document.getElementById('spFb').textContent='❌ Mic error: '+e.error;
+    document.getElementById('spFb').textContent=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดังๆ':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมค์':e.error==='network'?'📶 ต้องต่อเน็ต':'ลองกดพูดอีกครั้ง');
   };
   rec.start();
 }

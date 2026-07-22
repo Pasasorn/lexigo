@@ -739,6 +739,7 @@ function spManual(){
 function startSP(){
   if(!SR_API){document.getElementById('spAlt').style.display='block';return;}
   if(spListening)return;
+  if(window.speechSynthesis&&window.speechSynthesis.speaking)window.speechSynthesis.cancel();
   spListening=true;
   const rb=document.getElementById('spRecord');
   if(rb){rb.textContent='🔴 Listening…';rb.disabled=true;}
@@ -748,7 +749,7 @@ function startSP(){
     spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
     document.getElementById('spFb').textContent='⏱ Timed out — try again!';
-  },7000);
+  },10000);
   rec.onresult=(e)=>{
     clearTimeout(timer);spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
@@ -774,7 +775,7 @@ function startSP(){
   rec.onerror=(e)=>{
     clearTimeout(timer);spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
-    document.getElementById('spFb').textContent='❌ Mic error: '+e.error;
+    document.getElementById('spFb').textContent=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดังๆ':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมค์':e.error==='network'?'📶 ต้องต่อเน็ต':'ลองกดพูดอีกครั้ง');
   };
   rec.start();
 }
