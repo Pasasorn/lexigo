@@ -197,6 +197,37 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
     <p>ฟัง · พูด · อ่าน · เขียน — Oxford 3,000 คำ ใน 1 ปี</p>
   </div>
 
+  <!-- ── เรียนแบบธรรมชาติ ── -->
+  <div style="background:#fff;border-radius:18px;padding:18px 16px;margin-bottom:14px;box-shadow:0 3px 14px rgba(0,0,0,.06)">
+    <div style="text-align:center;font-size:15px;font-weight:900;color:#37474F;margin-bottom:3px">🌱 เรียนแบบธรรมชาติ ค่อยเป็นค่อยไป</div>
+    <div style="text-align:center;font-size:12px;color:#90A4AE;font-weight:700;margin-bottom:14px">วันละนิด ซึมซับเหมือนเด็กเรียนภาษาแม่</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:#E3F2FD;border-radius:14px;padding:12px 10px;text-align:center">
+        <div style="font-size:30px">👂</div>
+        <div style="font-size:13px;font-weight:900;color:#1565C0;margin-top:2px">ฟัง</div>
+        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">ฟังเรื่องก่อน<br>ให้หูคุ้นเสียง</div>
+      </div>
+      <div style="background:#FFF3E0;border-radius:14px;padding:12px 10px;text-align:center">
+        <div style="font-size:30px">🗣️</div>
+        <div style="font-size:13px;font-weight:900;color:#E65100;margin-top:2px">พูด</div>
+        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">พูดตาม AI ฟัง<br>ให้คะแนนทันที</div>
+      </div>
+      <div style="background:#E8F5E9;border-radius:14px;padding:12px 10px;text-align:center">
+        <div style="font-size:30px">📖</div>
+        <div style="font-size:13px;font-weight:900;color:#2E7D32;margin-top:2px">อ่าน</div>
+        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">อ่านเรื่องสั้น<br>เห็นคำในบริบท</div>
+      </div>
+      <div style="background:#F3E5F5;border-radius:14px;padding:12px 10px;text-align:center">
+        <div style="font-size:30px">💭</div>
+        <div style="font-size:13px;font-weight:900;color:#6A1B9A;margin-top:2px">คิด</div>
+        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">ตอบคำถาม<br>เข้าใจจริง ไม่ท่องจำ</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#90A4AE;font-weight:700;margin-top:12px;line-height:1.6">
+      🎮 มีเกม 5 แบบสลับทุกวัน · 🤖 เกม Coding · 🏆 แข่งขันสะสมแต้ม<br>เรียนสนุก ไม่กดดัน โตไปพร้อมกันทุกวัน
+    </div>
+  </div>
+
   <!-- LIFETIME TIER CARD -->
   <div class="tier-card">
     <div class="tier-head">
@@ -639,13 +670,28 @@ window.onload = function() {
 
   // Already registered?
   const st = JSON.parse(localStorage.getItem(SK) || 'null');
-  if (st && st.code) {
+  const _buymore = new URLSearchParams(location.search).has('buymore');
+  if (st && st.code && !_buymore) {
     if (!st.pending_approval) {
       // อนุมัติแล้ว → ไป dashboard โดยตรง
       location.href = 'dashboard.html';
       return;
     }
     showSuccess(st); return;
+  }
+  // ── ซื้อ Level เพิ่ม (ลูกค้าเก่า) ──
+  if (st && st.code && _buymore) {
+    window._BUYMORE = st;  // เก็บไว้ prefill + mark เป็น upgrade
+    loadTiers();
+    setTimeout(() => {
+      const nick = st.nick || st.fullname || '';
+      const nk = document.getElementById('rNick'); if (nk && nick) nk.value = nick;
+      const banner = document.createElement('div');
+      banner.style.cssText = 'background:#E8F5E9;border:2px solid #A5D6A7;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:800;color:#2E7D32;text-align:center';
+      banner.innerHTML = '➕ ซื้อ Level เพิ่มสำหรับ <strong>' + nick + '</strong><br><span style="font-size:11px;font-weight:600">เลือก Level ใหม่ที่ต้องการ แล้วชำระเงินได้เลย</span>';
+      const host = document.querySelector('.container, body'); if (host) host.insertBefore(banner, host.firstChild);
+    }, 300);
+    return;
   }
 
   // Pending purchase → go straight to p3
@@ -823,7 +869,8 @@ async function doPayment() {
 
   try {
     await jsonp({ action:'newPurchase', order_id: orderId,
-      pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type });
+      pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type,
+      existing_code: (window._BUYMORE && window._BUYMORE.code) ? window._BUYMORE.code : '' });
     // Upload slip (no-cors + text/plain เพื่อข้าม CORS preflight)
     try {
       await fetch(API, {

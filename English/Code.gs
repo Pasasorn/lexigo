@@ -832,10 +832,19 @@ function actionNewPurchase(p, cb) {
 
   if (!pkg) return respond({status:'error', msg:'ไม่พบ pkg'}, cb);
 
+  const existingCode = (p.existing_code || '').toString().trim(); // ← ซื้อ Level เพิ่ม (บัญชีเดิม)
+
   const sh = getSheet(SHEET_PURCHASES);
-  sh.appendRow([orderId, '', '', '', '', pkg, price, type, 'pending', '', new Date().toISOString(), '']);
+  // line_id column (index 3) เก็บ existing_code สำหรับการ upgrade
+  sh.appendRow([orderId, '', '', existingCode, '', pkg, price, type, 'pending', '', new Date().toISOString(), '']);
 
   return respond({status:'ok', order_id: orderId}, cb);
+}
+
+// ── helper: แปลงชื่อ pkg → เลข level (เช่น "Level 2" → 2) ─
+function levelNumFromPkg(pkgName) {
+  const m = (pkgName || '').toString().match(/(\d+)/);
+  return m ? parseInt(m[1]) : 1;
 }
 
 // ── uploadSlip: รับสลิป base64 → บันทึกไฟล์ใน Google Drive ─
@@ -934,6 +943,27 @@ function actionVerifyPurchase(p, cb) {
       const exp = new Date();
       exp.setDate(exp.getDate() + 365);
       expiryDate = exp.toISOString();
+    }
+
+    // ── ซื้อ Level เพิ่ม (upgrade บัญชีเดิม) ──
+    const existingCode = (data[i][3] || '').toString().trim();  // line_id column เก็บ existing_code
+    if (existingCode) {
+      const stSh2 = getSheet(SHEET_STUDENTS);
+      const stData = stSh2.getDataRange().getValues();
+      for (let j = 1; j < stData.length; j++) {
+        if (stData[j][0].toString() !== existingCode) continue;
+        // อัปเกรด: ตั้ง pkg_name เป็น Level ที่สูงกว่า (สะสม) — ดู Day 1 ถึง level*30
+        const oldLevel = levelNumFromPkg(stData[j][7]);
+        const newLevel = levelNumFromPkg(pkgName);
+        const maxLevel = Math.max(oldLevel, newLevel);
+        stSh2.getRange(j + 1, 8).setValue('Level ' + maxLevel);  // pkg_name (col 8)
+        stSh2.getRange(j + 1, 7).setValue('level');              // type (col 7)
+        // อัปเดต Purchases row → ใช้ code เดิม (ไม่สร้างบัญชีใหม่)
+        sh.getRange(i + 1, 9).setValue('verified');
+        sh.getRange(i + 1, 12).setValue(existingCode);
+        return respond({status:'ok', upgraded:true, student_code: existingCode, level: maxLevel, name: stData[j][1]}, cb);
+      }
+      // ไม่พบบัญชีเดิม → fallthrough สร้างใหม่ (กันพลาด)
     }
 
     // เพิ่มใน Students sheet (status=pending รอเด็กกรอกโปรไฟล์)
