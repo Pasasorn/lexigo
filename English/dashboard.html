@@ -433,11 +433,24 @@ function showDashboard(st) {
   }
   document.getElementById('gridSection').style.display = 'block';
   document.getElementById('bottomBar').style.display   = 'flex';
-  // ── UX 2 ชั้น: เก็บ state แล้วโชว์การ์ด Level ก่อน ──
+  // ── UX 2 ชั้น: เก็บ state แล้วโชว์การ์ด Level ที่ซื้อ ──
   window._ST = st;
-  const maxContentLevel = Math.ceil(Math.max(...ALL_DAYS.map(d => d.n)) / 30);
-  window._MAXLEVEL = (isAdmin || st.type === 'lifetime') ? maxContentLevel : Math.min(parseInt(st.level || 1), 15);
   window._ISADMIN = isAdmin;
+  const maxContentLevel = Math.ceil(Math.max(...ALL_DAYS.map(d => d.n)) / 30);
+  // OWNED = เซ็ต Level ที่ซื้อ (independent) | admin/lifetime = ทุก Level ที่มีเนื้อหา
+  let owned;
+  if (isAdmin || st.type === 'lifetime') {
+    owned = []; for (let L = 1; L <= maxContentLevel; L++) owned.push(L);
+  } else {
+    const nums = (String(st.level || '').match(/\d+/g) || []).map(Number).filter(n => n >= 1 && n <= 15);
+    owned = nums.length ? [...new Set(nums)].sort((a,b) => a-b) : [1];
+  }
+  window._OWNED = owned;
+  // ปลดล็อกวันแรกของแต่ละ Level ที่ซื้อ (LEVEL-START)
+  owned.forEach(L => {
+    const s = (L-1)*30 + 1;
+    if (s > 1 && !localStorage.getItem('wla_d' + (s-1))) localStorage.setItem('wla_d' + (s-1), 'LEVEL-START');
+  });
   showLevels();
 }
 
@@ -453,7 +466,7 @@ function showLevels(){
   document.getElementById('secTitle').textContent = '📚 เลือก Level ที่จะเรียน';
   const maxContent = Math.max(...ALL_DAYS.map(d => d.n));
   let totalDone = 0, totalDays = 0;
-  for (let L = 1; L <= window._MAXLEVEL; L++){
+  for (const L of window._OWNED){
     const { cefr, s, e } = levelMeta(L);
     const hasContent = s <= maxContent;
     const lastDay = Math.min(e, maxContent);
@@ -487,6 +500,7 @@ function showLevels(){
 }
 // ── ชั้น 2: วันใน Level ที่เลือก ──
 function openLevel(L){
+  if (!window._OWNED || window._OWNED.indexOf(L) === -1) return; // กันเข้า Level ที่ไม่ได้ซื้อ
   const { s, e } = levelMeta(L);
   const maxContent = Math.max(...ALL_DAYS.map(d => d.n));
   document.getElementById('secTitle').innerHTML =

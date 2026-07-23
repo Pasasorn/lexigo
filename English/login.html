@@ -134,8 +134,9 @@ async function doLogin() {
         nick: res.nick || nick,
         pending_approval: false,
         course: '',
-        type: null,
-        level: null,
+        type: res.type || 'level',
+        level: res.pkg_name || '1',   // เก็บ pkg_name ดิบ (เช่น "Level 5" หรือ "3,5")
+        pkg_name: res.pkg_name || '',
         cefr: 'A1',
         startDay: 1,
         endDay: 448

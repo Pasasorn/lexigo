@@ -952,16 +952,16 @@ function actionVerifyPurchase(p, cb) {
       const stData = stSh2.getDataRange().getValues();
       for (let j = 1; j < stData.length; j++) {
         if (stData[j][0].toString() !== existingCode) continue;
-        // อัปเกรด: ตั้ง pkg_name เป็น Level ที่สูงกว่า (สะสม) — ดู Day 1 ถึง level*30
-        const oldLevel = levelNumFromPkg(stData[j][7]);
+        // อัปเกรด: เพิ่ม Level ใหม่เข้าเซ็ตที่มี (independent — เป็นเจ้าของเฉพาะ Level ที่ซื้อ)
+        const oldNums = (String(stData[j][7]).match(/\d+/g) || []).map(Number);
         const newLevel = levelNumFromPkg(pkgName);
-        const maxLevel = Math.max(oldLevel, newLevel);
-        stSh2.getRange(j + 1, 8).setValue('Level ' + maxLevel);  // pkg_name (col 8)
-        stSh2.getRange(j + 1, 7).setValue('level');              // type (col 7)
+        const owned = [...new Set(oldNums.concat([newLevel]))].sort(function(a,b){return a-b;});
+        stSh2.getRange(j + 1, 8).setValue('Level ' + owned.join(','));  // pkg_name เก็บเซ็ต เช่น "Level 3,5"
+        stSh2.getRange(j + 1, 7).setValue('level');                    // type (col 7)
         // อัปเดต Purchases row → ใช้ code เดิม (ไม่สร้างบัญชีใหม่)
         sh.getRange(i + 1, 9).setValue('verified');
         sh.getRange(i + 1, 12).setValue(existingCode);
-        return respond({status:'ok', upgraded:true, student_code: existingCode, level: maxLevel, name: stData[j][1]}, cb);
+        return respond({status:'ok', upgraded:true, student_code: existingCode, owned: owned.join(','), name: stData[j][1]}, cb);
       }
       // ไม่พบบัญชีเดิม → fallthrough สร้างใหม่ (กันพลาด)
     }
@@ -1116,7 +1116,7 @@ function actionCheckApproval(p, cb) {
   const data = sh.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
     if (data[i][0].toString() === code) {
-      return respond({status:'ok', approval_status: data[i][3], nick: data[i][1]}, cb);
+      return respond({status:'ok', approval_status: data[i][3], nick: data[i][1], type: data[i][6], pkg_name: data[i][7]}, cb);
     }
   }
   return respond({status:'not_found'}, cb);
