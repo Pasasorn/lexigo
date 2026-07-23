@@ -374,7 +374,14 @@ function renderOrders() {
     wrap.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:#78909C;font-weight:700">ยังไม่มี order ครับ</div>';
     return;
   }
-  wrap.innerHTML = allOrders.map(o => {
+  // เรียง: รอ Approve ก่อน → รอลงทะเบียน → verified/rejected ท้ายสุด
+  const rank = s => s === 'pending_approval' ? 0 : (s === 'pending' || !s) ? 1 : 2;
+  allOrders.sort((a,b) => rank(a.status) - rank(b.status));
+  const pendingCount = allOrders.filter(o => o.status === 'pending_approval').length;
+  const header = pendingCount
+    ? '<div style="background:#EDE9FE;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:13px;font-weight:800;color:#5B21B6;text-align:center">📋 รออนุมัติ ' + pendingCount + ' รายการ</div>'
+    : '<div style="background:#F0FDF4;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:13px;font-weight:800;color:#065F46;text-align:center">✅ ไม่มีรายการค้างอนุมัติ</div>';
+  wrap.innerHTML = header + allOrders.map(o => {
     const statusTag = o.status === 'verified'
       ? '<span class="order-status st-verified">✅ Verified</span>'
       : o.status === 'rejected'

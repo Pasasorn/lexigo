@@ -531,7 +531,20 @@ function init() {
     location.href = 'login.html';
     return;
   }
+  // แสดงก่อนด้วยข้อมูล cache เพื่อความไว
   showDashboard(st);
+  // แล้วดึง level ล่าสุดจาก backend (เผื่อเพิ่ง upgrade ซื้อ Level เพิ่ม) → อัปเดตแล้ว render ใหม่
+  if (st.code !== 'ADMIN' && localStorage.getItem('wla_admin') !== '1') {
+    jsonp({ action:'checkApproval', code: st.code }).then(res => {
+      if (res && res.status === 'ok' && res.pkg_name && res.pkg_name !== st.level) {
+        st.level = res.pkg_name;
+        st.type  = res.type || st.type;
+        st.pkg_name = res.pkg_name;
+        localStorage.setItem(SK, JSON.stringify(st));
+        showDashboard(st);  // render ใหม่ด้วย level ที่อัปเดต
+      }
+    }).catch(() => {});
+  }
 }
 
 init();
