@@ -103,8 +103,9 @@ def build(d):
         t=re.sub(r'(<div id="thinkAns"[^>]*>✅[^<]*</div></div>)',lambda m:m.group(1)+gbox,t,count=1)
     return t
 
-out=build(DATA)
-fn='Day%d_%s_%s.html'%(DATA['n'],DATA['title'].replace(' ',''),DATA['cefr'])
-open(os.path.join(OUTDIR,fn),'w',encoding='utf-8').write(out)
-leak=out.count('Day 61')+out.count('wla_d61')+out.count('D61-')+out.count('Happy Feelings')
-print("✅ สร้าง %s | leftover=%d (ควร 0)"%(fn,leak))
+if __name__=='__main__':
+    out=build(DATA)
+    fn='Day%d_%s_%s.html'%(DATA['n'],DATA['title'].replace(' ',''),DATA['cefr'])
+    open(os.path.join(OUTDIR,fn),'w',encoding='utf-8').write(out)
+    leak=out.count('Day 61')+out.count('wla_d61')+out.count('D61-')+out.count('Happy Feelings')
+    print("✅ สร้าง %s | leftover=%d (ควร 0)"%(fn,leak))

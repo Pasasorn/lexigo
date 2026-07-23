@@ -1,14 +1,18 @@
 actor
+adventure
 afraid
 airport
 angry
 apple
 arm
+arrive
+backpack
 bag
 baker
 balloon
 banana
 bank
+basket
 bath
 beautiful
 bed
@@ -21,6 +25,7 @@ bike
 bird
 birthday
 black
+blanket
 block
 blow
 blue
@@ -30,6 +35,7 @@ body
 book
 boot
 bored
+bottle
 bowl
 brave
 bread
@@ -48,6 +54,8 @@ buy
 cake
 calendar
 calm
+camera
+campfire
 candle
 cap
 car
@@ -70,6 +78,7 @@ clap
 class
 clay
 clean
+climb
 clock
 clothes
 cloud
@@ -98,6 +107,9 @@ dancer
 dark
 date
 day
+deer
+delicious
+depart
 desk
 different
 dinner
@@ -123,8 +135,10 @@ easy
 eat
 egg
 end
+engine
 eraser
 excited
+explore
 eye
 face
 factory
@@ -137,6 +151,7 @@ fast
 father
 favorite
 feel
+ferry
 field
 fine
 finger
@@ -147,6 +162,7 @@ flower
 fly
 fold
 foot
+forest
 forget
 free
 fresh
@@ -172,6 +188,7 @@ gray
 great
 green
 grow
+guide
 guitar
 hair
 hand
@@ -183,6 +200,7 @@ hello
 help
 here
 hide
+hill
 hobby
 hold
 holiday
@@ -208,6 +226,7 @@ kick
 kind
 kitchen
 kite
+lake
 lamp
 land
 late
@@ -235,6 +254,7 @@ market
 match
 meat
 meet
+memory
 milk
 minute
 moment
@@ -249,6 +269,7 @@ mouth
 move
 museum
 music
+napkin
 near
 neck
 need
@@ -271,11 +292,14 @@ painter
 paper
 park
 party
+passenger
 pay
 pen
 pencil
 people
+photo
 piano
+picnic
 pillow
 pilot
 pink
@@ -300,6 +324,7 @@ quiet
 race
 rain
 rainbow
+ranger
 read
 ready
 red
@@ -321,10 +346,12 @@ run
 safe
 salt
 same
+sandwich
 school
 score
 sea
 season
+seat
 see
 sell
 shape
@@ -345,11 +372,13 @@ sit
 skirt
 sky
 sleep
+sleepy
 slow
 small
 smart
 smell
 smile
+snack
 snow
 sock
 sofa
@@ -358,10 +387,12 @@ soup
 south
 space
 spend
+splash
 spoon
 sport
 spring
 square
+squirrel
 stairs
 stand
 star
@@ -374,9 +405,12 @@ street
 stretch
 strong
 student
+suitcase
 summer
 sun
 sunny
+sunrise
+sunset
 supper
 sure
 sweet
@@ -388,6 +422,7 @@ taste
 teacher
 team
 temple
+tent
 test
 thank
 there
@@ -400,9 +435,11 @@ today
 tomorrow
 tool
 tooth
+torch
 touch
 town
 toy
+trail
 train
 tree
 triangle
@@ -412,6 +449,8 @@ turn
 two
 umbrella
 upset
+valley
+view
 village
 visit
 wait
@@ -423,6 +462,7 @@ warm
 wash
 watch
 water
+waterfall
 wave
 way
 wear
@@ -435,12 +475,14 @@ wet
 wheel
 whisper
 white
+wildlife
 win
 wind
 window
 winter
 wish
 woman
+wonderful
 work
 world
 worried
