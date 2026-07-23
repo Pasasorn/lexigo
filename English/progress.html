@@ -114,27 +114,103 @@ canvas{max-height:200px}
 
 <script>
 const DAY_META={
-  d1:{day:1,week:1,title:"Leo's Big Day",theme:"Animals"},
-  d2:{day:2,week:1,title:"Mimi's Garden Walk",theme:"Animals"},
-  d3:{day:3,week:1,title:"The School Zoo",theme:"Animals"},
-  d4:{day:4,week:1,title:"Farm Morning",theme:"Animals"},
-  d5:{day:5,week:1,title:"Under the Sea",theme:"Animals"},
-  d6:{day:6,week:1,title:"Pets at Home",theme:"Animals"},
-  d7:{day:7,week:1,title:"Week 1 Review",theme:"Review"},
-  d8:{day:8,week:2,title:"Lunch at School",theme:"Food"},
-  d9:{day:9,week:2,title:"Mimi's Breakfast",theme:"Food"},
-  d10:{day:10,week:2,title:"Market Day",theme:"Food"},
-  d11:{day:11,week:2,title:"Cooking with Grandma",theme:"Food"},
-  d12:{day:12,week:2,title:"Fruit Basket",theme:"Food"},
-  d13:{day:13,week:2,title:"Healthy Snacks",theme:"Food"},
-  d14:{day:14,week:2,title:"Week 2 Review",theme:"Review"},
-  d15:{day:15,week:3,title:"Welcome Home",theme:"Home"},
-  d16:{day:16,week:3,title:"My Room",theme:"Home"},
-  d17:{day:17,week:3,title:"Family Dinner",theme:"Home"},
-  d18:{day:18,week:3,title:"Cleaning Day",theme:"Home"},
-  d19:{day:19,week:3,title:"Evening Routine",theme:"Home"},
-  d20:{day:20,week:3,title:"Weekend at Home",theme:"Home"},
-  d21:{day:21,week:3,title:"Week 3 Review",theme:"Review"},
+  d1:{day:1,week:1,title:"Leos Big Day",theme:"A1 · Level 1"},
+  d2:{day:2,week:1,title:"Mimis Garden Walk",theme:"A1 · Level 1"},
+  d3:{day:3,week:1,title:"Sams Farm Day",theme:"A1 · Level 1"},
+  d4:{day:4,week:1,title:"Duck At The Pond",theme:"A1 · Level 1"},
+  d5:{day:5,week:1,title:"Amy And The Butterfly",theme:"A1 · Level 1"},
+  d6:{day:6,week:1,title:"River Friends",theme:"A1 · Level 1"},
+  d7:{day:7,week:1,title:"Week1 Review",theme:"A1 · Level 1"},
+  d8:{day:8,week:2,title:"Leos Big Breakfast",theme:"A1 · Level 1"},
+  d9:{day:9,week:2,title:"Leos Tasty Lunch",theme:"A1 · Level 1"},
+  d10:{day:10,week:2,title:"Mimis Banana Cake",theme:"A1 · Level 1"},
+  d11:{day:11,week:2,title:"Leos Chicken Noodle",theme:"A1 · Level 1"},
+  d12:{day:12,week:2,title:"Mimis Grape Bowl",theme:"A1 · Level 1"},
+  d13:{day:13,week:2,title:"Leos Meal Time",theme:"A1 · Level 1"},
+  d14:{day:14,week:2,title:"Week2 Food Review",theme:"A1 · Level 1"},
+  d15:{day:15,week:3,title:"Welcome Home",theme:"A1 · Level 1"},
+  d16:{day:16,week:3,title:"The Living Room",theme:"A1 · Level 1"},
+  d17:{day:17,week:3,title:"The Kitchen",theme:"A1 · Level 1"},
+  d18:{day:18,week:3,title:"The Bedroom",theme:"A1 · Level 1"},
+  d19:{day:19,week:3,title:"My Family",theme:"A1 · Level 1"},
+  d20:{day:20,week:3,title:"Our House",theme:"A1 · Level 1"},
+  d21:{day:21,week:3,title:"Week3 Home Review",theme:"A1 · Level 1"},
+  d22:{day:22,week:4,title:"First Day At School",theme:"A1 · Level 1"},
+  d23:{day:23,week:4,title:"My Classroom",theme:"A1 · Level 1"},
+  d24:{day:24,week:4,title:"Leos School Bag",theme:"A1 · Level 1"},
+  d25:{day:25,week:4,title:"Playtime",theme:"A1 · Level 1"},
+  d26:{day:26,week:4,title:"My Teacher",theme:"A1 · Level 1"},
+  d27:{day:27,week:4,title:"Learning To Count",theme:"A1 · Level 1"},
+  d28:{day:28,week:4,title:"Week4 School Review",theme:"A1 · Level 1"},
+  d29:{day:29,week:5,title:"Colors Around Us",theme:"A1 · Level 1"},
+  d30:{day:30,week:5,title:"Shapes Everywhere",theme:"A1 · Level 1"},
+  d31:{day:31,week:5,title:"My Face",theme:"A1 · Level 2"},
+  d32:{day:32,week:5,title:"My Body",theme:"A1 · Level 2"},
+  d33:{day:33,week:5,title:"Smile And Laugh",theme:"A1 · Level 2"},
+  d34:{day:34,week:5,title:"Five Senses",theme:"A1 · Level 2"},
+  d35:{day:35,week:5,title:"Move Your Body",theme:"A1 · Level 2"},
+  d36:{day:36,week:6,title:"Strong And Tall",theme:"A1 · Level 2"},
+  d37:{day:37,week:6,title:"Week5 Review",theme:"A1 · Level 2"},
+  d38:{day:38,week:6,title:"What To Wear",theme:"A1 · Level 2"},
+  d39:{day:39,week:6,title:"More Clothes",theme:"A1 · Level 2"},
+  d40:{day:40,week:6,title:"Getting Dressed",theme:"A1 · Level 2"},
+  d41:{day:41,week:6,title:"Dark Colors",theme:"A1 · Level 2"},
+  d42:{day:42,week:6,title:"Pretty And Nice",theme:"A1 · Level 2"},
+  d43:{day:43,week:7,title:"At The Clothes Shop",theme:"A1 · Level 2"},
+  d44:{day:44,week:7,title:"Week6 Review",theme:"A1 · Level 2"},
+  d45:{day:45,week:7,title:"Look At The Sky",theme:"A1 · Level 2"},
+  d46:{day:46,week:7,title:"Four Seasons",theme:"A1 · Level 2"},
+  d47:{day:47,week:7,title:"Nature Wonders",theme:"A1 · Level 2"},
+  d48:{day:48,week:7,title:"Weather Actions",theme:"A1 · Level 2"},
+  d49:{day:49,week:7,title:"Warm And Cool",theme:"A1 · Level 2"},
+  d50:{day:50,week:8,title:"Day By Day",theme:"A1 · Level 2"},
+  d51:{day:51,week:8,title:"Week7 Review",theme:"A1 · Level 2"},
+  d52:{day:52,week:8,title:"Around Town",theme:"A1 · Level 2"},
+  d53:{day:53,week:8,title:"Big Buildings",theme:"A1 · Level 2"},
+  d54:{day:54,week:8,title:"Find The Way",theme:"A1 · Level 2"},
+  d55:{day:55,week:8,title:"Lets Go",theme:"A1 · Level 2"},
+  d56:{day:56,week:8,title:"Near And Far",theme:"A1 · Level 2"},
+  d57:{day:57,week:9,title:"People In Town",theme:"A1 · Level 2"},
+  d58:{day:58,week:9,title:"Week8 Review",theme:"A1 · Level 2"},
+  d59:{day:59,week:9,title:"Things That Go",theme:"A1 · Level 2"},
+  d60:{day:60,week:9,title:"Lets Travel",theme:"A1 · Level 2"},
+  d61:{day:61,week:9,title:"Happy Feelings",theme:"A1 · Level 3"},
+  d62:{day:62,week:9,title:"Big Feelings",theme:"A1 · Level 3"},
+  d63:{day:63,week:9,title:"I Think I Hope",theme:"A1 · Level 3"},
+  d64:{day:64,week:10,title:"Being Kind",theme:"A1 · Level 3"},
+  d65:{day:65,week:10,title:"Show It",theme:"A1 · Level 3"},
+  d66:{day:66,week:10,title:"Feeling Great",theme:"A1 · Level 3"},
+  d67:{day:67,week:10,title:"Week9 Review",theme:"A1 · Level 3"},
+  d68:{day:68,week:10,title:"Wake Up",theme:"A1 · Level 3"},
+  d69:{day:69,week:10,title:"School Time",theme:"A1 · Level 3"},
+  d70:{day:70,week:10,title:"In The Evening",theme:"A1 · Level 3"},
+  d71:{day:71,week:11,title:"Telling Time",theme:"A1 · Level 3"},
+  d72:{day:72,week:11,title:"Days And Months",theme:"A1 · Level 3"},
+  d73:{day:73,week:11,title:"Special Days",theme:"A1 · Level 3"},
+  d74:{day:74,week:11,title:"Week10 Review",theme:"A1 · Level 3"},
+  d75:{day:75,week:11,title:"Lets Play Sport",theme:"A1 · Level 3"},
+  d76:{day:76,week:11,title:"Ball Games",theme:"A1 · Level 3"},
+  d77:{day:77,week:11,title:"Make Music",theme:"A1 · Level 3"},
+  d78:{day:78,week:12,title:"Art And Craft",theme:"A1 · Level 3"},
+  d79:{day:79,week:12,title:"Fun And Games",theme:"A1 · Level 3"},
+  d80:{day:80,week:12,title:"Story And Magic",theme:"A1 · Level 3"},
+  d81:{day:81,week:12,title:"Week11 Review",theme:"A1 · Level 3"},
+  d82:{day:82,week:12,title:"People Who Help",theme:"A1 · Level 3"},
+  d83:{day:83,week:12,title:"More Jobs",theme:"A1 · Level 3"},
+  d84:{day:84,week:12,title:"At Work",theme:"A1 · Level 3"},
+  d85:{day:85,week:13,title:"Places In Town",theme:"A1 · Level 3"},
+  d86:{day:86,week:13,title:"Money And Shopping",theme:"A1 · Level 3"},
+  d87:{day:87,week:13,title:"Our World",theme:"A1 · Level 3"},
+  d88:{day:88,week:13,title:"Week12 Review",theme:"A1 · Level 3"},
+  d89:{day:89,week:13,title:"Big Wide World",theme:"A1 · Level 3"},
+  d90:{day:90,week:13,title:"A New Journey",theme:"A1 · Level 3"},
+  d91:{day:91,week:13,title:"Getting Ready",theme:"A2 · Level 4"},
+  d92:{day:92,week:14,title:"On The Way",theme:"A2 · Level 4"},
+  d93:{day:93,week:14,title:"In The Forest",theme:"A2 · Level 4"},
+  d94:{day:94,week:14,title:"Animals We See",theme:"A2 · Level 4"},
+  d95:{day:95,week:14,title:"Picnic Lunch",theme:"A2 · Level 4"},
+  d96:{day:96,week:14,title:"Evening And Home",theme:"A2 · Level 4"},
+  d97:{day:97,week:14,title:"Week17 Review",theme:"A2 · Level 4"}
 };
 const WEEK_NAMES={1:'สัปดาห์ 1 — Animals 🐾',2:'สัปดาห์ 2 — Food 🍎',3:'สัปดาห์ 3 — Home 🏠'};
 const MONTH_TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
@@ -170,6 +246,10 @@ function switchTab(id,btn){
 function render(){
   const prog=JSON.parse(localStorage.getItem('wla_progress')||'{}');
   const keys=Object.keys(prog);
+  // ── Level ของนักเรียน (จาก wla_student) ──
+  const _st=JSON.parse(localStorage.getItem('wla_student')||'null');
+  const MY_LEVEL=(_st&&_st.level)?parseInt(_st.level):1;
+  const LEVEL_TOTAL=(_st&&_st.type==='lifetime')?448:30;
 
   // ── stats ──
   const allOverall=keys.map(k=>prog[k].overall).filter(v=>v!=null);
@@ -302,11 +382,11 @@ function render(){
       return `<div class="mcard">
         <div class="mcard-name">ปี ${y}</div>
         <div class="mcard-n" style="color:${sc(yAvg??50)}">${yAvg!=null?yAvg+'%':'—'}</div>
-        <div class="mcard-sub">${yd.days.length} วัน / 365 วัน</div>
+        <div class="mcard-sub">${yd.days.length} วัน / ${LEVEL_TOTAL} วัน (Level ${MY_LEVEL})</div>
         <div style="margin-top:6px;height:6px;background:#E0E0E0;border-radius:3px;overflow:hidden">
-          <div style="width:${Math.min(100,Math.round(yd.days.length/365*100))}%;height:100%;background:#5C6BC0;border-radius:3px"></div>
+          <div style="width:${Math.min(100,Math.round(yd.days.length/LEVEL_TOTAL*100))}%;height:100%;background:#5C6BC0;border-radius:3px"></div>
         </div>
-        <div style="font-size:10px;color:#90A4AE;font-weight:700;margin-top:3px">${Math.round(yd.days.length/365*100)}% ของปี</div>
+        <div style="font-size:10px;color:#90A4AE;font-weight:700;margin-top:3px">${Math.min(100,Math.round(yd.days.length/LEVEL_TOTAL*100))}% ของ Level</div>
         ${s3avg!=null?`<div style="margin-top:6px;font-size:11px;font-weight:800;color:${sc(s3avg)}">🗣️ พูด avg: ${s3avg}%</div>`:''}
       </div>`;
     }).join('')+'</div>';
