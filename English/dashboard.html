@@ -121,7 +121,7 @@ body{background:#FFF8F0;min-height:100vh;padding:16px}
     <div class="stat-card"><span class="num" id="statPct">0%</span><span class="lbl">ความคืบหน้า</span></div>
   </div>
 
-  <div class="sec-title">📅 บทเรียนของฉัน</div>
+  <div class="sec-title" id="secTitle">📅 บทเรียนของฉัน</div>
   <div class="day-grid" id="dayGrid"></div>
 </div>
 
@@ -433,7 +433,65 @@ function showDashboard(st) {
   }
   document.getElementById('gridSection').style.display = 'block';
   document.getElementById('bottomBar').style.display   = 'flex';
-  buildGrid(startDay, endDay, isAdmin);
+  // ── UX 2 ชั้น: เก็บ state แล้วโชว์การ์ด Level ก่อน ──
+  window._ST = st;
+  const maxContentLevel = Math.ceil(Math.max(...ALL_DAYS.map(d => d.n)) / 30);
+  window._MAXLEVEL = (isAdmin || st.type === 'lifetime') ? maxContentLevel : Math.min(parseInt(st.level || 1), 15);
+  window._ISADMIN = isAdmin;
+  showLevels();
+}
+
+// ── ชั้น 1: การ์ด Level ──
+function levelMeta(L){
+  const cefr = L<=3?'A1':L<=6?'A2':L<=10?'B1':'B2';
+  const s = (L-1)*30+1, e = L>=15?448:L*30;
+  return { cefr, s, e };
+}
+function showLevels(){
+  const grid = document.getElementById('dayGrid');
+  grid.innerHTML = '';
+  document.getElementById('secTitle').textContent = '📚 เลือก Level ที่จะเรียน';
+  const maxContent = Math.max(...ALL_DAYS.map(d => d.n));
+  let totalDone = 0, totalDays = 0;
+  for (let L = 1; L <= window._MAXLEVEL; L++){
+    const { cefr, s, e } = levelMeta(L);
+    const hasContent = s <= maxContent;
+    const lastDay = Math.min(e, maxContent);
+    let done = 0; const total = hasContent ? (lastDay - s + 1) : 30;
+    for (let d = s; d <= lastDay; d++){
+      const v = localStorage.getItem('wla_d' + d);
+      if (v && v !== 'LEVEL-START') done++;
+    }
+    if (hasContent){ totalDone += done; totalDays += total; }
+    const pct = total ? Math.round(done/total*100) : 0;
+    const card = document.createElement('div');
+    card.className = 'day-card ' + (hasContent ? 'current' : 'locked');
+    card.style.cssText = 'grid-column:1/-1;text-align:left;padding:16px;cursor:'+(hasContent?'pointer':'not-allowed');
+    card.innerHTML =
+      '<div style="display:flex;align-items:center;gap:12px">'+
+        '<div style="font-size:30px">'+(hasContent?'📘':'📦')+'</div>'+
+        '<div style="flex:1">'+
+          '<div style="font-size:16px;font-weight:900;color:#37474F">Level '+L+' · '+cefr+'</div>'+
+          '<div style="font-size:12px;color:#78909C;font-weight:700">Day '+s+'–'+e+(hasContent?' · '+done+'/'+total+' วัน ('+pct+'%)':' · กำลังเตรียม')+'</div>'+
+          (hasContent?'<div style="margin-top:6px;height:6px;background:#E0E0E0;border-radius:3px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:#43A047;border-radius:3px"></div></div>':'')+
+        '</div>'+
+        '<div style="font-size:22px;color:#B0BEC5">'+(hasContent?'›':'🔒')+'</div>'+
+      '</div>';
+    if (hasContent) card.onclick = () => openLevel(L);
+    grid.appendChild(card);
+  }
+  const pct = totalDays ? Math.round(totalDone/totalDays*100) : 0;
+  document.getElementById('statDone').textContent  = window._ISADMIN ? '—' : totalDone;
+  document.getElementById('statTotal').textContent = totalDays;
+  document.getElementById('statPct').textContent   = window._ISADMIN ? 'ADMIN' : pct + '%';
+}
+// ── ชั้น 2: วันใน Level ที่เลือก ──
+function openLevel(L){
+  const { s, e } = levelMeta(L);
+  const maxContent = Math.max(...ALL_DAYS.map(d => d.n));
+  document.getElementById('secTitle').innerHTML =
+    '<span onclick="showLevels()" style="cursor:pointer;color:#5C6BC0">← Levels</span> · 📅 Level '+L;
+  buildGrid(s, Math.min(e, maxContent), window._ISADMIN);
 }
 
 // ── MAIN ──

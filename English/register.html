@@ -890,6 +890,20 @@ async function doPayment() {
 
 // ── STEP 2: Show pending → redirect to p3 ──
 function showPending(d) {
+  // ── ซื้อ Level เพิ่ม (บัญชีเดิม) → ข้ามฟอร์มลงทะเบียน ไปหน้ารออนุมัติเลย ──
+  if (window._BUYMORE) {
+    const nick = window._BUYMORE.nick || window._BUYMORE.fullname || 'คุณ';
+    document.getElementById('pendTable').innerHTML = `
+      <div class="irow"><span class="ilbl">นักเรียน</span><span class="ival">${nick}</span></div>
+      <div class="irow"><span class="ilbl">Level ใหม่</span><span class="ival hi">${d.pkgName||'—'}</span></div>
+      <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿ ${Number(d.price||0).toLocaleString()}</span></div>
+      <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:#E65100;text-align:center">
+        ⏳ รอครูอนุมัติสลิป<br><span style="font-size:11px;font-weight:600">อนุมัติแล้ว Level ใหม่จะปลดล็อกอัตโนมัติ<br>ใช้ code เดิม login ได้เลย ไม่ต้องสมัครใหม่</span>
+      </div>
+      <a href="dashboard.html" style="display:block;margin-top:14px;background:linear-gradient(135deg,#5C6BC0,#3949AB);color:#fff;border-radius:12px;padding:12px;font-size:15px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito',sans-serif">🏠 กลับหน้าหลัก</a>`;
+    setStep(2); go(2);
+    return;  // ไม่ไปฟอร์มลงทะเบียน
+  }
   document.getElementById('pendTable').innerHTML = `
     <div class="irow"><span class="ilbl">ชื่อ</span><span class="ival">${d.name||'—'}</span></div>
     <div class="irow"><span class="ilbl">Package</span><span class="ival hi">${d.pkgName||'—'}</span></div>
