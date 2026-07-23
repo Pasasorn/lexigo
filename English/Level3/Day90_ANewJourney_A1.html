@@ -151,8 +151,8 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
     <img src="img_day90.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
-  <div class="sbox">Every big <span class="vocab">journey</span> has a start. Leo and Mimi learned so many words! One level comes to an <span class="vocab">end</span>. But they <span class="vocab">grow</span> bigger and smarter every day. Say <span class="vocab">hello</span> to Level 4! <span class="vocab">Goodbye</span> A1, <span class="vocab">hello</span> new <span class="vocab">journey</span>. The adventure goes on!</div>
-  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What comes to an end?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ One level comes to an end.</div></div>
+  <div class="sbox">Leo and Mimi stand on a green hill. What a long <span class="vocab">journey</span>! says Leo. They began at a small house and walked so far. Now the sun starts to set and the day is near its <span class="vocab">end</span>. We learned so much, and we <span class="vocab">grow</span> every day! says Mimi. They wave <span class="vocab">goodbye</span> to the old path. Tomorrow a new <span class="vocab">journey</span> will <span class="vocab">begin</span>. <span class="vocab">Hello</span>, new adventure!</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: How do Leo and Mimi feel about their journey?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ It was a long and happy journey.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -233,18 +233,18 @@ const WORDS=[
   {e:'goodbye',t:'ลาก่อน',ph:'/ɡʊdˈbaɪ/',em:'🤗'}
 ];
 const SS=[
-  "Every journey has a start.",
-  "Leo says hello to A2!",
-  "One level comes to an end.",
-  "Leo and Mimi grow.",
-  "Goodbye A1, hello new journey!"
+  "Leo and Mimi stand on a green hill.",
+  "What a long journey! says Leo.",
+  "The day is near its end.",
+  "We grow every day! says Mimi.",
+  "Hello, new adventure!"
 ];
 const DS=[
-  "Leo says hello to A2!",
-  "Leo and Mimi grow.",
-  "Goodbye A1, hello new journey!"
+  "What a long journey! says Leo.",
+  "We grow every day! says Mimi.",
+  "Hello, new adventure!"
 ];
-const STORY="Every big journey has a start. Leo and Mimi learned so many words! One level comes to an end. But they grow bigger and smarter every day. Say hello to Level 4! Goodbye A1, hello new journey. The adventure goes on!";
+const STORY="Leo and Mimi stand on a green hill. What a long journey! says Leo. They began at a small house and walked so far. Now the sun starts to set and the day is near its end. We learned so much, and we grow every day! says Mimi. They wave goodbye to the old path. Tomorrow a new journey will begin. Hello, new adventure!";
 const PREV_KEY='wla_d89',MY_KEY='wla_d90',PREV_PFX='D89-',MY_DAY=90;
 let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
