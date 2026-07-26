@@ -464,13 +464,24 @@ function actionActivateStudent(p, cb) {
   if (!code) return respond({status:'error', msg:'ระบุ code ด้วย'}, cb);
   const sh   = getSheet(SHEET_STUDENTS);
   const data = sh.getDataRange().getValues();
+  let found = false;
   for (let i = 1; i < data.length; i++) {
     if (data[i][0].toString() === code) {
       sh.getRange(i + 1, 4).setValue('active');
-      return respond({status:'ok', code}, cb);
+      found = true;
+      break;
     }
   }
-  return respond({status:'not_found'}, cb);
+  if (!found) return respond({status:'not_found'}, cb);
+  // อัปเดตสถานะ order ที่ผูกกับ code นี้ให้เป็น verified (order จะหายจากรายการรออนุมัติ)
+  const purSh   = getSheet(SHEET_PURCHASES);
+  const purData = purSh.getDataRange().getValues();
+  for (let i = 1; i < purData.length; i++) {
+    if (purData[i][11].toString() === code && purData[i][8] !== 'rejected') {
+      purSh.getRange(i + 1, 9).setValue('verified');  // status column (index 8 → col 9)
+    }
+  }
+  return respond({status:'ok', code}, cb);
 }
 
 // ── Streak helper ────────────────────────────────────────────
