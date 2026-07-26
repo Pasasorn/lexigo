@@ -1129,7 +1129,14 @@ function actionCheckApproval(p, cb) {
   const data = sh.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
     if (data[i][0].toString() === code) {
-      return respond({status:'ok', approval_status: data[i][3], nick: data[i][1], type: data[i][6], pkg_name: data[i][7]}, cb);
+      // ดึง progress ของนักเรียน (คืนกลับให้ client restore ข้ามเครื่องได้)
+      const pSh2   = getSheet(SHEET_PROGRESS);
+      const pData2 = pSh2.getDataRange().getValues();
+      const prog2  = {};
+      for (let k = 1; k < pData2.length; k++) {
+        if (pData2[k][0].toString().toUpperCase() === code.toUpperCase()) prog2['d' + pData2[k][1]] = pData2[k][2];
+      }
+      return respond({status:'ok', approval_status: data[i][3], nick: data[i][1], type: data[i][6], pkg_name: data[i][7], progress: prog2}, cb);
     }
   }
   return respond({status:'not_found'}, cb);

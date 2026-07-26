@@ -141,6 +141,19 @@ async function doLogin() {
         startDay: 1,
         endDay: 448
       };
+      // ── ถ้าเปลี่ยนบัญชี (code ไม่ตรงกับที่เคย login ในเครื่องนี้) → ล้าง progress เก่า ──
+      const prevCode = localStorage.getItem('wla_last_code');
+      if (prevCode !== code) {
+        for (let d = 1; d <= 448; d++) localStorage.removeItem('wla_d' + d);
+        localStorage.removeItem('wla_progress');
+      }
+      // restore progress จริงของบัญชีนี้จาก backend (ข้ามเครื่องได้)
+      if (res.progress && typeof res.progress === 'object') {
+        Object.keys(res.progress).forEach(k => {
+          if (/^d\d+$/.test(k) && res.progress[k]) localStorage.setItem('wla_' + k, res.progress[k]);
+        });
+      }
+      localStorage.setItem('wla_last_code', code);
       localStorage.setItem(SK, JSON.stringify(st));
       localStorage.removeItem('wla_admin'); // clear admin bypass
       location.href = 'dashboard.html';
