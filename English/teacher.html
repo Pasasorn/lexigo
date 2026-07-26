@@ -368,6 +368,13 @@ async function loadPurchases() {
   }
 }
 
+// เติม 0 นำหน้าเบอร์ที่หายไป (Sheets เก่าตัด 0)
+function fixPhone(p){
+  p = (p==null?'':String(p)).trim();
+  if (!p) return '-';
+  if (/^\d{9}$/.test(p)) return '0' + p;   // 9 หลัก = ขาด 0 หน้า
+  return p;
+}
 function renderOrders() {
   const wrap = document.getElementById('ordersWrap');
   if (!allOrders.length) {
@@ -431,7 +438,7 @@ function renderOrders() {
     return `<div class="order-card ${o.status}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px">
         <div>
-          <div style="font-size:14px;font-weight:900;color:#1E3A8A">${o.name} <span style="font-size:11px;color:#78909C;font-weight:700">${o.phone}</span></div>
+          <div style="font-size:14px;font-weight:900;color:#1E3A8A">${o.name} <span style="font-size:11px;color:#78909C;font-weight:700">${fixPhone(o.phone)}</span></div>
           <div style="font-size:12px;font-weight:700;color:#546E7A;margin-top:1px">${o.pkg_name} · <strong style="color:#E65100">฿${Number(o.price).toLocaleString()}</strong></div>
           <div style="font-size:11px;color:#90A4AE;margin-top:1px">${o.email} ${o.line_id ? '· Line: '+o.line_id : ''} · ${date}</div>
         </div>
@@ -491,6 +498,12 @@ async function addStudent() {
   const code = document.getElementById('addCode').value.trim();
   const note = document.getElementById('addNote').value.trim();
   const result = document.getElementById('addResult');
+  // กันรหัสขึ้นต้นด้วย 0 (Sheets จะตัด 0 ทิ้ง → login ไม่เจอ)
+  if (code && code.charAt(0) === '0') {
+    result.textContent = '⚠️ รหัสห้ามขึ้นต้นด้วย 0 — กรุณาสร้างรหัสใหม่ ขึ้นต้นด้วย 1-9';
+    result.style.color = '#C62828';
+    return;
+  }
   result.textContent = '⏳ กำลังเพิ่ม...';
   result.style.color = '#78909C';
   try {

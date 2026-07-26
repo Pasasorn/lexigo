@@ -1108,7 +1108,9 @@ function actionSelfRegister(p, cb) {
   // อัปเดต Purchases row ด้วย contact info + student_code
   if (purRow >= 0) {
     purSh.getRange(purRow + 1, 2).setValue(fullName);  // name
-    purSh.getRange(purRow + 1, 3).setValue(phone);     // phone
+    const phoneCell = purSh.getRange(purRow + 1, 3);
+    phoneCell.setNumberFormat('@');                    // บังคับเป็น text กัน Sheets ตัด 0
+    phoneCell.setValue(phone);                         // phone (เก็บ 0 นำหน้า)
     purSh.getRange(purRow + 1, 4).setValue(line);      // line_id
     purSh.getRange(purRow + 1, 5).setValue(email);     // email
     purSh.getRange(purRow + 1, 9).setValue('pending_approval');
