@@ -378,10 +378,19 @@ function renderOrders() {
   const rank = s => s === 'pending_approval' ? 0 : (s === 'pending' || !s) ? 1 : 2;
   allOrders.sort((a,b) => rank(a.status) - rank(b.status));
   const pendingCount = allOrders.filter(o => o.status === 'pending_approval').length;
-  const header = pendingCount
-    ? '<div style="background:#EDE9FE;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:13px;font-weight:800;color:#5B21B6;text-align:center">📋 รออนุมัติ ' + pendingCount + ' รายการ</div>'
-    : '<div style="background:#F0FDF4;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:13px;font-weight:800;color:#065F46;text-align:center">✅ ไม่มีรายการค้างอนุมัติ</div>';
-  wrap.innerHTML = header + allOrders.map(o => {
+  if (window._ordersFilter === undefined) window._ordersFilter = 'pending'; // เริ่มที่ "เฉพาะรออนุมัติ"
+  const showAll = window._ordersFilter === 'all';
+  const toggle =
+    '<div style="display:flex;gap:6px;margin-bottom:10px">'+
+      '<button onclick="window._ordersFilter=\'pending\';renderOrders()" style="flex:1;border-radius:9px;padding:7px;font-size:12px;font-weight:800;cursor:pointer;border:2px solid #C4B5FD;font-family:\'Nunito\',sans-serif;'+(!showAll?'background:#5B21B6;color:#fff':'background:#fff;color:#5B21B6')+'">📋 เฉพาะรออนุมัติ ('+pendingCount+')</button>'+
+      '<button onclick="window._ordersFilter=\'all\';renderOrders()" style="flex:1;border-radius:9px;padding:7px;font-size:12px;font-weight:800;cursor:pointer;border:2px solid #CBD5E1;font-family:\'Nunito\',sans-serif;'+(showAll?'background:#475569;color:#fff':'background:#fff;color:#475569')+'">📚 ทั้งหมด ('+allOrders.length+')</button>'+
+    '</div>';
+  const shown = showAll ? allOrders : allOrders.filter(o => o.status === 'pending_approval' || o.status === 'pending' || !o.status);
+  if (!shown.length){
+    wrap.innerHTML = toggle + '<div style="background:#F0FDF4;border-radius:10px;padding:14px;font-size:13px;font-weight:800;color:#065F46;text-align:center">✅ ไม่มีรายการค้างอนุมัติ</div>';
+    return;
+  }
+  wrap.innerHTML = toggle + shown.map(o => {
     const statusTag = o.status === 'verified'
       ? '<span class="order-status st-verified">✅ Verified</span>'
       : o.status === 'rejected'
