@@ -32,11 +32,11 @@ nav .container{display:flex;align-items:center;justify-content:space-between;hei
   padding:9px 20px;background:var(--orange-s);border-radius:100px}
 
 /* HERO */
-.hero{background:linear-gradient(180deg,#FFF6EF 0%,#FFFFFF 100%);padding:56px 0 62px;text-align:center;position:relative;overflow:hidden}
+.hero{background:linear-gradient(165deg,#FFE9DC 0%,#FFF3E8 45%,#F3F8FF 100%);padding:56px 0 72px;text-align:center;position:relative;overflow:hidden}
 .blob{position:absolute;border-radius:50%;opacity:.5;pointer-events:none}
-.b1{width:150px;height:150px;background:#FFE0CC;top:-40px;left:-40px}
-.b2{width:110px;height:110px;background:#DFF3FF;bottom:10px;right:-30px}
-.b3{width:70px;height:70px;background:#FFE9F2;top:70px;right:40px}
+.b1{width:180px;height:180px;background:#FFD3B8;top:-50px;left:-50px}
+.b2{width:140px;height:140px;background:#CDE9FF;bottom:-20px;right:-40px}
+.b3{width:80px;height:80px;background:#FFD9E7;top:70px;right:40px}
 .hero-in{position:relative;z-index:2}
 .pill{display:inline-block;font-size:15px;font-weight:700;color:var(--orange);
   background:#fff;padding:7px 20px;border-radius:100px;margin-bottom:20px;box-shadow:0 2px 10px rgba(255,122,69,.16)}
@@ -47,8 +47,14 @@ h1 em{font-style:normal;color:var(--orange)}
 .btn-main{background:var(--orange);color:#fff;padding:16px 38px;font-size:19px;
   box-shadow:0 6px 0 #E85F2C;transition:.12s}
 .btn-main:active{transform:translateY(3px);box-shadow:0 3px 0 #E85F2C}
-.btn-2{color:var(--body);padding:16px 24px;font-size:17px;font-weight:700}
-.hero-note{font-size:15px;font-weight:600;color:var(--muted);margin-top:20px}
+.btn-2{color:var(--body);padding:14px 28px;font-size:17px;font-weight:700;
+  background:#fff;box-shadow:0 2px 10px rgba(61,51,85,.08);margin-top:18px}
+.hero-note{font-size:15px;font-weight:600;color:var(--muted);margin-top:14px}
+/* กล่องเน้นปุ่มทดลองฟรี */
+.cta-box{display:inline-block;background:#fff;border:3px dashed #FFC49B;
+  border-radius:30px;padding:26px 30px 20px;box-shadow:0 8px 26px rgba(255,122,69,.15)}
+.cta-box .hero-note{margin:14px 0 0}
+@media(max-width:480px){.cta-box{padding:22px 18px 18px;display:block}}
 
 /* SECTION */
 section{padding:58px 0}
@@ -158,10 +164,12 @@ footer a{color:var(--orange);font-weight:700;text-decoration:none}
     <div class="pill"><span class="float-e" style="position:static;display:inline-block;font-size:17px;animation-duration:2.6s">🎈</span> สำหรับเด็ก 5–12 ปี</div>
     <h1>เปิดโลกคำศัพท์<br>วันละนิด <em>พิชิต 3,000 คำ</em></h1>
     <p>เรียนภาษาอังกฤษผ่านเรื่องราวสนุกๆ<br>ฟัง พูด อ่าน คิด พร้อม AI ฟังเสียงให้คะแนนทันที</p>
-    <div class="point-d" style="margin-bottom:6px">👇</div>
-    <a href="trial.html" class="btn btn-main"><span class="wiggle">🎁</span> ทดลองเรียนฟรี 7 วัน</a>
+    <div class="point-d" style="margin-bottom:14px">👇</div>
+    <div class="cta-box">
+      <a href="trial.html" class="btn btn-main"><span class="wiggle">🎁</span> ทดลองเรียนฟรี 7 วัน</a>
+      <p class="hero-note">ไม่ต้องผูกบัตร · Day 1–3 เข้าเรียนได้เลย</p>
+    </div>
     <a href="register.html" class="btn btn-2">ดูแพ็กเกจ</a>
-    <p class="hero-note">ไม่ต้องผูกบัตร · Day 1–3 เข้าเรียนได้เลย</p>
   </div>
 </div>
 
