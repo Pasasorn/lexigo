@@ -874,9 +874,9 @@ function actionUploadSlip(p, cb) {
       'slip_' + orderId + '_' + Date.now() + '.jpg'
     );
 
-    // สร้าง/หาโฟลเดอร์ "LexiGo Slips" ใน Drive
-    const folderIter = DriveApp.getFoldersByName('LexiGo Slips');
-    const folder = folderIter.hasNext() ? folderIter.next() : DriveApp.createFolder('LexiGo Slips');
+    // สร้าง/หาโฟลเดอร์ "PeekaWord Slips" ใน Drive
+    const folderIter = DriveApp.getFoldersByName('PeekaWord Slips');
+    const folder = folderIter.hasNext() ? folderIter.next() : DriveApp.createFolder('PeekaWord Slips');
     const file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     const url = file.getUrl();

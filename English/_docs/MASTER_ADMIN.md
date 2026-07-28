@@ -1,7 +1,7 @@
-# 🔐 LexiGo — Master Admin (ลิงก์ + รหัสทั้งหมด)
+# 🔐 PeekaWord — Master Admin (ลิงก์ + รหัสทั้งหมด)
 
 > อัปเดต: 2026-07-23 | **เก็บไฟล์นี้เป็นความลับ อย่าแชร์ลูกค้า**
-> Base URL: `https://pasasorn.github.io/lexigo/English/`
+> Base URL: `https://pasasorn.github.io/peekaword/English/`
 
 ---
 

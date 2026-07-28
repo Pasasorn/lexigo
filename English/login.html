@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LexiGo — เข้าสู่ระบบ</title>
+<title>PeekaWord — เข้าสู่ระบบ</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
@@ -34,8 +34,9 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
 <div class="wrap">
   <div class="logo-area">
     <div class="logo-ico">📚</div>
-    <div class="logo-name">LexiGo</div>
-    <div class="logo-tagline">Go ทุกวัน · Grow ทุกคำ</div>
+    <div class="logo-name">PeekaWord</div>
+    <div class="logo-tagline">เปิดโลกคำศัพท์</div>
+    <div class="logo-tagline" style="font-size:12px;margin-top:1px">ชวนฟัง ชวนคิด ฝึกพูดวันละนิด พิชิต 3,000 คำ</div>
   </div>
 
   <div class="card">
@@ -59,6 +60,17 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
 
     <button class="btn" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ →</button>
 
+    <!-- ลืมรหัส -->
+    <div style="text-align:center;margin-top:14px">
+      <span onclick="toggleRecover()" style="font-size:13px;font-weight:800;color:#1E88E5;cursor:pointer;text-decoration:underline">🔑 ลืมรหัสนักเรียน?</span>
+    </div>
+    <div id="recoverBox" style="display:none;margin-top:12px;background:#F1F8E9;border:2px solid #C5E1A5;border-radius:14px;padding:14px">
+      <div style="font-size:13px;font-weight:800;color:#33691E;margin-bottom:8px">กรอกอีเมลที่ใช้สมัคร เราจะแสดงรหัสให้</div>
+      <input id="recEmail" class="inp" type="email" placeholder="you@example.com" style="margin-bottom:8px">
+      <button class="btn" style="background:linear-gradient(135deg,#7CB342,#33691E);margin-top:0;font-size:15px;padding:12px" onclick="doRecover()">ค้นหารหัสของฉัน</button>
+      <div id="recResult" style="font-size:13px;font-weight:800;margin-top:10px;min-height:18px;text-align:center"></div>
+    </div>
+
     <div id="pendingMsg" class="pending-msg">
       <div class="p-ico">📋</div>
       <h3>รอครูอนุมัติอยู่นะ</h3>
@@ -73,6 +85,31 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
 <script>
 const SK  = 'wla_student';
 const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+
+// ── ลืมรหัส: ค้นด้วย email ──
+function toggleRecover(){
+  const b=document.getElementById('recoverBox');
+  b.style.display = b.style.display==='none' ? 'block' : 'none';
+  if(b.style.display==='block') document.getElementById('recEmail').focus();
+}
+async function doRecover(){
+  const email=document.getElementById('recEmail').value.trim();
+  const out=document.getElementById('recResult');
+  if(!email || !email.includes('@')){ out.style.color='#C62828'; out.textContent='⚠️ กรอกอีเมลให้ถูกต้อง'; return; }
+  out.style.color='#78909C'; out.textContent='⏳ กำลังค้นหา...';
+  try{
+    const res=await jsonp({ action:'recover', email });
+    if(res.status==='ok'){
+      out.style.color='#2E7D32';
+      out.innerHTML='✅ พบแล้ว! รหัสของ <strong>'+(res.name||'คุณ')+'</strong> คือ<br><span style="font-size:22px;font-family:monospace;letter-spacing:3px;color:#1E88E5">'+res.code+'</span>';
+      document.getElementById('codeInp').value=res.code;
+      if(res.name) document.getElementById('nickInp').value=res.name;
+    } else {
+      out.style.color='#C62828';
+      out.textContent='❌ ไม่พบอีเมลนี้ในระบบ — ติดต่อครูที่ Line: @PeekaWord';
+    }
+  }catch(e){ out.style.color='#C62828'; out.textContent='❌ เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'; }
+}
 
 function jsonp(params) {
   return new Promise((resolve, reject) => {
@@ -162,7 +199,7 @@ async function doLogin() {
       pendEl.style.display = 'block';
 
     } else if (res.approval_status === 'rejected') {
-      errEl.innerHTML = '❌ รหัสนี้ถูก reject<br><span style="font-size:11px;font-weight:700">ติดต่อ Line: <strong>@LexiGo</strong></span>';
+      errEl.innerHTML = '❌ รหัสนี้ถูก reject<br><span style="font-size:11px;font-weight:700">ติดต่อ Line: <strong>@PeekaWord</strong></span>';
       errEl.style.display = 'block';
 
     } else {
