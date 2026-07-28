@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PeekaWord — ทดลองเรียนฟรี 7 วัน</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:#FFF8F0;min-height:100vh;padding:16px}
+.wrap{max-width:520px;margin:0 auto}
+.hdr{background:linear-gradient(135deg,#FF6B35,#FF9800);border-radius:22px;padding:22px 18px;color:#fff;text-align:center;margin-bottom:14px}
+.hdr .ico{font-size:46px;line-height:1}
+.hdr h1{font-size:26px;font-weight:900;margin-top:4px}
+.hdr .tag{font-size:13px;font-weight:800;opacity:.95;margin-top:2px}
+.hdr .sub{font-size:12px;font-weight:600;opacity:.9;margin-top:1px}
+.badge{display:inline-block;background:rgba(255,255,255,.25);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:900;margin-top:10px}
+.card{background:#fff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 3px 14px rgba(0,0,0,.06)}
+.sec-t{font-size:15px;font-weight:900;color:#37474F;margin-bottom:10px;text-align:center}
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.day{border-radius:14px;padding:13px 6px;text-align:center;text-decoration:none;display:block;border:2px solid transparent;transition:.15s}
+.day.open{background:#E8F5E9;border-color:#A5D6A7;cursor:pointer}
+.day.open:active{transform:scale(.96)}
+.day.lock{background:#F5F5F5;border-color:#E0E0E0;cursor:pointer}
+.day .ico{font-size:20px;display:block}
+.day .n{font-size:13px;font-weight:900;color:#2E7D32;margin-top:2px}
+.day.lock .n{color:#9E9E9E}
+.day .t{font-size:9px;font-weight:700;color:#78909C;line-height:1.3;margin-top:1px}
+.inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:13px 15px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;color:#1E3A5F;background:#FAFAFA;margin-bottom:9px}
+.inp:focus{border-color:#FF6B35;background:#fff}
+.btn{width:100%;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+.btn:active{opacity:.85}
+.btn.green{background:linear-gradient(135deg,#66BB6A,#2E7D32)}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
+.feat div{background:#F5F5F5;border-radius:12px;padding:10px 8px;text-align:center}
+.feat .fi{font-size:24px}
+.feat .fn{font-size:12px;font-weight:900;color:#37474F;margin-top:1px}
+.feat .fd{font-size:9px;color:#90A4AE;font-weight:700;line-height:1.4}
+.note{font-size:11px;color:#90A4AE;font-weight:700;text-align:center;line-height:1.6;margin-top:10px}
+.warn{display:none;background:#FF6B35;color:#fff;padding:11px 14px;border-radius:12px;font-size:13px;font-weight:800;text-align:center;margin-bottom:12px;line-height:1.5}
+#msg{font-size:13px;font-weight:800;text-align:center;min-height:18px;margin-top:8px}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="warn" id="inAppWarn">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:11px;font-weight:600">แตะ ⋮ หรือ ⋯ มุมขวาบน → "เปิดในเบราว์เซอร์อื่น"</span></div>
+
+  <div class="hdr">
+    <div class="ico">🎁</div>
+    <h1>PeekaWord</h1>
+    <div class="tag">เปิดโลกคำศัพท์</div>
+    <div class="sub">ชวนฟัง ชวนคิด ฝึกพูดวันละนิด พิชิต 3,000 คำ</div>
+    <div class="badge">✨ ทดลองเรียนฟรี 7 วัน</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">👇 เริ่มเรียนได้เลย ไม่ต้องสมัคร</div>
+    <div class="day-grid" id="dayGrid"></div>
+    <div class="note">Day 1–3 เข้าเรียนได้ทันที · Day 4–7 กรอกอีเมลเพื่อปลดล็อกฟรี</div>
+  </div>
+
+  <div class="card" id="unlockCard">
+    <div class="sec-t">🔓 ปลดล็อก Day 4–7 ฟรี</div>
+    <input class="inp" id="tName" placeholder="ชื่อเล่นของน้อง" maxlength="30">
+    <input class="inp" id="tEmail" type="email" placeholder="อีเมลผู้ปกครอง">
+    <button class="btn green" onclick="unlock()">🎁 ปลดล็อกฟรี 7 วัน</button>
+    <div id="msg"></div>
+    <div class="note">เราจะส่งข้อมูลคอร์สให้ทางอีเมล · ไม่มีค่าใช้จ่าย ไม่ต้องผูกบัตร</div>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">📚 เรียนแบบธรรมชาติ ค่อยเป็นค่อยไป</div>
+    <div class="feat">
+      <div><div class="fi">👂</div><div class="fn">ฟัง</div><div class="fd">ฟังเรื่องก่อน<br>ให้หูคุ้นเสียง</div></div>
+      <div><div class="fi">🗣️</div><div class="fn">พูด</div><div class="fd">AI ฟัง<br>ให้คะแนนทันที</div></div>
+      <div><div class="fi">📖</div><div class="fn">อ่าน</div><div class="fd">เรื่องสั้น<br>เห็นคำในบริบท</div></div>
+      <div><div class="fi">💭</div><div class="fn">คิด</div><div class="fd">ตอบคำถาม<br>เข้าใจจริง</div></div>
+    </div>
+    <div class="note">🎮 เกม 5 แบบสลับทุกวัน · 🤖 เกม Coding · 🏆 สะสมแต้มแข่งขัน</div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div class="sec-t">ชอบมั้ย? เรียนต่อครบ 448 วัน</div>
+    <a href="register.html" class="btn" style="display:block;text-decoration:none;padding:14px">🛒 ดูแพ็กเกจ / สมัครเรียน</a>
+    <div class="note">มีรหัสแล้ว? <a href="login.html" style="color:#FF6B35;font-weight:900;text-decoration:none">เข้าสู่ระบบ</a></div>
+  </div>
+</div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+const TK='pw_trial';   // {name,email,unlocked,at}
+const DAYS=[
+  {n:1,f:'Level1/Day1_LeosBigDay_A1.html',   t:"Leo's Big Day"},
+  {n:2,f:'Level1/Day2_MimisGardenWalk_A1.html', t:"Garden Walk"},
+  {n:3,f:'Level1/Day3_SamsFarmDay_A1.html',  t:"Farm Day"},
+  {n:4,f:'Level1/Day4_DuckAtThePond_A1.html',t:"At the Pond"},
+  {n:5,f:'Level1/Day5_AmyAndTheButterfly_A1.html',t:"Butterfly"},
+  {n:6,f:'Level1/Day6_RiverFriends_A1.html', t:"River Friends"},
+  {n:7,f:'Level1/Day7_Week1Review_A1.html',  t:"Week 1 Review ⭐"},
+];
+function trial(){ try{return JSON.parse(localStorage.getItem(TK)||'null');}catch(e){return null;} }
+function isUnlocked(){ const t=trial(); return !!(t&&t.unlocked); }
+
+function render(){
+  const g=document.getElementById('dayGrid'); g.innerHTML='';
+  const open=isUnlocked();
+  DAYS.forEach(d=>{
+    const free = d.n<=3 || open;
+    const el=document.createElement(free?'a':'div');
+    el.className='day '+(free?'open':'lock');
+    if(free){
+      el.href=d.f;
+      // ปลดล็อกวันก่อนหน้าให้เข้าได้ตามลำดับอิสระในโหมดทดลอง
+      el.onclick=()=>{ for(let i=1;i<d.n;i++) if(!localStorage.getItem('wla_d'+i)) localStorage.setItem('wla_d'+i,'TRIAL'); };
+    } else {
+      el.onclick=()=>{ document.getElementById('tName').focus(); document.getElementById('unlockCard').scrollIntoView({behavior:'smooth'}); };
+    }
+    el.innerHTML='<span class="ico">'+(free?'📘':'🔒')+'</span><span class="n">Day '+d.n+'</span><span class="t">'+d.t+'</span>';
+    g.appendChild(el);
+  });
+  if(open){
+    document.getElementById('unlockCard').innerHTML=
+      '<div class="sec-t">✅ ปลดล็อกครบ 7 วันแล้ว!</div>'+
+      '<div class="note" style="font-size:13px;color:#2E7D32">สนุกกับการเรียนได้เลย 🎉<br>เรียนจบแล้วอยากเรียนต่อ กดดูแพ็กเกจด้านล่างได้เลย</div>';
+  }
+}
+async function unlock(){
+  const name=document.getElementById('tName').value.trim();
+  const email=document.getElementById('tEmail').value.trim();
+  const m=document.getElementById('msg');
+  if(!name){ m.style.color='#C62828'; m.textContent='⚠️ กรอกชื่อเล่นด้วยนะ'; return; }
+  if(!email||!email.includes('@')){ m.style.color='#C62828'; m.textContent='⚠️ กรอกอีเมลให้ถูกต้อง'; return; }
+  m.style.color='#78909C'; m.textContent='⏳ กำลังปลดล็อก...';
+  // เก็บ lead (ถ้า backend ล่ม ก็ยังปลดล็อกให้ — ไม่กั้นเด็ก)
+  try{ await jsonp({action:'newPurchase', order_id:'TRIAL-'+Date.now(), pkg:'Trial 7 Days', price:0, type:'trial'}); }catch(e){}
+  localStorage.setItem(TK, JSON.stringify({name,email,unlocked:true,at:new Date().toISOString()}));
+  m.style.color='#2E7D32'; m.textContent='🎉 ปลดล็อกสำเร็จ! เรียนได้ครบ 7 วันแล้ว';
+  setTimeout(render,600);
+}
+function jsonp(params){
+  return new Promise((res,rej)=>{
+    const cb='jp_'+Date.now(); const s=document.createElement('script');
+    const q=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+    window[cb]=d=>{delete window[cb];s.remove();res(d);};
+    s.onerror=()=>{delete window[cb];s.remove();rej(new Error('err'));};
+    s.src=API+'?'+q+'&callback='+cb; document.body.appendChild(s);
+    setTimeout(()=>{ if(window[cb]){delete window[cb];s.remove();rej(new Error('timeout'));} },8000);
+  });
+}
+(function(){ var ua=navigator.userAgent||''; if(/Line\/|FBAN|FBAV|Instagram|Messenger|MicroMessenger|; wv\)/i.test(ua)){ document.getElementById('inAppWarn').style.display='block'; } })();
+render();
+</script>
+</body></html>
