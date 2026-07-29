@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PeekaWord — ตั้งรหัสผ่านใหม่</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:380px}
+.logo-area{text-align:center;margin-bottom:22px}
+.logo-ico{font-size:60px;line-height:1}
+.logo-name{font-size:30px;font-weight:900;color:#FF6B35;margin-top:4px}
+.logo-tagline{font-size:13px;color:#90A4AE;font-weight:700}
+.card{background:#fff;border-radius:24px;padding:26px 22px;box-shadow:0 8px 32px rgba(255,107,53,.12)}
+h2{font-size:17px;font-weight:900;color:#37474F;text-align:center;margin-bottom:6px}
+.sub{font-size:12px;font-weight:700;color:#90A4AE;text-align:center;margin-bottom:18px;line-height:1.6}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12px;font-weight:900;color:#546E7A;margin-bottom:7px}
+.inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;color:#1E3A5F;background:#FAFAFA}
+.inp:focus{border-color:#FF6B35;background:#fff}
+.pwrap{position:relative}
+.peye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;user-select:none;opacity:.55}
+.btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff;border:none;border-radius:14px;padding:15px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{display:none;margin-top:13px;font-size:13px;font-weight:800;border-radius:12px;padding:11px 14px;text-align:center;line-height:1.6}
+.msg.bad{display:block;color:#C62828;background:#FEE2E2}
+.msg.good{display:block;color:#2E7D32;background:#E8F5E9}
+.foot{text-align:center;font-size:13px;font-weight:700;color:#90A4AE;margin-top:16px}
+.foot a{color:#FF6B35;font-weight:900;text-decoration:none}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="logo-area">
+    <div class="logo-ico">🔑</div>
+    <div class="logo-name">PeekaWord</div>
+    <div class="logo-tagline">เปิดโลกคำศัพท์</div>
+  </div>
+
+  <div class="card">
+    <h2>ตั้งรหัสผ่านใหม่</h2>
+    <div class="sub" id="subTxt">สำหรับบัญชี <strong id="emShow">—</strong></div>
+
+    <div id="form">
+      <div class="field">
+        <label>รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)</label>
+        <div class="pwrap">
+          <input id="p1" class="inp" type="password" placeholder="รหัสผ่านใหม่" autocomplete="new-password" style="padding-right:44px">
+          <span class="peye" onclick="tog('p1',this)">👁️</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>ยืนยันอีกครั้ง</label>
+        <input id="p2" class="inp" type="password" placeholder="พิมพ์ซ้ำ" autocomplete="new-password"
+          onkeydown="if(event.key==='Enter')doReset()">
+      </div>
+      <button class="btn" id="btn" onclick="doReset()">บันทึกรหัสผ่านใหม่</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+    <div class="foot"><a href="login.html">← กลับไปหน้าเข้าสู่ระบบ</a></div>
+  </div>
+</div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+const q=new URLSearchParams(location.search);
+const TOKEN=q.get('t')||'', EMAIL=(q.get('e')||'').toLowerCase();
+
+document.getElementById('emShow').textContent = EMAIL || '—';
+if(!TOKEN || !EMAIL){
+  document.getElementById('form').style.display='none';
+  show('bad','❌ ลิงก์ไม่ถูกต้อง<br><span style="font-size:11px;font-weight:700">กรุณาขอลิงก์ตั้งรหัสใหม่อีกครั้งจากหน้าเข้าสู่ระบบ</span>');
+}
+
+function tog(id,el){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';el.style.opacity=i.type==='text'?'1':'.55';}
+function show(kind,html){const m=document.getElementById('msg');m.className='msg '+kind;m.innerHTML=html;}
+
+async function hashPw(pw){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function jsonp(p){
+  return new Promise((res,rej)=>{
+    const cb='jp_'+Date.now()+'_'+Math.floor(Math.random()*9999);
+    const s=document.createElement('script');
+    const q=Object.entries(p).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+    window[cb]=d=>{delete window[cb];s.remove();res(d);};
+    s.onerror=()=>{delete window[cb];s.remove();rej(new Error('err'));};
+    s.src=API+'?'+q+'&callback='+cb; document.body.appendChild(s);
+    setTimeout(()=>{if(window[cb]){delete window[cb];s.remove();rej(new Error('timeout'));}},15000);
+  });
+}
+
+async function doReset(){
+  const a=document.getElementById('p1').value, b=document.getElementById('p2').value;
+  if(a.length<6) return show('bad','⚠️ รหัสผ่านต้องยาวอย่างน้อย 6 ตัว');
+  if(a!==b)      return show('bad','⚠️ รหัสผ่านสองช่องไม่ตรงกัน');
+
+  const btn=document.getElementById('btn'); btn.disabled=true;
+  show('good','⏳ กำลังบันทึก...');
+  try{
+    const ph=await hashPw(a);
+    const r=await jsonp({action:'confirmReset', email:EMAIL, t:TOKEN, ph});
+    if(r.status==='ok'){
+      document.getElementById('form').style.display='none';
+      show('good','✅ ตั้งรหัสผ่านใหม่เรียบร้อย!<br>กำลังพาไปหน้าเข้าสู่ระบบ...');
+      setTimeout(()=>location.href='login.html',1800);
+    } else {
+      btn.disabled=false;
+      show('bad','❌ '+(r.msg||'ตั้งรหัสผ่านไม่สำเร็จ'));
+    }
+  }catch(e){ btn.disabled=false; show('bad','⚠️ เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); }
+}
+</script>
+</body></html>

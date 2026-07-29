@@ -872,21 +872,61 @@ async function doPayment() {
     await jsonp({ action:'newPurchase', order_id: orderId,
       pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type,
       existing_code: (window._BUYMORE && window._BUYMORE.code) ? window._BUYMORE.code : '' });
-    // Upload slip (no-cors + text/plain เพื่อข้าม CORS preflight)
+    // เก็บไฟล์สลิปไว้ให้ครูดูย้อนหลัง (fire-and-forget)
     try {
       await fetch(API, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ action:'uploadSlip', order_id: orderId, slip: slipData })
+      });
+    } catch(e) {}
+
+    // ── ตรวจสลิปอัตโนมัติ ──
+    // ส่งแบบ no-cors (อ่าน response ไม่ได้) แล้ว poll ผลผ่าน JSONP แทน
+    // เพราะ base64 ของสลิปยาวเกินกว่าจะยัดใส่ URL ของ JSONP ได้
+    try {
+      await fetch(API, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          action:'verifyPurchaseSlip', order_id: orderId,
+          pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type,
+          existing_code: (window._BUYMORE && window._BUYMORE.code) ? window._BUYMORE.code : '',
+          slip: slipData
+        })
       });
     } catch(e) {}
   } catch(e) { /* offline fallback */ }
 
   localStorage.setItem(PK, JSON.stringify(data));
+  showAlt('altPay','🔎 กำลังตรวจสลิปอัตโนมัติ...','warn');
+  const verdict = await pollSlipVerdict(orderId);
   document.getElementById('ldPay').classList.remove('on');
   document.getElementById('btnPay').disabled=false;
+
+  if (verdict.state === 'reject') {
+    showAlt('altPay','❌ ' + (verdict.msg || 'สลิปไม่ผ่านการตรวจสอบ') +
+      ' — ตรวจสอบแล้วแนบใหม่ หรือทักครูได้เลย','warn');
+    return;   // ไม่ให้ผ่านไปขั้นถัดไป
+  }
+  hideAlt('altPay');
+  data.autoVerified = (verdict.state === 'ok');
+  data.studentCode  = verdict.code || '';
+  localStorage.setItem(PK, JSON.stringify(data));
   showPending(data);
+}
+
+// รอผลตรวจสลิป — ลองสูงสุด ~20 วินาที ถ้าไม่ได้ผลถือว่าให้ครูตรวจมือ
+async function pollSlipVerdict(orderId) {
+  for (let i = 0; i < 10; i++) {
+    await new Promise(r => setTimeout(r, 2000));
+    try {
+      const r = await jsonp({ action:'orderStatus', order_id: orderId });
+      if (r && r.status === 'ok' && r.slip_state)
+        return { state: r.slip_state, msg: r.slip_msg, code: r.student_code };
+    } catch(e) {}
+  }
+  return { state: 'manual', msg: 'ตรวจอัตโนมัติไม่ทัน — ครูจะตรวจให้' };
 }
 
 // ── STEP 2: Show pending → redirect to p3 ──

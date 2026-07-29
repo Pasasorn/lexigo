@@ -5,33 +5,45 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
 body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.wrap{width:100%;max-width:380px}
-.logo-area{text-align:center;margin-bottom:24px}
-.logo-ico{font-size:72px;line-height:1}
+.wrap{width:100%;max-width:390px}
+.logo-area{text-align:center;margin-bottom:22px}
+.logo-ico{font-size:66px;line-height:1}
 .logo-name{font-size:32px;font-weight:900;color:#FF6B35;margin-top:4px}
 .logo-tagline{font-size:13px;color:#90A4AE;font-weight:700;margin-top:2px}
-.card{background:#fff;border-radius:24px;padding:28px 24px;box-shadow:0 8px 32px rgba(255,107,53,.12)}
-.card h2{font-size:16px;font-weight:900;color:#37474F;margin-bottom:20px;text-align:center}
-.field{margin-bottom:16px}
+.card{background:#fff;border-radius:24px;padding:26px 22px;box-shadow:0 8px 32px rgba(255,107,53,.12)}
+.tabs{display:flex;gap:6px;background:#F5F5F5;border-radius:14px;padding:5px;margin-bottom:20px}
+.tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;font-size:13px;font-weight:900;color:#90A4AE;cursor:pointer;transition:.15s}
+.tab.on{background:#fff;color:#FF6B35;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.pane{display:none}.pane.on{display:block}
+.field{margin-bottom:15px}
 .field label{display:block;font-size:12px;font-weight:900;color:#546E7A;margin-bottom:7px;letter-spacing:.3px}
 .inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;color:#1E3A5F;transition:border-color .2s;background:#FAFAFA}
 .inp:focus{border-color:#FF6B35;background:#fff}
-#codeInp{font-size:28px;letter-spacing:8px;text-align:center}
-.btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:15px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity .15s;letter-spacing:.3px}
+#codeInp{font-size:26px;letter-spacing:8px;text-align:center}
+.pwrap{position:relative}
+.peye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;user-select:none;opacity:.55}
+.btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:15px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;letter-spacing:.3px}
 .btn:active{opacity:.85}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.err{display:none;margin-top:12px;font-size:13px;font-weight:800;color:#C62828;background:#FEE2E2;border-radius:12px;padding:10px 14px;text-align:center}
+.btn.green{background:linear-gradient(135deg,#66BB6A,#2E7D32)}
+.err{display:none;margin-top:12px;font-size:13px;font-weight:800;color:#C62828;background:#FEE2E2;border-radius:12px;padding:10px 14px;text-align:center;line-height:1.6}
+.ok{display:none;margin-top:12px;font-size:13px;font-weight:800;color:#2E7D32;background:#E8F5E9;border-radius:12px;padding:10px 14px;text-align:center;line-height:1.6}
 .load{display:none;margin-top:10px;font-size:13px;font-weight:700;color:#1E88E5;text-align:center}
-.divider{border:none;border-top:1.5px dashed #E0E0E0;margin:20px 0}
+.divider{border:none;border-top:1.5px dashed #E0E0E0;margin:18px 0}
 .register-link{text-align:center;font-size:13px;color:#90A4AE;font-weight:700}
 .register-link a{color:#FF6B35;font-weight:900;text-decoration:none}
 .pending-msg{display:none;margin-top:14px;background:#FFF8E1;border:1.5px solid #FFCC02;border-radius:14px;padding:16px;text-align:center}
 .pending-msg .p-ico{font-size:32px;margin-bottom:6px}
 .pending-msg h3{font-size:15px;font-weight:900;color:#E65100;margin-bottom:4px}
 .pending-msg p{font-size:12px;color:#78909C;font-weight:700;line-height:1.6}
+.hint{font-size:11px;color:#B0BEC5;font-weight:700;margin-top:5px;line-height:1.5}
+.link{font-size:13px;font-weight:800;color:#1E88E5;cursor:pointer;text-decoration:underline}
+.warn{display:none;background:#FF6B35;color:#fff;padding:11px 14px;border-radius:12px;font-size:13px;font-weight:800;text-align:center;margin-bottom:14px;line-height:1.5}
 </style></head>
 <body>
 <div class="wrap">
+  <div class="warn" id="inAppWarn">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:11px;font-weight:600">แตะ ⋮ หรือ ⋯ มุมขวาบน → "เปิดในเบราว์เซอร์อื่น"</span></div>
+
   <div class="logo-area">
     <div class="logo-ico">📚</div>
     <div class="logo-name">PeekaWord</div>
@@ -40,36 +52,96 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
   </div>
 
   <div class="card">
-    <h2>🔐 เข้าสู่ระบบ</h2>
-
-    <div class="field">
-      <label>รหัสนักเรียน 6 หลัก</label>
-      <input id="codeInp" class="inp" type="tel" maxlength="6" placeholder="• • • • • •"
-        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-        onkeydown="if(event.key==='Enter')document.getElementById('nickInp').focus()">
+    <div class="tabs">
+      <div class="tab on" id="tabA" onclick="setTab('A')">📧 อีเมล + รหัสผ่าน</div>
+      <div class="tab"    id="tabB" onclick="setTab('B')">🔢 รหัสนักเรียน</div>
     </div>
 
-    <div class="field">
-      <label>ชื่อเล่น (ที่ใช้สมัคร)</label>
-      <input id="nickInp" class="inp" type="text" maxlength="30" placeholder="เช่น มิมิ, Leo"
-        onkeydown="if(event.key==='Enter')doLogin()">
+    <!-- ══ A: email + password ══ -->
+    <div class="pane on" id="paneA">
+      <div class="field">
+        <label>อีเมล</label>
+        <input id="emInp" class="inp" type="email" placeholder="you@example.com" autocomplete="username"
+          onkeydown="if(event.key==='Enter')document.getElementById('pwInp').focus()">
+      </div>
+      <div class="field">
+        <label>รหัสผ่าน</label>
+        <div class="pwrap">
+          <input id="pwInp" class="inp" type="password" placeholder="รหัสผ่านของคุณ" autocomplete="current-password"
+            style="padding-right:44px" onkeydown="if(event.key==='Enter')doLoginEmail()">
+          <span class="peye" onclick="togglePw('pwInp',this)">👁️</span>
+        </div>
+      </div>
+      <button class="btn" id="btnA" onclick="doLoginEmail()">เข้าสู่ระบบ →</button>
+      <div style="text-align:center;margin-top:13px">
+        <span class="link" onclick="show('resetBox')">🔑 ลืมรหัสผ่าน?</span>
+      </div>
+      <div id="resetBox" style="display:none;margin-top:12px;background:#E3F2FD;border:2px solid #90CAF9;border-radius:14px;padding:14px">
+        <div style="font-size:13px;font-weight:800;color:#1565C0;margin-bottom:8px">กรอกอีเมลที่ใช้สมัคร เราจะส่งลิงก์ตั้งรหัสใหม่ให้</div>
+        <input id="rsEmail" class="inp" type="email" placeholder="you@example.com" style="margin-bottom:8px">
+        <button class="btn" style="background:linear-gradient(135deg,#42A5F5,#1565C0);margin-top:0;font-size:15px;padding:12px" onclick="doRequestReset()">ส่งลิงก์ตั้งรหัสใหม่</button>
+        <div id="rsResult" style="font-size:13px;font-weight:800;margin-top:9px;min-height:18px;text-align:center;line-height:1.6"></div>
+      </div>
+    </div>
+
+    <!-- ══ B: student code (ลูกค้าเดิม / ครั้งแรก) ══ -->
+    <div class="pane" id="paneB">
+      <div class="field">
+        <label>รหัสนักเรียน 6 หลัก</label>
+        <input id="codeInp" class="inp" type="tel" maxlength="6" placeholder="• • • • • •"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+          onkeydown="if(event.key==='Enter')document.getElementById('nickInp').focus()">
+      </div>
+      <div class="field">
+        <label>ชื่อเล่น (ที่ใช้สมัคร)</label>
+        <input id="nickInp" class="inp" type="text" maxlength="30" placeholder="เช่น มิมิ, Leo"
+          onkeydown="if(event.key==='Enter')doLoginCode()">
+      </div>
+      <button class="btn" id="btnB" onclick="doLoginCode()">เข้าสู่ระบบ →</button>
+      <div class="hint">เข้าครั้งแรกด้วยรหัสนักเรียน แล้วระบบจะให้ตั้งอีเมล + รหัสผ่าน<br>ครั้งต่อไปจะจำง่ายกว่ามาก</div>
+
+      <div style="text-align:center;margin-top:13px">
+        <span class="link" onclick="show('recoverBox')">🔑 ลืมรหัสนักเรียน?</span>
+      </div>
+      <div id="recoverBox" style="display:none;margin-top:12px;background:#F1F8E9;border:2px solid #C5E1A5;border-radius:14px;padding:14px">
+        <div style="font-size:13px;font-weight:800;color:#33691E;margin-bottom:8px">กรอกอีเมลที่ใช้สมัคร เราจะแสดงรหัสให้</div>
+        <input id="recEmail" class="inp" type="email" placeholder="you@example.com" style="margin-bottom:8px">
+        <button class="btn green" style="margin-top:0;font-size:15px;padding:12px" onclick="doRecover()">ค้นหารหัสของฉัน</button>
+        <div id="recResult" style="font-size:13px;font-weight:800;margin-top:9px;min-height:18px;text-align:center;line-height:1.6"></div>
+      </div>
+    </div>
+
+    <!-- ══ ตั้งรหัสผ่านครั้งแรก ══ -->
+    <div class="pane" id="paneSet">
+      <div style="text-align:center;font-size:15px;font-weight:900;color:#2E7D32;margin-bottom:6px">✅ ยืนยันตัวตนสำเร็จ</div>
+      <div style="text-align:center;font-size:12px;font-weight:700;color:#78909C;margin-bottom:16px;line-height:1.6">
+        ตั้งอีเมลกับรหัสผ่านไว้ ครั้งหน้าจะไม่ต้องจำรหัส 6 หลักอีก
+      </div>
+      <div class="field">
+        <label>อีเมล</label>
+        <input id="setEm" class="inp" type="email" placeholder="you@example.com" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)</label>
+        <div class="pwrap">
+          <input id="setPw" class="inp" type="password" placeholder="รหัสผ่านใหม่" autocomplete="new-password" style="padding-right:44px">
+          <span class="peye" onclick="togglePw('setPw',this)">👁️</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>ยืนยันรหัสผ่านอีกครั้ง</label>
+        <input id="setPw2" class="inp" type="password" placeholder="พิมพ์ซ้ำ" autocomplete="new-password"
+          onkeydown="if(event.key==='Enter')doSetPassword()">
+      </div>
+      <button class="btn green" id="btnSet" onclick="doSetPassword()">บันทึกแล้วเข้าเรียน →</button>
+      <div style="text-align:center;margin-top:12px">
+        <span class="link" style="color:#90A4AE" onclick="skipSetPassword()">ข้ามไปก่อน เข้าเรียนเลย</span>
+      </div>
     </div>
 
     <div id="errMsg" class="err"></div>
+    <div id="okMsg"  class="ok"></div>
     <div id="loadMsg" class="load">⏳ กำลังตรวจสอบ…</div>
-
-    <button class="btn" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ →</button>
-
-    <!-- ลืมรหัส -->
-    <div style="text-align:center;margin-top:14px">
-      <span onclick="toggleRecover()" style="font-size:13px;font-weight:800;color:#1E88E5;cursor:pointer;text-decoration:underline">🔑 ลืมรหัสนักเรียน?</span>
-    </div>
-    <div id="recoverBox" style="display:none;margin-top:12px;background:#F1F8E9;border:2px solid #C5E1A5;border-radius:14px;padding:14px">
-      <div style="font-size:13px;font-weight:800;color:#33691E;margin-bottom:8px">กรอกอีเมลที่ใช้สมัคร เราจะแสดงรหัสให้</div>
-      <input id="recEmail" class="inp" type="email" placeholder="you@example.com" style="margin-bottom:8px">
-      <button class="btn" style="background:linear-gradient(135deg,#7CB342,#33691E);margin-top:0;font-size:15px;padding:12px" onclick="doRecover()">ค้นหารหัสของฉัน</button>
-      <div id="recResult" style="font-size:13px;font-weight:800;margin-top:10px;min-height:18px;text-align:center"></div>
-    </div>
 
     <div id="pendingMsg" class="pending-msg">
       <div class="p-ico">📋</div>
@@ -87,19 +159,177 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
 const SK  = 'wla_student';
 const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
 
-// ── ลืมรหัส: ค้นด้วย email ──
-function toggleRecover(){
-  const b=document.getElementById('recoverBox');
-  b.style.display = b.style.display==='none' ? 'block' : 'none';
-  if(b.style.display==='block') document.getElementById('recEmail').focus();
+let _pendingStudent = null;   // ข้อมูลนักเรียนที่รอตั้งรหัสผ่าน
+
+// ── UI helpers ──
+function setTab(t){
+  document.getElementById('tabA').classList.toggle('on', t==='A');
+  document.getElementById('tabB').classList.toggle('on', t==='B');
+  document.getElementById('paneA').classList.toggle('on', t==='A');
+  document.getElementById('paneB').classList.toggle('on', t==='B');
+  document.getElementById('paneSet').classList.remove('on');
+  hideMsg();
 }
+function show(id){ const b=document.getElementById(id); b.style.display = b.style.display==='none'?'block':'none'; }
+function togglePw(id,el){ const i=document.getElementById(id); i.type = i.type==='password'?'text':'password'; el.style.opacity = i.type==='text'?'1':'.55'; }
+function err(m){ const e=document.getElementById('errMsg'); e.innerHTML=m; e.style.display='block'; document.getElementById('okMsg').style.display='none'; }
+function okMsg(m){ const e=document.getElementById('okMsg'); e.innerHTML=m; e.style.display='block'; document.getElementById('errMsg').style.display='none'; }
+function hideMsg(){ ['errMsg','okMsg','loadMsg','pendingMsg'].forEach(i=>document.getElementById(i).style.display='none'); }
+function loading(on){ document.getElementById('loadMsg').style.display = on?'block':'none'; }
+
+// ── รหัสผ่านถูก hash ตั้งแต่ในเบราว์เซอร์ ──
+// สำคัญ เพราะ JSONP ส่งข้อมูลผ่าน URL ซึ่งจะไปโผล่ใน log ของ Google
+// hash ก่อนส่ง = รหัสผ่านจริงไม่เคยออกจากเครื่องผู้ใช้เลย
+async function hashPw(pw){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function jsonp(params){
+  return new Promise((resolve,reject)=>{
+    const cb='jpcb_'+Date.now()+'_'+Math.floor(Math.random()*9999);
+    const s=document.createElement('script');
+    const q=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+    window[cb]=d=>{delete window[cb];s.remove();resolve(d);};
+    s.onerror=()=>{delete window[cb];s.remove();reject(new Error('JSONP error'));};
+    s.src=API+'?'+q+'&callback='+cb;
+    document.body.appendChild(s);
+    setTimeout(()=>{ if(window[cb]){delete window[cb];s.remove();reject(new Error('timeout'));} },15000);
+  });
+}
+
+// ── เข้าสู่ระบบสำเร็จ → เก็บ session + progress ──
+function finishLogin(st, progress){
+  const prevCode = localStorage.getItem('wla_last_code');
+  if (prevCode !== st.code) {
+    for (let d=1; d<=448; d++) localStorage.removeItem('wla_d'+d);
+    localStorage.removeItem('wla_progress');
+  }
+  if (progress && typeof progress==='object'){
+    Object.keys(progress).forEach(k=>{
+      if(/^d\d+$/.test(k) && progress[k]) localStorage.setItem('wla_'+k, progress[k]);
+    });
+  }
+  localStorage.setItem('wla_last_code', st.code);
+  localStorage.setItem(SK, JSON.stringify(st));
+  localStorage.removeItem('wla_admin');
+  location.href = 'dashboard.html';
+}
+
+function buildSession(code, nick, res){
+  return {
+    code, nick: nick || res.nick || res.name || '',
+    pending_approval:false, course:'',
+    type: res.type || 'level',
+    level: res.pkg_name || res.level || '1',
+    pkg_name: res.pkg_name || '',
+    cefr:'A1', startDay:1, endDay:448
+  };
+}
+
+// ══ A: login ด้วย email + password ══
+async function doLoginEmail(){
+  hideMsg();
+  const email=document.getElementById('emInp').value.trim().toLowerCase();
+  const pw   =document.getElementById('pwInp').value;
+  if(!email || !email.includes('@')) return err('⚠️ กรอกอีเมลให้ถูกต้อง');
+  if(!pw) return err('⚠️ กรอกรหัสผ่านด้วยนะ');
+
+  const btn=document.getElementById('btnA'); btn.disabled=true; loading(true);
+  try{
+    const ph=await hashPw(pw);
+    const res=await jsonp({action:'loginEmail', email, ph});
+    loading(false); btn.disabled=false;
+
+    if(res.status==='ok') return finishLogin(buildSession(res.code, res.name, res), res.progress);
+    if(res.status==='no_password')
+      return err('บัญชีนี้ยังไม่ได้ตั้งรหัสผ่าน<br><span style="font-size:11px;font-weight:700">เข้าด้วย "รหัสนักเรียน" ก่อน แล้วระบบจะให้ตั้งรหัสผ่าน</span>');
+    err('❌ ' + (res.msg || 'เข้าสู่ระบบไม่สำเร็จ'));
+  }catch(e){ loading(false); btn.disabled=false; err('⚠️ เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); }
+}
+
+// ══ B: login ด้วยรหัสนักเรียน (เดิม) ══
+async function doLoginCode(){
+  hideMsg();
+  const code=document.getElementById('codeInp').value.trim();
+  const nick=document.getElementById('nickInp').value.trim();
+  if(!/^\d{6}$/.test(code)) return err('⚠️ กรอกรหัส 6 หลักให้ครบ');
+  if(!nick) return err('⚠️ กรอกชื่อเล่นด้วยนะ');
+
+  const btn=document.getElementById('btnB'); btn.disabled=true; loading(true);
+  try{
+    const res=await jsonp({action:'checkApproval', code});
+    loading(false); btn.disabled=false;
+
+    if(res.status==='not_found') return err('❌ ไม่พบรหัสนี้ในระบบ');
+
+    const apiNick=(res.nick||'').toString().trim().toLowerCase();
+    if(apiNick && apiNick!==nick.toLowerCase())
+      return err('❌ รหัสหรือชื่อเล่นไม่ถูกต้อง กรุณาลองใหม่');
+
+    if(res.approval_status==='pending_approval'){ document.getElementById('pendingMsg').style.display='block'; return; }
+    if(res.approval_status==='rejected')
+      return err('❌ รหัสนี้ถูก reject<br><span style="font-size:11px;font-weight:700">ติดต่อ Line: <strong>@PeekaWord</strong></span>');
+    if(res.approval_status!=='active') return err('⚠️ สถานะไม่ถูกต้อง ลองใหม่');
+
+    // ผ่านแล้ว → ชวนตั้งรหัสผ่าน (ถ้ายังไม่มี)
+    _pendingStudent = { st: buildSession(code, res.nick||nick, res), progress: res.progress };
+    if(res.has_password) return finishLogin(_pendingStudent.st, _pendingStudent.progress);
+
+    document.getElementById('paneA').classList.remove('on');
+    document.getElementById('paneB').classList.remove('on');
+    document.getElementById('paneSet').classList.add('on');
+    if(res.email) document.getElementById('setEm').value=res.email;
+    document.getElementById('setEm').focus();
+  }catch(e){ loading(false); btn.disabled=false; err('⚠️ ไม่สามารถเชื่อมต่อได้ ลองใหม่'); }
+}
+
+// ══ ตั้งรหัสผ่านครั้งแรก ══
+async function doSetPassword(){
+  hideMsg();
+  if(!_pendingStudent) return err('⚠️ กรุณาเข้าสู่ระบบใหม่');
+  const email=document.getElementById('setEm').value.trim().toLowerCase();
+  const p1=document.getElementById('setPw').value;
+  const p2=document.getElementById('setPw2').value;
+  if(!email || !email.includes('@')) return err('⚠️ กรอกอีเมลให้ถูกต้อง');
+  if(p1.length<6) return err('⚠️ รหัสผ่านต้องยาวอย่างน้อย 6 ตัว');
+  if(p1!==p2)     return err('⚠️ รหัสผ่านสองช่องไม่ตรงกัน');
+
+  const btn=document.getElementById('btnSet'); btn.disabled=true; loading(true);
+  try{
+    const ph=await hashPw(p1);
+    const res=await jsonp({action:'setPassword', code:_pendingStudent.st.code, ph, email});
+    loading(false); btn.disabled=false;
+    if(res.status!=='ok') return err('❌ ' + (res.msg||'ตั้งรหัสผ่านไม่สำเร็จ'));
+    finishLogin(_pendingStudent.st, _pendingStudent.progress);
+  }catch(e){ loading(false); btn.disabled=false; err('⚠️ เชื่อมต่อไม่ได้ ลองใหม่'); }
+}
+function skipSetPassword(){
+  if(!_pendingStudent) return setTab('B');
+  finishLogin(_pendingStudent.st, _pendingStudent.progress);
+}
+
+// ══ ลืมรหัสผ่าน ══
+async function doRequestReset(){
+  const email=document.getElementById('rsEmail').value.trim().toLowerCase();
+  const out=document.getElementById('rsResult');
+  if(!email || !email.includes('@')){ out.style.color='#C62828'; out.textContent='⚠️ กรอกอีเมลให้ถูกต้อง'; return; }
+  out.style.color='#78909C'; out.textContent='⏳ กำลังส่ง...';
+  try{
+    const res=await jsonp({action:'requestReset', email});
+    out.style.color='#2E7D32';
+    out.innerHTML='✅ ' + (res.msg||'ส่งลิงก์แล้ว') + '<br><span style="font-size:11px;font-weight:700;color:#78909C">ลิงก์ใช้ได้ 30 นาที · เช็กกล่อง Junk ด้วยนะ</span>';
+  }catch(e){ out.style.color='#C62828'; out.textContent='❌ ส่งไม่สำเร็จ ลองใหม่'; }
+}
+
+// ══ ลืมรหัสนักเรียน ══
 async function doRecover(){
   const email=document.getElementById('recEmail').value.trim();
   const out=document.getElementById('recResult');
   if(!email || !email.includes('@')){ out.style.color='#C62828'; out.textContent='⚠️ กรอกอีเมลให้ถูกต้อง'; return; }
   out.style.color='#78909C'; out.textContent='⏳ กำลังค้นหา...';
   try{
-    const res=await jsonp({ action:'recover', email });
+    const res=await jsonp({action:'recover', email});
     if(res.status==='ok'){
       out.style.color='#2E7D32';
       out.innerHTML='✅ พบแล้ว! รหัสของ <strong>'+(res.name||'คุณ')+'</strong> คือ<br><span style="font-size:22px;font-family:monospace;letter-spacing:3px;color:#1E88E5">'+res.code+'</span>';
@@ -112,115 +342,16 @@ async function doRecover(){
   }catch(e){ out.style.color='#C62828'; out.textContent='❌ เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'; }
 }
 
-function jsonp(params) {
-  return new Promise((resolve, reject) => {
-    const cb = 'jpcb_' + Date.now();
-    const s  = document.createElement('script');
-    const q  = Object.entries(params).map(([k,v]) => k+'='+encodeURIComponent(v)).join('&');
-    window[cb] = d => { delete window[cb]; s.remove(); resolve(d); };
-    s.onerror  = () => { delete window[cb]; s.remove(); reject(new Error('JSONP error')); };
-    s.src = API + '?' + q + '&callback=' + cb;
-    document.body.appendChild(s);
-  });
-}
+// ── เตือนถ้าเปิดใน in-app browser ──
+(function(){ var ua=navigator.userAgent||'';
+  if(/Line\/|FBAN|FBAV|Instagram|Messenger|MicroMessenger|; wv\)/i.test(ua))
+    document.getElementById('inAppWarn').style.display='block';
+})();
 
-async function doLogin() {
-  const code = document.getElementById('codeInp').value.trim();
-  const nick = document.getElementById('nickInp').value.trim();
-  const errEl  = document.getElementById('errMsg');
-  const loadEl = document.getElementById('loadMsg');
-  const btn    = document.getElementById('loginBtn');
-  const pendEl = document.getElementById('pendingMsg');
-
-  errEl.style.display  = 'none';
-  loadEl.style.display = 'none';
-  pendEl.style.display = 'none';
-
-  if (!/^\d{6}$/.test(code)) {
-    errEl.textContent = '⚠️ กรอกรหัส 6 หลักให้ครบ';
-    errEl.style.display = 'block'; return;
-  }
-  if (!nick) {
-    errEl.textContent = '⚠️ กรอกชื่อเล่นด้วยนะ';
-    errEl.style.display = 'block'; return;
-  }
-
-  btn.disabled = true;
-  loadEl.style.display = 'block';
-
-  try {
-    const res = await jsonp({ action: 'checkApproval', code });
-    loadEl.style.display = 'none';
-    btn.disabled = false;
-
-    if (res.status === 'not_found') {
-      errEl.textContent = '❌ ไม่พบรหัสนี้ในระบบ';
-      errEl.style.display = 'block'; return;
-    }
-
-    // Verify nickname (case-insensitive, trim)
-    const apiNick = (res.nick || '').toString().trim().toLowerCase();
-    const entNick = nick.toLowerCase();
-    if (apiNick && apiNick !== entNick) {
-      errEl.textContent = '❌ รหัสหรือชื่อเล่นไม่ถูกต้อง กรุณาลองใหม่';
-      errEl.style.display = 'block'; return;
-    }
-
-    if (res.approval_status === 'active') {
-      const st = {
-        code,
-        nick: res.nick || nick,
-        pending_approval: false,
-        course: '',
-        type: res.type || 'level',
-        level: res.pkg_name || '1',   // เก็บ pkg_name ดิบ (เช่น "Level 5" หรือ "3,5")
-        pkg_name: res.pkg_name || '',
-        cefr: 'A1',
-        startDay: 1,
-        endDay: 448
-      };
-      // ── ถ้าเปลี่ยนบัญชี (code ไม่ตรงกับที่เคย login ในเครื่องนี้) → ล้าง progress เก่า ──
-      const prevCode = localStorage.getItem('wla_last_code');
-      if (prevCode !== code) {
-        for (let d = 1; d <= 448; d++) localStorage.removeItem('wla_d' + d);
-        localStorage.removeItem('wla_progress');
-      }
-      // restore progress จริงของบัญชีนี้จาก backend (ข้ามเครื่องได้)
-      if (res.progress && typeof res.progress === 'object') {
-        Object.keys(res.progress).forEach(k => {
-          if (/^d\d+$/.test(k) && res.progress[k]) localStorage.setItem('wla_' + k, res.progress[k]);
-        });
-      }
-      localStorage.setItem('wla_last_code', code);
-      localStorage.setItem(SK, JSON.stringify(st));
-      localStorage.removeItem('wla_admin'); // clear admin bypass
-      location.href = 'dashboard.html';
-
-    } else if (res.approval_status === 'pending_approval') {
-      pendEl.style.display = 'block';
-
-    } else if (res.approval_status === 'rejected') {
-      errEl.innerHTML = '❌ รหัสนี้ถูก reject<br><span style="font-size:11px;font-weight:700">ติดต่อ Line: <strong>@PeekaWord</strong></span>';
-      errEl.style.display = 'block';
-
-    } else {
-      errEl.textContent = '⚠️ สถานะไม่ถูกต้อง ลองใหม่';
-      errEl.style.display = 'block';
-    }
-  } catch(e) {
-    loadEl.style.display = 'none';
-    btn.disabled = false;
-    errEl.textContent = '⚠️ ไม่สามารถเชื่อมต่อได้ ลองใหม่';
-    errEl.style.display = 'block';
-  }
-}
-
-// Auto-redirect if already logged in
-(function() {
-  const st = JSON.parse(localStorage.getItem(SK) || 'null');
-  if (st && st.code && !st.pending_approval) {
-    location.href = 'dashboard.html';
-  }
+// ── ถ้า login ค้างอยู่แล้ว เข้า dashboard เลย ──
+(function(){
+  const st=JSON.parse(localStorage.getItem(SK)||'null');
+  if(st && st.code && !st.pending_approval) location.href='dashboard.html';
 })();
 </script>
 </body></html>
