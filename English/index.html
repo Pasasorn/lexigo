@@ -22,6 +22,13 @@ body{font-family:'Baloo 2','Nunito','Apple Color Emoji','Segoe UI Emoji','Noto C
   font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased}
 .container{max-width:700px;margin:0 auto;padding:0 22px}
 
+/* PROMO BAR */
+.promo-bar{background:linear-gradient(90deg,#FF9057,#FF6FA5);color:#fff;text-align:center;
+  padding:11px 18px;font-size:15px;font-weight:600;line-height:1.6}
+.promo-bar s{opacity:.75;font-weight:500}
+.promo-bar b{font-weight:800}
+.promo-bar a{color:#fff;font-weight:800;text-decoration:underline;white-space:nowrap}
+
 /* NAV */
 nav{background:#fff;border-bottom:2px solid #F4F0FA;position:sticky;top:0;z-index:50}
 nav .container{display:flex;align-items:center;justify-content:space-between;height:68px}
@@ -97,6 +104,18 @@ h2{font-size:31px;font-weight:800;color:var(--ink);line-height:1.35;margin-botto
 .pc .amt{font-size:40px;font-weight:800;color:var(--ink);line-height:1.15;margin:6px 0 2px}
 .pc .per{font-size:15px;font-weight:600;color:var(--muted)}
 .pc .nt{font-size:15px;font-weight:600;color:var(--body);margin-top:12px;line-height:1.6}
+.pc .was{font-size:17px;font-weight:600;color:var(--muted);text-decoration:line-through;margin-top:4px}
+.pc .save{display:inline-block;background:#FFEEF4;color:#D6336C;font-size:13px;font-weight:800;
+  padding:3px 12px;border-radius:100px;margin-bottom:4px}
+/* แถบที่นั่งจำกัด */
+.seats{max-width:560px;margin:22px auto 0;background:#fff;border:2.5px solid #FFD9C2;
+  border-radius:24px;padding:18px 20px}
+.seats-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.seats-ttl{font-size:15px;font-weight:700;color:var(--ink)}
+.seats-left{font-size:15px;font-weight:800;color:var(--orange);white-space:nowrap}
+.seats-bar{height:12px;background:#FFF0E9;border-radius:100px;overflow:hidden}
+.seats-fill{height:100%;background:linear-gradient(90deg,#FF9057,#FF6FA5);border-radius:100px;transition:width .6s}
+.seats-note{font-size:14px;font-weight:600;color:var(--muted);margin-top:9px;text-align:center}
 
 /* FAQ */
 .faqs{max-width:560px;margin:0 auto;display:grid;gap:12px}
@@ -147,6 +166,7 @@ footer a{color:var(--orange);font-weight:700;text-decoration:none}
 }
 </style></head>
 <body>
+<div class="promo-bar">🎉 <b>ราคาเปิดตัว 30 ที่นั่งแรก</b> — ตลอดชีพ <s>฿8,985</s> เหลือ <b>฿2,590</b> <a href="register.html">จองที่นั่ง →</a></div>
 
 <div id="warn">⚠️ เปิดใน Chrome นะคะ เพื่อใช้ไมโครโฟน — แตะ ⋯ มุมขวาบน เลือก "เปิดในเบราว์เซอร์อื่น"</div>
 
@@ -235,10 +255,22 @@ footer a{color:var(--orange);font-weight:700;text-decoration:none}
       <div class="pc hot">
         <div class="point-d" style="margin:-6px 0 4px">👇</div>
         <div class="pl">ตลอดชีพ <span class="pop">🔥</span></div>
+        <div class="was">฿8,985</div>
         <div class="amt">฿2,590</div>
+        <div class="save">ประหยัด ฿6,395 (71%)</div>
         <div class="per">15 Level · 448 วัน</div>
         <div class="nt">วันละไม่ถึง 6 บาท <span class="pop">💸</span><br>เรียนซ้ำไม่จำกัด ♾️</div>
       </div>
+    </div>
+
+    <!-- ราคาเปิดตัว 30 ที่นั่งแรก -->
+    <div class="seats">
+      <div class="seats-top">
+        <span class="seats-ttl">🎫 ราคาเปิดตัว — <b>30 ที่นั่งแรก</b></span>
+        <span class="seats-left">เหลือ <b id="seatsNum">30</b> ที่</span>
+      </div>
+      <div class="seats-bar"><div class="seats-fill" id="seatsFill" style="width:100%"></div></div>
+      <p class="seats-note" id="seatsNote">ครบ 30 ที่แล้วราคาจะขึ้นเป็น ฿2,990 · ราคาปกติ ฿4,590</p>
     </div>
     <div style="text-align:center;margin-top:32px">
       <a href="register.html" class="btn btn-main"><span class="point-r">👉</span> ดูแพ็กเกจทั้งหมด</a>
@@ -256,6 +288,7 @@ footer a{color:var(--orange);font-weight:700;text-decoration:none}
       <details><summary>AI ให้คะแนนการพูดยังไง</summary><p>ระบบฟังเสียงเด็กแล้วเทียบกับประโยคเป้าหมาย ให้คะแนนเป็นเปอร์เซ็นต์ พร้อมบอกว่าได้ยินอะไร เด็กจะรู้ทันทีว่าออกเสียงชัดหรือยัง</p></details>
       <details><summary>ใช้บนมือถือหรือแท็บเล็ตได้ไหม</summary><p>ได้ค่ะ รองรับทั้งมือถือ แท็บเล็ต และคอมพิวเตอร์ แนะนำเปิดด้วย Chrome เพราะไมโครโฟนใช้ในแอป LINE ไม่ได้</p></details>
       <details><summary>ทดลองฟรีต้องผูกบัตรไหม</summary><p>ไม่ต้องเลยค่ะ Day 1–3 เข้าเรียนได้ทันที ส่วน Day 4–7 แค่กรอกชื่อเล่นกับอีเมลก็ปลดล็อกฟรี ไม่มีการเรียกเก็บเงินอัตโนมัติ</p></details>
+      <details><summary>ราคา ฿2,590 นี้คือราคาจริงหรือลดชั่วคราว</summary><p>เป็นราคาเปิดตัวสำหรับ <b>30 ที่นั่งแรก</b> เท่านั้นค่ะ จากราคาเต็ม ฿8,985 (15 Level × ฿599) ครบ 30 ที่แล้วจะขึ้นเป็น ฿2,990 → ฿3,990 → ฿4,590 ตามลำดับ ใครสมัครในราคาไหนก็ได้ของครบเหมือนกันทุกคน และไม่ต้องจ่ายเพิ่มภายหลังค่ะ</p></details>
       <details><summary>ซื้อแล้วเรียนได้นานแค่ไหน</summary><p>ซื้อครั้งเดียวเรียนได้ตลอด ไม่มีวันหมดอายุ ไม่มีค่ารายเดือน เรียนซ้ำกี่รอบก็ได้ค่ะ</p></details>
     </div>
   </div>
@@ -277,5 +310,33 @@ footer a{color:var(--orange);font-weight:700;text-decoration:none}
 <script>
 (function(){var ua=navigator.userAgent||'';
 if(/Line\/|FBAN|FBAV|Instagram|Messenger|MicroMessenger|; wv\)/i.test(ua)){document.getElementById('warn').style.display='block';}})();
+</script>
+<script>
+/* จำนวนที่นั่งดึงจาก backend จริง — ไม่ตั้งตัวเลขปลอม
+   ถ้าเรียกไม่ได้ ให้แสดง 30 ที่ไว้ก่อน ดีกว่าโชว์เลขที่ไม่จริง */
+(function(){
+  var API='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+  var cb='pwseats_'+Date.now(), s=document.createElement('script');
+  window[cb]=function(d){
+    delete window[cb]; s.remove();
+    var sold=(d&&d.lifetimeSold)||0, left=Math.max(0,30-sold);
+    var n=document.getElementById('seatsNum'),
+        f=document.getElementById('seatsFill'),
+        t=document.getElementById('seatsNote');
+    if(!n) return;
+    if(left>0){
+      n.textContent=left;
+      f.style.width=(left/30*100)+'%';
+      if(left<=10) t.innerHTML='⚡ เหลือน้อยแล้ว! ครบ 30 ที่ ราคาจะขึ้นเป็น ฿2,990';
+    } else {
+      document.querySelector('.seats-left').innerHTML='<b>เต็มแล้ว</b>';
+      f.style.width='0%';
+      t.textContent='รอบ 30 ที่แรกเต็มแล้ว — ดูราคารอบถัดไปที่หน้าแพ็กเกจ';
+    }
+  };
+  s.onerror=function(){delete window[cb];s.remove();};
+  s.src=API+'?action=getStats&callback='+cb;
+  document.body.appendChild(s);
+})();
 </script>
 </body></html>
