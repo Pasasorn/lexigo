@@ -537,12 +537,13 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
     <div class="card-title">✏️ ข้อมูลนักเรียน</div>
 
     <div class="field">
-      <label>รหัสนักเรียน <span class="req">*</span></label>
-      <input class="inp" id="rCode" type="tel" placeholder="ตั้งรหัส 6 หลัก เช่น 123456" maxlength="6"
-        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-        onblur="checkCodeUnique(this.value)">
-      <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:3px">ตัวเลข 6 หลักเท่านั้น — ใช้จำรหัสเข้าเรียน</div>
-      <div class="ferr" id="eCode">กรุณากรอกรหัส</div>
+      <label>รหัสนักเรียน <span style="font-size:10px;color:#90A4AE;font-weight:700">(ระบบสร้างให้อัตโนมัติ)</span></label>
+      <input class="inp" id="rCode" type="text" readonly
+        style="background:#E8F5E9;border-color:#A5D6A7;color:#2E7D32;font-size:22px;letter-spacing:6px;text-align:center;cursor:default">
+      <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:3px">
+        ไม่ต้องจำก็ได้ — เข้าเรียนด้วย <b>อีเมล + รหัสผ่าน</b> ที่ตั้งด้านล่าง
+      </div>
+      <div class="ferr" id="eCode">กำลังสร้างรหัส...</div>
     </div>
 
     <div class="row2">
@@ -581,6 +582,23 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
       <label>Email <span class="req">*</span></label>
       <input class="inp" id="rEmail" type="email" placeholder="email@gmail.com" maxlength="80">
       <div class="ferr" id="eREmail">ไม่ถูกต้อง</div>
+    </div>
+
+    <div style="background:#FFF8E1;border:2px solid #FFE082;border-radius:14px;padding:13px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:900;color:#E65100;margin-bottom:9px">🔐 ตั้งรหัสผ่านสำหรับเข้าเรียน</div>
+      <div class="field" style="margin-bottom:10px">
+        <label>รหัสผ่าน <span class="req">*</span></label>
+        <input class="inp" id="rPw" type="password" placeholder="อย่างน้อย 6 ตัว" maxlength="60" autocomplete="new-password">
+        <div class="ferr" id="ePw">อย่างน้อย 6 ตัว</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>ยืนยันรหัสผ่าน <span class="req">*</span></label>
+        <input class="inp" id="rPw2" type="password" placeholder="พิมพ์ซ้ำอีกครั้ง" maxlength="60" autocomplete="new-password">
+        <div class="ferr" id="ePw2">ไม่ตรงกัน</div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#8D6E63;margin-top:8px;line-height:1.5">
+        ครั้งหน้าเข้าเรียนด้วย <b>อีเมล + รหัสผ่าน</b> นี้ได้เลย
+      </div>
     </div>
 
     <div class="field">
@@ -957,6 +975,9 @@ function gotoRegister(d) {
   const fCourse = document.getElementById('rCourse');
   if (fCourse) fCourse.value = d.pkgName || '';
   setStep(3); go(3);
+  // สร้างรหัสนักเรียนให้อัตโนมัติทันทีที่เข้าหน้าฟอร์ม
+  const rc = document.getElementById('rCode');
+  if (rc && !rc.value) autoGenCode();
 }
 
 async function checkOrderStatus(d) {
@@ -1005,17 +1026,43 @@ function retryPayment() {
 }
 
 // ── STEP 3: Register student ──
-async function checkCodeUnique(code) {
-  if (!/^\d{6}$/.test(code)) return;
+// รหัสนักเรียนสร้างให้อัตโนมัติ ผู้ปกครองไม่ต้องคิดเอง
+// (ยังเก็บไว้เพราะเป็น key ของ progress ทั้งระบบ — แต่ผู้ใช้ login ด้วย email/password)
+let _genBusy = false;
+async function autoGenCode() {
+  if (_genBusy) return;
+  _genBusy = true;
+  const inp = document.getElementById('rCode');
   const eEl = document.getElementById('eCode');
-  try {
-    const res = await jsonp({ action:'checkCode', code });
-    if (res.available === false) {
-      fv('rCode','eCode',false,'รหัสนี้ถูกใช้แล้ว กรุณาเลือกรหัสอื่น');
-    } else {
-      if (eEl) { eEl.textContent='✓ รหัสนี้ว่างอยู่'; eEl.style.color='#43A047'; eEl.style.display='block'; }
+  if (!inp) { _genBusy = false; return; }
+  if (eEl) { eEl.textContent = '⏳ กำลังสร้างรหัส...'; eEl.style.color = '#90A4AE'; eEl.style.display = 'block'; }
+
+  for (let t = 0; t < 8; t++) {
+    const c = String(Math.floor(100000 + Math.random() * 900000));
+    try {
+      const res = await jsonp({ action: 'checkCode', code: c });
+      if (res.available !== false) {
+        inp.value = c;
+        if (eEl) { eEl.textContent = '✓ สร้างรหัสให้แล้ว'; eEl.style.color = '#43A047'; }
+        _genBusy = false; return;
+      }
+    } catch (e) {
+      // เรียก backend ไม่ได้ — ใช้รหัสจากเวลาแทน โอกาสชนต่ำมาก
+      // และฝั่ง server จะเช็กซ้ำอีกชั้นตอน selfRegister อยู่แล้ว
+      inp.value = String(Date.now()).slice(-6);
+      if (eEl) { eEl.textContent = '✓ สร้างรหัสให้แล้ว'; eEl.style.color = '#43A047'; }
+      _genBusy = false; return;
     }
-  } catch {}
+  }
+  inp.value = String(Date.now()).slice(-6);
+  if (eEl) { eEl.textContent = '✓ สร้างรหัสให้แล้ว'; eEl.style.color = '#43A047'; }
+  _genBusy = false;
+}
+
+// hash รหัสผ่านตั้งแต่ในเบราว์เซอร์ — รหัสจริงไม่เคยวิ่งผ่านเน็ต
+async function hashPw(pw) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
 async function doRegister() {
@@ -1028,15 +1075,18 @@ async function doRegister() {
   const line  = document.getElementById('rLine') ? document.getElementById('rLine').value.trim() : '';
   const email = document.getElementById('rEmail').value.trim();
   const ref   = document.getElementById('rRef').value.trim().toUpperCase();
+  const pw    = document.getElementById('rPw').value;
+  const pw2   = document.getElementById('rPw2').value;
 
   let ok = true;
-  if(!/^\d{6}$/.test(code)) ok&=fv('rCode','eCode',false,'รหัสต้องเป็นตัวเลข 6 หลัก');
-  else { const eEl=document.getElementById('eCode'); if(eEl){eEl.style.color='';} fv('rCode','eCode',true,''); }
+  if(!/^\d{6}$/.test(code)){ await autoGenCode(); }
   if(!nick)   ok&=fv('rNick','eNick',false,'กรุณากรอก');   else fv('rNick','eNick',true,'');
   if(!first)  ok&=fv('rFirst','eFirst',false,'กรุณากรอก'); else fv('rFirst','eFirst',true,'');
   if(!last)   ok&=fv('rLast','eLast',false,'กรุณากรอก');   else fv('rLast','eLast',true,'');
   if(!/^0\d{8,9}$/.test(phone)) ok&=fv('rPhone','eRPhone',false,'10 หลัก'); else fv('rPhone','eRPhone',true,'');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ok&=fv('rEmail','eREmail',false,'ไม่ถูกต้อง'); else fv('rEmail','eREmail',true,'');
+  if(pw.length<6)  ok&=fv('rPw','ePw',false,'อย่างน้อย 6 ตัว');       else fv('rPw','ePw',true,'');
+  if(pw!==pw2)     ok&=fv('rPw2','ePw2',false,'รหัสผ่านไม่ตรงกัน');   else fv('rPw2','ePw2',true,'');
   if(!ok){showAlt('altReg','⚠️ กรุณากรอกข้อมูลให้ครบ','warn');return;}
 
   document.getElementById('btnReg').disabled=true;
@@ -1051,6 +1101,8 @@ async function doRegister() {
     document.getElementById('ldReg').classList.remove('on');
 
     if(res.status==='ok') {
+      // ตั้งรหัสผ่านให้เลย ผู้ใช้จะได้ login ด้วย email/password ได้ทันที
+      try { await jsonp({ action:'setPassword', code, ph: await hashPw(pw), email }); } catch(e) {}
       // คำนวณ startDay / endDay จาก level
       const _lvl = pd.level ? parseInt(pd.level) : null;
       const _type = pd.type || 'level';
@@ -1068,8 +1120,9 @@ async function doRegister() {
       localStorage.removeItem(PK);
       showSuccess(st);
     } else if(res.status==='code_taken') {
-      fv('rCode','eCode',false,'รหัสนี้ถูกใช้แล้ว กรุณาเลือกรหัสอื่น');
-      showAlt('altReg','❌ รหัส '+code+' ถูกใช้แล้ว','err');
+      // รหัสชนกันพอดี — สร้างใหม่ให้เงียบๆ แล้วให้กดยืนยันอีกที
+      await autoGenCode();
+      showAlt('altReg','🔄 สร้างรหัสใหม่ให้แล้ว กดยืนยันอีกครั้งได้เลย','warn');
     } else {
       showAlt('altReg','❌ '+(res.msg||'เกิดข้อผิดพลาด กรุณาลองใหม่'),'err');
     }

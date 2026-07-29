@@ -52,10 +52,7 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
   </div>
 
   <div class="card">
-    <div class="tabs">
-      <div class="tab on" id="tabA" onclick="setTab('A')">📧 อีเมล + รหัสผ่าน</div>
-      <div class="tab"    id="tabB" onclick="setTab('B')">🔢 รหัสนักเรียน</div>
-    </div>
+    <h2 style="font-size:16px;font-weight:900;color:#37474F;text-align:center;margin-bottom:18px">🔐 เข้าสู่ระบบ</h2>
 
     <!-- ══ A: email + password ══ -->
     <div class="pane on" id="paneA">
@@ -82,6 +79,9 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
         <button class="btn" style="background:linear-gradient(135deg,#42A5F5,#1565C0);margin-top:0;font-size:15px;padding:12px" onclick="doRequestReset()">ส่งลิงก์ตั้งรหัสใหม่</button>
         <div id="rsResult" style="font-size:13px;font-weight:800;margin-top:9px;min-height:18px;text-align:center;line-height:1.6"></div>
       </div>
+      <div style="text-align:center;margin-top:10px">
+        <span class="link" style="color:#B0BEC5;font-size:12px" onclick="setTab('B')">เข้าด้วยรหัสนักเรียน 6 หลักแทน</span>
+      </div>
     </div>
 
     <!-- ══ B: student code (ลูกค้าเดิม / ครั้งแรก) ══ -->
@@ -98,7 +98,7 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
           onkeydown="if(event.key==='Enter')doLoginCode()">
       </div>
       <button class="btn" id="btnB" onclick="doLoginCode()">เข้าสู่ระบบ →</button>
-      <div class="hint">เข้าครั้งแรกด้วยรหัสนักเรียน แล้วระบบจะให้ตั้งอีเมล + รหัสผ่าน<br>ครั้งต่อไปจะจำง่ายกว่ามาก</div>
+      <div class="hint">ใช้เมื่อจำอีเมลที่สมัครไม่ได้ — เข้าแล้วระบบจะให้ตั้งอีเมล + รหัสผ่านใหม่</div>
 
       <div style="text-align:center;margin-top:13px">
         <span class="link" onclick="show('recoverBox')">🔑 ลืมรหัสนักเรียน?</span>
@@ -108,6 +108,9 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
         <input id="recEmail" class="inp" type="email" placeholder="you@example.com" style="margin-bottom:8px">
         <button class="btn green" style="margin-top:0;font-size:15px;padding:12px" onclick="doRecover()">ค้นหารหัสของฉัน</button>
         <div id="recResult" style="font-size:13px;font-weight:800;margin-top:9px;min-height:18px;text-align:center;line-height:1.6"></div>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <span class="link" style="color:#B0BEC5;font-size:12px" onclick="setTab('A')">← กลับไปเข้าด้วยอีเมล</span>
       </div>
     </div>
 
@@ -163,8 +166,6 @@ let _pendingStudent = null;   // ข้อมูลนักเรียนท�
 
 // ── UI helpers ──
 function setTab(t){
-  document.getElementById('tabA').classList.toggle('on', t==='A');
-  document.getElementById('tabB').classList.toggle('on', t==='B');
   document.getElementById('paneA').classList.toggle('on', t==='A');
   document.getElementById('paneB').classList.toggle('on', t==='B');
   document.getElementById('paneSet').classList.remove('on');
