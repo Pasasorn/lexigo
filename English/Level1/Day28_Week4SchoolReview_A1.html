@@ -460,7 +460,9 @@ function renderLC(){
   lcCurrent=lcIdx;const w=lcDeck[lcIdx];
   document.getElementById('lcQ').textContent=lcIdx+1;document.getElementById('lcSc').textContent=lcScore;
   document.getElementById('lcPrompt').textContent=w.icon;
-  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  // คำถามแสดงเป็น emoji ดังนั้นตัวลวงต้องไม่ใช้ emoji เดียวกับคำเฉลย
+  // เดิมกรองแค่ .e ทำให้ 👨‍🍳 มีทั้ง baker และ chef เป็นตัวเลือก กดถูกก็ได้ 0 คะแนน
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e&&x.icon!==w.icon),3)]);
   const grid=document.getElementById('lcGrid');grid.innerHTML='';
   choices.forEach(c=>{
     const btn=document.createElement('button');btn.className='lc-card';btn.textContent=c.e;
@@ -482,7 +484,9 @@ function renderLP(){
   if(lpIdx>=lpDeck.length){endLP();return;}
   const w=lpDeck[lpIdx];
   document.getElementById('lpQ').textContent=lpIdx+1;document.getElementById('lpSc').textContent=lpScore;
-  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  // คำถามแสดงเป็น emoji ดังนั้นตัวลวงต้องไม่ใช้ emoji เดียวกับคำเฉลย
+  // เดิมกรองแค่ .e ทำให้ 👨‍🍳 มีทั้ง baker และ chef เป็นตัวเลือก กดถูกก็ได้ 0 คะแนน
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e&&x.icon!==w.icon),3)]);
   const opts=document.getElementById('lpOpts');opts.innerHTML='';
   choices.forEach(c=>{
     const btn=document.createElement('button');btn.className='lp-opt';btn.textContent=c.icon+' '+c.e;
@@ -503,7 +507,9 @@ function renderSQ(){
   if(sqIdx>=sqDeck.length){endSQ();return;}
   const w=sqDeck[sqIdx];
   document.getElementById('sqQ').textContent=sqIdx+1;document.getElementById('sqSc').textContent=sqScore;
-  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  // คำถามแสดงเป็น emoji ดังนั้นตัวลวงต้องไม่ใช้ emoji เดียวกับคำเฉลย
+  // เดิมกรองแค่ .e ทำให้ 👨‍🍳 มีทั้ง baker และ chef เป็นตัวเลือก กดถูกก็ได้ 0 คะแนน
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e&&x.icon!==w.icon),3)]);
   const area=document.getElementById('sqArea');area.innerHTML='';
   const card=document.createElement('div');card.className='sq-q';
   card.innerHTML='<div style="font-size:52px;margin-bottom:4px">'+w.icon+'</div><div style="font-size:12px;color:#78909C;font-weight:700">What English word?</div>';
@@ -536,7 +542,9 @@ function nextBalloon(){
   const area=document.getElementById('bpArena');area.innerHTML='';
   const w=WORDS[Math.floor(Math.random()*WORDS.length)];
   document.getElementById('bpPrompt').textContent=w.icon+' What is this?';speak(w.e);
-  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  // คำถามแสดงเป็น emoji ดังนั้นตัวลวงต้องไม่ใช้ emoji เดียวกับคำเฉลย
+  // เดิมกรองแค่ .e ทำให้ 👨‍🍳 มีทั้ง baker และ chef เป็นตัวเลือก กดถูกก็ได้ 0 คะแนน
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e&&x.icon!==w.icon),3)]);
   const colors=['#FF6B9D','#FFB347','#87CEEB','#98E89A'];
   const lefts=[5,28,52,72];
   choices.forEach((c,i)=>{
@@ -586,9 +594,13 @@ function showNextWA(){
   const w=WORDS[Math.floor(Math.random()*WORDS.length)];
   document.getElementById('waPrompt').textContent='👂 Whack: '+w.e+'!';speak(w.e,1.0);
   for(let i=0;i<waHoles;i++){const h=document.getElementById('wh'+i);if(h){h.textContent='🕳️';h.style.cssText='background:#E0E0E0;border-radius:50%;height:70px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;user-select:none';h.onclick=null;}}
+  const pool=WORDS.filter(x=>x.e!==w.e);
+  const decoys=shuffle([...pool]).slice(0,3);
   const active=shuffle([...Array(waHoles).keys()]).slice(0,4);
   active.forEach((hi,idx)=>{
-    const word=idx===0?w:WORDS[Math.floor(Math.random()*WORDS.length)];
+    // ตัวลวงต้องไม่ซ้ำกับคำเป้าหมายและไม่ซ้ำกันเอง
+    // เดิมสุ่มจาก WORDS ทั้งชุด ทำให้คำเป้าหมายโผล่ 2 หลุม แล้วกดถูกแต่ได้ 0 คะแนน
+    const word=idx===0?w:(decoys[idx-1]||w);
     const h=document.getElementById('wh'+hi);
     if(h){
       h.innerHTML=word.icon+'<br><span style="font-size:10px;font-weight:900">'+word.e+'</span>';
@@ -712,7 +724,7 @@ function startSP(){
   rec.onerror=(e)=>{
     clearTimeout(timer);spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
-    document.getElementById('spFb').textContent=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดังๆ':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมค์':e.error==='network'?'📶 ต้องต่อเน็ต':'ลองกดพูดอีกครั้ง');
+    document.getElementById('spFb').textContent=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดัง ๆ':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมค์':e.error==='network'?'📶 ต้องต่อเน็ต':'ลองกดพูดอีกครั้ง');
   };
   rec.start();
 }
@@ -772,7 +784,7 @@ function cbRun(){
 
 function showCompletion(){
   let code=localStorage.getItem(LOCK_KEY);
-  if(!code){code=generateCode(28);localStorage.setItem(LOCK_KEY,code);syncToCloud(28,code,totalScore);}
+  if(!code){code=generateCode(28);localStorage.setItem(LOCK_KEY,code);}syncToCloud(28,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('savedCode').textContent=code;
   document.getElementById('alreadyDone').classList.add('show');
@@ -781,6 +793,7 @@ function showCompletion(){
   document.getElementById('completeScreen').classList.add('show');
 }
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copied: '+code));else alert('Code: '+code);}
+function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){
   try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;
   const cb='jpc_'+Date.now();const s=document.createElement('script');
@@ -798,7 +811,7 @@ function checkLock(){
 function tryUnlock(){
   const input=document.getElementById('codeInput').value.trim().toUpperCase();
   if(input==='ADMIN-0000'){unlockContent();return;}
-  if(input.startsWith(PREV_PFX)&&input.length===7){localStorage.setItem(PREV_KEY,input);document.getElementById('unlockErr').style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
+  if(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(input)){localStorage.setItem(PREV_KEY,input);document.getElementById('unlockErr').style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
   else{document.getElementById('unlockErr').style.display='block';}
 }
 function unlockContent(){document.getElementById('lockScreen').style.display='none';document.getElementById('mainContent').style.display='block';go(0);}

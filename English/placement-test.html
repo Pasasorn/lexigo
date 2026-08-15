@@ -166,10 +166,10 @@ const QUESTIONS = [
    choices:['เสมอ','บางครั้ง','ไม่เคย','ทันที'], ans:'เสมอ'},
   {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
    q:'"between" หมายถึงอะไร?', hint:'', listen:null,
-   choices:['ด้านบน','ด้านล่าง','ระหว่าง','รอบๆ'], ans:'ระหว่าง'},
+   choices:['ด้านบน','ด้านล่าง','ระหว่าง','รอบ ๆ'], ans:'ระหว่าง'},
   {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
    q:'"quickly" หมายถึงอะไร?', hint:'', listen:null,
-   choices:['อย่างช้าๆ','อย่างรวดเร็ว','เบาๆ','ดังๆ'], ans:'อย่างรวดเร็ว'},
+   choices:['อย่างช้า ๆ','อย่างรวดเร็ว','เบา ๆ','ดัง ๆ'], ans:'อย่างรวดเร็ว'},
   {type:'vocab', label:'คำศัพท์ A2 · เลือกคำแปล',
    q:'"describe" หมายถึงอะไร?', hint:'', listen:null,
    choices:['นับ','เดิน','อธิบาย','ว่ายน้ำ'], ans:'อธิบาย'},
@@ -307,7 +307,7 @@ function showResult(){
       <div class="day-lbl">PeekaWord</div>
     </div>
     <button class="btn-retake" onclick="retake()">🔄 ทำใหม่อีกครั้ง</button>
-    ${lv.startDay===1?`<button class="btn-day1" onclick="window.location='Day1_LeosBigDay_A1.html'">🚀 ไป Day 1</button>`:lv.startDay===8?`<button class="btn-day1" onclick="window.location='Day8_LeosBigBreakfast_A1.html'">🚀 ไป Day 8</button>`:lv.startDay===22?`<button class="btn-day1" onclick="window.location='Day22_FirstDayAtSchool_A1.html'">🚀 ไป Day 22</button>`:'<div style="font-size:12px;color:#888;font-weight:700;text-align:center;padding:10px">⏳ Day 31+ กำลังจะมาเร็วๆ นี้!</div>'}
+    ${lv.startDay===1?`<button class="btn-day1" onclick="window.location='Day1_LeosBigDay_A1.html'">🚀 ไป Day 1</button>`:lv.startDay===8?`<button class="btn-day1" onclick="window.location='Day8_LeosBigBreakfast_A1.html'">🚀 ไป Day 8</button>`:lv.startDay===22?`<button class="btn-day1" onclick="window.location='Day22_FirstDayAtSchool_A1.html'">🚀 ไป Day 22</button>`:'<div style="font-size:12px;color:#888;font-weight:700;text-align:center;padding:10px">⏳ Day 31+ กำลังจะมาเร็ว ๆ นี้!</div>'}
   `;
 }
 

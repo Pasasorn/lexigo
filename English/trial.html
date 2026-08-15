@@ -107,7 +107,12 @@ function render(){
     if(free){
       el.href=d.f;
       // ปลดล็อกวันก่อนหน้าให้เข้าได้ตามลำดับอิสระในโหมดทดลอง
-      el.onclick=()=>{ for(let i=1;i<d.n;i++) if(!localStorage.getItem('wla_d'+i)) localStorage.setItem('wla_d'+i,'TRIAL'); };
+      el.onclick=()=>{
+        // ทำเครื่องหมายว่านี่คือ progress ของโหมดทดลอง ไม่ใช่ของบัญชีจริง
+        // ถ้าไม่ตั้ง wla_last_code เด็กที่ login ครั้งแรกจะได้ progress ทดลองติดมาด้วย
+        localStorage.setItem('wla_last_code','TRIAL');
+        for(let i=1;i<d.n;i++) if(!localStorage.getItem('wla_d'+i)) localStorage.setItem('wla_d'+i,'TRIAL');
+      };
     } else {
       el.onclick=()=>{ document.getElementById('tName').focus(); document.getElementById('unlockCard').scrollIntoView({behavior:'smooth'}); };
     }

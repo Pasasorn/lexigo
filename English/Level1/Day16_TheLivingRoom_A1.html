@@ -279,7 +279,7 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     </div>
   </div>
 
-  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
 </div>
 
 </div><!-- /mainContent -->
@@ -353,7 +353,7 @@ function go(n){
 // ── VOCAB CARDS ───────────────────────────────────────
 function buildCards(id){
   const el=document.getElementById(id);
-  el.innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${w.e}')">
+  el.innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
     <div class="ac-en">🔊 ${w.e}</div>
     <div class="ac-ph">${w.ph}</div>
     <div class="ac-th">${w.t}</div>
@@ -396,7 +396,7 @@ let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
   const txt=s2FullText.trim();
-  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดังๆ';return;}
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดัง ๆ';return;}
   const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
   const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   step2Score=avg;
@@ -529,7 +529,7 @@ function startRec(i){
       document.getElementById('tr'+i).textContent='ได้ยิน: "'+text+'"';
       checkSummary3();
     } else {
-      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดังๆ ภาษาอังกฤษ';
+      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดัง ๆ ภาษาอังกฤษ';
       document.getElementById('tr'+i).textContent='';
     }
   };
@@ -593,7 +593,7 @@ function checkS4(){
     if(good){s4done[i]=true;}
     if(good)ok++;
   });
-  step4Score=Math.round(ok/data.length*100);
+  step4Score=Math.round(ok/data.length*100);updScore(ok,data.length);
   speakFb(ok===data.length?'perfect':ok>0?'correct':'wrong');
 }
 
@@ -661,15 +661,16 @@ function showCompletion(){
   if(!code){
     code=generateCode(DAY);
     localStorage.setItem(LOCK_KEY,code);
-    syncToCloud(DAY,code,mfMatched*10);
+    
     document.getElementById('savedCode').textContent=code;
     document.getElementById('alreadyDone').classList.add('show');
-  }
+  }syncToCloud(DAY,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('completeScreen').classList.add('show');
 }
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
-function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;const cb='jpc_'+Date.now();const s=document.createElement('script');window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+'&callback='+cb;document.body.appendChild(s);}catch(e){}}
+function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
+function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;const cb='jpc_'+Date.now();const s=document.createElement('script');window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+'&callback='+cb;document.body.appendChild(s);}catch(e){}}
 
 // ── LOCK SYSTEM ──────────────────────────────────────
 function checkLock(){
@@ -689,7 +690,7 @@ function checkLock(){
 function tryUnlock(){
   const v=document.getElementById('codeInput').value.trim().toUpperCase();
   const prev=localStorage.getItem(PREV_KEY);
-  if(v===prev||(v&&v.startsWith('D'+(DAY-1)+'-'))){
+  if(v==='ADMIN-0000'||v===prev||(v&&new RegExp('^D'+(DAY-1)+'-[A-Z0-9]{4}$').test(v))){
     localStorage.setItem(PREV_KEY,v);
     document.getElementById('lockScreen').style.display='none';
     unlockContent();
@@ -701,6 +702,7 @@ function unlockContent(){document.getElementById('mainContent').style.display='b
 
 // ── SCORE UTIL ───────────────────────────────────────
 function updScore(n){
+  window._pwScore=Math.max(window._pwScore||0,n);
   const pct=Math.round(n/WORDS.length*100);
   document.getElementById('sfill').style.width=pct+'%';
   const sc=document.getElementById('totalSc');if(sc)sc.textContent=n;

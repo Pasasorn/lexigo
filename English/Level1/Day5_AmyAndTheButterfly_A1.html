@@ -218,7 +218,7 @@ body{background:#F3E5F5;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 6 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
         <!-- 1-lesson/day recommendation (A1 level Day 1-60) -->
     <div style="background:#FFF9C4;border:2px solid #F9A825;border-radius:12px;padding:10px 14px;margin:14px 0;font-size:13px;color:#795548;font-weight:700;line-height:1.6">
-      🌟 <strong>เคล็ดลับ:</strong> เรียน <strong>วันละ 1 เรื่อง</strong> ค่อยๆ สะสมทุกวัน ดีกว่าเรียนรวดเดียว!<br>
+      🌟 <strong>เคล็ดลับ:</strong> เรียน <strong>วันละ 1 เรื่อง</strong> ค่อย ๆ สะสมทุกวัน ดีกว่าเรียนรวดเดียว!<br>
       <span style="font-size:12px;color:#9E9E9E">แนะนำให้กลับมาเรียน Day 6 พรุ่งนี้ 😊</span>
     </div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
@@ -230,7 +230,7 @@ body{background:#F3E5F5;min-height:100vh;padding:14px;max-width:680px;margin:0 a
       </a>
     </div>
   </div>
-  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
 </div>
 </div>
 <script>
@@ -245,7 +245,7 @@ const STORY="Amy is Mimi's little sister. One day, she sees a butterfly in the g
 function scramble(w){const a=w.split('');for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.join('').toUpperCase();}
 function checkLock(){
   if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
-function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000' || (v.startsWith(PREV_PFX)&&v.length===7)){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
+function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000' || (new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
 function initContent(){
   const SV={butterfly:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="55" rx="8" ry="20" fill="#6A1B9A"/><ellipse cx="28" cy="42" rx="24" ry="16" fill="#AB47BC" transform="rotate(-20 28 42)"/><ellipse cx="72" cy="42" rx="24" ry="16" fill="#AB47BC" transform="rotate(20 72 42)"/><ellipse cx="24" cy="65" rx="18" ry="12" fill="#CE93D8" transform="rotate(15 24 65)"/><ellipse cx="76" cy="65" rx="18" ry="12" fill="#CE93D8" transform="rotate(-15 76 65)"/><circle cx="48" cy="35" r="8" fill="#37474F"/><circle cx="46" cy="33" r="2" fill="white"/></svg>`,
@@ -371,12 +371,12 @@ function chkSC(){
   scScore=0;
   WORDS.forEach((w,i)=>{const v=document.getElementById('sc'+i).value.trim().toLowerCase();const f=document.getElementById('scf'+i);if(v===w.e){scScore++;f.textContent='✓ Correct!';f.className='fb ok';}else{f.textContent=`✗ Answer: ${w.e}`;f.className='fb err';}});
   document.getElementById('scsc').textContent=scScore;document.getElementById('scfill').style.width=(scScore/6*100)+'%';
-  document.getElementById('totalSc').textContent=scScore;document.getElementById('sfill').style.width=(scScore/6*100)+'%';
+  window._pwScore=Math.max(window._pwScore||0,scScore);document.getElementById('totalSc').textContent=scScore;document.getElementById('sfill').style.width=(scScore/6*100)+'%';
   document.getElementById('starDisp').textContent=scScore<=2?'☆☆☆':scScore<=4?'⭐☆☆':scScore<=5?'⭐⭐☆':'⭐⭐⭐';
   if(scScore>=4)showCompletion();
 }
 function generateCode(d){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+d+'-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
-function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);document.getElementById('savedCode').textContent=code;document.getElementById('alreadyDone').classList.add('show');}syncToCloud(MY_DAY,code);document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
+function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);document.getElementById('savedCode').textContent=code;document.getElementById('alreadyDone').classList.add('show');}syncToCloud(MY_DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
 checkLock();
 
@@ -391,7 +391,7 @@ let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
   const txt=s2FullText.trim();
-  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดังๆ';return;}
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดัง ๆ';return;}
   const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
   const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   step2Score=avg;
@@ -515,7 +515,7 @@ function startRec(i){
       document.getElementById('tr'+i).textContent='ได้ยิน: "'+text+'"';
       checkSummary3();
     } else {
-      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดังๆ';
+      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดัง ๆ';
       document.getElementById('tr'+i).textContent='';
     }
   };
@@ -526,7 +526,8 @@ function startRec(i){
 </script>
 <script>
 const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
-function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
+function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
 </body>
 </html>

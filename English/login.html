@@ -201,8 +201,11 @@ function jsonp(params){
 
 // ── เข้าสู่ระบบสำเร็จ → เก็บ session + progress ──
 function finishLogin(st, progress){
+  // ล้าง progress เฉพาะตอน "สลับบัญชี" จริง ๆ เท่านั้น
+  // เดิมล้างเมื่อ prevCode !== code ซึ่ง prevCode เป็น null เสมอในการ login ครั้งแรก
+  // → เด็กที่ทดลองเรียนไว้ก่อนสมัคร จะโดนลบ progress ทิ้งทั้งหมด
   const prevCode = localStorage.getItem('wla_last_code');
-  if (prevCode !== st.code) {
+  if (prevCode && prevCode !== st.code) {
     for (let d=1; d<=448; d++) localStorage.removeItem('wla_d'+d);
     localStorage.removeItem('wla_progress');
   }

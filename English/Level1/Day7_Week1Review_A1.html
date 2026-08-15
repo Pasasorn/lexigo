@@ -669,7 +669,9 @@ function nextBalloon(){
   bpTarget=w.e;
   document.getElementById('bpPrompt').textContent=w.icon+' What is this?';
   speak(w.e);
-  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e),3)]);
+  // คำถามแสดงเป็น emoji ดังนั้นตัวลวงต้องไม่ใช้ emoji เดียวกับคำเฉลย
+  // เดิมกรองแค่ .e ทำให้ 👨‍🍳 มีทั้ง baker และ chef เป็นตัวเลือก กดถูกก็ได้ 0 คะแนน
+  const choices=shuffle([w,...pick(WORDS.filter(x=>x.e!==w.e&&x.icon!==w.icon),3)]);
   const colors=['#FF6B9D','#FFB347','#87CEEB','#98E89A'];
   const lefts=[5,28,52,72];
   choices.forEach((c,i)=>{
@@ -905,7 +907,7 @@ function cbRun(){
 
 function showCompletion(){
   let code = localStorage.getItem(LOCK_KEY);
-  if(!code){ code=generateCode(7); localStorage.setItem(LOCK_KEY,code); syncToCloud(7,code,totalScore); }
+  if(!code){ code=generateCode(7); localStorage.setItem(LOCK_KEY,code);  }syncToCloud(7,code,pwPct());
   document.getElementById('codeDisplay').textContent = code;
   document.getElementById('savedCode').textContent  = code;
   document.getElementById('alreadyDone').classList.add('show');
@@ -997,7 +999,7 @@ function startSP(){
   rec.onerror=(e)=>{
     clearTimeout(timer); spListening=false;
     if(rb){rb.textContent='🎤 Speak!';rb.disabled=false;}
-    document.getElementById('spFb').textContent=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดังๆ':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมค์':e.error==='network'?'📶 ต้องต่อเน็ต':'ลองกดพูดอีกครั้ง');
+    document.getElementById('spFb').textContent=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดัง ๆ':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมค์':e.error==='network'?'📶 ต้องต่อเน็ต':'ลองกดพูดอีกครั้ง');
   };
   rec.start();
 }
@@ -1007,6 +1009,7 @@ function endSP(){
   document.getElementById('spFinalScore').textContent=spScore+'/'+spSentList.length*30+' pts';
 }
 
+function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){
   score=score||0;
   try{
@@ -1033,7 +1036,7 @@ function checkLock(){
 function tryUnlock(){
   const input = document.getElementById('codeInput').value.trim().toUpperCase();
   if(input==='ADMIN-0000'){ unlockContent(); return; }
-  if(input.startsWith(PREV_PFX) && input.length===7){
+  if(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(input)){
     localStorage.setItem(PREV_KEY, input);
     document.getElementById('unlockErr').style.display='none';
     document.getElementById('lockScreen').style.display='none';

@@ -273,7 +273,7 @@ body{background:#F1F8E9;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   
         <!-- 1-lesson/day recommendation (A1 level Day 1-60) -->
     <div style="background:#FFF9C4;border:2px solid #F9A825;border-radius:12px;padding:10px 14px;margin:14px 0;font-size:13px;color:#795548;font-weight:700;line-height:1.6">
-      🌟 <strong>เคล็ดลับ:</strong> เรียน <strong>วันละ 1 เรื่อง</strong> ค่อยๆ สะสมทุกวัน ดีกว่าเรียนรวดเดียว!<br>
+      🌟 <strong>เคล็ดลับ:</strong> เรียน <strong>วันละ 1 เรื่อง</strong> ค่อย ๆ สะสมทุกวัน ดีกว่าเรียนรวดเดียว!<br>
       <span style="font-size:12px;color:#9E9E9E">แนะนำให้กลับมาเรียน Day 3 พรุ่งนี้ 😊</span>
     </div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:4px">
@@ -286,7 +286,7 @@ body{background:#F1F8E9;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     </div>
   </div>
 
-  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
 </div>
 
 </div><!-- end mainContent -->
@@ -408,6 +408,7 @@ function speak(t){
 }
 function stopAll(){window.speechSynthesis.cancel();}
 function updScore(n){
+  window._pwScore=Math.max(window._pwScore||0,n);
   document.getElementById('totalSc').textContent=n;
   document.getElementById('sfill').style.width=(n/6*100)+'%';
   document.getElementById('starDisp').textContent=n<=2?'☆☆☆':n<=4?'⭐☆☆':n<=5?'⭐⭐☆':'⭐⭐⭐';
@@ -490,10 +491,10 @@ function showCompletion(){
   if(!code){
     code=generateCode(2);
     localStorage.setItem(D2_KEY,code);
-    syncToCloud(2,code);
+    
     document.getElementById('savedCode2').textContent=code;
     document.getElementById('alreadyDone').classList.add('show');
-  }
+  }syncToCloud(2,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('completeScreen').classList.add('show');
 }
@@ -586,7 +587,7 @@ let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
   const txt=s2FullText.trim();
-  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดังๆ';return;}
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดัง ๆ';return;}
   const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
   const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   step2Score=avg;
@@ -710,7 +711,7 @@ function startRec(i){
       document.getElementById('tr'+i).textContent='ได้ยิน: "'+text+'"';
       checkSummary3();
     } else {
-      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดังๆ';
+      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดัง ๆ';
       document.getElementById('tr'+i).textContent='';
     }
   };
@@ -721,7 +722,8 @@ function startRec(i){
 </script>
 <script>
 const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
-function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
+function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
 </body>
 </html>

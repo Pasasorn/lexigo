@@ -242,7 +242,7 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     </div>
   </div>
 
-  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
+  <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
 </div>
 
 <script>
@@ -296,7 +296,7 @@ function unlockContent(){
 // ── INIT ──
 function initContent(){
   // Vocab grid cards (cover)
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${w.e}')">${SV[w.e]}<div class="ac-en">🔊 ${w.e}</div><div class="ac-ph">${w.ph}</div><div class="ac-th">${w.t}</div><div class="ac-hint">กดฟัง</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${SV[w.e]}<div class="ac-en">🔊 ${w.e}</div><div class="ac-ph">${w.ph}</div><div class="ac-th">${w.t}</div><div class="ac-hint">กดฟัง</div></div>`).join('');
   // Step 1 preview
   const s1El=document.getElementById('s1A');if(s1El)s1El.innerHTML=WORDS.slice(0,4).map(w=>`<div style="font-size:36px">${SV[w.e]}</div>`).join('');
 
@@ -361,6 +361,7 @@ function stopAll(){window.speechSynthesis.cancel();}
 
 // ── SCORE ──
 function updScore(n){
+  window._pwScore=Math.max(window._pwScore||0,n);
   document.getElementById('totalSc').textContent=n;
   document.getElementById('sfill').style.width=(n/6*100)+'%';
   document.getElementById('starDisp').textContent=n<=2?'☆☆☆':n<=4?'⭐☆☆':n<=5?'⭐⭐☆':'⭐⭐⭐';
@@ -371,7 +372,7 @@ let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
   const txt=s2FullText.trim();
-  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดังๆ';return;}
+  if(!txt){document.getElementById('r2lbl').textContent='ไม่ได้ยินเสียง — กดอีกครั้งแล้วพูดดัง ๆ';return;}
   // score each sentence against the full transcript
   const scores=SS.map(s=>Math.min(100,calcScore(txt,s)));
   const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
@@ -514,7 +515,7 @@ function startRec(i){
       document.getElementById('tr'+i).textContent='ได้ยิน: "'+text+'"';
       checkSummary3();
     } else {
-      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดังๆ';document.getElementById('tr'+i).textContent='';
+      document.getElementById('lbl'+i).textContent='ไม่ได้ยินเสียง — กด พูดใหม่ แล้วพูดดัง ๆ';document.getElementById('tr'+i).textContent='';
     }
   };
   rec.onerror=e=>{if(e.error==='no-speech')return;if(activeRec===rec)activeRec=null;btn.classList.remove('recording');btn.textContent='🎤 พูดใหม่';btn.onclick=()=>startRec(i);document.getElementById('lbl'+i).textContent='Error: '+e.error+' — ลองใหม่';};
@@ -643,7 +644,7 @@ function checkMatch(){
 function generateCode(day){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='D'+day+'-';for(let i=0;i<4;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code;}
 function showCompletion(){
   let code=localStorage.getItem(LOCK_KEY);
-  if(!code){code=generateCode(1);localStorage.setItem(LOCK_KEY,code);syncToCloud(1,code);}
+  if(!code){code=generateCode(1);localStorage.setItem(LOCK_KEY,code);}syncToCloud(1,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('savedCode').textContent=code;
   document.getElementById('alreadyDone').classList.add('show');
@@ -694,7 +695,8 @@ function copyCode(){const code=document.getElementById('codeDisplay').textConten
 
 // ── API SYNC ──
 const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec";
-function syncToCloud(day,code,score){score=score||100;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
+function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
+function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 
 // ── START ──
 checkLock();

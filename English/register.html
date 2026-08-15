@@ -1120,7 +1120,7 @@ async function doRegister() {
       localStorage.removeItem(PK);
       showSuccess(st);
     } else if(res.status==='code_taken') {
-      // รหัสชนกันพอดี — สร้างใหม่ให้เงียบๆ แล้วให้กดยืนยันอีกที
+      // รหัสชนกันพอดี — สร้างใหม่ให้เงียบ ๆ แล้วให้กดยืนยันอีกที
       await autoGenCode();
       showAlt('altReg','🔄 สร้างรหัสใหม่ให้แล้ว กดยืนยันอีกครั้งได้เลย','warn');
     } else {

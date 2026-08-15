@@ -43,7 +43,7 @@ function getSheet(name) {
       sh.appendRow(['competition_start','2026-07-01']);  // ← วันเริ่ม
       sh.appendRow(['competition_end',  '2026-07-30']);  // ← วันสิ้นสุด
       sh.appendRow(['pts_attendance','10']);    // คะแนนเข้าเรียน/วัน
-      sh.appendRow(['pts_per_correct','5']);    // คะแนนต่อข้อที่ถูก
+      sh.appendRow(['pts_full_day','50']);      // คะแนนเต็มเมื่อทำได้ 100%
       sh.appendRow(['pts_streak_7','50']);      // โบนัส streak 7 วันติด
       sh.appendRow(['pts_streak_30','200']);    // โบนัส streak 30 วันติด
       sh.setFrozenRows(1);
@@ -255,9 +255,14 @@ function actionSave(p, cb) {
   const day  = parseInt(p.day);
   const comp = (p.completion || '').toString().trim().toUpperCase();
 
-  const score = Math.min(100, Math.max(0, parseInt(p.score) || 100)); // 0–100, default 100
+  // เดิมใช้ || 100 ทำให้ score=0 (ไม่ทำแบบฝึกหัดเลย) กลายเป็นคะแนนเต็ม
+  const rawScore = parseInt(p.score);
+  const score = Math.min(100, Math.max(0, isNaN(rawScore) ? 0 : rawScore));
   if (!code || !day || !comp) return respond({status:'error', msg:'ข้อมูลไม่ครบ'}, cb);
-  if (!comp.startsWith('D'+day+'-') || comp.length !== 7)
+  // รหัสยาวไม่เท่ากันตามเลขวัน: D1-XXXX=7, D10-XXXX=8, D104-XXXX=9
+  if (!(day >= 1 && day <= 448))
+    return respond({status:'error', msg:'เลขวันไม่ถูกต้อง'}, cb);
+  if (!new RegExp('^D' + day + '-[A-Z0-9]{4}$').test(comp))
     return respond({status:'error', msg:'completion code ผิด format'}, cb);
 
   const sh   = getSheet(SHEET_STUDENTS);
@@ -272,16 +277,29 @@ function actionSave(p, cb) {
   const pData = pSh.getDataRange().getValues();
   for (let i = 1; i < pData.length; i++) {
     if (pData[i][0].toString() === code && parseInt(pData[i][1]) === day) {
-      return respond({status:'already_saved', completion: pData[i][2]}, cb);
+      // เด็กกด Finish แล้วกลับไปทำแบบฝึกหัดเพิ่ม → อัปเดตให้ถ้าคะแนนดีขึ้น
+      // เดิมตอบ already_saved ทิ้งคะแนนที่ทำเพิ่มทั้งหมด
+      const oldCorrect = parseInt(pData[i][4]) || 0;
+      const newCorrect = Math.min(100, Math.max(0, parseInt(p.score) || 0));
+      if (newCorrect > oldCorrect) {
+        const PTS_A = parseInt(getConfig('pts_attendance') || '10');
+        const PTS_F = parseInt(getConfig('pts_full_day')   || '50');
+        pSh.getRange(i + 1, 5).setValue(newCorrect);
+        pSh.getRange(i + 1, 6).setValue(PTS_A + Math.round(newCorrect / 100 * PTS_F));
+      }
+      return respond({status:'already_saved', completion: pData[i][2],
+                      updated: newCorrect > oldCorrect}, cb);
     }
   }
 
   // คำนวณ day_points = เข้าเรียน(10) + quiz(correct × 5)
-  const PTS_ATT     = parseInt(getConfig('pts_attendance')   || '10');
-  const PTS_CORRECT = parseInt(getConfig('pts_per_correct')  || '5');
-  // score field = จำนวนข้อที่ถูก (0–N) ส่งมาจาก HTML
-  const correctAns  = Math.min(100, Math.max(0, score));  // reuse score field as correct count
-  const dayPoints   = PTS_ATT + (correctAns * PTS_CORRECT);
+  const PTS_ATT  = parseInt(getConfig('pts_attendance') || '10');
+  const PTS_FULL = parseInt(getConfig('pts_full_day')   || '50');
+  // score = เปอร์เซ็นต์ 0–100 (ทุกวันสเกลเดียวกัน)
+  // เดิมเป็น "จำนวนข้อที่ถูก" ซึ่งแต่ละวันมีจำนวนข้อไม่เท่ากัน (0,4,6,7,60,100,255+)
+  // ทำให้ leaderboard วัดว่า "ทำวันไหน" แทนที่จะวัดว่า "ทำได้ดีแค่ไหน"
+  const correctAns  = Math.min(100, Math.max(0, score));
+  const dayPoints   = PTS_ATT + Math.round(correctAns / 100 * PTS_FULL);
 
   pSh.appendRow([code, day, comp, new Date().toISOString(), correctAns, dayPoints]);
   return respond({status:'ok', day_points: dayPoints}, cb);
@@ -320,7 +338,8 @@ function actionGetLeaderboard(p, cb) {
     const c = pData[i][0].toString();
     if (!progMap[c]) progMap[c] = { days: [], total_score: 0, day30_date: null, savedAts: [] };
     const dayNum  = parseInt(pData[i][1]);
-    const score   = parseFloat(pData[i][4]) || 100;
+    const rawSc   = parseFloat(pData[i][4]);
+    const score   = isNaN(rawSc) ? 0 : rawSc;
     const savedAt = pData[i][3] ? pData[i][3].toString() : '';
     progMap[c].days.push(dayNum);
     progMap[c].total_score += score;
