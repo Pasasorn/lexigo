@@ -164,6 +164,8 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
+      case 'version':         return respond({status:'ok', version:'v4', deployed:'2026-08-15',
+                                features:['completion-regex','score-percent','email-password','slip-verify']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
       case 'setPassword':     return actionSetPassword(p, cb);
