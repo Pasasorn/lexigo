@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 127 — Week 21 Friends Review!</title>
+<title>Day 284 — Week 42 Friends Review!</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
@@ -88,10 +88,10 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 
 
 <div class="hdr">
-  <span class="hdr-l">🤝 Day 127 · Week 21 Friends Review!</span>
+  <span class="hdr-l">🤝 Day 284 · Week 42 Friends Review!</span>
   <div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div>
 </div>
-<div class="already-done" id="alreadyDone">✅ Week 21 Friends Review Done! Code: <strong id="savedCode"></strong> 🏫</div>
+<div class="already-done" id="alreadyDone">✅ Week 42 Friends Review Done! Code: <strong id="savedCode"></strong> 🏫</div>
 <div class="score-bar">
   <span>⭐ Score: <span id="totalSc">0</span></span>
   <div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div>
@@ -109,11 +109,11 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 
 <div class="lock-screen" id="lockScreen" style="display:none">
   <div style="font-size:56px">🔒</div>
-  <h2>Day 127 ยังล็อกอยู่!</h2>
+  <h2>Day 284 ยังล็อกอยู่!</h2>
   <p>ต้องเรียน <strong>Day 27 ให้จบก่อน</strong><br>กรอก Completion Code ของ Day 27</p>
-  <input class="d-code-input" id="codeInput" placeholder="D126-????" maxlength="10"
+  <input class="d-code-input" id="codeInput" placeholder="D283-????" maxlength="10"
     oninput="this.value=this.value.toUpperCase()">
-  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 127</button>
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 284</button>
   <div class="unlock-err" id="unlockErr">❌ Code ไม่ถูกต้อง ลองใหม่</div>
   <div style="margin-top:14px;font-size:12px;color:#78909C;font-weight:700">💡 ลืม Code → กลับไปเล่น Day 27 อีกครั้ง</div>
 </div>
@@ -124,7 +124,7 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 <div class="page on fin" id="p0">
   <div style="text-align:center;padding:10px 6px">
     <div class="bounce" style="font-size:48px">🏫</div>
-    <div style="font-size:22px;font-weight:900;background:linear-gradient(90deg,#3949AB,#1E88E5,#00ACC1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:6px 0 3px">Week 21 Friends Review!</div>
+    <div style="font-size:22px;font-weight:900;background:linear-gradient(90deg,#3949AB,#1E88E5,#00ACC1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:6px 0 3px">Week 42 Friends Review!</div>
     <div style="font-size:13px;color:#78909C;margin-bottom:10px;font-weight:700">Review <strong style="color:#37474F">42 friendship words</strong> — plus <strong style="color:#3949AB">🎤 speak out loud!</strong></div>
     <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:12px">
       <span style="background:#E8EAF6;border-radius:9px;padding:3px 9px;font-size:11px;font-weight:800;color:#283593">🏫 Day22</span>
@@ -147,7 +147,7 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 
 
 
-    <button class="btn btn-p" style="width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 21 Results!</button>
+    <button class="btn btn-p" style="width:100%;font-size:16px" onclick="showCompletion()">🏆 Week 42 Results!</button>
   </div>
 </div>
 
@@ -322,86 +322,92 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 
 <div class="complete-screen" id="completeScreen">
   <div style="font-size:36px">🏫🏆</div>
-  <div style="font-size:20px;font-weight:900;color:#283593;margin:8px 0">Week 21 Friends Review Complete!</div>
+  <div style="font-size:20px;font-weight:900;color:#283593;margin:8px 0">Week 42 Friends Review Complete!</div>
   <div style="font-size:14px;color:#78909C;margin-bottom:10px;font-weight:700">All 7 games — including 🎤 Speak Up!</div>
   <div style="font-size:22px;font-weight:900;color:#3949AB;margin:8px 0">⭐ Total: <span id="finalSc">0</span> pts</div>
   <div id="starFinal" style="font-size:32px;margin:6px 0">☆☆☆</div>
   <div class="code-box">
-    <div style="font-size:12px;color:#78909C;font-weight:700;margin-bottom:4px">🔑 Week 21 Completion Code</div>
-    <div class="code-txt" id="codeDisplay">D127-????</div>
+    <div style="font-size:12px;color:#78909C;font-weight:700;margin-bottom:4px">🔑 Week 42 Completion Code</div>
+    <div class="code-txt" id="codeDisplay">D284-????</div>
     <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
   </div>
   <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">
     🏅 จดรหัสนี้เพื่อยืนยันการแข่งขัน!<br>
-    <strong style="color:#283593">Week 21 เสร็จสิ้นสมบูรณ์! 🤝</strong>
+    <strong style="color:#283593">Week 42 เสร็จสิ้นสมบูรณ์! 🤝</strong>
   </div>
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
     <a href="../dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
-    <a href="Day128_FeelingUnwell_A2.html" style="display:inline-block;background:linear-gradient(135deg,#3949AB,#1E88E5);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🤒 Day 128 →</a>
+    <a href="Day285_LinesandColours_B1.html" style="display:inline-block;background:linear-gradient(135deg,#3949AB,#1E88E5);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">Day 285 →</a>
   </div>
 </div>
 
 <script>
 const WORDS = [
-  // Day 121
-  {e:'recipe', day:121, icon:'📖'},
-  {e:'ingredient', day:121, icon:'🧺'},
-  {e:'flour', day:121, icon:'🌾'},
-  {e:'sugar', day:121, icon:'🧁'},
-  {e:'mix', day:121, icon:'🥣'},
-  {e:'pour', day:121, icon:'🫗'},
-  {e:'bake', day:121, icon:'🔥'},
-  // Day 122
-  {e:'chop', day:122, icon:'🔪'},
-  {e:'slice', day:122, icon:'🍞'},
-  {e:'boil', day:122, icon:'♨️'},
-  {e:'fry', day:122, icon:'🍳'},
-  {e:'dish', day:122, icon:'🍽️'},
-  {e:'serve', day:122, icon:'🤵'},
-  {e:'spoonful', day:122, icon:'🥄'},
-  // Day 123
-  {e:'flavour', day:123, icon:'🌈'},
-  {e:'lemon', day:123, icon:'🍋'},
-  {e:'sour', day:123, icon:'😖'},
-  {e:'salty', day:123, icon:'🧂'},
-  {e:'bitter', day:123, icon:'☕'},
-  {e:'spicy', day:123, icon:'🌶️'},
-  {e:'crispy', day:123, icon:'🥨'},
-  // Day 124
-  {e:'menu', day:124, icon:'📋'},
-  {e:'order', day:124, icon:'✍️'},
-  {e:'waiter', day:124, icon:'🧑‍🍳'},
-  {e:'customer', day:124, icon:'🧑'},
-  {e:'bill', day:124, icon:'🧾'},
-  {e:'tip', day:124, icon:'💵'},
-  {e:'manners', day:124, icon:'🙇'},
-  // Day 125
-  {e:'healthy', day:125, icon:'💚'},
-  {e:'vitamin', day:125, icon:'💊'},
-  {e:'protein', day:125, icon:'🥚'},
-  {e:'portion', day:125, icon:'🍛'},
-  {e:'balance', day:125, icon:'🧘'},
-  {e:'avoid', day:125, icon:'🚫'},
-  {e:'nutrition', day:125, icon:'🥬'},
-  // Day 126
-  {e:'stall', day:126, icon:'🎪'},
-  {e:'weigh', day:126, icon:'⚖️'},
-  {e:'kilo', day:126, icon:'📦'},
-  {e:'seller', day:126, icon:'🧑‍🌾'},
-  {e:'bargain', day:126, icon:'💰'},
-  {e:'crowded', day:126, icon:'👥'},
-  {e:'trolley', day:126, icon:'🛒'}
+  // Day 278
+  {e:'league', day:278, icon:'🏟️'},
+  {e:'squad', day:278, icon:'👥'},
+  {e:'fixture', day:278, icon:'🗓️'},
+  {e:'kickoff', day:278, icon:'⏱️'},
+  {e:'halftime', day:278, icon:'⏸️'},
+  {e:'whistle', day:278, icon:'📣'},
+  {e:'jersey', day:278, icon:'👕'},
+  {e:'formation', day:278, icon:'🔷'},
+  // Day 279
+  {e:'umpire', day:279, icon:'🧑‍⚖️'},
+  {e:'penalty', day:279, icon:'🥅'},
+  {e:'foul', day:279, icon:'🚩'},
+  {e:'offside', day:279, icon:'🚧'},
+  {e:'substitute', day:279, icon:'🔄'},
+  {e:'dribble', day:279, icon:'⚽'},
+  {e:'scoreboard', day:279, icon:'🔢'},
+  {e:'replay', day:279, icon:'📹'},
+  // Day 280
+  {e:'sprint', day:280, icon:'💨'},
+  {e:'marathon', day:280, icon:'🛣️'},
+  {e:'relay', day:280, icon:'🤝'},
+  {e:'hurdle', day:280, icon:'🚏'},
+  {e:'javelin', day:280, icon:'🎯'},
+  {e:'archery', day:280, icon:'🏹'},
+  {e:'gymnastics', day:280, icon:'🤸'},
+  {e:'podium', day:280, icon:'🥇'},
+  // Day 281
+  {e:'wrestling', day:281, icon:'🤼'},
+  {e:'fencing', day:281, icon:'🤺'},
+  {e:'paddle', day:281, icon:'🛶'},
+  {e:'racquet', day:281, icon:'🎾'},
+  {e:'goggles', day:281, icon:'🥽'},
+  {e:'agility', day:281, icon:'🐆'},
+  {e:'flexibility', day:281, icon:'🧘'},
+  {e:'aerobic', day:281, icon:'🫁'},
+  // Day 282
+  {e:'warmup', day:282, icon:'🔥'},
+  {e:'sweat', day:282, icon:'💦'},
+  {e:'joint', day:282, icon:'🦴'},
+  {e:'injury', day:282, icon:'🚑'},
+  {e:'sprain', day:282, icon:'🦶'},
+  {e:'bruise', day:282, icon:'🟣'},
+  {e:'physiotherapy', day:282, icon:'🧑‍⚕️'},
+  {e:'rehabilitation', day:282, icon:'📈'},
+  // Day 283
+  {e:'qualifier', day:283, icon:'🎫'},
+  {e:'semifinal', day:283, icon:'🥈'},
+  {e:'underdog', day:283, icon:'🐕'},
+  {e:'rivalry', day:283, icon:'⚔️'},
+  {e:'comeback', day:283, icon:'🔙'},
+  {e:'sponsor', day:283, icon:'💼'},
+  {e:'trophy', day:283, icon:'🏆'},
+  {e:'champion', day:283, icon:'👑'}
 ];
 
 const SB_LIST = [
-  {w:['First','we','need','every','ingredient']},
-  {w:['Mimi','began','to','chop','the','carrots']},
-  {w:['The','cake','was','very','sweet']},
-  {w:['A','kind','waiter','came','to','our','table']},
-  {w:['Fruit','gives','us','vitamin','C']}
+  {w:['One','whistle','stops','the','whole','game']},
+  {w:['The','goal','did','not','count','because','he','was','offside']},
+  {w:['Only','three','athletes','fit','on','the','podium']},
+  {w:['Never','skip','the','warmup','however','late','you','are']},
+  {w:['A','local','sponsor','paid','for','the','new','kit']}
 ];
 
-const LOCK_KEY='wla_d127', PREV_KEY='wla_d126', PREV_PFX='D126-';
+const LOCK_KEY='wla_d284', PREV_KEY='wla_d283', PREV_PFX='D283-';
 const API_URL='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
 
 let totalScore=0;
@@ -796,7 +802,7 @@ function cbRun(){
 
 function showCompletion(){
   let code=localStorage.getItem(LOCK_KEY);
-  if(!code){code=generateCode(104);localStorage.setItem(LOCK_KEY,code);}syncToCloud(127,code,pwPct());
+  if(!code){code=generateCode(104);localStorage.setItem(LOCK_KEY,code);}syncToCloud(284,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('savedCode').textContent=code;
   document.getElementById('alreadyDone').classList.add('show');

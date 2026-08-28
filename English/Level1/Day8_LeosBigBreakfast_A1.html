@@ -239,10 +239,10 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 
 const PREV_KEY='wla_d7',MY_KEY='wla_d8',PREV_PFX='D7-',MY_DAY=8;
 const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🃏'];
-const WORDS=[{e:'bread',t:'ขนมปัง'},{e:'milk',t:'นม'},{e:'egg',t:'ไข่'},{e:'apple',t:'แอปเปิ้ล'},{e:'eat',t:'กิน'},{e:'hot',t:'ร้อน'}];
+const WORDS=[{e:'bread',t:'ขนมปัง',ph:'/bred/',em:'🍞'},{e:'milk',t:'นม',ph:'/mɪlk/',em:'🥛'},{e:'egg',t:'ไข่',ph:'/eɡ/',em:'🥚'},{e:'apple',t:'แอปเปิ้ล',ph:'/ˈæpl/',em:'🍎'},{e:'jam',t:'แยม',ph:'/dʒæm/',em:'🍓'},{e:'hot',t:'ร้อน',ph:'/hɒt/',em:'🔥'}];
 const SS=["Leo wakes up early. He is very hungry.","He sees bread on the table.","He drinks a glass of milk.","Then he cooks an egg.","Mimi brings an apple.","The food is hot and good."];
 const DS=["He sees bread on the table.","Then he cooks an egg.","The food is hot and good."];
-const STORY="Leo wakes up early. He is very hungry. He sees bread on the table. He drinks a glass of milk. Then he cooks an egg. Mimi brings an apple. Let's eat! she says. The food is hot and good. Leo smiles. This is the best breakfast!";
+const STORY="Leo wakes up early. He is very hungry. He sees bread on the table. He drinks a glass of milk. Then he cooks an egg. Mimi brings an apple. He puts jam on his bread! she says. The food is hot and good. Leo smiles. This is the best breakfast!";
 
 function checkLock(){
   if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}

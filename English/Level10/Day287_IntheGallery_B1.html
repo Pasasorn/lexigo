@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Day 26 — My Teacher</title>
+<title>Day 287 — In the Gallery</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
@@ -107,24 +107,24 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div id="inAppWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#FF6B35,#E65100);color:#fff;padding:12px 14px;font-family:'Nunito',sans-serif;font-weight:800;text-align:center;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.3);line-height:1.5">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:12px;font-weight:600;opacity:.95">แตะ ⋮ หรือ ⋯ (มุมขวาบน) → "เปิดในเบราว์เซอร์อื่น"</span></div>
 <script>(function(){var ua=navigator.userAgent||'';if(/Line\/|FBAN|FBAV|Instagram|Messenger|MicroMessenger|; wv\)/i.test(ua)){var w=document.getElementById('inAppWarn');if(w){w.style.display='block';if(document.body)document.body.style.paddingTop='62px';}}})();</script>
 
-<div class="hdr"><span class="hdr-l" id="lbl">👩‍🏫 Day 26 · My Teacher</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
-<div class="already-done" id="alreadyDone">✅ เรียน Day 26 จบแล้ว! Code: <strong id="savedCode26"></strong> — Day 27 ปลดล็อกแล้ว 🎉</div>
+<div class="hdr"><span class="hdr-l" id="lbl">🖼️ Day 287 · In the Gallery</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
+<div class="already-done" id="alreadyDone">✅ เรียน Day 287 จบแล้ว! Code: <strong id="savedCode287"></strong> — Day 288 ปลดล็อกแล้ว 🎉</div>
 <div class="score-bar"><span>⭐ Score: <span id="totalSc">0</span> / 6</span><div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div><span id="starDisp">☆☆☆</span></div>
 <div class="vbar"><label>🔊</label><select id="vsel" onchange="setV(this.value)"></select><label>Speed:</label><input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'"><span id="rv" style="font-size:13px;color:#0D47A1;font-weight:800">0.85×</span><button class="tts" onclick="speak(WORDS.map(w=>w.e).join(' '))">▶ Test</button><span class="vstatus" id="vs">loading...</span></div>
 <div class="lock-screen" id="lockScreen" style="display:none">
-  <div style="font-size:56px">🔒</div><h2>Day 26 ยังล็อกอยู่!</h2>
-  <p>เรียน <strong>Day 25 ให้จบก่อน</strong> แล้วกรอก Code</p>
-  <input class="d-code-input" id="codeInput" placeholder="D25-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
-  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 26</button>
+  <div style="font-size:56px">🔒</div><h2>Day 287 ยังล็อกอยู่!</h2>
+  <p>เรียน <strong>Day 21 ให้จบก่อน</strong> แล้วกรอก Code</p>
+  <input class="d-code-input" id="codeInput" placeholder="D286-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 287</button>
   <div class="unlock-err" id="unlockErr">❌ Wrong code — try again!</div>
-  <div style="margin-top:12px;font-size:12px;color:#78909C;font-weight:700">💡 ถ้าลืม Code → กลับไปเล่น Day 25 อีกครั้ง</div>
+  <div style="margin-top:12px;font-size:12px;color:#78909C;font-weight:700">💡 ถ้าลืม Code → กลับไปเล่น Day 21 อีกครั้ง</div>
 </div>
 <div id="mainContent" style="display:none">
 <div class="page on fin" id="p0">
   <div style="text-align:center;padding:16px 8px">
-    <div class="wave">👩‍🏫</div>
-    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">My Teacher!</div>
-    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 26 · School — <strong style="color:#37474F">6 new words</strong>!</div>
+    <div class="wave">🏫</div>
+    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">In the Gallery!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 287 · Art & Creativity — <strong style="color:#37474F">8 new words</strong>!</div>
     <div class="acgrid" id="cvA"></div>
     <button class="btn btn-p" onclick="go(1)" style="margin-top:20px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! →</button>
   </div>
@@ -139,7 +139,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
       <button class="tts" style="padding:10px 18px;font-size:14px" onclick="stopAll()">■ Stop</button>
     </div>
     <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
-      <img src="../img/img_day26.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+      <img src="img_day287.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
     </div>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
@@ -149,10 +149,11 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <p class="step-sub"><span style="color:#1565C0;font-weight:900;background:#BBDEFB;padding:2px 7px;border-radius:6px">Blue</span> = vocab words! Tap ▶ listen, then 🎤 read the story aloud!</p>
   <div style="display:flex;gap:8px;margin-bottom:11px"><button class="tts" onclick="speak(STORY)">▶ Play Story</button><button class="tts" onclick="stopAll()">■ Stop</button></div>
   <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
-    <img src="../img/img_day26.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+    <img src="img_day287.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
-  <div class="sbox">Leo's teacher is very <span class="vocab">kind</span>. She <span class="vocab">helps</span> Leo every day.<br><br>Leo loves to <span class="vocab">listen</span> to her. She is very <span class="vocab">smart</span>!<br><br>She teaches Leo to <span class="vocab">read</span> and <span class="vocab">write</span>.<br><br>Leo says, "Thank you, teacher!" 🌟</div>
-  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What does the teacher teach Leo?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ To read and write.</div></div>
+  <div class="sbox">The <span class="vocab">exhibition</span> runs for three more weeks. This <span class="vocab">gallery</span> is free on the first Sunday. A <span class="vocab">curator</span> decides what you see and in what order. Nobody agrees on which painting is the <span class="vocab">masterpiece</span>. An <span class="vocab">abstract</span> picture asks you to feel before you understand. A <span class="vocab">realistic</span> drawing hides all its hard work. Perfect <span class="vocab">symmetry</span> can look cold. Getting the <span class="vocab">proportion</span> right matters more than getting the colour right.</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: When is the gallery free?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ On the first Sunday.</div></div>
+  <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Opinion language: it strikes me as / what I find interesting is.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -187,19 +188,13 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page" id="p5">
 
 
-  <div class="step-label">Step 5 · Missing Vowels! 🅰️</div>
-  <p class="step-sub">Tap the correct vowels (a e i o u) to complete the word!</p>
-  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Q <span id="g5q">1</span>/<span id="g5tot">6</span> · ⭐ <span id="g5sc">0</span></div>
-  <div id="g5card" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #90CAF9;text-align:center">
-    <div id="g5hint" style="font-size:44px;margin-bottom:4px"></div>
-    <div id="g5thai" style="font-size:16px;color:#546E7A;font-weight:700;margin-bottom:12px"></div>
-    <div id="g5blanks" style="font-size:28px;font-weight:900;letter-spacing:6px;color:#1565C0;margin-bottom:14px;min-height:42px"></div>
-    <div id="g5tiles" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px"></div>
-    <div id="g5feedback" style="min-height:28px;margin-top:10px;font-size:18px;font-weight:900"></div>
-  </div>
-  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
-    <div style="font-size:30px">🅰️</div><div style="font-size:18px;font-weight:900;color:#1565C0">Vowel Hero! 🌟</div>
-    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
+  <div class="step-label">Step 5 · Memory Match! 🧠</div>
+  <p class="step-sub">Flip cards → match each word with its picture!</p>
+  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Pairs <span id="g5pairs">0</span>/6 · Tries <span id="g5tries">0</span></div>
+  <div id="g5grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
+  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9;margin-top:10px">
+    <div style="font-size:30px">🧠</div><div style="font-size:18px;font-weight:900;color:#1565C0">Memory Master! 🎉</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0</div>
     <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
@@ -207,14 +202,14 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 
 <div class="complete-screen" id="completeScreen">
     <div style="font-size:36px">🎉</div>
-    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 26 Complete!</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 287 Complete!</div>
     <div id="daySummary" style="background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;text-align:left;border:2px solid #A5D6A7"></div>
-    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 26</div><div class="code-txt" id="codeDisplay">D26-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
-    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode26"></span></div>
-    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 27 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
+    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 287</div><div class="code-txt" id="codeDisplay">D287-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
+    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode287"></span></div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 288 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
       <a href="../dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
-      <a href="Day27_LearningToCount_A1.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🏫 Day 27 →</a>
+      <a href="Day288_ClothandThread_B1.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">😊 Day 288 →</a>
     </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
   </div>
@@ -224,27 +219,29 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <script>
 const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🔤'];
 const WORDS=[
-  {e:'kind',t:'ใจดี',ph:'/kaɪnd/',em:'💗'},
-  {e:'teach',t:'สอน',ph:'/tiːtʃ/',em:'👩‍🏫'},
-  {e:'listen',t:'ฟัง',ph:'/ˈlɪsən/',em:'👂'},
-  {e:'smart',t:'ฉลาด',ph:'/smɑːt/',em:'🧠'},
-  {e:'read',t:'อ่าน',ph:'/riːd/',em:'📖'},
-  {e:'write',t:'เขียน',ph:'/raɪt/',em:'✍️'}
+  {e:'exhibition',t:'นิทรรศการ',ph:'/ˌeksɪˈbɪʃn/',em:'🏛️'},
+  {e:'gallery',t:'หอศิลป์',ph:'/ˈɡæləri/',em:'🖼️'},
+  {e:'curator',t:'ภัณฑารักษ์',ph:'/kjʊəˈreɪtə(r)/',em:'🗝️'},
+  {e:'masterpiece',t:'ผลงานชิ้นเอก',ph:'/ˈmɑːstəpiːs/',em:'⭐'},
+  {e:'abstract',t:'นามธรรม',ph:'/ˈæbstrækt/',em:'🌀'},
+  {e:'realistic',t:'เหมือนจริง',ph:'/ˌrɪəˈlɪstɪk/',em:'📷'},
+  {e:'symmetry',t:'ความสมมาตร',ph:'/ˈsɪmətri/',em:'🦋'},
+  {e:'proportion',t:'สัดส่วน',ph:'/prəˈpɔːʃn/',em:'📐'}
 ];
 const SS=[
-  "Leo's teacher is very kind.",
-  "She teaches Leo every day.",
-  "Leo loves to listen to her.",
-  "She teaches Leo to read and write.",
-  "Thank you, teacher!"
+  "The exhibition runs for three more weeks.",
+  "This gallery is free on the first Sunday.",
+  "A curator decides what you see and in what order.",
+  "An abstract picture asks you to feel before you understand.",
+  "Perfect symmetry can look cold."
 ];
 const DS=[
-  "Leo's teacher is very kind.",
-  "She teaches Leo every day.",
-  "She teaches Leo to read and write."
+  "This gallery is free on the first Sunday.",
+  "A curator decides what you see and in what order.",
+  "Perfect symmetry can look cold."
 ];
-const STORY="Leo's teacher is very kind. She teaches Leo every day. Leo loves to listen to her. She is very smart! She teaches Leo to read and write. Leo says, Thank you, teacher!";
-const PREV_KEY='wla_d25',MY_KEY='wla_d26',PREV_PFX='D25-',MY_DAY=26;
+const STORY="The exhibition runs for three more weeks. This gallery is free on the first Sunday. A curator decides what you see and in what order. Nobody agrees on which painting is the masterpiece. An abstract picture asks you to feel before you understand. A realistic drawing hides all its hard work. Perfect symmetry can look cold. Getting the proportion right matters more than getting the colour right.";
+const PREV_KEY='wla_d286',MY_KEY='wla_d287',PREV_PFX='D286-',MY_DAY=287;
 let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
@@ -307,11 +304,11 @@ function startRec2(){
     s2SilenceTimer=setTimeout(stopRec2,2500);
   };
   rec.onend=()=>{if(activeRec2){activeRec2=null;finishRec2();}};
-  rec.onerror=e=>{if(e.error!=='no-speech'){var m=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดัง ๆ แล้วลองใหม่':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมโครโฟน แล้วลองใหม่':e.error==='network'?'📶 ต้องต่ออินเทอร์เน็ต':e.error==='audio-capture'?'🎤 ไม่พบไมโครโฟน':'ลองกดพูดอีกครั้ง');document.getElementById('r2lbl').textContent=m;}activeRec2=null;btn.classList.remove('recording');btn.textContent='🎤 Read aloud';btn.onclick=startRec2;};
+  rec.onerror=e=>{if(e.error!=='no-speech'){var m=(e.error==='no-speech'?'🔇 ไม่ได้ยินเสียง — พูดดังๆ แล้วลองใหม่':e.error==='not-allowed'||e.error==='service-not-allowed'?'🎤 กรุณาอนุญาตไมโครโฟน แล้วลองใหม่':e.error==='network'?'📶 ต้องต่ออินเทอร์เน็ต':e.error==='audio-capture'?'🎤 ไม่พบไมโครโฟน':'ลองกดพูดอีกครั้ง');document.getElementById('r2lbl').textContent=m;}activeRec2=null;btn.classList.remove('recording');btn.textContent='🎤 Read aloud';btn.onclick=startRec2;};
   try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 Read aloud';}
   btn.onclick=startRec2;
 }
-function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode26').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode287').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
 function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
 function initContent(){
@@ -321,7 +318,7 @@ function initContent(){
   buildS4();
   loadV();buildG();
 }
-function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='👩‍🏫 Day 26 · '+STEPS[n];if(n===4)buildS4();
+function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🖼️ Day 287 · '+STEPS[n];if(n===4)buildS4();
   if(n===5)buildG();}
 let allV=[],curV=null;
 function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
@@ -418,12 +415,10 @@ function speakFb(type){
 }
 
 
-let g5deck=[],g5idx=0,g5score=0,g5ans='',g5pos=[],g5fill=[];
-function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
-function g5render(){if(g5idx>=g5deck.length){g5end();return;}const w=g5deck[g5idx];g5ans=w.e.toLowerCase();document.getElementById('g5q').textContent=g5idx+1;document.getElementById('g5sc').textContent=g5score;document.getElementById('g5hint').textContent=w.em||'📝';document.getElementById('g5thai').textContent=w.t;document.getElementById('g5feedback').textContent='';g5pos=[];for(let i=0;i<g5ans.length;i++)if('aeiou'.includes(g5ans[i]))g5pos.push(i);if(!g5pos.length)g5pos.push(0);g5fill=new Array(g5ans.length).fill(null);g5upd();const tiles=document.getElementById('g5tiles');tiles.innerHTML='';'aeiou'.split('').forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:50px;height:50px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});}
-function g5upd(){document.getElementById('g5blanks').innerHTML=g5ans.split('').map((c,i)=>!g5pos.includes(i)?'<span style="color:#1565C0">'+c.toUpperCase()+'</span>':g5fill[i]?'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5fill[i].toUpperCase()+'</span>':'<span style="color:#bbb">_</span>').join('<span style="margin:0 3px"> </span>');}
-function g5tap(c,btn){const nb=g5pos.find(p=>!g5fill[p]);if(nb===undefined)return;if(g5ans[nb]===c){g5fill[nb]=c;g5upd();if(g5pos.every(p=>g5fill[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(g5render,900);}}else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},600);}}
-function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
+let g5cards=[],g5flip=[],g5pairs=0,g5tries=0,g5lock=false;
+function buildG(){g5pairs=0;g5tries=0;g5flip=[];g5lock=false;document.getElementById('g5done').style.display='none';const deck=[];WORDS.forEach((w,i)=>{deck.push({id:i,label:w.e});deck.push({id:i,label:w.em});});g5cards=deck.sort(()=>Math.random()-.5);document.getElementById('g5pairs').textContent=0;document.getElementById('g5tries').textContent=0;const g=document.getElementById('g5grid');g.innerHTML='';g5cards.forEach((c,idx)=>{const b=document.createElement('button');b.id='mc'+idx;b.style.cssText='aspect-ratio:1;border-radius:12px;border:2.5px solid #90CAF9;background:#42A5F5;font-size:16px;cursor:pointer;color:#fff;font-weight:900;padding:2px;word-break:break-word';b.textContent='?';b.onclick=()=>g5tap(idx);g.appendChild(b);});}
+function g5tap(i){if(g5lock)return;const c=g5cards[i],b=document.getElementById('mc'+i);if(b.dataset.done||g5flip.find(f=>f.i===i))return;b.textContent=c.label;b.style.background='#fff';b.style.color='#1565C0';g5flip.push({i,c});if(g5flip.length===2){g5tries++;document.getElementById('g5tries').textContent=g5tries;g5lock=true;const a=g5flip[0],d=g5flip[1];if(a.c.id===d.c.id){setTimeout(()=>{['mc'+a.i,'mc'+d.i].forEach(id=>{const e=document.getElementById(id);e.style.background='#E8F5E9';e.style.borderColor='#7CB342';e.dataset.done=1;});g5pairs++;document.getElementById('g5pairs').textContent=g5pairs;updScore(g5pairs,6);g5flip=[];g5lock=false;if(g5pairs===6)g5end();},450);}else{setTimeout(()=>{['mc'+a.i,'mc'+d.i].forEach(id=>{const e=document.getElementById(id);e.textContent='?';e.style.background='#42A5F5';e.style.color='#fff';});g5flip=[];g5lock=false;},850);}}}
+function g5end(){document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5tries+' tries';updScore(6,6);}
 
 var activeRec=null,activeIdx=-1,recScores=[];
 function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}
