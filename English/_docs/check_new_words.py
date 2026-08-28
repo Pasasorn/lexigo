@@ -12,11 +12,23 @@ BASE=os.path.dirname(os.path.abspath(__file__))
 CSV=os.path.join(BASE,'wordlist_master.csv')
 
 def load():
-    used={}
-    with open(CSV,encoding='utf-8-sig') as f:
-        for r in csv.DictReader(f):
-            used.setdefault(r['english'].lower(),[]).append('Day'+r['day'])
+    """อ่านจากไฟล์ HTML จริงทุกครั้ง — ไม่พึ่ง CSV ที่อาจเก่า
+    (เคยพลาดมาแล้ว: CSV ไม่มี Day 241-245 ทำให้เช็กซ้ำไม่เจอ 7 คำ)"""
+    import glob
+    used = {}
+    root = os.path.join(BASE, '..')
+    for f in sorted(glob.glob(os.path.join(root, 'Level*', 'Day*.html'))):
+        if 'Review' in os.path.basename(f):
+            continue
+        n = int(re.search(r'Day(\d+)', os.path.basename(f)).group(1))
+        h = open(f, encoding='utf-8', errors='ignore').read()
+        m = re.search(r'const WORDS\s*=\s*\[(.*?)\n\s*\];', h, re.S)
+        if not m:
+            continue
+        for w in re.findall(r"\{e:'([^']+)'", m.group(1)):
+            used.setdefault(w.lower(), []).append('Day%d' % n)
     return used
+
 
 def main():
     args=sys.argv[1:]
