@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Day 330 — Three Hundred and Thirty</title>
+<title>Day 341 — Machines That Learn</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
@@ -107,15 +107,15 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div id="inAppWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#FF6B35,#E65100);color:#fff;padding:12px 14px;font-family:'Nunito',sans-serif;font-weight:800;text-align:center;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.3);line-height:1.5">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:12px;font-weight:600;opacity:.95">แตะ ⋮ หรือ ⋯ (มุมขวาบน) → "เปิดในเบราว์เซอร์อื่น"</span></div>
 <script>(function(){var ua=navigator.userAgent||'';if(/Line\/|FBAN|FBAV|Instagram|Messenger|MicroMessenger|; wv\)/i.test(ua)){var w=document.getElementById('inAppWarn');if(w){w.style.display='block';if(document.body)document.body.style.paddingTop='62px';}}})();</script>
 
-<div class="hdr"><span class="hdr-l" id="lbl">🎓 Day 330 · Three Hundred and Thirty</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
-<div class="already-done" id="alreadyDone">✅ เรียน Day 330 จบแล้ว! Code: <strong id="savedCode330"></strong> — Day 331 ปลดล็อกแล้ว 🎉</div>
+<div class="hdr"><span class="hdr-l" id="lbl">🤖 Day 341 · Machines That Learn</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
+<div class="already-done" id="alreadyDone">✅ เรียน Day 341 จบแล้ว! Code: <strong id="savedCode341"></strong> — Day 342 ปลดล็อกแล้ว 🎉</div>
 <div class="score-bar"><span>⭐ Score: <span id="totalSc">0</span> / 6</span><div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div><span id="starDisp">☆☆☆</span></div>
 <div class="vbar"><label>🔊</label><select id="vsel" onchange="setV(this.value)"></select><label>Speed:</label><input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'"><span id="rv" style="font-size:13px;color:#0D47A1;font-weight:800">0.85×</span><button class="tts" onclick="speak(WORDS.map(w=>w.e).join(' '))">▶ Test</button><span class="vstatus" id="vs">loading...</span></div>
 <div class="lock-screen" id="lockScreen" style="display:none">
-  <div style="font-size:56px">🔒</div><h2>Day 330 ยังล็อกอยู่!</h2>
+  <div style="font-size:56px">🔒</div><h2>Day 341 ยังล็อกอยู่!</h2>
   <p>เรียน <strong>Day 21 ให้จบก่อน</strong> แล้วกรอก Code</p>
-  <input class="d-code-input" id="codeInput" placeholder="D329-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
-  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 330</button>
+  <input class="d-code-input" id="codeInput" placeholder="D340-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 341</button>
   <div class="unlock-err" id="unlockErr">❌ Wrong code — try again!</div>
   <div style="margin-top:12px;font-size:12px;color:#78909C;font-weight:700">💡 ถ้าลืม Code → กลับไปเล่น Day 21 อีกครั้ง</div>
 </div>
@@ -123,8 +123,8 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page on fin" id="p0">
   <div style="text-align:center;padding:16px 8px">
     <div class="wave">🏫</div>
-    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">Three Hundred and Thirty!</div>
-    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 330 · Critical Reading — <strong style="color:#37474F">9 new words</strong>!</div>
+    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">Machines That Learn!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 341 · Technology — <strong style="color:#37474F">9 new words</strong>!</div>
     <div class="acgrid" id="cvA"></div>
     <button class="btn btn-p" onclick="go(1)" style="margin-top:20px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! →</button>
   </div>
@@ -139,7 +139,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
       <button class="tts" style="padding:10px 18px;font-size:14px" onclick="stopAll()">■ Stop</button>
     </div>
     <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
-      <img src="img_day330.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+      <img src="img_day341.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
     </div>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
@@ -149,11 +149,11 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <p class="step-sub"><span style="color:#1565C0;font-weight:900;background:#BBDEFB;padding:2px 7px;border-radius:6px">Blue</span> = vocab words! Tap ▶ listen, then 🎤 read the story aloud!</p>
   <div style="display:flex;gap:8px;margin-bottom:11px"><button class="tts" onclick="speak(STORY)">▶ Play Story</button><button class="tts" onclick="stopAll()">■ Stop</button></div>
   <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
-    <img src="img_day330.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+    <img src="img_day341.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
-  <div class="sbox">A <span class="vocab">citation</span> is a promise that the reader can check you. <span class="vocab">Plagiarism</span> is not only unfair; it hides where an idea actually came from. <span class="vocab">Correlation</span> means two things move together. <span class="vocab">Causation</span> means one of them moves the other. Ask about the <span class="vocab">methodology</span> before you argue about the conclusion. <span class="vocab">Peerreview</span> is imperfect and still better than no review at all. A result nobody can <span class="vocab">replicate</span> is a story, not a finding. One <span class="vocab">anomaly</span> is noise. A repeated <span class="vocab">anomaly</span> is a discovery waiting. Real understanding is a <span class="vocab">synthesis</span>: many sources, one clear picture in your own words.</div>
-  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What should you ask about before arguing about the conclusion?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ Ask about the methodology.</div></div>
-  <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Academic caution: the data suggest / this does not establish that.</div></div>
+  <div class="sbox">A model is only as fair as the <span class="vocab">dataset</span> it was trained on. A system may <span class="vocab">throttle</span> your access when you ask for too much at once. A <span class="vocab">chatbot</span> sounds confident whether or not it is correct. A convincing <span class="vocab">deepfake</span> costs almost nothing to make now. <span class="vocab">Autocorrect</span> has quietly changed how a generation spells. A <span class="vocab">recommendation</span> is a guess dressed as a suggestion. An <span class="vocab">explainable</span> system lets people ask how a decision was reached. An <span class="vocab">auditable</span> system keeps a record somebody can check later. To <span class="vocab">automate</span> a bad process is to do the wrong thing faster.</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What happens if you automate a bad process?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ You do the wrong thing faster.</div></div>
+  <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Qualified claims: appears to / is often assumed to / is not necessarily.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -188,19 +188,14 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page" id="p5">
 
 
-  <div class="step-label">Step 5 · Fill the Blank! ✏️</div>
-  <p class="step-sub">See the hint → tap letters to complete the word!</p>
-  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Q <span id="g5q">1</span>/<span id="g5tot">6</span> · ⭐ <span id="g5sc">0</span></div>
-  <div id="g5card" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #90CAF9;text-align:center">
-    <div id="g5hint" style="font-size:44px;margin-bottom:4px"></div>
-    <div id="g5thai" style="font-size:16px;color:#546E7A;font-weight:700;margin-bottom:12px"></div>
-    <div id="g5blanks" style="font-size:28px;font-weight:900;letter-spacing:6px;color:#1565C0;margin-bottom:14px;min-height:42px"></div>
-    <div id="g5tiles" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px"></div>
-    <div id="g5feedback" style="min-height:28px;margin-top:10px;font-size:18px;font-weight:900"></div>
-  </div>
-  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
-    <div style="font-size:30px">✏️</div><div style="font-size:18px;font-weight:900;color:#1565C0">Spelling Star! 🌟</div>
-    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
+  <div class="step-label">Step 5 · Word Search! 🔍</div>
+  <p class="step-sub">Tap the first and last letter of each word to find it!</p>
+  <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Found <span id="g5found">0</span>/6</div>
+  <div id="g5grid" style="display:grid;gap:3px;justify-content:center;margin-bottom:10px"></div>
+  <div id="g5words" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center"></div>
+  <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9;margin-top:10px">
+    <div style="font-size:30px">🔍</div><div style="font-size:18px;font-weight:900;color:#1565C0">Word Finder! 🎉</div>
+    <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">6/6</div>
     <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="showCompletion()">🏆 Finish!</button></div>
@@ -208,14 +203,14 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 
 <div class="complete-screen" id="completeScreen">
     <div style="font-size:36px">🎉</div>
-    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 330 Complete!</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 341 Complete!</div>
     <div id="daySummary" style="background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;text-align:left;border:2px solid #A5D6A7"></div>
-    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 330</div><div class="code-txt" id="codeDisplay">D330-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
-    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode330"></span></div>
-    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 331 ปลดล็อกอัตโนมัติแล้ว ✓ ✓</strong></div>
+    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 341</div><div class="code-txt" id="codeDisplay">D341-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
+    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode341"></span></div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 342 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
       <a href="../dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
-      <a href="../Level12/Day331_WhatEverythingIsMadeOf_B2.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">⚛️ Day 331 →</a>
+      <a href="Day342_TheAttentionMarket_B2.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">😊 Day 342 →</a>
     </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
   </div>
@@ -225,30 +220,30 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <script>
 const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🔤'];
 const WORDS=[
-  {e:'citation',t:'การอ้างอิงแหล่งที่มา',ph:'/saɪˈteɪʃn/',em:'🔖'},
-  {e:'plagiarism',t:'การลอกงานผู้อื่น',ph:'/ˈpleɪdʒərɪzəm/',em:'🚫'},
-  {e:'correlation',t:'ความสัมพันธ์ร่วม',ph:'/ˌkɒrəˈleɪʃn/',em:'📈'},
-  {e:'causation',t:'ความเป็นเหตุเป็นผล',ph:'/kɔːˈzeɪʃn/',em:'➡️'},
-  {e:'methodology',t:'ระเบียบวิธีวิจัย',ph:'/ˌmeθəˈdɒlədʒi/',em:'🧪'},
-  {e:'peerreview',t:'การตรวจโดยผู้รู้เท่ากัน',ph:'/ˈpɪərɪvjuː/',em:'👓'},
-  {e:'replicate',t:'ทำซ้ำเพื่อยืนยันผล',ph:'/ˈreplɪkeɪt/',em:'🔁'},
-  {e:'anomaly',t:'สิ่งผิดปกติจากรูปแบบ',ph:'/əˈnɒməli/',em:'❗'},
-  {e:'synthesis',t:'การสังเคราะห์ข้อมูล',ph:'/ˈsɪnθəsɪs/',em:'🧩'}
+  {e:'dataset',t:'ชุดข้อมูลฝึก',ph:'/ˈdeɪtəset/',em:'📚'},
+  {e:'throttle',t:'จำกัดความเร็วการใช้งาน',ph:'/ˈθrɒtl/',em:'🧮'},
+  {e:'chatbot',t:'แชตบอต',ph:'/ˈtʃætbɒt/',em:'💬'},
+  {e:'deepfake',t:'วิดีโอปลอมด้วย AI',ph:'/ˈdiːpfeɪk/',em:'🪄'},
+  {e:'autocorrect',t:'การแก้คำอัตโนมัติ',ph:'/ˌɔːtəʊkəˈrekt/',em:'✏️'},
+  {e:'recommendation',t:'การแนะนำเนื้อหา',ph:'/ˌrekəmenˈdeɪʃn/',em:'👍'},
+  {e:'explainable',t:'อธิบายเหตุผลได้',ph:'/ɪkˈspleɪnəbl/',em:'🪟'},
+  {e:'auditable',t:'ตรวจสอบย้อนหลังได้',ph:'/ˈɔːdɪtəbl/',em:'⚖️'},
+  {e:'automate',t:'ทำให้เป็นอัตโนมัติ',ph:'/ˈɔːtəmeɪt/',em:'⚙️'}
 ];
 const SS=[
-  "A citation is a promise that the reader can check you.",
-  "Correlation means two things move together.",
-  "Ask about the methodology before you argue about the conclusion.",
-  "A result nobody can replicate is a story, not a finding.",
-  "One anomaly is noise. A repeated anomaly is a discovery waiting."
+  "A model is only as fair as the dataset it was trained on.",
+  "A system may throttle your access when you ask for too much at once.",
+  "A chatbot sounds confident whether or not it is correct.",
+  "A recommendation is a guess dressed as a suggestion.",
+  "To automate a bad process is to do the wrong thing faster."
 ];
 const DS=[
-  "A citation is a promise that the reader can check you.",
-  "Ask about the methodology before you argue about the conclusion.",
-  "A result nobody can replicate is a story, not a finding."
+  "A system may throttle your access when you ask for too much at once.",
+  "A chatbot sounds confident whether or not it is correct.",
+  "To automate a bad process is to do the wrong thing faster."
 ];
-const STORY="A citation is a promise that the reader can check you. Plagiarism is not only unfair; it hides where an idea actually came from. Correlation means two things move together. Causation means one of them moves the other. Ask about the methodology before you argue about the conclusion. Peerreview is imperfect and still better than no review at all. A result nobody can replicate is a story, not a finding. One anomaly is noise. A repeated anomaly is a discovery waiting. Real understanding is a synthesis: many sources, one clear picture in your own words.";
-const PREV_KEY='wla_d329',MY_KEY='wla_d330',PREV_PFX='D329-',MY_DAY=330;
+const STORY="A model is only as fair as the dataset it was trained on. A system may throttle your access when you ask for too much at once. A chatbot sounds confident whether or not it is correct. A convincing deepfake costs almost nothing to make now. Autocorrect has quietly changed how a generation spells. A recommendation is a guess dressed as a suggestion. An explainable system lets people ask how a decision was reached. An auditable system keeps a record somebody can check later. To automate a bad process is to do the wrong thing faster.";
+const PREV_KEY='wla_d340',MY_KEY='wla_d341',PREV_PFX='D340-',MY_DAY=341;
 let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
@@ -315,7 +310,7 @@ function startRec2(){
   try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 Read aloud';}
   btn.onclick=startRec2;
 }
-function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode330').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode341').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
 function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
 function initContent(){
@@ -325,7 +320,7 @@ function initContent(){
   buildS4();
   loadV();buildG();
 }
-function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🎓 Day 330 · '+STEPS[n];if(n===4)buildS4();
+function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🤖 Day 341 · '+STEPS[n];if(n===4)buildS4();
   if(n===5)buildG();}
 let allV=[],curV=null;
 function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
@@ -422,12 +417,11 @@ function speakFb(type){
 }
 
 
-let g5deck=[],g5idx=0,g5score=0,g5blanks=[],g5answer='',g5filled=[];
-function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
-function g5render(){if(g5idx>=g5deck.length){g5end();return;}const w=g5deck[g5idx];g5answer=w.e.toLowerCase();document.getElementById('g5q').textContent=g5idx+1;document.getElementById('g5sc').textContent=g5score;document.getElementById('g5hint').textContent=w.em||'📝';document.getElementById('g5thai').textContent=w.t;document.getElementById('g5feedback').textContent='';const len=g5answer.length;const nb=len<=3?1:len<=5?2:3;const pos=[];while(pos.length<nb){const p=Math.floor(Math.random()*len);if(!pos.includes(p))pos.push(p);}pos.sort((a,b)=>a-b);g5blanks=pos;g5filled=new Array(len).fill(null);g5upd();const miss=pos.map(p=>g5answer[p]);const pool='abcdefghijklmnoprstuw'.split('').filter(c=>!miss.includes(c));pool.sort(()=>Math.random()-.5);const opts=[...miss,...pool.slice(0,4)].sort(()=>Math.random()-.5);const tiles=document.getElementById('g5tiles');tiles.innerHTML='';opts.forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});}
-function g5upd(){document.getElementById('g5blanks').innerHTML=g5answer.split('').map((c,i)=>!g5blanks.includes(i)?'<span style="color:#1565C0">'+c.toUpperCase()+'</span>':g5filled[i]?'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5filled[i].toUpperCase()+'</span>':'<span style="color:#bbb">_</span>').join('<span style="margin:0 3px"> </span>');}
-function g5tap(c,btn){const nb=g5blanks.find(p=>!g5filled[p]);if(nb===undefined)return;if(g5answer[nb]===c){g5filled[nb]=c;btn.style.opacity='0.35';btn.onclick=null;g5upd();if(g5blanks.every(p=>g5filled[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(g5render,900);}}else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},700);}}
-function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
+let g5N=10,g5g=[],g5place=[],g5found=0,g5sel=null;
+function buildG(){g5found=0;g5sel=null;document.getElementById('g5done').style.display='none';document.getElementById('g5found').textContent=0;const words=WORDS.map(w=>w.e.toUpperCase().replace(/[^A-Z]/g,'')).filter(w=>w.length<=g5N);let ok=false,tr=0;while(!ok&&tr<40){tr++;g5g=Array.from({length:g5N},()=>Array(g5N).fill(''));g5place=[];ok=true;for(const w of words){let placed=false;for(let a=0;a<30&&!placed;a++){const dir=Math.floor(Math.random()*2),r=Math.floor(Math.random()*g5N),c=Math.floor(Math.random()*g5N),dr=dir===0?0:1,dc=dir===0?1:0;if(r+dr*(w.length-1)>=g5N||c+dc*(w.length-1)>=g5N)continue;let fit=true;for(let k=0;k<w.length;k++){const cell=g5g[r+dr*k][c+dc*k];if(cell&&cell!==w[k]){fit=false;break;}}if(!fit)continue;for(let k=0;k<w.length;k++)g5g[r+dr*k][c+dc*k]=w[k];g5place.push({w,cells:Array.from({length:w.length},(_,k)=>[r+dr*k,c+dc*k]),found:false});placed=true;}if(!placed){ok=false;break;}}}for(let r=0;r<g5N;r++)for(let c=0;c<g5N;c++)if(!g5g[r][c])g5g[r][c]='ABCDEFGHIJKLMNOPRSTUW'[Math.floor(Math.random()*21)];const g=document.getElementById('g5grid');g.style.gridTemplateColumns='repeat('+g5N+',1fr)';g.innerHTML='';for(let r=0;r<g5N;r++)for(let c=0;c<g5N;c++){const b=document.createElement('button');b.id='ws'+r+'_'+c;b.textContent=g5g[r][c];b.style.cssText='width:34px;height:34px;border-radius:7px;border:2px solid #BBDEFB;background:#fff;font-size:15px;font-weight:900;cursor:pointer;color:#1565C0;padding:0';b.onclick=()=>g5cell(r,c);g.appendChild(b);}const wl=document.getElementById('g5words');wl.innerHTML='';g5place.forEach((p,i)=>{const s=document.createElement('span');s.id='wl'+i;s.textContent=p.w;s.style.cssText='background:#E3F2FD;border:1.5px solid #90CAF9;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:800;color:#1565C0';wl.appendChild(s);});}
+function g5read(r0,c0,r1,c1){const dr=Math.sign(r1-r0),dc=Math.sign(c1-c0);if(dr!==0&&dc!==0&&Math.abs(r1-r0)!==Math.abs(c1-c0))return '';const len=Math.max(Math.abs(r1-r0),Math.abs(c1-c0))+1;let s='';for(let k=0;k<len;k++){const rr=r0+dr*k,cc=c0+dc*k;if(!g5g[rr]||!g5g[rr][cc])return '';s+=g5g[rr][cc];}return s;}
+function g5cell(r,c){const b=document.getElementById('ws'+r+'_'+c);if(!g5sel){g5sel=[r,c];b.style.background='#FFF59D';return;}const r0=g5sel[0],c0=g5sel[1];document.getElementById('ws'+r0+'_'+c0).style.background='#fff';g5sel=null;for(let i=0;i<g5place.length;i++){const p=g5place[i];if(p.found)continue;const f=p.cells[0],l=p.cells[p.cells.length-1];const spell=g5read(r0,c0,r,c);if((f[0]===r0&&f[1]===c0&&l[0]===r&&l[1]===c)||(f[0]===r&&f[1]===c&&l[0]===r0&&l[1]===c0)||spell===p.w||spell===[...p.w].reverse().join('')){p.found=true;g5found++;document.getElementById('g5found').textContent=g5found;document.getElementById('wl'+i).style.cssText='background:#C8E6C9;border:1.5px solid #7CB342;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:800;color:#2E7D32;text-decoration:line-through';p.cells.forEach(x=>{document.getElementById('ws'+x[0]+'_'+x[1]).style.background='#C8E6C9';});updScore(g5found,6);if(g5found>=g5place.length)g5end();return;}}}
+function g5end(){document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5found+'/'+g5place.length;updScore(6,6);}
 
 var activeRec=null,activeIdx=-1,recScores=[];
 function buildSL(){const sl=document.getElementById('sl');sl.innerHTML=SS.map((s,i)=>`<div class="srow" id="srow${i}"><div class="srow-text">${i+1}. ${s}</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="tts" onclick="speak('${String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">▶ Listen</button><button class="rec-btn" id="rb${i}" onclick="startRec(${i})">🎤 Speak</button></div><div class="rec-wrap" style="width:100%;margin-bottom:0"><div class="score-mini-wrap"><div class="score-mini" id="sm${i}"></div></div><div class="rec-label" id="rl${i}">— Tap 🎤 and speak —</div><div class="rec-transcript" id="rt${i}"></div></div></div>`).join('');}
