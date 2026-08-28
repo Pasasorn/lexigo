@@ -1,0 +1,121 @@
+# -*- coding: utf-8 -*-
+# Level 7 · B1 · Week 29 Opinions (181–187) · Week 30 Science (188–194)
+# B1 = 8 คำ/วัน · ประโยคยาวขึ้น มีเหตุผล/ความเห็น
+import sys, os
+sys.path.insert(0, os.path.dirname(__file__))
+from golden_generator import build
+OUT = '/sessions/wonderful-magical-bohr/mnt/English/Level7/'
+
+def D(n, prev, title, emoji, nf, ne, game, grammar, words, story, ss, ds, tq, ta, theme='Ideas'):
+    return dict(n=n, prev=prev, level=7, cefr='B1', title=title, emoji=emoji, theme=theme,
+                next_file=nf, next_emoji=ne, game=game, grammar=grammar, words=words, story=story,
+                ss=ss, ds=ds, think_q=tq, think_a=ta)
+
+W = [
+D(181,180,'What Do You Think?','💭','Day182_GoodReasons_B1.html','🧠','tiles',
+  'Giving opinions: In my opinion... / I believe that... / It seems to me that...',
+  [('debate','การโต้วาที','/dɪˈbeɪt/','🗣️'),('viewpoint','มุมมอง','/ˈvjuːpɔɪnt/','👓'),
+   ('disagree','ไม่เห็นด้วย','/ˌdɪsəˈɡriː/','🙅'),('persuade','โน้มน้าว','/pəˈsweɪd/','🎯'),
+   ('claim','อ้างว่า','/kleɪm/','📌'),('reasonable','สมเหตุสมผล','/ˈriːznəbl/','⚖️'),
+   ('perspective','แง่มุม','/pəˈspektɪv/','🪞'),('respectful','ให้เกียรติ','/rɪˈspektfl/','🤝')],
+  "Every Friday the class holds a short debate. In my opinion, homework should be shorter, said Ben. Mimi had a different viewpoint and explained her reasons calmly. It is fine to disagree as long as you stay respectful. Leo tried to persuade the group with two clear examples. Do not claim something unless you can support it. A reasonable argument listens to the other perspective too.",
+  ["Every Friday the class holds a short debate.",
+   "In my opinion, homework should be shorter.",
+   "Mimi had a different viewpoint and explained her reasons.",
+   "It is fine to disagree as long as you stay respectful.",
+   "A reasonable argument listens to the other perspective."],
+  ["In my opinion, homework should be shorter.",
+   "It is fine to disagree as long as you stay respectful.",
+   "A reasonable argument listens to the other perspective."],
+  "What did Ben think about homework?","He thought it should be shorter."),
+
+D(182,181,'Good Reasons','🧠','Day183_MakingChoices_B1.html','🔀','scramble',
+  'Linking reasons: because of / due to / as a result.',
+  [('evidence','หลักฐาน','/ˈevɪdəns/','🔍'),('logic','ตรรกะ','/ˈlɒdʒɪk/','🧩'),
+   ('assume','สันนิษฐาน','/əˈsjuːm/','❔'),('justify','ให้เหตุผลสนับสนุน','/ˈdʒʌstɪfaɪ/','📐'),
+   ('obvious','ชัดเจน','/ˈɒbviəs/','💡'),('doubtful','น่าสงสัย','/ˈdaʊtfl/','🤨'),
+   ('conclude','สรุป','/kənˈkluːd/','🏁'),('clarify','ทำให้กระจ่าง','/ˈklærəfaɪ/','🔦')],
+  "A strong opinion needs evidence, not only feelings. Ben used simple logic to explain his idea. Do not assume that everyone agrees with you. You must justify each point with a real example. Some answers look obvious but are actually doubtful. The teacher asked Mimi to clarify her second reason. As a result the class could finally conclude the discussion.",
+  ["A strong opinion needs evidence, not only feelings.",
+   "Ben used simple logic to explain his idea.",
+   "Do not assume that everyone agrees with you.",
+   "You must justify each point with a real example.",
+   "The class could finally conclude the discussion."],
+  ["Ben used simple logic to explain his idea.",
+   "You must justify each point with a real example.",
+   "The class could finally conclude the discussion."],
+  "What does a strong opinion need?","It needs evidence, not only feelings."),
+
+D(183,182,'Making Choices','🔀','Day184_ScienceClub_B1.html','🔬','memory',
+  'Modals of possibility: might, may, could + verb.',
+  [('alternative','ทางเลือก','/ɔːlˈtɜːnətɪv/','↔️'),('consider','พิจารณา','/kənˈsɪdə(r)/','🤔'),
+   ('consequence','ผลที่ตามมา','/ˈkɒnsɪkwəns/','⛓️'),('outcome','ผลลัพธ์','/ˈaʊtkʌm/','🎲'),
+   ('likely','น่าจะเป็น','/ˈlaɪkli/','📈'),('unlikely','ไม่น่าเป็นไปได้','/ʌnˈlaɪkli/','📉'),
+   ('compromise','ประนีประนอม','/ˈkɒmprəmaɪz/','🤲'),('decision','การตัดสินใจ','/dɪˈsɪʒn/','✅')],
+  "The club had to choose between two trips. Leo asked the group to consider every alternative. Each choice may bring a different consequence. A rainy day is likely in July, said Mimi. It is unlikely that everyone will be happy. In the end they found a fair compromise. A good decision thinks about the outcome before it acts.",
+  ["The club had to choose between two trips.",
+   "Leo asked the group to consider every alternative.",
+   "Each choice may bring a different consequence.",
+   "In the end they found a fair compromise.",
+   "A good decision thinks about the outcome."],
+  ["Leo asked the group to consider every alternative.",
+   "In the end they found a fair compromise.",
+   "A good decision thinks about the outcome."],
+  "How did the club solve the problem?","They found a fair compromise."),
+
+D(184,183,'Science Club','🔬','Day185_HowThingsWork_B1.html','⚙️','wordsearch',
+  'Passive voice: The liquid was heated. The results were recorded.',
+  [('experiment','การทดลอง','/ɪkˈsperɪmənt/','⚗️'),('hypothesis','สมมติฐาน','/haɪˈpɒθəsɪs/','❓'),
+   ('observe','สังเกต','/əbˈzɜːv/','👁️'),('measure','วัด','/ˈmeʒə(r)/','📏'),
+   ('data','ข้อมูล','/ˈdeɪtə/','📊'),('laboratory','ห้องปฏิบัติการ','/ləˈbɒrətri/','🧪'),
+   ('microscope','กล้องจุลทรรศน์','/ˈmaɪkrəskəʊp/','🔬'),('record','บันทึก','/rɪˈkɔːd/','📝')],
+  "The science club met in the school laboratory. First they wrote a simple hypothesis on the board. Then they began the experiment with two glasses of water. Ben had to observe the colour change carefully. Mimi used a ruler to measure each result. All the data was recorded in a table. Under the microscope the leaf looked like a green city!",
+  ["The science club met in the school laboratory.",
+   "First they wrote a simple hypothesis.",
+   "Ben had to observe the colour change carefully.",
+   "All the data was recorded in a table.",
+   "Under the microscope the leaf looked like a green city."],
+  ["First they wrote a simple hypothesis.",
+   "Ben had to observe the colour change carefully.",
+   "All the data was recorded in a table."],
+  "Where did the science club meet?","They met in the school laboratory."),
+
+D(185,184,'How Things Work','⚙️','Day186_SpaceAndBeyond_B1.html','🛰️','vowels',
+  'Relative clauses: the engineer who built it / the machine which runs on solar power.',
+  [('invention','สิ่งประดิษฐ์','/ɪnˈvenʃn/','💡'),('engineer','วิศวกร','/ˌendʒɪˈnɪə(r)/','👷'),
+   ('circuit','วงจรไฟฟ้า','/ˈsɜːkɪt/','🔌'),('electricity','ไฟฟ้า','/ɪˌlekˈtrɪsəti/','⚡'),
+   ('battery','แบตเตอรี่','/ˈbætri/','🔋'),('solar','พลังแสงอาทิตย์','/ˈsəʊlə(r)/','☀️'),
+   ('renewable','หมุนเวียนได้','/rɪˈnjuːəbl/','♻️'),('function','ทำงาน','/ˈfʌŋkʃn/','⚙️')],
+  "The greatest invention often starts as a simple idea. An engineer who visited the school showed us a small circuit. Electricity travels through the wire in a loop. This little battery can power a lamp for six hours. A solar panel uses renewable energy from the sun. Do you know how a fan function inside? Machines are easier to understand than they look.",
+  ["The greatest invention often starts as a simple idea.",
+   "An engineer showed us a small circuit.",
+   "Electricity travels through the wire in a loop.",
+   "A solar panel uses renewable energy from the sun.",
+   "Machines are easier to understand than they look."],
+  ["An engineer showed us a small circuit.",
+   "Electricity travels through the wire in a loop.",
+   "Machines are easier to understand than they look."],
+  "What does a solar panel use?","It uses renewable energy from the sun."),
+
+D(186,185,'Space and Beyond','🛰️','Day187_Week29Review_B1.html','⭐','tiles',
+  'Time expressions with present perfect: for, since, already, yet.',
+  [('orbit','วงโคจร','/ˈɔːbɪt/','🌀'),('satellite','ดาวเทียม','/ˈsætəlaɪt/','📡'),
+   ('gravity','แรงโน้มถ่วง','/ˈɡrævəti/','🍎'),('telescope','กล้องดูดาว','/ˈtelɪskəʊp/','🔭'),
+   ('galaxy','กาแล็กซี','/ˈɡæləksi/','🌌'),('astronaut','นักบินอวกาศ','/ˈæstrənɔːt/','👨‍🚀'),
+   ('mission','ภารกิจ','/ˈmɪʃn/','🚀'),('universe','จักรวาล','/ˈjuːnɪvɜːs/','🌠')],
+  "A satellite travels in orbit around our planet. Gravity keeps the moon close to the Earth. Through a telescope you can see another galaxy. Humans have studied space for hundreds of years. An astronaut must train for a long time before a mission. Would you like to travel across the universe one day? The universe is bigger than any story.",
+  ["A satellite travels in orbit around our planet.",
+   "Gravity keeps the moon close to the Earth.",
+   "Through a telescope you can see another galaxy.",
+   "An astronaut must train before a mission.",
+   "The universe is bigger than any story."],
+  ["Gravity keeps the moon close to the Earth.",
+   "An astronaut must train before a mission.",
+   "The universe is bigger than any story."],
+  "What keeps the moon close to the Earth?","Gravity keeps it close."),
+]
+for d in W:
+    out = build(d)
+    fn = 'Day%d_%s_B1.html' % (d['n'], d['title'].replace(' ','').replace("'",'').replace('?',''))
+    open(OUT+fn,'w',encoding='utf-8').write(out)
+    print('OK', fn, len(d['words']),'คำ')
