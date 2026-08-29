@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Day 390 — Three Hundred and Ninety</title>
+<title>Day 402 — From Manuscript to Shelf</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
@@ -107,15 +107,15 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div id="inAppWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#FF6B35,#E65100);color:#fff;padding:12px 14px;font-family:'Nunito',sans-serif;font-weight:800;text-align:center;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.3);line-height:1.5">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:12px;font-weight:600;opacity:.95">แตะ ⋮ หรือ ⋯ (มุมขวาบน) → "เปิดในเบราว์เซอร์อื่น"</span></div>
 <script>(function(){var ua=navigator.userAgent||'';if(/Line\/|FBAN|FBAV|Instagram|Messenger|MicroMessenger|; wv\)/i.test(ua)){var w=document.getElementById('inAppWarn');if(w){w.style.display='block';if(document.body)document.body.style.paddingTop='62px';}}})();</script>
 
-<div class="hdr"><span class="hdr-l" id="lbl">🎓 Day 390 · Three Hundred and Ninety</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
-<div class="already-done" id="alreadyDone">✅ เรียน Day 390 จบแล้ว! Code: <strong id="savedCode390"></strong> — Day 391 ปลดล็อกแล้ว 🎉</div>
+<div class="hdr"><span class="hdr-l" id="lbl">📦 Day 402 · From Manuscript to Shelf</span><div class="hdr-r"><span class="cefr">🟢 A1</span><div class="dots" id="dots"></div></div></div>
+<div class="already-done" id="alreadyDone">✅ เรียน Day 402 จบแล้ว! Code: <strong id="savedCode402"></strong> — Day 403 ปลดล็อกแล้ว 🎉</div>
 <div class="score-bar"><span>⭐ Score: <span id="totalSc">0</span> / 6</span><div class="strack"><div class="sfill" id="sfill" style="width:0%"></div></div><span id="starDisp">☆☆☆</span></div>
 <div class="vbar"><label>🔊</label><select id="vsel" onchange="setV(this.value)"></select><label>Speed:</label><input type="range" id="rsl" min="0.5" max="1.4" step="0.05" value="0.85" oninput="document.getElementById('rv').textContent=parseFloat(this.value).toFixed(2)+'×'"><span id="rv" style="font-size:13px;color:#0D47A1;font-weight:800">0.85×</span><button class="tts" onclick="speak(WORDS.map(w=>w.e).join(' '))">▶ Test</button><span class="vstatus" id="vs">loading...</span></div>
 <div class="lock-screen" id="lockScreen" style="display:none">
-  <div style="font-size:56px">🔒</div><h2>Day 390 ยังล็อกอยู่!</h2>
+  <div style="font-size:56px">🔒</div><h2>Day 402 ยังล็อกอยู่!</h2>
   <p>เรียน <strong>Day 21 ให้จบก่อน</strong> แล้วกรอก Code</p>
-  <input class="d-code-input" id="codeInput" placeholder="D389-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
-  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 390</button>
+  <input class="d-code-input" id="codeInput" placeholder="D401-????" maxlength="10" oninput="this.value=this.value.toUpperCase()">
+  <br><button class="unlock-btn" onclick="tryUnlock()">🔓 Unlock Day 402</button>
   <div class="unlock-err" id="unlockErr">❌ Wrong code — try again!</div>
   <div style="margin-top:12px;font-size:12px;color:#78909C;font-weight:700">💡 ถ้าลืม Code → กลับไปเล่น Day 21 อีกครั้ง</div>
 </div>
@@ -123,8 +123,8 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page on fin" id="p0">
   <div style="text-align:center;padding:16px 8px">
     <div class="wave">🏫</div>
-    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">Three Hundred and Ninety!</div>
-    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 390 · Putting It Together — <strong style="color:#37474F">9 new words</strong>!</div>
+    <div style="font-size:24px;font-weight:900;color:#1565C0;margin:9px 0 4px">From Manuscript to Shelf!</div>
+    <div style="font-size:15px;color:#78909C;margin-bottom:14px;font-weight:700">Day 402 · Literature — <strong style="color:#37474F">9 new words</strong>!</div>
     <div class="acgrid" id="cvA"></div>
     <button class="btn btn-p" onclick="go(1)" style="margin-top:20px;padding:13px 30px;font-size:17px;border-radius:18px">Let's Start! →</button>
   </div>
@@ -139,7 +139,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
       <button class="tts" style="padding:10px 18px;font-size:14px" onclick="stopAll()">■ Stop</button>
     </div>
     <div style="border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
-      <img src="img_day390.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+      <img src="img_day402.png" alt="Story illustration" style="width:100%;max-height:220px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
     </div>
   </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(0)">← Back</button><button class="btn btn-p" onclick="go(2)">Next →</button></div>
@@ -149,11 +149,11 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <p class="step-sub"><span style="color:#1565C0;font-weight:900;background:#BBDEFB;padding:2px 7px;border-radius:6px">Blue</span> = vocab words! Tap ▶ listen, then 🎤 read the story aloud!</p>
   <div style="display:flex;gap:8px;margin-bottom:11px"><button class="tts" onclick="speak(STORY)">▶ Play Story</button><button class="tts" onclick="stopAll()">■ Stop</button></div>
   <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
-    <img src="img_day390.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
+    <img src="img_day402.png" alt="Story illustration" style="width:100%;max-height:180px;object-fit:cover;display:block" onerror="this.parentElement.style.display='none'">
   </div>
-  <div class="sbox"><span class="vocab">Compounding</span> is why ten words a day becomes three thousand and feels like nothing. <span class="vocab">Incremental</span> progress is invisible on any single day and undeniable across a year. A <span class="vocab">lull</span> is not a stop; it is the brain reorganising quietly. Passing a <span class="vocab">milepost</span> in a language feels sudden and was not. <span class="vocab">Scaffolding</span> is help you are meant to outgrow. <span class="vocab">Automaticity</span> is the moment you stop translating in your head. <span class="vocab">Consolidation</span> matters more at this stage than adding anything new. <span class="vocab">Command</span> of a language is not a certificate; it is what you can do on a tired day. <span class="vocab">Doggedness</span> brought you three hundred and ninety days, and it is the only rare ingredient.</div>
-  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What is a lull?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ It is the brain reorganising quietly, not a stop.</div></div>
-  <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Progress over time: has been steadily / is no longer / has come to.</div></div>
+  <div class="sbox">A finished typescript is the beginning of the work, not the end. A <span class="vocab">publisher</span> takes the financial risk and earns the larger share for it. <span class="vocab">Royalties</span> usually arrive twice a year and rarely change a life. A <span class="vocab">bestseller</span> is made in the first three weeks or not at all. An <span class="vocab">excerpt</span> in a magazine sells more copies than any advertisement. A <span class="vocab">prologue</span> should earn its place or be deleted. An <span class="vocab">epilogue</span> answers the question the reader will otherwise ask on the last page. Every <span class="vocab">retelling</span> must cut something the readers loved. A <span class="vocab">screenplay</span> is mostly what people do, not what they think.</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: When is a bestseller made?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ In the first three weeks or not at all.</div></div>
+  <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Publishing process: is submitted to / is accepted for / goes into print.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
     <button class="rec-btn" id="r2recBtn" onclick="startRec2()" style="margin-bottom:8px">🎤 Read aloud</button>
@@ -188,8 +188,8 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <div class="page" id="p5">
 
 
-  <div class="step-label">Step 5 · Fill the Blank! ✏️</div>
-  <p class="step-sub">See the hint → tap letters to complete the word!</p>
+  <div class="step-label">Step 5 · Missing Vowels! 🅰️</div>
+  <p class="step-sub">Tap the correct vowels (a e i o u) to complete the word!</p>
   <div style="text-align:center;font-size:14px;font-weight:800;color:#1565C0;margin-bottom:8px">Q <span id="g5q">1</span>/<span id="g5tot">6</span> · ⭐ <span id="g5sc">0</span></div>
   <div id="g5card" style="background:#fff;border-radius:18px;padding:18px;border:2.5px solid #90CAF9;text-align:center">
     <div id="g5hint" style="font-size:44px;margin-bottom:4px"></div>
@@ -199,7 +199,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
     <div id="g5feedback" style="min-height:28px;margin-top:10px;font-size:18px;font-weight:900"></div>
   </div>
   <div id="g5done" style="display:none;text-align:center;padding:16px;background:#E3F2FD;border-radius:16px;border:2px solid #90CAF9">
-    <div style="font-size:30px">✏️</div><div style="font-size:18px;font-weight:900;color:#1565C0">Spelling Star! 🌟</div>
+    <div style="font-size:30px">🅰️</div><div style="font-size:18px;font-weight:900;color:#1565C0">Vowel Hero! 🌟</div>
     <div style="font-size:24px;font-weight:900;margin:6px 0" id="g5result">0 pts</div>
     <button class="btn btn-p" onclick="buildG()">Play Again 🔄</button>
   </div>
@@ -208,14 +208,14 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 
 <div class="complete-screen" id="completeScreen">
     <div style="font-size:36px">🎉</div>
-    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 390 Complete!</div>
+    <div style="font-size:20px;font-weight:900;color:#1B5E20;margin:8px 0">Day 402 Complete!</div>
     <div id="daySummary" style="background:#fff;border-radius:16px;padding:14px 16px;margin:10px 0;text-align:left;border:2px solid #A5D6A7"></div>
-    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 390</div><div class="code-txt" id="codeDisplay">D390-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
-    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode390"></span></div>
-    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 391 ปลดล็อกอัตโนมัติแล้ว ✓ ✓</strong></div>
+    <div class="code-box"><div class="code-label">🔑 Completion Code — Day 402</div><div class="code-txt" id="codeDisplay">D402-????</div><button class="copy-btn" onclick="copyCode()">📋 Copy Code</button></div>
+    <div id="alreadyDone" style="display:none;background:#E8F5E9;border-radius:10px;padding:8px 12px;font-size:12px;color:#2E7D32;font-weight:700;margin-top:6px">🔒 Code เดิม: <span id="savedCode402"></span></div>
+    <div style="font-size:13px;color:#78909C;font-weight:700;line-height:1.7">⚠️ จดหรือ screenshot เก็บไว้!<br><strong style="color:#2E7D32">Day 403 ปลดล็อกอัตโนมัติแล้ว ✓</strong></div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
       <a href="../dashboard.html" style="display:inline-block;background:#F1F5F9;color:#475569;border:2px solid #CBD5E1;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🏠 หน้าหลัก</a>
-      <a href="../Level14/Day391_TheStudyofLanguage_B2.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🔤 Day 391 →</a>
+      <a href="Day403_ReadingClosely_B2.html" style="display:inline-block;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">😊 Day 403 →</a>
     </div>
   <div class="navrow"><button class="btn btn-o" onclick="go(4)">← Back</button><button class="btn btn-p" onclick="go(0)">Start Over 🔁</button></div>
   </div>
@@ -225,30 +225,30 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 <script>
 const STEPS=['🏠 Cover','Step 1','Step 2','Step 3','Step 4','Step 5 🔤'];
 const WORDS=[
-  {e:'compounding',t:'การทบต้นสะสมผล',ph:'/kəmˈpaʊndɪŋ/',em:'📈'},
-  {e:'incremental',t:'ทีละเล็กละน้อย',ph:'/ˌɪŋkrəˈmentl/',em:'🐢'},
-  {e:'lull',t:'ช่วงชะงักเงียบ',ph:'/lʌl/',em:'🏔️'},
-  {e:'milepost',t:'หมุดบอกระยะความก้าวหน้า',ph:'/ˈmaɪlpəʊst/',em:'🚪'},
-  {e:'scaffolding',t:'โครงช่วยเรียนรู้',ph:'/ˈskæfəʊldɪŋ/',em:'🪜'},
-  {e:'automaticity',t:'ความคล่องแบบอัตโนมัติ',ph:'/ˌɔːtəməˈtɪsəti/',em:'⚡'},
-  {e:'consolidation',t:'การรวบยอดความรู้',ph:'/kənˌsɒlɪˈdeɪʃn/',em:'🧱'},
-  {e:'capability',t:'ขีดความสามารถที่ทำได้จริง',ph:'/ˌkeɪpəˈbɪləti/',em:'🏆'},
-  {e:'doggedness',t:'ความไม่ยอมเลิกกลางคัน',ph:'/ˈdɒɡɪdnəs/',em:'🔥'}
+  {e:'typescript',t:'ต้นฉบับพิมพ์ส่งสำนักพิมพ์',ph:'/ˈtaɪpskrɪpt/',em:'📝'},
+  {e:'publisher',t:'สำนักพิมพ์',ph:'/ˈpʌblɪʃə(r)/',em:'🏢'},
+  {e:'royalties',t:'ค่าลิขสิทธิ์ผู้เขียน',ph:'/ˈrɔɪəltiz/',em:'💰'},
+  {e:'bestseller',t:'หนังสือขายดี',ph:'/ˌbestˈselə(r)/',em:'🏆'},
+  {e:'excerpt',t:'บทตัดตอน',ph:'/ˈeksɜːpt/',em:'✂️'},
+  {e:'prologue',t:'บทนำเรื่อง',ph:'/ˈprəʊlɒɡ/',em:'🚪'},
+  {e:'epilogue',t:'บทส่งท้าย',ph:'/ˈepɪlɒɡ/',em:'🌅'},
+  {e:'retelling',t:'การเล่าใหม่ในสื่ออื่น',ph:'/ˌriːˈtelɪŋ/',em:'🎬'},
+  {e:'screenplay',t:'บทภาพยนตร์',ph:'/ˈskriːnpleɪ/',em:'🎞️'}
 ];
 const SS=[
-  "Compounding is why ten words a day becomes three thousand.",
-  "Incremental progress is invisible on any single day.",
-  "A lull is not a stop; it is the brain reorganising quietly.",
-  "Scaffolding is help you are meant to outgrow.",
-  "Automaticity is the moment you stop translating in your head."
+  "A finished typescript is the beginning of the work, not the end.",
+  "A publisher takes the financial risk and earns the larger share for it.",
+  "A bestseller is made in the first three weeks or not at all.",
+  "A prologue should earn its place or be deleted.",
+  "Every retelling must cut something the readers loved."
 ];
 const DS=[
-  "A lull is not a stop; it is the brain reorganising quietly.",
-  "Scaffolding is help you are meant to outgrow.",
-  "Automaticity is the moment you stop translating in your head."
+  "A finished typescript is the beginning of the work, not the end.",
+  "A prologue should earn its place or be deleted.",
+  "Every retelling must cut something the readers loved."
 ];
-const STORY="Compounding is why ten words a day becomes three thousand and feels like nothing. Incremental progress is invisible on any single day and undeniable across a year. A lull is not a stop; it is the brain reorganising quietly. Passing a milepost in a language feels sudden and was not. Scaffolding is help you are meant to outgrow. Automaticity is the moment you stop translating in your head. Consolidation matters more at this stage than adding anything new. Capability in a language is not a certificate; it is what you can do on a tired day. Doggedness brought you three hundred and ninety days, and it is the only rare ingredient.";
-const PREV_KEY='wla_d389',MY_KEY='wla_d390',PREV_PFX='D389-',MY_DAY=390;
+const STORY="A finished typescript is the beginning of the work, not the end. A publisher takes the financial risk and earns the larger share for it. Royalties usually arrive twice a year and rarely change a life. A bestseller is made in the first three weeks or not at all. An excerpt in a magazine sells more copies than any advertisement. A prologue should earn its place or be deleted. An epilogue answers the question the reader will otherwise ask on the last page. Every retelling must cut something the readers loved. A screenplay is mostly what people do, not what they think.";
+const PREV_KEY='wla_d401',MY_KEY='wla_d402',PREV_PFX='D401-',MY_DAY=402;
 let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;
 function finishRec2(){
@@ -315,7 +315,7 @@ function startRec2(){
   try{rec.start();}catch(e){btn.classList.remove('recording');btn.textContent='🎤 Read aloud';}
   btn.onclick=startRec2;
 }
-function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode390').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
+function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode402').textContent=mine;unlockContent();}else if(prev){unlockContent();}else{document.getElementById('lockScreen').style.display='block';}}
 function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
 function initContent(){
@@ -325,7 +325,7 @@ function initContent(){
   buildS4();
   loadV();buildG();
 }
-function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='🎓 Day 390 · '+STEPS[n];if(n===4)buildS4();
+function go(n){document.querySelector('.page.on').classList.remove('on');document.getElementById('p'+n).classList.add('on');document.getElementById('dots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));document.getElementById('lbl').textContent='📦 Day 402 · '+STEPS[n];if(n===4)buildS4();
   if(n===5)buildG();}
 let allV=[],curV=null;
 function loadV(){const raw=window.speechSynthesis.getVoices();if(!raw.length)return;
@@ -422,11 +422,11 @@ function speakFb(type){
 }
 
 
-let g5deck=[],g5idx=0,g5score=0,g5blanks=[],g5answer='',g5filled=[];
+let g5deck=[],g5idx=0,g5score=0,g5ans='',g5pos=[],g5fill=[];
 function buildG(){g5idx=0;g5score=0;g5deck=[...WORDS].sort(()=>Math.random()-.5);document.getElementById('g5tot').textContent=g5deck.length;document.getElementById('g5done').style.display='none';document.getElementById('g5card').style.display='block';g5render();}
-function g5render(){if(g5idx>=g5deck.length){g5end();return;}const w=g5deck[g5idx];g5answer=w.e.toLowerCase();document.getElementById('g5q').textContent=g5idx+1;document.getElementById('g5sc').textContent=g5score;document.getElementById('g5hint').textContent=w.em||'📝';document.getElementById('g5thai').textContent=w.t;document.getElementById('g5feedback').textContent='';const len=g5answer.length;const nb=len<=3?1:len<=5?2:3;const pos=[];while(pos.length<nb){const p=Math.floor(Math.random()*len);if(!pos.includes(p))pos.push(p);}pos.sort((a,b)=>a-b);g5blanks=pos;g5filled=new Array(len).fill(null);g5upd();const miss=pos.map(p=>g5answer[p]);const pool='abcdefghijklmnoprstuw'.split('').filter(c=>!miss.includes(c));pool.sort(()=>Math.random()-.5);const opts=[...miss,...pool.slice(0,4)].sort(()=>Math.random()-.5);const tiles=document.getElementById('g5tiles');tiles.innerHTML='';opts.forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:48px;height:48px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});}
-function g5upd(){document.getElementById('g5blanks').innerHTML=g5answer.split('').map((c,i)=>!g5blanks.includes(i)?'<span style="color:#1565C0">'+c.toUpperCase()+'</span>':g5filled[i]?'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5filled[i].toUpperCase()+'</span>':'<span style="color:#bbb">_</span>').join('<span style="margin:0 3px"> </span>');}
-function g5tap(c,btn){const nb=g5blanks.find(p=>!g5filled[p]);if(nb===undefined)return;if(g5answer[nb]===c){g5filled[nb]=c;btn.style.opacity='0.35';btn.onclick=null;g5upd();if(g5blanks.every(p=>g5filled[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(g5render,900);}}else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},700);}}
+function g5render(){if(g5idx>=g5deck.length){g5end();return;}const w=g5deck[g5idx];g5ans=w.e.toLowerCase();document.getElementById('g5q').textContent=g5idx+1;document.getElementById('g5sc').textContent=g5score;document.getElementById('g5hint').textContent=w.em||'📝';document.getElementById('g5thai').textContent=w.t;document.getElementById('g5feedback').textContent='';g5pos=[];for(let i=0;i<g5ans.length;i++)if('aeiou'.includes(g5ans[i]))g5pos.push(i);if(!g5pos.length)g5pos.push(0);g5fill=new Array(g5ans.length).fill(null);g5upd();const tiles=document.getElementById('g5tiles');tiles.innerHTML='';'aeiou'.split('').forEach(c=>{const b=document.createElement('button');b.textContent=c.toUpperCase();b.style.cssText='width:50px;height:50px;border-radius:12px;border:2.5px solid #90CAF9;background:#E3F2FD;font-size:22px;font-weight:900;cursor:pointer;color:#1565C0';b.onclick=()=>g5tap(c,b);tiles.appendChild(b);});}
+function g5upd(){document.getElementById('g5blanks').innerHTML=g5ans.split('').map((c,i)=>!g5pos.includes(i)?'<span style="color:#1565C0">'+c.toUpperCase()+'</span>':g5fill[i]?'<span style="color:#388E3C;border-bottom:3px solid #388E3C">'+g5fill[i].toUpperCase()+'</span>':'<span style="color:#bbb">_</span>').join('<span style="margin:0 3px"> </span>');}
+function g5tap(c,btn){const nb=g5pos.find(p=>!g5fill[p]);if(nb===undefined)return;if(g5ans[nb]===c){g5fill[nb]=c;g5upd();if(g5pos.every(p=>g5fill[p])){g5score+=5;g5idx++;document.getElementById('g5feedback').textContent='✅ Great!';document.getElementById('g5sc').textContent=g5score;updScore(g5idx,g5deck.length);setTimeout(g5render,900);}}else{btn.style.background='#FFEBEE';btn.style.borderColor='#EF9A9A';document.getElementById('g5feedback').textContent='❌ Try again!';setTimeout(()=>{btn.style.background='#E3F2FD';btn.style.borderColor='#90CAF9';document.getElementById('g5feedback').textContent='';},600);}}
 function g5end(){document.getElementById('g5card').style.display='none';document.getElementById('g5done').style.display='block';document.getElementById('g5result').textContent=g5score+' pts';updScore(g5deck.length,g5deck.length);}
 
 var activeRec=null,activeIdx=-1,recScores=[];
