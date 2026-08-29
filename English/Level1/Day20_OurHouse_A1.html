@@ -362,7 +362,7 @@ function updScore(n){var pct=Math.round(n/WORDS.length*100);document.getElementB
 
 /* Completion */
 function generateCode(day){var c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';var code='D'+day+'-';for(var i=0;i<4;i++)code+=c[Math.floor(Math.random()*c.length)];return code;}
-function showCompletion(){var code=localStorage.getItem(LOCK_KEY);if(!code){code=generateCode(DAY);localStorage.setItem(LOCK_KEY,code);document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=code;}syncToCloud(DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;buildDaySummary();document.getElementById('completeScreen').classList.add('show');}
+function showCompletion(){var code=localStorage.getItem(LOCK_KEY);if(!code){code=generateCode(DAY);localStorage.setItem(LOCK_KEY,code);document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=code;}if(window.pwCollect)pwCollect(DAY);syncToCloud(DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;buildDaySummary();document.getElementById('completeScreen').classList.add('show');}
 function buildDaySummary(){var el=document.getElementById('daySummary');if(!el)return;var recDone=recScores.filter(function(s){return s!==null;});var s3=recDone.length?Math.round(recDone.reduce(function(a,b){return a+b;},0)/recDone.length):null;var rows=[['Step 2 Reading',step2Score],['Step 3 Speaking',s3],['Step 4 Arrange',step4Score],['Step 5 Mem Flip',Math.round(mfMatched/WORDS.length*100)]];el.innerHTML=rows.map(function(r){var lbl=r[0],sc=r[1];return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:12px;font-weight:700;color:#546E7A;min-width:120px">'+lbl+'</span><div style="flex:1;height:7px;background:#E0E0E0;border-radius:4px;overflow:hidden"><div style="height:100%;width:'+(sc||0)+'%;background:'+(sc>=80?'#43A047':sc>=50?'#FFA726':'#E53935')+'"></div></div><span style="font-size:12px;font-weight:800;color:#37474F;min-width:36px;text-align:right">'+(sc!==null&&sc!==undefined?sc+'%':'—')+'</span></div>';}).join('');}
 function copyCode(){var code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){alert('Copied: '+code);});else alert('Code: '+code);}
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
@@ -378,6 +378,7 @@ window.addEventListener('DOMContentLoaded',function(){
   loadVoices();buildCards('cvA');buildS4();buildSL();
 });
 </script>
+<script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
 </html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ผลการเรียน 7 วัน · PeekaWord</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#3D3355;--body:#6B6382;--muted:#9A93AE;--orange:#FF7A45;--orange-s:#FFF0E9;
+ --green:#5BC98C;--green-s:#E9F9F0;--blue:#4DA8F0;--blue-s:#EAF5FE;--yellow-s:#FFF7E4;
+ --pink:#FF6FA5;--pink-s:#FFEEF4;--cream:#FFFBF5}
+*{box-sizing:border-box}
+body{font-family:'Baloo 2','Nunito',sans-serif;background:var(--cream);color:var(--body);
+ font-size:17px;line-height:1.8;margin:0;padding:0 0 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px}
+.top{background:linear-gradient(165deg,#FFE9DC,#F3F8FF);padding:34px 0 30px;text-align:center;margin-bottom:26px}
+h1{font-size:27px;font-weight:800;color:var(--ink);margin:0 0 6px;line-height:1.35}
+.sub{font-size:16px;font-weight:600;color:var(--body);margin:0}
+.card{background:#fff;border-radius:20px;padding:22px 20px;margin-bottom:16px;border:2px solid #F0EDF6}
+.card h2{font-size:19px;font-weight:800;color:var(--ink);margin:0 0 4px}
+.card .lead{font-size:15px;font-weight:600;color:var(--muted);margin:0 0 16px}
+.big{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kpi{flex:1;min-width:130px;background:var(--orange-s);border-radius:16px;padding:14px;text-align:center}
+.kpi b{display:block;font-size:30px;font-weight:800;color:var(--orange);line-height:1.25}
+.kpi span{font-size:14px;font-weight:700;color:#B4552C}
+.sk{margin-bottom:18px}
+.sk-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.sk-n{font-size:16px;font-weight:800;color:var(--ink)}
+.sk-v{font-size:16px;font-weight:800;white-space:nowrap}
+.bar{height:14px;background:#F3F1F7;border-radius:100px;overflow:hidden}
+.fill{height:100%;border-radius:100px;transition:width .7s}
+.sk-t{font-size:14.5px;font-weight:600;color:var(--body);margin-top:7px;line-height:1.7}
+.tag{display:inline-block;font-size:13px;font-weight:800;padding:2px 11px;border-radius:100px;margin-right:6px}
+.nodata{background:#F6F5F8;border-radius:14px;padding:13px 15px;font-size:14.5px;font-weight:600;color:var(--muted)}
+.tip{background:var(--blue-s);border-radius:14px;padding:13px 15px;font-size:14.5px;font-weight:600;color:#1B6FA8;margin-top:9px;line-height:1.75}
+.btn{display:inline-block;background:var(--orange);color:#fff;padding:15px 32px;font-size:18px;font-weight:800;
+ border-radius:100px;text-decoration:none;box-shadow:0 5px 0 #E85F2C}
+.btn2{display:inline-block;color:var(--body);padding:12px 24px;font-size:16px;font-weight:700;text-decoration:none;border-radius:100px;border:2px solid #E6E2EE}
+.mid{text-align:center;margin-top:26px}
+.foot{font-size:14px;font-weight:600;color:var(--muted);margin-top:12px;line-height:1.7}
+.daylist{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.dchip{font-size:13px;font-weight:800;padding:5px 12px;border-radius:100px;background:var(--green-s);color:#2E8B5E}
+.dchip.miss{background:#F3F1F7;color:var(--muted)}
+.inp{width:100%;padding:12px 15px;border:2px solid #E6E2EE;border-radius:12px;font-size:16px;
+ font-family:inherit;font-weight:600;color:var(--ink);margin-bottom:9px;background:#fff}
+.inp:focus{outline:none;border-color:var(--orange)}
+.mini{background:transparent;border:2px solid #E6E2EE;color:var(--body);padding:12px;width:100%;
+ border-radius:12px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer}
+.mini:active{transform:translateY(2px)}
+</style></head>
+<body>
+<div class="top"><div class="wrap">
+  <h1>📊 ผลการเรียนรายทักษะ</h1>
+  <p class="sub" id="who">— </p>
+</div></div>
+
+<div class="wrap" id="app"></div>
+
+<script src="js/report.js"></script>
+<script>
+// ผู้ทดลอง = 7 วันแรก · ผู้เรียนจริง = ทุกวันที่มีข้อมูล
+const PAID = (function(){ try{ const st=JSON.parse(localStorage.getItem('wla_student')||'null');
+  return !!(st && st.code); }catch(e){ return false; } })();
+const T = PAID ? 448 : 7;
+function nick(){
+  try{const t=JSON.parse(localStorage.getItem('pw_trial')||'null'); if(t&&t.name)return t.name;}catch(e){}
+  try{const s=JSON.parse(localStorage.getItem('wla_student')||'null'); if(s&&s.nick)return s.nick;}catch(e){}
+  return '';
+}
+function col(v){ return v>=80?'#43A047':v>=60?'#F9A825':'#E5533D'; }
+function band(v){
+  if(v>=80) return {t:'ทำได้ดีมาก',bg:'#E9F9F0',c:'#2E8B5E'};
+  if(v>=60) return {t:'พอใช้ได้',bg:'#FFF7E4',c:'#B07C0A'};
+  return {t:'ควรฝึกเพิ่ม',bg:'#FFEDEA',c:'#C0392B'};
+}
+// คำแนะนำ: แยกตามทักษะ × ระดับคะแนน — อิงจากสิ่งที่ระบบวัดได้จริงเท่านั้น
+const ADVICE={
+  read:{
+    hi:'อ่านออกเสียงได้ชัดเจนแล้ว ลองให้อ่านเรื่องเดิมแบบไม่หยุด แล้วจับเวลาดูว่าลื่นขึ้นไหม',
+    mid:'อ่านได้แล้วแต่ยังสะดุดบางคำ ให้กด ▶ ฟังประโยคก่อน 1 รอบ แล้วค่อยอ่านตาม จะลื่นขึ้นเร็ว',
+    lo:'ยังอ่านไม่ทันเสียง ลองลดความเร็วเสียงลง แล้วให้อ่านทีละประโยคก่อน ไม่ต้องรวดเดียวจบ'
+  },
+  speak:{
+    hi:'ออกเสียงชัดจนระบบจับได้เกือบทุกคำ ลองให้เล่าเรื่องด้วยคำของตัวเองหลังอ่านจบ',
+    mid:'พูดตามได้ดี แต่บางประโยคระบบยังจับไม่ครบ ให้พูดช้าลงและดังขึ้น เน้นเสียงท้ายคำ',
+    lo:'ระบบยังจับเสียงได้น้อย เช็กก่อนว่าอยู่ในที่เงียบและเปิดด้วย Chrome จากนั้นให้พูดทีละคำช้า ๆ'
+  },
+  write:{
+    hi:'ฟังแล้วสะกดคำได้แม่นมาก ลองเพิ่มความยากด้วยการเขียนโดยไม่ดูตัวอย่าง',
+    mid:'สะกดได้เกินครึ่ง ส่วนใหญ่พลาดที่สระและตัวสะกดท้ายคำ ให้ฟังซ้ำ 2 รอบก่อนเขียน',
+    lo:'ยังจับเสียงเป็นตัวอักษรไม่ทัน ให้ทำ Step 1 (ฟังอย่างเดียว) ซ้ำอีกรอบก่อนเขียนทุกครั้ง'
+  }
+};
+const NAMES={read:'อ่านออกเสียง',speak:'พูดตามประโยค',write:'ฟังแล้วเขียน'};
+const WHAT ={read:'Step 2 — อ่านทั้งเรื่องออกเสียง',speak:'Step 3 — พูดตามทีละประโยค',write:'Step 4 — ฟังแล้วเขียนตามคำบอก'};
+
+function skillBlock(k,s){
+  if(!s.n) return `<div class="sk"><div class="sk-h"><span class="sk-n">${NAMES[k]}</span></div>
+    <div class="nodata">ยังไม่มีข้อมูล — ${WHAT[k]} ยังไม่ได้ทำ หรือยังไม่ได้กดไมค์<br>
+    ลองทำขั้นนี้สัก 2–3 วัน แล้วกลับมาดูใหม่นะคะ</div></div>`;
+  const b=band(s.avg), c=col(s.avg);
+  const lvl = s.avg>=80?'hi':s.avg>=60?'mid':'lo';
+  let tr='';
+  if(s.trend!==null){
+    if(s.trend>=8)  tr=`<div class="tip">📈 <b>ดีขึ้นชัดเจน</b> — ช่วงหลังทำได้ดีกว่าช่วงแรก ${s.trend} คะแนน ส่งเสริมต่อได้เลย</div>`;
+    else if(s.trend<=-8) tr=`<div class="tip">📉 ช่วงหลังตกลง ${Math.abs(s.trend)} คะแนน อาจเพราะเนื้อหายาวขึ้นหรือเด็กเริ่มล้า ลองลดเหลือวันละ 1 ขั้นก่อน</div>`;
+    else tr=`<div class="tip">➡️ คะแนนคงที่ตลอด 7 วัน แปลว่าฐานแน่นแล้ว พร้อมขยับขึ้นระดับถัดไป</div>`;
+  }
+  return `<div class="sk">
+    <div class="sk-h"><span class="sk-n">${NAMES[k]}</span>
+      <span class="sk-v" style="color:${c}">${s.avg}%</span></div>
+    <div class="bar"><div class="fill" style="width:${s.avg}%;background:${c}"></div></div>
+    <div class="sk-t"><span class="tag" style="background:${b.bg};color:${b.c}">${b.t}</span>
+      วัดจาก ${WHAT[k]} · ทำไป ${s.n} วัน</div>
+    <div class="sk-t">${ADVICE[k][lvl]}</div>${tr}</div>`;
+}
+
+function render(){
+  const n=nick();
+  document.getElementById('who').textContent = n ? ('ของ '+n) : 'สรุปจากสิ่งที่ลูกทำจริงในระบบ';
+  const S=pwSummary(1,T);
+  const app=document.getElementById('app');
+
+  if(S.daysDone===0){
+    app.innerHTML=`<div class="card"><h2>ยังไม่มีข้อมูลค่ะ</h2>
+      <p class="lead">รายงานนี้สร้างจากคะแนนที่ลูกทำจริงในบทเรียน ยังไม่ได้เรียนวันไหนเลย</p>
+      <div class="mid"><a href="trial.html" class="btn">เริ่มเรียน Day 1 →</a></div></div>`;
+    return;
+  }
+
+  const chips=[];
+  if(!PAID) for(let d=1;d<=7;d++) chips.push(`<span class="dchip${S.days.includes(d)?'':' miss'}">Day ${d}</span>`);
+
+  let html=`<div class="card">
+    <h2>ภาพรวม</h2><p class="lead">จาก ${S.daysDone} วันที่ทำเสร็จ${PAID?"":" (จาก 7 วันทดลอง)"}</p>
+    <div class="big">
+      <div class="kpi"><b>${PAID?S.daysDone:S.daysDone+"/7"}</b><span>วันที่เรียนจบ</span></div>
+      ${S.total.avg!==null?`<div class="kpi"><b>${S.total.avg}%</b><span>คะแนนเฉลี่ยรวม</span></div>`:''}
+    </div>
+    <div class="daylist">${chips.join('')}</div>`;
+
+  if(S.daysDone>=6) html+=`<div class="tip">🎯 <b>ความสม่ำเสมอดีมาก</b> — นี่คือปัจจัยที่ทำนายผลระยะยาวได้ดีที่สุด มากกว่าคะแนนสอบ</div>`;
+  else if(S.daysDone<=3) html+=`<div class="tip">💡 ทำไป ${S.daysDone} วัน ยังน้อยไปที่จะสรุปจุดแข็ง–จุดอ่อนได้แม่น ลองให้ครบ 7 วันก่อนแล้วกลับมาดูอีกครั้ง</div>`;
+  html+='</div>';
+
+  html+=`<div class="card"><h2>แยกรายทักษะ</h2>
+    <p class="lead">คะแนนทั้งหมดมาจากที่ระบบวัดได้จริง ไม่ใช่การประเมินด้วยสายตา</p>
+    ${skillBlock('read',S.read)}${skillBlock('speak',S.speak)}${skillBlock('write',S.write)}</div>`;
+
+  // สรุปควรส่งเสริม / ควรปรับปรุง
+  const arr=[['read',S.read],['speak',S.speak],['write',S.write]].filter(x=>x[1].n>0);
+  if(arr.length>=2){
+    arr.sort((a,b)=>b[1].avg-a[1].avg);
+    const best=arr[0], worst=arr[arr.length-1];
+    html+=`<div class="card"><h2>สรุปสั้น ๆ สำหรับผู้ปกครอง</h2>
+      <div class="sk-t" style="background:var(--green-s);border-radius:14px;padding:13px 15px;color:#2E8B5E">
+        ✅ <b>ควรส่งเสริม:</b> ${NAMES[best[0]]} (${best[1].avg}%) — ทำได้ดีที่สุด ให้ชมตรงนี้บ่อย ๆ เด็กจะอยากทำต่อ</div>
+      <div class="sk-t" style="background:var(--orange-s);border-radius:14px;padding:13px 15px;color:#B4552C;margin-top:10px">
+        🔧 <b>ควรปรับปรุง:</b> ${NAMES[worst[0]]} (${worst[1].avg}%) — ${ADVICE[worst[0]][worst[1].avg>=80?'hi':worst[1].avg>=60?'mid':'lo']}</div>
+      ${best[1].avg-worst[1].avg<=10?`<div class="tip">⚖️ ทั้งสามทักษะห่างกันไม่เกิน 10 คะแนน แปลว่าพัฒนาไปพร้อมกันสม่ำเสมอ ไม่มีด้านไหนตามหลัง</div>`:''}
+    </div>`;
+  }
+
+  if(!PAID) html+=`<div class="card" id="mailCard">
+    <h2>📮 เก็บรายงานนี้ไว้ไหม</h2>
+    <p class="lead">ส่งสรุปนี้เข้าอีเมล พร้อมเตือนเมื่อถึงเวลาเรียน Day 8 · ไม่บังคับ ดูรายงานได้อยู่แล้ว</p>
+    <input class="inp" id="mName" placeholder="ชื่อเล่นของน้อง" maxlength="30">
+    <input class="inp" id="mEmail" type="email" placeholder="อีเมลผู้ปกครอง" maxlength="80">
+    <button class="mini" onclick="sendReport()">ส่งรายงานเข้าอีเมล</button>
+    <div id="mMsg" class="foot" style="text-align:center"></div>
+  </div>
+
+  <div class="card" style="background:var(--pink-s);border-color:#F8D3E0">
+    <h2>อยากเรียนต่อจาก Day 8 ไหม</h2>
+    <p class="lead" style="color:#A8446B">ระบบจะเก็บรายงานแบบนี้ให้ทุก 30 วัน เห็นพัฒนาการเป็นตัวเลขจริงตลอด 448 วัน</p>
+    <div class="mid"><a href="register.html" class="btn">ดูแพ็กเกจ →</a>
+      <div class="foot">ความคืบหน้า 7 วันนี้จะถูกโอนเข้าบัญชีให้อัตโนมัติ ไม่ต้องเริ่มใหม่</div></div></div>
+    <div class="mid"><a href="${PAID?'dashboard.html':'trial.html'}" class="btn2">← กลับไปเรียนต่อ</a></div>`;
+
+  app.innerHTML=html;
+}
+
+const API='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+function jsonp(params){
+  return new Promise((res,rej)=>{
+    const cb='jp_'+Date.now(); const sc=document.createElement('script');
+    const q=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+    window[cb]=d=>{delete window[cb];sc.remove();res(d);};
+    sc.onerror=()=>{delete window[cb];sc.remove();rej(new Error('err'));};
+    sc.src=API+'?'+q+'&callback='+cb; document.body.appendChild(sc);
+    setTimeout(()=>{ if(window[cb]){delete window[cb];sc.remove();rej(new Error('timeout'));} },8000);
+  });
+}
+async function sendReport(){
+  const nm=(document.getElementById('mName').value||'').trim();
+  const em=(document.getElementById('mEmail').value||'').trim().toLowerCase();
+  const m=document.getElementById('mMsg');
+  if(!em||!em.includes('@')){ m.style.color='#C0392B'; m.textContent='กรอกอีเมลให้ถูกต้องก่อนนะคะ'; return; }
+  m.style.color='var(--muted)'; m.textContent='กำลังส่ง...';
+  const S=pwSummary(1,7);
+  const note='days='+S.daysDone+' read='+(S.read.avg??'-')+' speak='+(S.speak.avg??'-')+' write='+(S.write.avg??'-');
+  try{
+    await jsonp({action:'newPurchase', order_id:'RPT-'+Date.now(), pkg:'Trial Report · '+note,
+                 price:0, type:'trial', name:nm, email:em, phone:''});
+    m.style.color='#2E8B5E'; m.textContent='✅ ส่งแล้วค่ะ เช็กอีเมลได้เลย';
+    try{ localStorage.setItem('pw_trial', JSON.stringify({name:nm,email:em,at:new Date().toISOString()})); }catch(e){}
+  }catch(e){ m.style.color='#C0392B'; m.textContent='ส่งไม่สำเร็จ ลองใหม่อีกครั้งนะคะ'; }
+}
+render();
+</script>
+<script src="js/protect.js"></script>
+</body></html>

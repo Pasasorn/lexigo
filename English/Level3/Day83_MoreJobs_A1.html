@@ -434,7 +434,7 @@ function startRec(i){if(!('webkitSpeechRecognition' in window||'SpeechRecognitio
 navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{s.getTracks().forEach(t=>t.stop());document.getElementById('micStatus').style.display='block';}).catch(()=>{});
 function updScore(n,tot){window._pwScore=Math.max(window._pwScore||0,n);window._pwTot=tot||6;const pct=Math.round(n/(tot||6)*100);const sf=document.getElementById('sfill');if(sf)sf.style.width=pct+'%';const sc=document.getElementById('totalSc');if(sc)sc.textContent=n;const sd=document.getElementById('starDisp');if(sd)sd.textContent=pct>=80?'⭐⭐⭐':pct>=50?'⭐⭐☆':'⭐☆☆';}
 function generateCode(day){const ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='D'+day+'-';for(let i=0;i<4;i++)c+=ch[Math.floor(Math.random()*ch.length)];return c;}
-function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);}syncToCloud(MY_DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;const cs=document.getElementById('completeScreen');cs.classList.add('show');window.scrollTo(0,document.body.scrollHeight);}
+function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);}if(window.pwCollect)pwCollect(MY_DAY);syncToCloud(MY_DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;const cs=document.getElementById('completeScreen');cs.classList.add('show');window.scrollTo(0,document.body.scrollHeight);}
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copied! Code: '+code));else alert('Code: '+code);}
 checkLock();
 </script>
@@ -443,6 +443,7 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
+<script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
 </html>

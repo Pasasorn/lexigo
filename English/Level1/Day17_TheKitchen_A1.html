@@ -670,7 +670,7 @@ function showCompletion(){
     
     document.getElementById('savedCode').textContent=code;
     document.getElementById('alreadyDone').classList.add('show');
-  }syncToCloud(DAY,code,pwPct());
+  }if(window.pwCollect)pwCollect(DAY);syncToCloud(DAY,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('completeScreen').classList.add('show');
 }
@@ -735,6 +735,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   // score bar already in HTML
 });
 </script>
+<script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
 </html>

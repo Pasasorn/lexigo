@@ -796,7 +796,7 @@ function cbRun(){
 
 function showCompletion(){
   let code=localStorage.getItem(LOCK_KEY);
-  if(!code){code=generateCode(104);localStorage.setItem(LOCK_KEY,code);}syncToCloud(127,code,pwPct());
+  if(!code){code=generateCode(104);localStorage.setItem(LOCK_KEY,code);}if(window.pwCollect)pwCollect(127);syncToCloud(127,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('savedCode').textContent=code;
   document.getElementById('alreadyDone').classList.add('show');
@@ -829,5 +829,6 @@ function tryUnlock(){
 function unlockContent(){document.getElementById('lockScreen').style.display='none';document.getElementById('mainContent').style.display='block';go(0);}
 window.onload=()=>{checkLock();};
 </script>
+<script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body></html>

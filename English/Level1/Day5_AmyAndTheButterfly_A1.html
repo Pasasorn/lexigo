@@ -376,7 +376,7 @@ function chkSC(){
   if(scScore>=4)showCompletion();
 }
 function generateCode(d){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='D'+d+'-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
-function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);document.getElementById('savedCode').textContent=code;document.getElementById('alreadyDone').classList.add('show');}syncToCloud(MY_DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
+function showCompletion(){let code=localStorage.getItem(MY_KEY);if(!code){code=generateCode(MY_DAY);localStorage.setItem(MY_KEY,code);document.getElementById('savedCode').textContent=code;document.getElementById('alreadyDone').classList.add('show');}if(window.pwCollect)pwCollect(MY_DAY);syncToCloud(MY_DAY,code,pwPct());document.getElementById('codeDisplay').textContent=code;document.getElementById('completeScreen').classList.add('show');}
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
 checkLock();
 
@@ -529,6 +529,7 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
+<script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
 </html>

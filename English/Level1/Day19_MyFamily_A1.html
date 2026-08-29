@@ -533,7 +533,7 @@ function showCompletion(){
     
     document.getElementById('alreadyDone').classList.add('show');
     document.getElementById('savedCode').textContent=code;
-  }syncToCloud(DAY,code,pwPct());
+  }if(window.pwCollect)pwCollect(DAY);syncToCloud(DAY,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   buildDaySummary();
   document.getElementById('completeScreen').classList.add('show');
@@ -599,6 +599,7 @@ window.addEventListener('DOMContentLoaded',function(){
   buildSL();
 });
 </script>
+<script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
 </html>
