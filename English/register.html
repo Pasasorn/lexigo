@@ -440,6 +440,28 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
       </div>
     </div>
 
+    <!-- ข้อมูลติดต่อ: เก็บตั้งแต่ตอนจ่าย เพื่อให้ติดต่อกลับได้แม้ลูกค้าปิดหน้าเว็บก่อนลงทะเบียน -->
+    <div style="background:#F1F8E9;border:1.5px solid #AED581;border-radius:10px;padding:12px;margin-top:14px">
+      <div style="font-size:12px;font-weight:900;color:#33691E;margin-bottom:8px">
+        📇 ข้อมูลติดต่อกลับ <span style="font-weight:700;color:#558B2F">— เผื่อโอนแล้วหลุดหน้าจอ เราจะได้ตามหาคุณเจอ</span>
+      </div>
+      <div class="field" style="margin-bottom:8px">
+        <label>ชื่อผู้โอน <span class="req">*</span></label>
+        <input class="inp" id="payName" type="text" placeholder="ชื่อ-นามสกุล ผู้ปกครอง" maxlength="60">
+        <div class="ferr" id="ePayName">กรุณากรอกชื่อผู้โอน</div>
+      </div>
+      <div class="field" style="margin-bottom:8px">
+        <label>อีเมล <span class="req">*</span></label>
+        <input class="inp" id="payEmail" type="email" placeholder="email@gmail.com" maxlength="80">
+        <div class="ferr" id="ePayEmail">กรุณากรอกอีเมลให้ถูกต้อง</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>เบอร์โทร <span class="req">*</span></label>
+        <input class="inp" id="payPhone" type="tel" inputmode="numeric" placeholder="08xxxxxxxx" maxlength="15">
+        <div class="ferr" id="ePayPhone">กรุณากรอกเบอร์โทร</div>
+      </div>
+    </div>
+
     <!-- Slip upload -->
     <div class="field" style="margin-top:14px">
       <label>📎 แนบสลิปโอนเงิน <span class="req">*</span></label>
@@ -680,10 +702,7 @@ window.onload = function() {
     document.getElementById('rCourse').value = pkg || (localStorage.getItem(PK) ? JSON.parse(localStorage.getItem(PK)).pkgName : '');
     // Pre-fill contact info from purchase data
     const pd = JSON.parse(localStorage.getItem(PK) || 'null');
-    if (pd) {
-      document.getElementById('rPhone').value = pd.phone || '';
-      document.getElementById('rEmail').value = pd.email || '';
-    }
+    if (pd) prefillFromPurchase(pd);
     setStep(3); go(3); return;
   }
 
@@ -877,6 +896,17 @@ function hideAlt(id){document.getElementById(id).classList.remove('on');}
 async function doPayment() {
   hideAlt('altPay');
 
+  // ── ตรวจข้อมูลติดต่อก่อน ──
+  const pName  = (document.getElementById('payName').value  || '').trim();
+  const pEmail = (document.getElementById('payEmail').value || '').trim().toLowerCase();
+  const pPhone = (document.getElementById('payPhone').value || '').trim();
+  let cErr = false;
+  ['ePayName','ePayEmail','ePayPhone'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  if(!pName){ document.getElementById('ePayName').classList.add('on'); cErr=true; }
+  if(!pEmail || !pEmail.includes('@')){ document.getElementById('ePayEmail').classList.add('on'); cErr=true; }
+  if(!pPhone || pPhone.replace(/\D/g,'').length < 9){ document.getElementById('ePayPhone').classList.add('on'); cErr=true; }
+  if(cErr){ showAlt('altPay','⚠️ กรอกข้อมูลติดต่อกลับให้ครบก่อนนะ','warn'); return; }
+
   if(!slipData){ document.getElementById('eSlip').classList.add('on');
     showAlt('altPay','⚠️ กรุณาแนบสลิปโอนเงินก่อน','warn'); return; }
 
@@ -884,11 +914,12 @@ async function doPayment() {
   document.getElementById('ldPay').classList.add('on');
 
   const orderId = 'ORD-' + Date.now();
-  const data = { ...selectedPkg, orderId, slipAttached: true };
+  const data = { ...selectedPkg, orderId, slipAttached: true, payName: pName, payEmail: pEmail, payPhone: pPhone };
 
   try {
     await jsonp({ action:'newPurchase', order_id: orderId,
       pkg: selectedPkg.pkgName, price: selectedPkg.price, type: selectedPkg.type,
+      name: pName, email: pEmail, phone: pPhone,
       existing_code: (window._BUYMORE && window._BUYMORE.code) ? window._BUYMORE.code : '' });
     // เก็บไฟล์สลิปไว้ให้ครูดูย้อนหลัง (fire-and-forget)
     try {
@@ -1188,9 +1219,27 @@ async function checkApprovalStatus(code) {
 }
 
 // ── Navigation ──
+function prefillFromPurchase(pd) {
+  if (!pd) return;
+  const set = function (id, v) {
+    const el = document.getElementById(id);
+    if (el && !el.value && v) el.value = v;
+  };
+  set('rPhone', pd.payPhone || pd.phone);
+  set('rEmail', pd.payEmail || pd.email);
+  const full = (pd.payName || '').trim();
+  if (full) {
+    const sp = full.split(/\s+/);
+    set('rFirst', sp[0] || '');
+    set('rLast', sp.slice(1).join(' ') || '');
+  }
+}
+
 function go(n) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.getElementById('p'+n).classList.add('on');
+  // เข้าหน้าลงทะเบียน → เติมข้อมูลที่กรอกไว้ตอนจ่ายเงินให้เลย ไม่ต้องพิมพ์ซ้ำ
+  if (n === 3) { try { prefillFromPurchase(JSON.parse(localStorage.getItem(PK) || 'null')); } catch (e) {} }
   window.scrollTo(0,0);
 }
 function setStep(n){ /* step indicator handled per-page in HTML */ }

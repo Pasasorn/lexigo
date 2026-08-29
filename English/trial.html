@@ -133,7 +133,9 @@ async function unlock(){
   if(!email||!email.includes('@')){ m.style.color='#C62828'; m.textContent='⚠️ กรอกอีเมลให้ถูกต้อง'; return; }
   m.style.color='#78909C'; m.textContent='⏳ กำลังปลดล็อก...';
   // เก็บ lead (ถ้า backend ล่ม ก็ยังปลดล็อกให้ — ไม่กั้นเด็ก)
-  try{ await jsonp({action:'newPurchase', order_id:'TRIAL-'+Date.now(), pkg:'Trial 7 Days', price:0, type:'trial'}); }catch(e){}
+  try{ await jsonp({action:'newPurchase', order_id:'TRIAL-'+Date.now(),
+      pkg:'Trial 7 Days', price:0, type:'trial',
+      name:name, email:email, phone:''}); }catch(e){}
   localStorage.setItem(TK, JSON.stringify({name,email,unlocked:true,at:new Date().toISOString()}));
   m.style.color='#2E7D32'; m.textContent='🎉 ปลดล็อกสำเร็จ! เรียนได้ครบ 7 วันแล้ว';
   setTimeout(render,600);

@@ -875,6 +875,11 @@ function actionNewPurchase(p, cb) {
   const pkg     = (p.pkg   || '').toString().trim();
   const price   = parseInt(p.price) || 0;
   const type    = (p.type  || 'lifetime').toString().trim();
+  // ── ข้อมูลติดต่อ: ต้องเก็บตั้งแต่ตอนจ่ายเงิน ไม่งั้นถ้าลูกค้าปิดหน้าเว็บก่อนลงทะเบียน
+  //    จะมีเงินเข้าและสลิป แต่ไม่รู้ว่าใครโอน ติดต่อกลับไม่ได้
+  const name    = (p.name  || '').toString().trim();
+  const email   = (p.email || '').toString().trim().toLowerCase();
+  const phone   = (p.phone || '').toString().trim();
 
   if (!pkg) return respond({status:'error', msg:'ไม่พบ pkg'}, cb);
 
@@ -882,7 +887,7 @@ function actionNewPurchase(p, cb) {
 
   const sh = getSheet(SHEET_PURCHASES);
   // line_id column (index 3) เก็บ existing_code สำหรับการ upgrade
-  sh.appendRow([orderId, '', '', existingCode, '', pkg, price, type, 'pending', '', new Date().toISOString(), '']);
+  sh.appendRow([orderId, name, phone, existingCode, email, pkg, price, type, 'pending', '', new Date().toISOString(), '']);
 
   return respond({status:'ok', order_id: orderId}, cb);
 }
