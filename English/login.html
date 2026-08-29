@@ -220,9 +220,10 @@ function finishLogin(st, progress){
   location.href = 'dashboard.html';
 }
 
-function buildSession(code, nick, res){
+function buildSession(code, nick, res, email){
   return {
     code, nick: nick || res.nick || res.name || '',
+    email: (email || res.email || '').toLowerCase(),
     pending_approval:false, course:'',
     type: res.type || 'level',
     level: res.pkg_name || res.level || '1',
@@ -245,7 +246,7 @@ async function doLoginEmail(){
     const res=await jsonp({action:'loginEmail', email, ph});
     loading(false); btn.disabled=false;
 
-    if(res.status==='ok') return finishLogin(buildSession(res.code, res.name, res), res.progress);
+    if(res.status==='ok') return finishLogin(buildSession(res.code, res.name, res, email), res.progress);
     if(res.status==='no_password')
       return err('บัญชีนี้ยังไม่ได้ตั้งรหัสผ่าน<br><span style="font-size:11px;font-weight:700">เข้าด้วย "รหัสนักเรียน" ก่อน แล้วระบบจะให้ตั้งรหัสผ่าน</span>');
     err('❌ ' + (res.msg || 'เข้าสู่ระบบไม่สำเร็จ'));
@@ -305,6 +306,7 @@ async function doSetPassword(){
     const res=await jsonp({action:'setPassword', code:_pendingStudent.st.code, ph, email});
     loading(false); btn.disabled=false;
     if(res.status!=='ok') return err('❌ ' + (res.msg||'ตั้งรหัสผ่านไม่สำเร็จ'));
+    _pendingStudent.st.email = email;
     finishLogin(_pendingStudent.st, _pendingStudent.progress);
   }catch(e){ loading(false); btn.disabled=false; err('⚠️ เชื่อมต่อไม่ได้ ลองใหม่'); }
 }
