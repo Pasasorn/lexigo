@@ -120,5 +120,45 @@
     };
   };
 
+  /* ต่อท้าย URL ตอน syncToCloud เพื่อเก็บคะแนนรายทักษะไว้บนคลาวด์ด้วย */
+  window.pwSkillQS = function (day) {
+    var r = load()[parseInt(day, 10)];
+    if (!r) return '';
+    var q = '';
+    if (r.read  !== null && r.read  !== undefined) q += '&sk_r=' + r.read;
+    if (r.speak !== null && r.speak !== undefined) q += '&sk_s=' + r.speak;
+    if (r.write !== null && r.write !== undefined) q += '&sk_w=' + r.write;
+    return q;
+  };
+
+  /* รับข้อมูลที่ดึงกลับมาจากคลาวด์ (ตอน login) มารวมกับของในเครื่อง */
+  window.pwMergeCloud = function (obj) {
+    if (!obj || typeof obj !== 'object') return;
+    var all = load(), changed = false;
+    Object.keys(obj).forEach(function (k) {
+      var d = parseInt(String(k).replace(/^d/, ''), 10);
+      if (!d) return;
+      var c = obj[k] || {};
+      var cur = all[d] || { read: null, speak: null, write: null, total: null, at: '' };
+      ['read', 'speak', 'write', 'total'].forEach(function (f) {
+        var v = parseInt(c[f], 10);
+        if (!isNaN(v) && (cur[f] === null || cur[f] === undefined || v > cur[f])) {
+          cur[f] = v; changed = true;
+        }
+      });
+      all[d] = cur;
+    });
+    if (changed) save(all);
+  };
+
+  /* ขอให้เบราว์เซอร์ไม่ล้างข้อมูลนี้ทิ้งอัตโนมัติ (Chrome/Edge/Android อนุมัติถ้าใช้งานสม่ำเสมอ) */
+  try {
+    if (navigator.storage && navigator.storage.persist && navigator.storage.persisted) {
+      navigator.storage.persisted().then(function (already) {
+        if (!already) navigator.storage.persist();
+      });
+    }
+  } catch (e) {}
+
   window.pwSkillsRaw = load;
 })();

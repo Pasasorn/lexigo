@@ -825,7 +825,7 @@ function syncToCloud(day,code,score){
   try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;
   const cb='jpc_'+Date.now();const s=document.createElement('script');
   window[cb]=()=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
-  s.src=API_URL+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+'&callback='+cb;
+  s.src=API_URL+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+(window.pwSkillQS?pwSkillQS(day):'')+'&callback='+cb;
   document.body.appendChild(s);}catch(e){}
 }
 function checkLock(){

@@ -158,6 +158,7 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
   </div>
 </div>
 
+<script src="js/report.js"></script>
 <script>
 const SK  = 'wla_student';
 const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
@@ -211,9 +212,11 @@ function finishLogin(st, progress){
   }
   if (progress && typeof progress==='object'){
     Object.keys(progress).forEach(k=>{
-      if(/^d\d+$/.test(k) && progress[k]) localStorage.setItem('wla_'+k, progress[k]);
+      if(/^d\d+$/.test(k) && typeof progress[k]==='string' && progress[k]) localStorage.setItem('wla_'+k, progress[k]);
     });
   }
+  // กู้คืนคะแนนรายทักษะจากคลาวด์ (เครื่องใหม่ / แคชโดนล้าง → ข้อมูลกลับมาครบ)
+  if (progress && progress.__skills && window.pwMergeCloud) pwMergeCloud(progress.__skills);
   localStorage.setItem('wla_last_code', st.code);
   localStorage.setItem(SK, JSON.stringify(st));
   localStorage.removeItem('wla_admin');
@@ -246,7 +249,7 @@ async function doLoginEmail(){
     const res=await jsonp({action:'loginEmail', email, ph});
     loading(false); btn.disabled=false;
 
-    if(res.status==='ok') return finishLogin(buildSession(res.code, res.name, res, email), res.progress);
+    if(res.status==='ok') return finishLogin(buildSession(res.code, res.name, res, email), Object.assign({}, res.progress||{}, {__skills: res.skills||null}));
     if(res.status==='no_password')
       return err('บัญชีนี้ยังไม่ได้ตั้งรหัสผ่าน<br><span style="font-size:11px;font-weight:700">เข้าด้วย "รหัสนักเรียน" ก่อน แล้วระบบจะให้ตั้งรหัสผ่าน</span>');
     err('❌ ' + (res.msg || 'เข้าสู่ระบบไม่สำเร็จ'));
@@ -278,7 +281,7 @@ async function doLoginCode(){
     if(res.approval_status!=='active') return err('⚠️ สถานะไม่ถูกต้อง ลองใหม่');
 
     // ผ่านแล้ว → ชวนตั้งรหัสผ่าน (ถ้ายังไม่มี)
-    _pendingStudent = { st: buildSession(code, res.nick||nick, res), progress: res.progress };
+    _pendingStudent = { st: buildSession(code, res.nick||nick, res), progress: Object.assign({}, res.progress||{}, {__skills: res.skills||null}) };
     if(res.has_password) return finishLogin(_pendingStudent.st, _pendingStudent.progress);
 
     document.getElementById('paneA').classList.remove('on');

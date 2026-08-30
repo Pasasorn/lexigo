@@ -4,7 +4,7 @@
 // ============================================================
 
 const SHEET_STUDENTS  = 'Students';
-const SHEET_PROGRESS  = 'Progress';
+const SHEET_PROGRESS  = 'Progress';  // student_code|day|completion|saved_at|score|day_points|sk_read|sk_speak|sk_write
 const SHEET_CONFIG    = 'Config';
 const SHEET_QUIZ_ATT  = 'QuizAttempts';   // code | free_used | paid_credits | updated_at
 const SHEET_QUIZ_SCR  = 'QuizScores';     // code | score | attempt_num | saved_at
@@ -26,7 +26,7 @@ function getSheet(name) {
       sh.setFrozenRows(1);
     }
     if (name === SHEET_PROGRESS) {
-      sh.appendRow(['student_code','day','completion_code','saved_at','score']);
+      sh.appendRow(['student_code','day','completion_code','saved_at','score','day_points','sk_read','sk_speak','sk_write']);
       sh.setFrozenRows(1);
     }
     if (name === SHEET_CONFIG) {
@@ -164,9 +164,9 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v5', deployed:'2026-08-29',
+      case 'version':         return respond({status:'ok', version:'v6', deployed:'2026-08-29',
                                 features:['completion-regex','score-percent','email-password','slip-verify',
-                                          'purchase-contact-info','trial-lead-capture']}, cb);
+                                          'purchase-contact-info','trial-lead-capture','skill-sync']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
       case 'setPassword':     return actionSetPassword(p, cb);
@@ -261,6 +261,12 @@ function actionSave(p, cb) {
   // เดิมใช้ || 100 ทำให้ score=0 (ไม่ทำแบบฝึกหัดเลย) กลายเป็นคะแนนเต็ม
   const rawScore = parseInt(p.score);
   const score = Math.min(100, Math.max(0, isNaN(rawScore) ? 0 : rawScore));
+  // คะแนนรายทักษะ — ว่างได้ (เด็กข้ามขั้นนั้น) เก็บ '' ไม่ใช่ 0 จะได้ไม่ปนกับ "ทำแล้วได้ 0"
+  const sk = function (v) {
+    var n = parseInt(v);
+    return isNaN(n) ? '' : Math.min(100, Math.max(0, n));
+  };
+  const skR = sk(p.sk_r), skS = sk(p.sk_s), skW = sk(p.sk_w);
   if (!code || !day || !comp) return respond({status:'error', msg:'ข้อมูลไม่ครบ'}, cb);
   // รหัสยาวไม่เท่ากันตามเลขวัน: D1-XXXX=7, D10-XXXX=8, D104-XXXX=9
   if (!(day >= 1 && day <= 448))
@@ -290,6 +296,12 @@ function actionSave(p, cb) {
         pSh.getRange(i + 1, 5).setValue(newCorrect);
         pSh.getRange(i + 1, 6).setValue(PTS_A + Math.round(newCorrect / 100 * PTS_F));
       }
+      // รายทักษะ: เก็บค่าที่ดีที่สุดของแต่ละช่อง ไม่ลงโทษการฝึกซ้ำ
+      [[7, skR], [8, skS], [9, skW]].forEach(function (pair) {
+        if (pair[1] === '') return;
+        var oldV = parseInt(pData[i][pair[0] - 1]);
+        if (isNaN(oldV) || pair[1] > oldV) pSh.getRange(i + 1, pair[0]).setValue(pair[1]);
+      });
       return respond({status:'already_saved', completion: pData[i][2],
                       updated: newCorrect > oldCorrect}, cb);
     }
@@ -304,7 +316,7 @@ function actionSave(p, cb) {
   const correctAns  = Math.min(100, Math.max(0, score));
   const dayPoints   = PTS_ATT + Math.round(correctAns / 100 * PTS_FULL);
 
-  pSh.appendRow([code, day, comp, new Date().toISOString(), correctAns, dayPoints]);
+  pSh.appendRow([code, day, comp, new Date().toISOString(), correctAns, dayPoints, skR, skS, skW]);
   return respond({status:'ok', day_points: dayPoints}, cb);
 }
 
@@ -1177,7 +1189,7 @@ function actionCheckApproval(p, cb) {
       for (let k = 1; k < pData2.length; k++) {
         if (pData2[k][0].toString().toUpperCase() === code.toUpperCase()) prog2['d' + pData2[k][1]] = pData2[k][2];
       }
-      return respond({status:'ok', approval_status: data[i][3], nick: data[i][1], email: data[i][2] || '', has_password: !!data[i][9], type: data[i][6], pkg_name: data[i][7], progress: prog2}, cb);
+      return respond({status:'ok', approval_status: data[i][3], nick: data[i][1], email: data[i][2] || '', has_password: !!data[i][9], type: data[i][6], pkg_name: data[i][7], progress: prog2, skills: skillsFor_(code)}, cb);
     }
   }
   return respond({status:'not_found'}, cb);
@@ -1264,6 +1276,21 @@ function progressFor_(code) {
     if (pData[j][0].toString() === code) progress['d' + pData[j][1]] = pData[j][2];
   }
   return progress;
+}
+
+/* คะแนนรายทักษะของนักเรียนคนหนึ่ง — ใช้กู้คืนตอน login เครื่องใหม่ */
+function skillsFor_(code) {
+  const pSh = getSheet(SHEET_PROGRESS);
+  const pData = pSh.getDataRange().getValues();
+  const out = {};
+  const num = function (v) { var n = parseInt(v); return isNaN(n) ? null : n; };
+  for (let j = 1; j < pData.length; j++) {
+    if (pData[j][0].toString() !== code) continue;
+    const r = num(pData[j][6]), sp = num(pData[j][7]), w = num(pData[j][8]);
+    if (r === null && sp === null && w === null) continue;
+    out['d' + pData[j][1]] = { read: r, speak: sp, write: w, total: num(pData[j][4]) };
+  }
+  return out;
 }
 
 
@@ -1563,7 +1590,7 @@ function actionLoginEmail(p, cb) {
     type: st.data[6],
     pkg_name: st.data[7],
     level: st.data[7],
-    progress: progressFor_(code)
+    progress: progressFor_(code), skills: skillsFor_(code)
   }, cb);
 }
 

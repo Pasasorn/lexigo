@@ -1019,7 +1019,7 @@ function syncToCloud(day,code,score){
     const s=document.createElement('script');
     window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
     s.onerror=()=>{delete window[cb];};
-    s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+'&callback='+cb;
+    s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+(window.pwSkillQS?pwSkillQS(day):'')+'&callback='+cb;
     document.body.appendChild(s);
   }catch(e){}
 }

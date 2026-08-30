@@ -647,7 +647,7 @@ function buildDaySummary(){
 }
 function copyCode(){const code=document.getElementById('codeDisplay').textContent;if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>alert('✅ Copy แล้ว! Code: '+code));else alert('Code: '+code);}
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
-function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;const cb='jpc_'+Date.now();const s=document.createElement('script');window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+'&callback='+cb;document.body.appendChild(s);}catch(e){}}
+function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem('wla_student')||'null');if(!st||!st.code)return;const cb='jpc_'+Date.now();const s=document.createElement('script');window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+score+(window.pwSkillQS?pwSkillQS(day):'')+'&callback='+cb;document.body.appendChild(s);}catch(e){}}
 
 // ── LOCK SYSTEM ──────────────────────────────────
 function checkLock(){

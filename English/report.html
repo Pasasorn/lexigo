@@ -158,21 +158,33 @@ function render(){
     </div>`;
   }
 
-  if(!PAID) html+=`<div class="card" id="mailCard">
+  html+=`<div class="card">
+    <h2>💾 สำรองความคืบหน้า</h2>
+    <p class="lead">ข้อมูลเก็บอยู่ในเบราว์เซอร์เครื่องนี้ ถ้าล้างแคชหรือเปลี่ยนเครื่องจะหาย${PAID?' (บัญชีที่ซื้อแล้วมีสำรองบนคลาวด์ให้อีกชั้น)':''}</p>
+    <button class="mini" onclick="doExport()">⬇️ บันทึกเป็นไฟล์</button>
+    <div style="height:9px"></div>
+    <label class="mini" style="display:block;text-align:center;cursor:pointer">⬆️ กู้คืนจากไฟล์
+      <input type="file" accept="application/json" onchange="doImport(this)" style="display:none"></label>
+    <div id="bkMsg" class="foot" style="text-align:center"></div>
+  </div>
+
+  ` + (!PAID ? `<div class="card" id="mailCard">
     <h2>📮 เก็บรายงานนี้ไว้ไหม</h2>
     <p class="lead">ส่งสรุปนี้เข้าอีเมล พร้อมเตือนเมื่อถึงเวลาเรียน Day 8 · ไม่บังคับ ดูรายงานได้อยู่แล้ว</p>
     <input class="inp" id="mName" placeholder="ชื่อเล่นของน้อง" maxlength="30">
     <input class="inp" id="mEmail" type="email" placeholder="อีเมลผู้ปกครอง" maxlength="80">
     <button class="mini" onclick="sendReport()">ส่งรายงานเข้าอีเมล</button>
     <div id="mMsg" class="foot" style="text-align:center"></div>
-  </div>
+  </div>` : '');
 
-  <div class="card" style="background:var(--pink-s);border-color:#F8D3E0">
+  if(!PAID) html+=`<div class="card" style="background:var(--pink-s);border-color:#F8D3E0">
     <h2>อยากเรียนต่อจาก Day 8 ไหม</h2>
-    <p class="lead" style="color:#A8446B">ระบบจะเก็บรายงานแบบนี้ให้ทุก 30 วัน เห็นพัฒนาการเป็นตัวเลขจริงตลอด 448 วัน</p>
+    <p class="lead" style="color:#A8446B">ระบบจะเก็บรายงานแบบนี้ให้ทุก 30 วัน เห็นพัฒนาการเป็นตัวเลขจริงตลอด 448 วัน<br>
+      <b>สมัครแล้วข้อมูลจะถูกสำรองบนคลาวด์ ไม่หายแม้เปลี่ยนเครื่อง</b></p>
     <div class="mid"><a href="register.html" class="btn">ดูแพ็กเกจ →</a>
-      <div class="foot">ความคืบหน้า 7 วันนี้จะถูกโอนเข้าบัญชีให้อัตโนมัติ ไม่ต้องเริ่มใหม่</div></div></div>
-    <div class="mid"><a href="${PAID?'dashboard.html':'trial.html'}" class="btn2">← กลับไปเรียนต่อ</a></div>`;
+      <div class="foot">ความคืบหน้า 7 วันนี้จะถูกโอนเข้าบัญชีให้อัตโนมัติ ไม่ต้องเริ่มใหม่</div></div></div>`;
+
+  html+=`<div class="mid"><a href="${PAID?'dashboard.html':'trial.html'}" class="btn2">← กลับไปเรียนต่อ</a></div>`;
 
   app.innerHTML=html;
 }
@@ -188,6 +200,36 @@ function jsonp(params){
     setTimeout(()=>{ if(window[cb]){delete window[cb];sc.remove();rej(new Error('timeout'));} },8000);
   });
 }
+/* สำรอง/กู้คืน — ตาข่ายนิรภัยสำหรับคนที่ยังไม่มีบัญชี */
+function doExport(){
+  const data={v:1, at:new Date().toISOString(), skills:pwSkillsRaw(), days:{}};
+  for(let d=1;d<=448;d++){ const v=localStorage.getItem('wla_d'+d); if(v) data.days['wla_d'+d]=v; }
+  try{ const t=localStorage.getItem('pw_trial'); if(t) data.trial=t; }catch(e){}
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='peekaword-progress-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  const m=document.getElementById('bkMsg'); m.style.color='#2E8B5E'; m.textContent='✅ บันทึกไฟล์แล้ว เก็บไว้ให้ดีนะคะ';
+}
+function doImport(el){
+  const f=el.files&&el.files[0]; const m=document.getElementById('bkMsg');
+  if(!f) return;
+  const rd=new FileReader();
+  rd.onload=function(){
+    try{
+      const d=JSON.parse(rd.result);
+      if(!d||!d.skills) throw new Error('bad');
+      if(d.days) Object.keys(d.days).forEach(k=>{ if(/^wla_d\d+$/.test(k)) localStorage.setItem(k,d.days[k]); });
+      if(d.trial) localStorage.setItem('pw_trial',d.trial);
+      pwMergeCloud(Object.keys(d.skills).reduce((o,k)=>{o['d'+k]=d.skills[k];return o;},{}));
+      m.style.color='#2E8B5E'; m.textContent='✅ กู้คืนแล้ว กำลังโหลดใหม่...';
+      setTimeout(()=>location.reload(),900);
+    }catch(e){ m.style.color='#C0392B'; m.textContent='ไฟล์ไม่ถูกต้อง ลองเลือกไฟล์ที่บันทึกจากที่นี่นะคะ'; }
+  };
+  rd.readAsText(f);
+}
+
 async function sendReport(){
   const nm=(document.getElementById('mName').value||'').trim();
   const em=(document.getElementById('mEmail').value||'').trim().toLowerCase();

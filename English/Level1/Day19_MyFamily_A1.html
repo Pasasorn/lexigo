@@ -558,7 +558,7 @@ function syncToCloud(day,code,score){
     var cb='jpc_'+Date.now();
     var s=document.createElement('script');
     window[cb]=function(){delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};
-    s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+((score===undefined||score===null?0:score))+'&callback='+cb;
+    s.src=API_URL_SYNC+'?action=save&code='+encodeURIComponent(st.code)+'&day='+day+'&completion='+code+'&score='+((score===undefined||score===null?0:score))+(window.pwSkillQS?pwSkillQS(day):'')+'&callback='+cb;
     document.body.appendChild(s);
   }catch(e){}
 }
