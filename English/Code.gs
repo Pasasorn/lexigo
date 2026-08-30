@@ -773,11 +773,16 @@ function actionMyStats(p, cb) {
   const myRows = [];
   for (let i = 1; i < pData.length; i++) {
     if (pData[i][0].toString().toUpperCase() === code) {
+      const _n = function (v) { var x = parseInt(v); return isNaN(x) ? null : x; };
       myRows.push({
         day:           parseInt(pData[i][1])   || 0,
         saved_at:      pData[i][3]             || '',
         correct_count: parseInt(pData[i][4])   || 0,
         day_points:    parseInt(pData[i][5])   || 0,
+        // คะแนนรายทักษะ — null = เด็กข้ามขั้นนั้น ไม่ใช่ทำแล้วได้ 0
+        sk_read:       _n(pData[i][6]),
+        sk_speak:      _n(pData[i][7]),
+        sk_write:      _n(pData[i][8]),
       });
     }
   }

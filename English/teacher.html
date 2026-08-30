@@ -665,16 +665,68 @@ async function viewStudentProgress(code, name){
     const days = (res.days || res.rows || []).slice().sort((a,b)=>(a.day||0)-(b.day||0));
     const totalDone = days.length;
     const avgPts = totalDone ? Math.round(days.reduce((a,d)=>a+(d.day_points||d.score||0),0)/totalDone) : 0;
+
+    // ── คะแนนรายทักษะ ──
+    const SKN = { sk_read:'อ่านออกเสียง', sk_speak:'พูดตามประโยค', sk_write:'ฟังแล้วเขียน' };
+    const SKW = { sk_read:'Step 2', sk_speak:'Step 3', sk_write:'Step 4' };
+    function skAvg(f){
+      const v = days.map(d=>d[f]).filter(x=>typeof x==='number');
+      if(!v.length) return null;
+      return { avg: Math.round(v.reduce((a,b)=>a+b,0)/v.length), n: v.length };
+    }
+    function skCol(v){ return v>=80?'#2E7D32':v>=60?'#B07C0A':'#C0392B'; }
+    const skStats = {};
+    ['sk_read','sk_speak','sk_write'].forEach(f=>{ skStats[f]=skAvg(f); });
+    const haveSk = Object.keys(skStats).filter(f=>skStats[f]);
+
+    let skHtml = '';
+    if (!haveSk.length) {
+      skHtml = '<div style="background:#F6F5F8;border-radius:12px;padding:11px 13px;font-size:12px;font-weight:700;color:#90A4AE;margin-bottom:12px">'+
+               'ยังไม่มีคะแนนรายทักษะ — ข้อมูลนี้เริ่มเก็บหลัง deploy Code.gs v6 นักเรียนต้องเรียนวันใหม่อย่างน้อย 1 วัน</div>';
+    } else {
+      skHtml = '<div style="font-size:13px;font-weight:900;color:#1E3A5F;margin:4px 0 8px">🎯 คะแนนรายทักษะ</div>';
+      ['sk_read','sk_speak','sk_write'].forEach(f=>{
+        const st = skStats[f];
+        if (!st) {
+          skHtml += '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:3px">'+
+                    '<span style="color:#37474F">'+SKN[f]+'</span><span style="color:#B0BEC5">ยังไม่ได้ทำ</span></div>'+
+                    '<div style="height:9px;background:#F3F1F7;border-radius:100px"></div></div>';
+          return;
+        }
+        const c = skCol(st.avg);
+        skHtml += '<div style="margin-bottom:9px">'+
+          '<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:3px">'+
+            '<span style="color:#37474F">'+SKN[f]+' <span style="color:#B0BEC5;font-weight:700">'+SKW[f]+' · '+st.n+' วัน</span></span>'+
+            '<span style="color:'+c+'">'+st.avg+'%</span></div>'+
+          '<div style="height:9px;background:#F3F1F7;border-radius:100px;overflow:hidden">'+
+            '<div style="height:100%;width:'+st.avg+'%;background:'+c+';border-radius:100px"></div></div></div>';
+      });
+      if (haveSk.length >= 2) {
+        const sorted = haveSk.slice().sort((a,b)=>skStats[b].avg-skStats[a].avg);
+        const best = sorted[0], worst = sorted[sorted.length-1];
+        skHtml += '<div style="background:#E8F5E9;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-top:8px">'+
+                  '✅ ควรส่งเสริม: '+SKN[best]+' ('+skStats[best].avg+'%)</div>'+
+                  '<div style="background:#FFF3E0;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:800;color:#B4552C;margin-top:6px">'+
+                  '🔧 ควรฝึกเพิ่ม: '+SKN[worst]+' ('+skStats[worst].avg+'%)</div>';
+      }
+      skHtml += '<div style="height:12px"></div>';
+    }
+
+    const skCell = function(v){
+      if (typeof v !== 'number') return '<span style="color:#CFD8DC">–</span>';
+      return '<span style="font-weight:800;color:'+skCol(v)+'">'+v+'</span>';
+    };
     let rows = days.map(d=>{
       const pts = d.day_points!=null?d.day_points:(d.score||0);
-      const cc = d.correct_count!=null?d.correct_count:'';
       const dt = d.saved_at? String(d.saved_at).split('T')[0] : '';
       return '<tr><td style="padding:5px 8px;font-weight:800;color:#1D4ED8">Day '+d.day+'</td>'+
-             '<td style="padding:5px 8px;color:#37474F">'+(cc!==''?cc+' ข้อ':'-')+'</td>'+
-             '<td style="padding:5px 8px;font-weight:800;color:#2E7D32">'+pts+' pts</td>'+
+             '<td style="padding:5px 8px;text-align:center">'+skCell(d.sk_read)+'</td>'+
+             '<td style="padding:5px 8px;text-align:center">'+skCell(d.sk_speak)+'</td>'+
+             '<td style="padding:5px 8px;text-align:center">'+skCell(d.sk_write)+'</td>'+
+             '<td style="padding:5px 8px;font-weight:800;color:#2E7D32">'+pts+'</td>'+
              '<td style="padding:5px 8px;font-size:11px;color:#90A4AE">'+dt+'</td></tr>';
     }).join('');
-    if (!rows) rows = '<tr><td colspan="4" style="padding:14px;text-align:center;color:#90A4AE;font-weight:700">ยังไม่มีข้อมูลการเรียน</td></tr>';
+    if (!rows) rows = '<tr><td colspan="6" style="padding:14px;text-align:center;color:#90A4AE;font-weight:700">ยังไม่มีข้อมูลการเรียน</td></tr>';
     box.innerHTML =
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
         '<div style="font-size:17px;font-weight:900;color:#1E3A5F">📊 '+name+'</div>'+
@@ -684,7 +736,14 @@ async function viewStudentProgress(code, name){
         '<div style="flex:1;background:#EDE9FE;border-radius:12px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900;color:#5B21B6">'+totalDone+'</div><div style="font-size:11px;font-weight:700;color:#78909C">วันที่เรียน</div></div>'+
         '<div style="flex:1;background:#D1FAE5;border-radius:12px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900;color:#065F46">'+avgPts+'</div><div style="font-size:11px;font-weight:700;color:#78909C">แต้มเฉลี่ย/วัน</div></div>'+
       '</div>'+
-      '<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#F5F5F5"><th style="padding:6px 8px;text-align:left">วัน</th><th style="padding:6px 8px;text-align:left">ถูก</th><th style="padding:6px 8px;text-align:left">แต้ม</th><th style="padding:6px 8px;text-align:left">วันที่</th></tr></thead><tbody>'+rows+'</tbody></table>';
+      skHtml+
+      '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#F5F5F5">'+
+        '<th style="padding:6px 8px;text-align:left">วัน</th>'+
+        '<th style="padding:6px 4px;text-align:center" title="Step 2 อ่านออกเสียง">อ่าน</th>'+
+        '<th style="padding:6px 4px;text-align:center" title="Step 3 พูดตามประโยค">พูด</th>'+
+        '<th style="padding:6px 4px;text-align:center" title="Step 4 ฟังแล้วเขียน">เขียน</th>'+
+        '<th style="padding:6px 8px;text-align:left">แต้ม</th>'+
+        '<th style="padding:6px 8px;text-align:left">วันที่</th></tr></thead><tbody>'+rows+'</tbody></table>';
   } catch(e){
     box.innerHTML = '<div style="color:#C62828;font-weight:700;padding:16px">❌ เชื่อมต่อไม่ได้: '+e.message+'</div>';
   }
