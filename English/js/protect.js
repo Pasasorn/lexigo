@@ -8,16 +8,23 @@
   if (window.__pwProtect) return;
   window.__pwProtect = true;
 
-  /* ── 1. ใครกำลังดูอยู่ ── */
+  /* ── 1. ใครกำลังดูอยู่ ──
+     ลายน้ำมีไว้ "ตามรอย" คนที่จ่ายเงินแล้วเอาไปแจก
+     คนทดลองเรียน (Day 1–7 แจกฟรีอยู่แล้ว) ไม่ต้องใส่ — ให้เห็นหน้าสะอาด ๆ
+     เป็นความประทับใจแรกที่ดี และไม่มีอะไรให้ปกป้องอยู่แล้ว */
+  function session() {
+    try { return JSON.parse(localStorage.getItem('wla_student') || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function isMember() {
+    if (localStorage.getItem('wla_admin')) return true;
+    var s = session();
+    return !!(s.code || s.email);
+  }
   function who() {
-    var s = {};
-    try { s = JSON.parse(localStorage.getItem('wla_student') || '{}') || {}; } catch (e) {}
-    var em = s.email || '';
-    var cd = s.code || '';
     if (localStorage.getItem('wla_admin')) return 'ADMIN';
-    if (!em && !cd) {
-      return localStorage.getItem('wla_last_code') === 'TRIAL' ? 'ทดลองเรียน · TRIAL' : 'ยังไม่ได้เข้าสู่ระบบ';
-    }
+    var s = session();
+    var em = s.email || '', cd = s.code || '';
     return (em || '') + (em && cd ? ' · ' : '') + (cd ? '#' + cd : '');
   }
 
@@ -34,10 +41,10 @@
   css.textContent =
     '#pw-wm{position:fixed;inset:0;z-index:2147483646;pointer-events:none;overflow:hidden;' +
       'user-select:none;-webkit-user-select:none}' +
-    '#pw-wm .pw-wm-row{white-space:nowrap;font:600 12px/1 system-ui,"Nunito",sans-serif;' +
-      'color:rgba(15,23,42,.11);letter-spacing:.4px;transform:rotate(-24deg);transform-origin:0 0;' +
+    '#pw-wm .pw-wm-row{white-space:nowrap;font:600 11px/1 system-ui,"Nunito",sans-serif;' +
+      'color:rgba(15,23,42,.055);letter-spacing:.4px;transform:rotate(-24deg);transform-origin:0 0;' +
       'position:absolute}' +
-    '@media (prefers-color-scheme:dark){#pw-wm .pw-wm-row{color:rgba(255,255,255,.13)}}' +
+    '@media (prefers-color-scheme:dark){#pw-wm .pw-wm-row{color:rgba(255,255,255,.07)}}' +
     '#pw-black{position:fixed;inset:0;z-index:2147483647;background:#000;color:#fff;display:none;' +
       'align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;' +
       'font:700 16px/1.7 system-ui,"Nunito",sans-serif;padding:24px}' +
@@ -58,10 +65,10 @@
     var vh = window.innerHeight || 800;
     var sh = (document.body && document.body.scrollHeight) || 0;
     var H = Math.max(vh, sh) + 400;
-    var rows = Math.max(8, Math.ceil(H / 118) + 4);
+    var rows = Math.max(6, Math.ceil(H / 190) + 3);
     var html = '';
     for (var i = 0; i < rows; i++) {
-      html += '<div class="pw-wm-row" style="top:' + (i * 118 - 120) + 'px;left:' +
+      html += '<div class="pw-wm-row" style="top:' + (i * 190 - 120) + 'px;left:' +
               (i % 2 ? -140 : -40) + 'px">' + line + '</div>';
     }
     wrap.innerHTML = html;
@@ -99,6 +106,7 @@
 
   /* ── 5. เริ่มทำงาน ── */
   function init() {
+    if (!isMember()) return;        // ทดลองเรียน = หน้าสะอาด ไม่มีลายน้ำ ไม่มีจอดำ
     buildWM();
     buildBlack();
 

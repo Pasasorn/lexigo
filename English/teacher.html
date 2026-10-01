@@ -667,7 +667,7 @@ async function viewStudentProgress(code, name){
     const avgPts = totalDone ? Math.round(days.reduce((a,d)=>a+(d.day_points||d.score||0),0)/totalDone) : 0;
 
     // ── คะแนนรายทักษะ ──
-    const SKN = { sk_read:'อ่านออกเสียง', sk_speak:'พูดตามประโยค', sk_write:'ฟังแล้วเขียน' };
+    const SKN = { sk_read:'อ่านออกเสียง', sk_speak:'พูดตามประโยค', sk_write:'ฟังแล้วเรียงประโยค' };
     const SKW = { sk_read:'Step 2', sk_speak:'Step 3', sk_write:'Step 4' };
     function skAvg(f){
       const v = days.map(d=>d[f]).filter(x=>typeof x==='number');
@@ -741,7 +741,7 @@ async function viewStudentProgress(code, name){
         '<th style="padding:6px 8px;text-align:left">วัน</th>'+
         '<th style="padding:6px 4px;text-align:center" title="Step 2 อ่านออกเสียง">อ่าน</th>'+
         '<th style="padding:6px 4px;text-align:center" title="Step 3 พูดตามประโยค">พูด</th>'+
-        '<th style="padding:6px 4px;text-align:center" title="Step 4 ฟังแล้วเขียน">เขียน</th>'+
+        '<th style="padding:6px 4px;text-align:center" title="Step 4 ฟังแล้วเรียงประโยค">เรียง</th>'+
         '<th style="padding:6px 8px;text-align:left">แต้ม</th>'+
         '<th style="padding:6px 8px;text-align:left">วันที่</th></tr></thead><tbody>'+rows+'</tbody></table>';
   } catch(e){
