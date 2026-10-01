@@ -264,7 +264,7 @@ function initContent(){
   catch:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="50" r="30" fill="none" stroke="#00ACC1" stroke-width="5"/><path d="M20 50 Q30 30 50 50 Q70 70 80 50" stroke="#006064" stroke-width="3" fill="none"/><circle cx="50" cy="50" r="8" fill="#F9A825"/><line x1="40" y1="20" x2="50" y2="42" stroke="#BDBDBD" stroke-width="2" stroke-dasharray="4 3"/><circle cx="40" cy="18" r="5" fill="#80DEEA"/></svg>`,
   long:`<svg viewBox="0 0 100 100" width="52" height="52"><rect x="8" y="44" width="84" height="12" rx="6" fill="#80DEEA" stroke="#006064" stroke-width="2"/><line x1="8" y1="38" x2="8" y2="62" stroke="#006064" stroke-width="2.5"/><line x1="92" y1="38" x2="92" y2="62" stroke="#006064" stroke-width="2.5"/><text x="50" y="38" text-anchor="middle" font-size="11" fill="#006064" font-family="Nunito" font-weight="800">LONG</text></svg>`,
   short:`<svg viewBox="0 0 100 100" width="52" height="52"><rect x="28" y="44" width="44" height="12" rx="6" fill="#F48FB1" stroke="#C62828" stroke-width="2"/><line x1="28" y1="38" x2="28" y2="62" stroke="#C62828" stroke-width="2.5"/><line x1="72" y1="38" x2="72" y2="62" stroke="#C62828" stroke-width="2.5"/><text x="50" y="38" text-anchor="middle" font-size="11" fill="#C62828" font-family="Nunito" font-weight="800">SHORT</text></svg>`};
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'></div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-em'>${pwPic(w.e,w.em||'')}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph||''}</div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
   const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
   buildSL();
   buildS4();
@@ -559,6 +559,7 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+(window.pwSkillQS?pwSkillQS(day):"")+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>

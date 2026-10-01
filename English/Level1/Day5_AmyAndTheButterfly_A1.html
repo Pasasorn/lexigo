@@ -253,7 +253,7 @@ function initContent(){
   beautiful:`<svg viewBox="0 0 100 100" width="52" height="52"><polygon points="50,8 61,35 90,35 67,54 75,82 50,65 25,82 33,54 10,35 39,35" fill="#FDD835"/></svg>`,
   sit:`<svg viewBox="0 0 100 100" width="52" height="52"><circle cx="50" cy="18" r="12" fill="#FFCCBC"/><path d="M50 30 Q48 48 46 58" stroke="#AB47BC" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M46 58 L30 72" stroke="#AB47BC" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M46 58 L62 72" stroke="#AB47BC" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M50 40 Q62 36 68 30" stroke="#AB47BC" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="15" y="72" width="70" height="8" rx="4" fill="#8D6E63"/></svg>`,
   look:`<svg viewBox="0 0 100 100" width="52" height="52"><ellipse cx="50" cy="50" rx="40" ry="22" fill="#E1BEE7" stroke="#AB47BC" stroke-width="3"/><circle cx="50" cy="50" r="14" fill="#fff" stroke="#AB47BC" stroke-width="2"/><circle cx="50" cy="50" r="9" fill="#37474F"/><circle cx="54" cy="46" r="3" fill="white"/></svg>`};
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'></div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-em'>${pwPic(w.e,w.em||'')}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph||''}</div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
   const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
   buildSL();
   buildS4();
@@ -528,6 +528,7 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+(window.pwSkillQS?pwSkillQS(day):"")+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>

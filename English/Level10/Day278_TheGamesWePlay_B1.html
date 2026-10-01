@@ -318,7 +318,7 @@ function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent()
 function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if(v==='ADMIN-0000'||(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
 function initContent(){
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><div class='ac-em'>${w.em}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph}</div><div class='ac-hint'>Tap to hear</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><div class='ac-em'>${pwPic(w.e,w.em)}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph}</div><div class='ac-hint'>Tap to hear</div></div>`).join('');
   const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
   buildSL();
   buildS4();
@@ -445,6 +445,7 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+(window.pwSkillQS?pwSkillQS(day):"")+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>

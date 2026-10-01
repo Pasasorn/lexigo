@@ -350,6 +350,7 @@ function go(n){
 function buildCards(id){
   const el=document.getElementById(id);
   el.innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
+    <div class="ac-em">${pwPic(w.e,w.em||'')}</div>
     <div class="ac-en">🔊 ${w.e}</div>
     <div class="ac-ph">${w.ph}</div>
     <div class="ac-th">${w.t}</div>
@@ -734,6 +735,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   // score bar already in HTML
 });
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>

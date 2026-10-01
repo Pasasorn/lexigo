@@ -285,7 +285,7 @@ var cur=0;
 function go(n){document.getElementById('p'+cur).classList.remove('on');cur=n;document.getElementById('p'+n).classList.add('on');document.getElementById('lbl').textContent='Day 20 - '+STEPS[n];document.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===n);});window.scrollTo(0,0);if(n===3)buildSL();if(n===4)buildS4();if(n===5)buildMF();}
 
 /* Word Cards */
-function buildCards(id){var el=document.getElementById(id);if(!el)return;el.innerHTML=WORDS.map(function(w){return '<div class="ac" onclick="speak(\''+w.e+'\')">'+'<div class="ac-en">&#x1F50A; '+w.e+'</div>'+'<div class="ac-ph">'+w.ph+'</div>'+'<div class="ac-th">'+w.t+'</div>'+'<div class="ac-hint">กดฟัง</div></div>';}).join('');}
+function buildCards(id){var el=document.getElementById(id);if(!el)return;el.innerHTML=WORDS.map(function(w){return '<div class="ac" onclick="speak(\''+w.e+'\')">'+'<div class="ac-em">'+pwPic(w.e,w.em||'')+'</div>'+'<div class="ac-en">&#x1F50A; '+w.e+'</div>'+'<div class="ac-ph">'+w.ph+'</div>'+'<div class="ac-th">'+w.t+'</div>'+'<div class="ac-hint">กดฟัง</div></div>';}).join('');}
 
 /* Step 3 */
 function buildSL(){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById('noRec').style.display='block';}var el=document.getElementById('sl');if(!el||el.children.length)return;el.innerHTML=SS.map(function(s,i){var safe=s.replace(/'/g,"\\'");return '<div class="srow"><div style="font-size:11px;font-weight:900;color:#90A4AE;margin-bottom:4px">ประโยคที่ '+(i+1)+'</div><div class="srow-text">'+s+'</div><div style="display:flex;gap:8px"><button class="tts" onclick="speak(\''+safe+'\')">&#x25B6; ฟัง</button><button class="rec-btn" id="rec'+i+'" onclick="startRec('+i+')">&#x1F3A4; พูด</button></div></div><div class="rec-wrap" id="rw'+i+'"><div class="score-mini-wrap"><div class="score-mini" id="bar'+i+'"></div></div><div class="rec-label" id="lbl'+i+'">— กด &#x25B6; ก่อน —</div><div class="rec-transcript" id="tr'+i+'"></div></div>';}).join('');}
@@ -378,6 +378,7 @@ window.addEventListener('DOMContentLoaded',function(){
   loadVoices();buildCards('cvA');buildS4();buildSL();
 });
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>

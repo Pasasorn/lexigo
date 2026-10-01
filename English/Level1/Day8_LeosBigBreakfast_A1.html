@@ -267,7 +267,7 @@ function initContent(){
     eat:`<svg viewBox="0 0 100 100" width="52" height="52"><path d="M35 20 L35 80" stroke="#FF8F00" stroke-width="6" stroke-linecap="round"/><path d="M25 20 Q25 40 35 50 Q45 60 35 80" stroke="#FF8F00" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M65 20 L65 80" stroke="#FF8F00" stroke-width="6" stroke-linecap="round"/><ellipse cx="65" cy="35" rx="12" ry="18" fill="#FFCC80" stroke="#FF8F00" stroke-width="3"/></svg>`,
     hot:`<svg viewBox="0 0 100 100" width="52" height="52"><path d="M30 70 Q30 40 50 30 Q70 20 70 50 Q70 75 50 80 Q30 85 30 70Z" fill="#FF5722" opacity="0.85"/><path d="M42 65 Q42 48 50 40 Q58 32 58 52 Q58 67 50 72 Q42 77 42 65Z" fill="#FDD835"/><path d="M48 62 Q48 52 52 46 Q56 40 56 54 Q56 63 52 67 Q48 71 48 62Z" fill="#fff" opacity="0.5"/></svg>`
   };
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'></div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick=\"speak('${w.e}')\"><div class='ac-em'>${pwPic(w.e,w.em||'')}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph||''}</div><div class='ac-th'>${w.t}</div><div class='ac-hint'>กดฟัง</div></div>`).join('');
   const dotsEl=document.getElementById('dots');
   STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
   buildSL();
@@ -570,6 +570,7 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+(window.pwSkillQS?pwSkillQS(day):"")+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>

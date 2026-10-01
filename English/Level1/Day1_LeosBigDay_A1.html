@@ -295,9 +295,9 @@ function unlockContent(){
 // ── INIT ──
 function initContent(){
   // Vocab grid cards (cover)
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${SV[w.e]}<div class="ac-en">🔊 ${w.e}</div><div class="ac-ph">${w.ph}</div><div class="ac-th">${w.t}</div><div class="ac-hint">กดฟัง</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class="ac" onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${pwPic(w.e,SV[w.e])}<div class="ac-en">🔊 ${w.e}</div><div class="ac-ph">${w.ph}</div><div class="ac-th">${w.t}</div><div class="ac-hint">กดฟัง</div></div>`).join('');
   // Step 1 preview
-  const s1El=document.getElementById('s1A');if(s1El)s1El.innerHTML=WORDS.slice(0,4).map(w=>`<div style="font-size:36px">${SV[w.e]}</div>`).join('');
+  const s1El=document.getElementById('s1A');if(s1El)s1El.innerHTML=WORDS.slice(0,4).map(w=>`<div style="font-size:36px">${pwPic(w.e,SV[w.e])}</div>`).join('');
 
   // Dots
   const dotsEl=document.getElementById('dots');
@@ -710,6 +710,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 });
 </script>
+<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
