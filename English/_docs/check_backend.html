@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ตรวจ Backend · PeekaWord</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"Segoe UI",Tahoma,sans-serif;background:#f4f6f9;color:#28323e}
+header{background:#1f3b57;color:#fff;padding:18px 20px}
+header h1{margin:0 0 4px;font-size:20px}
+header p{margin:0;font-size:13px;opacity:.85}
+main{max-width:860px;margin:0 auto;padding:18px 20px 60px}
+.card{background:#fff;border:1px solid #dde3ea;border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.card h2{margin:0 0 10px;font-size:16px}
+button{padding:10px 20px;border:0;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;
+ background:#1f3b57;color:#fff;font-family:inherit}
+button:hover{background:#2b5280}
+button.sec{background:#fff;color:#28323e;border:1px solid #cbd5e1}
+button:disabled{opacity:.5;cursor:default}
+.t{list-style:none;padding:0;margin:12px 0 0}
+.t li{padding:9px 11px;border-radius:8px;margin-bottom:6px;font-size:13.5px;
+ background:#f7f9fc;border-left:4px solid #cbd5e1;line-height:1.6}
+.t li.ok{border-color:#5FB06B;background:#eef8f0}
+.t li.no{border-color:#e76f51;background:#fdf0ed}
+.t li.wait{border-color:#f0ad4e;background:#fff8e6}
+.t b{display:block}
+.t code{font-size:12px;background:#eef3f8;padding:1px 5px;border-radius:4px;word-break:break-all}
+.sum{font-size:15px;font-weight:800;padding:12px 14px;border-radius:10px;margin-top:12px}
+.sum.ok{background:#eef8f0;color:#2d6b3b}.sum.no{background:#fdf0ed;color:#a93b23}
+.note{background:#fff8e6;border-left:4px solid #f0ad4e;padding:11px 14px;border-radius:7px;
+ font-size:13px;line-height:1.65;margin-top:12px}
+small{color:#64748b}
+</style></head><body>
+
+<header>
+  <h1>🩺 ตรวจ Backend PeekaWord</h1>
+  <p>ยิงคำสั่งจริงไปที่ Google Apps Script แล้วบอกว่าผ่านหรือไม่ผ่าน</p>
+</header>
+
+<main>
+<div class="card">
+  <h2>1️⃣ ตรวจอ่านอย่างเดียว — ปลอดภัย ไม่เขียนอะไรลงชีต</h2>
+  <button onclick="runRead()" id="b1">▶ เริ่มตรวจ</button>
+  <ul class="t" id="r1"></ul>
+  <div id="s1"></div>
+</div>
+
+<div class="card">
+  <h2>2️⃣ ตรวจการเขียน — สร้างข้อมูลทดสอบจริง</h2>
+  <p style="font-size:13.5px;margin:0 0 10px;color:#475569">
+    จะสร้างนักเรียนทดสอบ <code>ZZTEST</code> + บันทึกคะแนนรายทักษะ แล้ว<b>ลบทิ้งให้เอง</b><br>
+    ใช้ยืนยันว่า <code>sk_read / sk_speak / sk_write</code> ถูกเก็บจริง</p>
+  <button onclick="runWrite()" id="b2" class="sec">▶ ตรวจการเขียน</button>
+  <ul class="t" id="r2"></ul>
+  <div id="s2"></div>
+  <div class="note" id="cleanup" style="display:none"></div>
+</div>
+
+<div class="card">
+  <h2>📋 ถ้าไม่ผ่าน ทำยังไง</h2>
+  <ol style="font-size:13.5px;line-height:1.9;margin:0;padding-left:20px">
+    <li>Google Sheet → <b>Extensions → Apps Script</b></li>
+    <li><code>Ctrl+A</code> → <code>Delete</code> → วาง <code>English/Code.gs</code> ทั้งไฟล์ (1,671 บรรทัด) → <code>Ctrl+S</code></li>
+    <li><b>Deploy → Manage deployments</b> <small>(ไม่ใช่ New deployment)</small></li>
+    <li>กด ✏️ ดินสอ → ช่อง <b>Version</b> เลือก <b>New version</b> → <b>Deploy</b>
+      <br><small style="color:#a93b23">⚠️ จุดที่พลาดบ่อยที่สุด — กด Deploy แล้วแต่ลืมสลับ dropdown เป็น New version</small></li>
+    <li>กลับมากดตรวจซ้ำ</li>
+  </ol>
+  <div class="note">
+    <b>ชีตที่ต้องเตรียมด้วย</b><br>
+    • <b>Progress</b> แถวที่ 1 คอลัมน์ G, H, I → <code>sk_read</code> <code>sk_speak</code> <code>sk_write</code><br>
+    • <b>Config</b> เพิ่ม 3 แถว → <code>payee_last4</code> · <code>site_url</code> · <code>pts_full_day</code>=50
+  </div>
+</div>
+</main>
+
+<script>
+const TEACHER = 'oxford2026';   // ← รหัสครู ต้องตรงกับ TEACHER_PASS ใน Code.gs
+const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
+
+/* ลองใหม่ได้ 2 ครั้ง — Apps Script หลุดชั่วคราวบ่อย */
+async function jsonp(params, timeout){
+  let last;
+  for (let i = 0; i < 3; i++){
+    try { return await jsonp1(params, timeout); }
+    catch(e){ last = e; await new Promise(r => setTimeout(r, 900)); }
+  }
+  throw last;
+}
+
+function jsonp1(params, timeout){
+  return new Promise((res, rej) => {
+    const cb = 'cb_' + Math.random().toString(36).slice(2);
+    const s = document.createElement('script');
+    const t = setTimeout(() => { cleanup(); rej(new Error('หมดเวลา — ไม่ตอบกลับ')); }, timeout || 20000);
+    function cleanup(){ clearTimeout(t); delete window[cb]; s.remove(); }
+    window[cb] = d => { cleanup(); res(d); };
+    s.onerror = () => { cleanup(); rej(new Error('เรียก API ไม่สำเร็จ')); };
+    s.src = API + '?' + new URLSearchParams(Object.assign({callback: cb}, params));
+    document.body.appendChild(s);
+  });
+}
+
+function row(ul, cls, title, detail){
+  const li = document.createElement('li');
+  li.className = cls;
+  li.innerHTML = '<b>' + title + '</b>' + (detail ? detail : '');
+  ul.appendChild(li);
+  return li;
+}
+function esc(o){ return '<code>' + String(typeof o==='object'?JSON.stringify(o):o).slice(0,300) + '</code>'; }
+
+let pass = 0, fail = 0;
+function mark(li, ok, txt){ li.className = ok ? 'ok' : 'no';
+  li.innerHTML = (ok?'✅ ':'❌ ') + li.innerHTML.replace(/^(⏳ )?/,'') + (txt?txt:'');
+  ok ? pass++ : fail++; }
+
+async function runRead(){
+  const b = document.getElementById('b1'); b.disabled = true;
+  const ul = document.getElementById('r1'); ul.innerHTML = ''; pass = fail = 0;
+  document.getElementById('s1').innerHTML = '';
+
+  // 1 เชื่อมต่อได้ไหม + เวอร์ชัน
+  let li = row(ul, 'wait', '⏳ เชื่อมต่อ Apps Script …');
+  let v = null;
+  try {
+    v = await jsonp({action:'version'});
+    const isV6 = v && v.version === 'v6';
+    mark(li, isV6, '<br>ได้ ' + esc(v) +
+      (isV6 ? '' : '<br><b style="color:#a93b23">ยังไม่ใช่ v6 → คะแนนรายทักษะและข้อมูลติดต่อลูกค้าจะไม่ถูกบันทึก</b>'));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+
+  // 2 feature skill-sync
+  li = row(ul, 'wait', '⏳ มีความสามารถ <code>skill-sync</code> ไหม');
+  const hasSkill = !!(v && v.features && v.features.indexOf('skill-sync') >= 0);
+  mark(li, hasSkill, hasSkill ? '' : '<br>ไม่มี → <code>sk_read/sk_speak/sk_write</code> จะถูกทิ้ง');
+
+  // 3 feature เก็บข้อมูลติดต่อลูกค้า
+  li = row(ul, 'wait', '⏳ มีความสามารถ <code>purchase-contact-info</code> ไหม');
+  const hasPc = !!(v && v.features && v.features.indexOf('purchase-contact-info') >= 0);
+  mark(li, hasPc, hasPc ? '' : '<br>ไม่มี → <b>ชื่อ/อีเมล/เบอร์ ตอนลูกค้าจ่ายเงินจะไม่ถูกบันทึก</b>');
+
+  // 4 myStats ตอบรูปแบบถูกไหม (ใช้ code ปลอม ต้องตอบ error อย่างสุภาพ ไม่ใช่พัง)
+  li = row(ul, 'wait', '⏳ <code>myStats</code> ตอบกลับถูกรูปแบบ');
+  try {
+    const r = await jsonp({action:'myStats', code:'__NOPE__'});
+    mark(li, !!(r && r.status), '<br>ได้ ' + esc(r));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+
+  // 5 checkCode
+  li = row(ul, 'wait', '⏳ <code>checkCode</code> ทำงาน');
+  try {
+    const r = await jsonp({action:'checkCode', code:'__NOPE__'});
+    mark(li, !!(r && r.status), '<br>ได้ ' + esc(r));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+
+  const s = document.getElementById('s1');
+  s.className = 'sum ' + (fail ? 'no' : 'ok');
+  s.textContent = fail ? ('ไม่ผ่าน ' + fail + ' ข้อ · ผ่าน ' + pass + ' ข้อ — ดูวิธีแก้ด้านล่าง')
+                       : ('ผ่านครบ ' + pass + ' ข้อ ✅ Backend พร้อมใช้งาน');
+  b.disabled = false;
+}
+
+async function runWrite(){
+  const b = document.getElementById('b2'); b.disabled = true;
+  const ul = document.getElementById('r2'); ul.innerHTML = ''; pass = fail = 0;
+  document.getElementById('s2').innerHTML = '';
+  // รหัสต้องยาว 6 ตัวพอดี ไม่งั้น backend จะสุ่มให้ใหม่
+  let CODE = 'ZZ' + Math.floor(Math.random()*9000+1000);
+
+  // 1 สร้างนักเรียนทดสอบ
+  let li = row(ul, 'wait', '⏳ สร้างนักเรียนทดสอบ <code>' + CODE + '</code>');
+  let made = false;
+  try {
+    const r = await jsonp({action:'addStudent', teacher:TEACHER, code:CODE, note:'ทดสอบระบบ ลบได้'});
+    made = !!(r && r.status === 'ok');
+    if (made && r.code) CODE = r.code;       // backend อาจสุ่มรหัสใหม่ให้
+    mark(li, made, '<br>ได้ ' + esc(r) +
+      (made ? '' : '<br>ถ้าขึ้นว่ารหัสครูไม่ถูกต้อง ให้แก้ค่า <code>TEACHER</code> ในไฟล์นี้'));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+
+  // 2 บันทึกคะแนนพร้อมทักษะ
+  li = row(ul, 'wait', '⏳ บันทึก Day 1 พร้อม <code>sk_r=82 sk_s=68 sk_w=54</code>');
+  let saved = false;
+  if (made) try {
+    const r = await jsonp({action:'save', code:CODE, day:1, completion:'DAY1-TEST',
+                           score:70, sk_r:82, sk_s:68, sk_w:54});
+    saved = !!(r && r.status === 'ok');
+    mark(li, saved, '<br>ได้ ' + esc(r));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+  else mark(li, false, '<br>ข้ามเพราะสร้างนักเรียนไม่สำเร็จ');
+
+  // 3 อ่านกลับ ต้องได้เลขเดิม
+  li = row(ul, 'wait', '⏳ อ่านคะแนนรายทักษะกลับมา ต้องตรงกับที่ส่งไป');
+  if (saved) try {
+    const r = await jsonp({action:'myStats', code:CODE});
+    const got = [r.sk_read, r.sk_speak, r.sk_write].map(x => x===undefined?'—':x).join(' / ');
+    const ok = Number(r.sk_read)===82 && Number(r.sk_speak)===68 && Number(r.sk_write)===54;
+    mark(li, ok, '<br>ส่งไป <code>82 / 68 / 54</code> · ได้กลับ <code>' + got + '</code>' +
+      (ok ? '' : '<br><b style="color:#a93b23">ไม่ตรง → ยังไม่ได้ deploy v6 หรือชีต Progress ไม่มีคอลัมน์ G/H/I</b>'));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+  else mark(li, false, '<br>ข้ามเพราะบันทึกไม่สำเร็จ');
+
+  // 4 ลบนักเรียนทดสอบ
+  li = row(ul, 'wait', '⏳ ลบนักเรียนทดสอบทิ้ง');
+  let del = false;
+  if (made) try {
+    const r = await jsonp({action:'deleteStudent', teacher:TEACHER, code:CODE});
+    del = !!(r && r.status === 'ok');
+    mark(li, del, '<br>ได้ ' + esc(r));
+  } catch(e){ mark(li, false, '<br>' + e.message); }
+  else mark(li, true, '<br>ไม่มีอะไรต้องลบ');
+
+  const s = document.getElementById('s2');
+  s.className = 'sum ' + (fail ? 'no' : 'ok');
+  s.textContent = fail ? ('ไม่ผ่าน ' + fail + ' ข้อ · ผ่าน ' + pass + ' ข้อ')
+                       : ('ผ่านครบ ' + pass + ' ข้อ ✅ คะแนนรายทักษะเก็บได้จริง');
+
+  const c = document.getElementById('cleanup');
+  c.style.display = 'block';
+  c.innerHTML = del
+    ? '🧹 ลบนักเรียนทดสอบแล้ว (soft delete) — แต่<b>แถวในชีต Progress ยังอยู่</b> ' +
+      'ให้เปิดชีต <b>Progress</b> แล้วลบแถวที่ code = <code>' + CODE + '</code> ทิ้งด้วย'
+    : '⚠️ ยังลบนักเรียนทดสอบไม่สำเร็จ — เปิดชีต <b>Students</b> และ <b>Progress</b> ' +
+      'แล้วลบแถวที่ code = <code>' + CODE + '</code> ด้วยมือ';
+  b.disabled = false;
+}
+</script>
+</body></html>
