@@ -49,7 +49,7 @@ https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6Tr
 วางใน browser (แทน URL ยาวข้างบนด้วย `...` เพื่อความสั้น):
 
 ```
-.../exec?action=newPurchase&order_id=TEST-001&pkg=ทดสอบ&price=1&type=trial&name=ทดสอบ ระบบ&email=Test@Mail.com&phone=0812345678
+.../exec?action=newPurchase&order_id=TEST-001&pkg=ทดสอบ&price=1&type=trial&name=ทดสอบ ระบบ&email=Test@Mail.com&phone=0XXXXXXXXX
 ```
 
 **ต้องได้:** `{"status":"ok","order_id":"TEST-001"}`

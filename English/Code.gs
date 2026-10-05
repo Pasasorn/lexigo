@@ -10,7 +10,9 @@ const SHEET_QUIZ_ATT  = 'QuizAttempts';   // code | free_used | paid_credits | u
 const SHEET_QUIZ_SCR  = 'QuizScores';     // code | score | attempt_num | saved_at
 const SHEET_SLIPS     = 'UsedSlips';      // trans_ref | code | amount | used_at
 const SHEET_PURCHASES = 'Purchases';    // order_id | name | phone | line_id | email | pkg_name | price | type | status | slip_url | created_at | student_code
-const TEACHER_PASS   = 'oxford2026';  // ← เปลี่ยนได้
+// รหัสครูเก็บในชีต Config (key = teacher_pass) ไม่เก็บในไฟล์นี้
+// เพราะ Code.gs ถูก deploy ขึ้นเว็บ ใครก็โหลดอ่านได้
+const TEACHER_PASS_FALLBACK = '';   // เว้นว่างไว้เสมอ — อย่าใส่รหัสตรงนี้
 
 // ════════════════════════════════════════════════════════════
 //  เครื่องมือล้างข้อมูล — รันจากหน้า Apps Script เท่านั้น
@@ -112,6 +114,7 @@ function getSheet(name) {
       sh.appendRow(['key','value']);
       sh.appendRow(['leaderboard_open','false']);
       sh.appendRow(['competition_days','30']);
+      sh.appendRow(['teacher_pass','']);   // ← ตั้งรหัสครูที่นี่ ห้ามเว้นว่าง
       sh.appendRow(['slipok_api_key','YOUR_SLIPOK_KEY_HERE']);
       sh.appendRow(['promptpay_number','0812345678']);
       sh.appendRow(['payee_last4','']);
@@ -187,7 +190,17 @@ function respond(data, cb) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function isTeacher(p) { return p.teacher === TEACHER_PASS; }
+var _tpCache = null;
+function teacherPass_() {
+  if (_tpCache !== null) return _tpCache;
+  _tpCache = (getConfig('teacher_pass') || TEACHER_PASS_FALLBACK || '').toString().trim();
+  return _tpCache;
+}
+function isTeacher(p) {
+  const want = teacherPass_();
+  if (!want) return false;                 // ยังไม่ตั้งรหัส = ปิดสิทธิ์ครูทั้งหมด ปลอดภัยกว่าเปิดทิ้ง
+  return (p.teacher || '').toString() === want;
+}
 
 // ── Router ───────────────────────────────────────────────────
 // ── doPost: รับ JSON body (uploadSlip) หรือ verifySlip ──────
@@ -245,7 +258,7 @@ function doGet(e) {
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'version':         return respond({status:'ok', version:'v7', deployed:'2026-10-06',
                                 features:['completion-regex','score-percent','email-password','slip-verify',
-                                          'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools']}, cb);
+                                          'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
       case 'setPassword':     return actionSetPassword(p, cb);
