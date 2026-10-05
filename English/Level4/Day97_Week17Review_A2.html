@@ -78,6 +78,7 @@ body{background:#E8EAF6;min-height:100vh;padding:14px;max-width:720px;margin:0 a
 .game-btn{padding:14px 8px;border-radius:18px;font-size:13px;cursor:pointer;font-weight:900;border:none;color:#fff;font-family:'Nunito',sans-serif;transition:transform .1s;line-height:1.4}
 .game-btn:active{transform:scale(0.95)}
 </style>
+<script src="../js/pic.js"></script>
 </head>
 <body>
 <div id="inAppWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#FF6B35,#E65100);color:#fff;padding:12px 14px;font-family:'Nunito',sans-serif;font-weight:800;text-align:center;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.3);line-height:1.5">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:12px;font-weight:600;opacity:.95">แตะ ⋮ หรือ ⋯ (มุมขวาบน) → "เปิดในเบราว์เซอร์อื่น"</span></div>
@@ -823,7 +824,6 @@ function tryUnlock(){
 function unlockContent(){document.getElementById('lockScreen').style.display='none';document.getElementById('mainContent').style.display='block';go(0);}
 window.onload=()=>{checkLock();};
 </script>
-<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body></html>

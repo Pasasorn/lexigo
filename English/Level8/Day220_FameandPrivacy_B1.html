@@ -102,6 +102,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
 .s4w:hover{background:#E3F2FD}
 .s4w.used{opacity:.35;pointer-events:none}
 </style>
+<script src="../js/pic.js"></script>
 </head>
 <body>
 <div id="inAppWarn" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#FF6B35,#E65100);color:#fff;padding:12px 14px;font-family:'Nunito',sans-serif;font-weight:800;text-align:center;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.3);line-height:1.5">⚠️ กรุณาเปิดใน Chrome เพื่อใช้ไมโครโฟน 🎤<br><span style="font-size:12px;font-weight:600;opacity:.95">แตะ ⋮ หรือ ⋯ (มุมขวาบน) → "เปิดในเบราว์เซอร์อื่น"</span></div>
@@ -437,7 +438,6 @@ const API_URL_SYNC="https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rF
 function pwPct(){var s=window._pwScore||0,t=window._pwTot||6;return Math.max(0,Math.min(100,Math.round(s/(t||1)*100)));}
 function syncToCloud(day,code,score){score=(score===undefined||score===null)?0:score;try{const st=JSON.parse(localStorage.getItem("wla_student")||"null");if(!st||!st.code)return;const cb="jpc_"+Date.now();const s=document.createElement("script");window[cb]=(d)=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);};s.onerror=()=>{delete window[cb];};s.src=API_URL_SYNC+"?action=save&code="+encodeURIComponent(st.code)+"&day="+day+"&completion="+code+"&score="+score+(window.pwSkillQS?pwSkillQS(day):"")+"&callback="+cb;document.body.appendChild(s);}catch(e){}}
 </script>
-<script src="../js/pic.js"></script>
 <script src="../js/report.js"></script>
 <script src="../js/protect.js"></script>
 </body>
