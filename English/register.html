@@ -552,7 +552,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
   </div>
 
   <div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:#2E7D32;line-height:1.6">
-    📋 กรอกข้อมูลนักเรียนและตั้งรหัส เพื่อรอครูอนุมัติ
+    📋 ตั้งรหัสผ่านของน้อง แล้วเข้าเรียนได้ทันที
   </div>
 
   <div class="card">
@@ -651,25 +651,19 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
   <div class="hdr">
     <div class="logo">📋</div>
     <h1>ลงทะเบียนสำเร็จ!</h1>
-    <p>รอครูอนุมัติ — ไม่นานนี้</p>
+    <p id="succSub">พร้อมเริ่มเรียนแล้ว</p>
   </div>
 
   <div class="card">
     <div class="succ-hero">
-      <div style="font-size:48px;margin-bottom:6px">⏳</div>
-      <div style="font-size:16px;font-weight:900;color:#1565C0;margin-bottom:4px">รอครูอนุมัติ</div>
+      <div style="font-size:48px;margin-bottom:6px" id="succIcon">⏳</div>
+      <div style="font-size:16px;font-weight:900;color:#1565C0;margin-bottom:4px" id="succTitle">กำลังตรวจสลิป</div>
       <div style="font-size:12px;font-weight:700;color:#546E7A;margin-bottom:4px">รหัสนักเรียนของคุณ:</div>
       <div class="code-chip" id="succCode">—</div>
     </div>
     <div class="info-table" id="succDetail"></div>
-    <div style="background:#E3F2FD;border:1.5px solid #90CAF9;border-radius:11px;padding:11px 13px;font-size:12px;font-weight:700;color:#1565C0;line-height:1.7;margin-top:10px">
-      ✅ ข้อมูลได้รับแล้ว!<br>
-      ครูจะตรวจสอบสลิปและอนุมัติภายใน <strong>24 ชั่วโมง</strong><br>
-      เมื่ออนุมัติแล้วจะได้รับลิงค์เรียนทาง Line
-    </div>
-    <div style="background:#FFF8E1;border:1.5px solid #FFE082;border-radius:11px;padding:10px 13px;font-size:11px;font-weight:700;color:#E65100;margin-top:8px">
-      💡 ยังไม่ได้รับการอนุมัติใน 24 ชม.? ทักมาที่ Line: <strong>@PeekaWord</strong>
-    </div>
+    <div id="succMsg" style="border-radius:11px;padding:11px 13px;font-size:12px;font-weight:700;line-height:1.7;margin-top:10px"></div>
+    <a id="succGo" href="login.html" style="display:none;margin-top:12px;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:13px;font-size:16px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito',sans-serif">🚀 เข้าสู่ระบบ เริ่มเรียนเลย</a>
     <div id="approvalNotif" style="display:none;margin-top:10px"></div>
   </div>
   <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่</button>
@@ -988,7 +982,7 @@ function showPending(d) {
       <div class="irow"><span class="ilbl">Level ใหม่</span><span class="ival hi">${d.pkgName||'—'}</span></div>
       <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿ ${Number(d.price||0).toLocaleString()}</span></div>
       <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:#E65100;text-align:center">
-        ⏳ รอครูอนุมัติสลิป<br><span style="font-size:11px;font-weight:600">อนุมัติแล้ว Level ใหม่จะปลดล็อกอัตโนมัติ<br>ใช้ code เดิม login ได้เลย ไม่ต้องสมัครใหม่</span>
+        ${d.autoVerified ? '✅ เพิ่ม Level ให้บัญชีเดิมแล้ว<br><span style="font-size:11px;font-weight:600">ใช้ code เดิม login ได้ทันที · ส่งอีเมลยืนยันแล้ว</span>' : '⏳ กำลังตรวจสลิป<br><span style="font-size:11px;font-weight:600">ถ้าตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้ภายในวันเดียวกัน<br>อนุมัติแล้ว Level ใหม่ปลดล็อกเอง ใช้ code เดิมได้เลย</span>'}
       </div>
       <a href="dashboard.html" style="display:block;margin-top:14px;background:linear-gradient(135deg,#5C6BC0,#3949AB);color:#fff;border-radius:12px;padding:12px;font-size:15px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito',sans-serif">🏠 กลับหน้าหลัก</a>`;
     setStep(2); go(2);
@@ -1023,7 +1017,7 @@ async function checkOrderStatus(d) {
       if (notif) {
         notif.style.display = 'block';
         notif.innerHTML = `<div style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:700;color:#065F46;text-align:center">
-          ✅ ชำระเงินได้รับการยืนยันแล้ว!<br>รอรับลิงก์ลงทะเบียนทาง Line ได้เลย 📱</div>`;
+          ✅ ยืนยันการชำระเงินแล้ว!<br>รหัสนักเรียนถูกส่งไปที่อีเมลของคุณแล้ว 📧</div>`;
       }
     } else if (res.order_status === 'rejected') {
       clearInterval(_checkTimer);
@@ -1174,10 +1168,39 @@ function showSuccess(st) {
     <div class="irow"><span class="ilbl">ชื่อ-สกุล</span><span class="ival">${st.fullname||'—'}</span></div>
     <div class="irow"><span class="ilbl">คอร์ส</span><span class="ival hi">${st.course||'—'}</span></div>
     <div class="irow"><span class="ilbl">Email</span><span class="ival">${st.email||'—'}</span></div>`;
+  // ตรวจสลิปผ่านอัตโนมัติแล้วหรือยัง
+  let auto = false;
+  try { auto = !!(JSON.parse(localStorage.getItem(PK) || '{}').autoVerified); } catch(e) {}
+
+  const ic = document.getElementById('succIcon'),
+        ti = document.getElementById('succTitle'),
+        sb = document.getElementById('succSub'),
+        ms = document.getElementById('succMsg'),
+        gb = document.getElementById('succGo');
+
+  if (auto) {
+    ic.textContent = '🎉';
+    ti.textContent = 'เปิดสิทธิ์เรียบร้อย';
+    if (sb) sb.textContent = 'เริ่มเรียนได้ทันที';
+    ms.style.cssText += ';background:#E8F5E9;border:1.5px solid #A5D6A7;color:#2E7D32';
+    ms.innerHTML = '✅ ตรวจสลิปอัตโนมัติผ่านแล้ว<br>' +
+      'ส่งรหัสนักเรียนไปที่อีเมล <strong>' + (st.email || 'ของคุณ') + '</strong> แล้ว<br>' +
+      '<span style="font-size:11px;font-weight:600">ถ้าไม่เจอ ลองดูในโฟลเดอร์ Junk/Spam</span>';
+    gb.style.display = 'block';
+  } else {
+    ic.textContent = '⏳';
+    ti.textContent = 'กำลังตรวจสลิป';
+    if (sb) sb.textContent = 'อีกสักครู่';
+    ms.style.cssText += ';background:#E3F2FD;border:1.5px solid #90CAF9;color:#1565C0';
+    ms.innerHTML = '✅ ได้รับข้อมูลแล้ว<br>' +
+      'สลิปนี้ตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้<strong>ภายในวันเดียวกัน</strong><br>' +
+      'เปิดสิทธิ์แล้วจะส่งรหัสไปที่อีเมล <strong>' + (st.email || 'ของคุณ') + '</strong><br>' +
+      '<span style="font-size:11px;font-weight:600">หน้านี้จะอัปเดตเองถ้าเปิดค้างไว้ · สอบถาม Line @PeekaWord</span>';
+  }
+
   setStep(4); go(4);
-  // Poll สถานะทุก 30 วิ
   if (_approvalTimer) clearInterval(_approvalTimer);
-  if (st.code) {
+  if (st.code && !auto) {
     _approvalTimer = setInterval(() => checkApprovalStatus(st.code), 30000);
   }
 }

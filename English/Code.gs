@@ -12,6 +12,85 @@ const SHEET_SLIPS     = 'UsedSlips';      // trans_ref | code | amount | used_at
 const SHEET_PURCHASES = 'Purchases';    // order_id | name | phone | line_id | email | pkg_name | price | type | status | slip_url | created_at | student_code
 const TEACHER_PASS   = 'oxford2026';  // ← เปลี่ยนได้
 
+// ════════════════════════════════════════════════════════════
+//  เครื่องมือล้างข้อมูล — รันจากหน้า Apps Script เท่านั้น
+//  (ไม่ได้เปิดเป็น API เรียกจากเว็บไม่ได้ ปลอดภัย)
+// ════════════════════════════════════════════════════════════
+
+const ALL_SHEETS = ['Students','Progress','Config','Purchases',
+                    'UsedSlips','QuizAttempts','QuizScores'];
+
+/**
+ * ล้างข้อมูลทั้งหมด แล้วสร้างแท็บใหม่พร้อมหัวคอลัมน์ที่ถูกต้อง
+ * วิธีใช้: เลือกฟังก์ชัน resetAllSheets ด้านบน → กด ▶ Run
+ * ⚠️ ลบข้อมูลทิ้งถาวร — สำรองชีตก่อน (File → Make a copy)
+ */
+function resetAllSheets() {
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  const tmp = ss.insertSheet('__tmp__' + Date.now());   // กันลบจนไม่เหลือแท็บ
+  let gone = [];
+
+  ss.getSheets().forEach(function (sh) {
+    const n = sh.getName();
+    if (n === tmp.getName()) return;
+    ss.deleteSheet(sh);
+    gone.push(n);
+  });
+
+  ALL_SHEETS.forEach(function (n) { getSheet(n); });    // สร้างใหม่พร้อมหัวตาราง
+  ss.deleteSheet(tmp);
+
+  const msg = 'ลบแท็บเดิม ' + gone.length + ' แท็บ: ' + gone.join(', ') +
+              '\nสร้างใหม่ ' + ALL_SHEETS.length + ' แท็บพร้อมหัวคอลัมน์ครบ' +
+              '\n\nอย่าลืมกรอก Config: slipok_api_key และ payee_last4';
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('เสร็จแล้ว', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch (e) {}
+  return msg;
+}
+
+/**
+ * ล้างเฉพาะ "ข้อมูล" เก็บหัวคอลัมน์และ Config ไว้
+ * ใช้ตอนอยากลบข้อมูลทดสอบหลังลองซื้อจริง
+ */
+function clearTestData() {
+  const keep = ['Config'];
+  let out = [];
+  ALL_SHEETS.forEach(function (n) {
+    if (keep.indexOf(n) >= 0) return;
+    const sh = getSheet(n);
+    const last = sh.getLastRow();
+    if (last > 1) {
+      sh.deleteRows(2, last - 1);
+      out.push(n + ' (' + (last - 1) + ' แถว)');
+    }
+  });
+  const msg = out.length ? 'ล้างข้อมูลแล้ว: ' + out.join(', ') : 'ไม่มีข้อมูลให้ลบ';
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('เสร็จแล้ว', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch (e) {}
+  return msg;
+}
+
+/** ตรวจว่าแท็บและหัวคอลัมน์ครบถูกต้องไหม — รันดูได้ตลอด ไม่แก้อะไร */
+function checkSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const have = ss.getSheets().map(function (s) { return s.getName(); });
+  let out = [];
+  ALL_SHEETS.forEach(function (n) {
+    if (have.indexOf(n) < 0) { out.push('❌ ขาดแท็บ ' + n); return; }
+    const sh = ss.getSheetByName(n);
+    const hd = sh.getRange(1, 1, 1, Math.max(1, sh.getLastColumn())).getValues()[0]
+                 .filter(String).join(',');
+    out.push('✅ ' + n + '  (' + Math.max(0, sh.getLastRow() - 1) + ' แถว)  [' + hd + ']');
+  });
+  have.forEach(function (n) {
+    if (ALL_SHEETS.indexOf(n) < 0) out.push('🗑️ แท็บที่ไม่ได้ใช้: ' + n + ' — ลบได้');
+  });
+  const msg = out.join('\n');
+  Logger.log(msg);
+  try { SpreadsheetApp.getUi().alert('ผลตรวจชีต', msg, SpreadsheetApp.getUi().ButtonSet.OK); } catch (e) {}
+  return msg;
+}
+
 // ── Helper ───────────────────────────────────────────────────
 function getSheet(name) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -164,9 +243,9 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v6', deployed:'2026-08-29',
+      case 'version':         return respond({status:'ok', version:'v7', deployed:'2026-10-06',
                                 features:['completion-regex','score-percent','email-password','slip-verify',
-                                          'purchase-contact-info','trial-lead-capture','skill-sync']}, cb);
+                                          'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
       case 'setPassword':     return actionSetPassword(p, cb);
@@ -1458,6 +1537,7 @@ function actionVerifyPurchaseSlip(p, cb) {
   // ออก/อัปเกรด student code — ใช้ logic เดิมของ actionVerifyPurchase
   const out = issueOrUpgradeCode_(orderId, pkg, type, name, email, existingCode);
   pSh.getRange(pRow, 12).setValue(out.code);
+  sendWelcomeEmail_(email, name, out.code, out.pkg_name || pkg, out.upgraded);
 
   setOrderNote_(orderId, 'ok', 'ตรวจสลิปผ่านอัตโนมัติ', out.code);
   return respond({
@@ -1473,6 +1553,45 @@ function actionVerifyPurchaseSlip(p, cb) {
 }
 
 // ── ออกรหัสใหม่ หรือเพิ่ม Level ให้บัญชีเดิม ────────────────
+// ── ส่งอีเมลรหัสนักเรียนอัตโนมัติ (ไม่ขัดจังหวะถ้าส่งไม่สำเร็จ) ──
+function sendWelcomeEmail_(email, name, code, pkg, upgraded) {
+  if (!email || !code) return false;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return false;
+  try {
+    const base  = getConfig('site_url') || 'https://peekaword.pages.dev/English/';
+    const who   = name || 'ผู้ปกครอง';
+    const head  = upgraded ? 'เพิ่ม Level ให้บัญชีเดิมแล้ว' : 'ยินดีต้อนรับสู่ PeekaWord';
+    const intro = upgraded
+      ? 'เพิ่ม <b>' + pkg + '</b> เข้าบัญชีเดิมของน้องเรียบร้อยแล้ว ใช้รหัสเดิมเข้าเรียนได้เลย'
+      : 'ชำระเงินสำเร็จ ระบบตรวจสลิปอัตโนมัติผ่านเรียบร้อย น้องเริ่มเรียนได้ทันที';
+    MailApp.sendEmail({
+      to: email,
+      subject: 'PeekaWord — รหัสนักเรียนของน้อง: ' + code,
+      htmlBody:
+        '<div style="font-family:sans-serif;color:#14204A;line-height:1.8;max-width:520px">' +
+        '<h2 style="color:#14204A;margin:0 0 6px">' + head + '</h2>' +
+        '<p style="margin:0 0 14px">สวัสดีคุณ ' + who + ' — ' + intro + '</p>' +
+        '<div style="background:#F1F5FF;border:2px solid #C7D5FF;border-radius:14px;' +
+        'padding:16px;text-align:center;margin:16px 0">' +
+        '<div style="font-size:13px;color:#4A5A8A">รหัสนักเรียน</div>' +
+        '<div style="font-size:34px;font-weight:900;letter-spacing:4px;color:#14204A">' + code + '</div>' +
+        '<div style="font-size:12px;color:#4A5A8A;margin-top:6px">แพ็กเกจ: ' + pkg + '</div></div>' +
+        '<p style="margin:0 0 6px"><b>เริ่มเรียน</b></p>' +
+        '<p style="margin:0 0 16px"><a href="' + base + 'login.html" ' +
+        'style="background:#2E5BFF;color:#fff;text-decoration:none;border-radius:10px;' +
+        'padding:11px 22px;font-weight:700;display:inline-block">เข้าสู่ระบบ</a></p>' +
+        '<p style="font-size:13px;color:#4A5A8A;margin:0 0 4px">' +
+        'ครั้งแรกให้กด "ลงทะเบียน" แล้วกรอกรหัสด้านบนเพื่อตั้งรหัสผ่านของน้อง</p>' +
+        '<p style="font-size:13px;color:#4A5A8A;margin:0">' +
+        'เก็บอีเมลฉบับนี้ไว้ — ถ้าลืมรหัสนักเรียนสามารถกลับมาดูได้</p>' +
+        '<hr style="border:0;border-top:1px solid #E3E8F5;margin:18px 0">' +
+        '<p style="font-size:12px;color:#8A94B0;margin:0">PeekaWord · ' + base + '</p>' +
+        '</div>'
+    });
+    return true;
+  } catch (e) { return false; }
+}
+
 function issueOrUpgradeCode_(orderId, pkg, type, name, email, existingCode) {
   const sh = ensurePasswordColumns_();
 
