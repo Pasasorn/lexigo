@@ -9,8 +9,8 @@
 
 | รหัส | ค่า | ใช้ที่ไหน |
 |------|-----|----------|
-| **Teacher (อนุมัติสลิป)** | `oxford2026` | teacher.html — ตั้งใน Code.gs บรรทัด 13 |
-| **Admin (ดู dashboard ทุก Level)** | `Gift0142` | dashboard.html?admin= / gate |
+| **Teacher (อนุมัติสลิป)** | `<รหัสครูของคุณ>` | teacher.html — ตั้งใน Code.gs บรรทัด 13 |
+| **Admin (ดู dashboard ทุก Level)** | `<รหัส admin ของคุณ>` | dashboard.html?admin= / gate |
 | **Token ชื่อไฟล์ admin** | `k7m3x9q2p5` | panel/gate filenames |
 
 ---
@@ -19,10 +19,10 @@
 
 | หน้า | ลิงก์ | รหัส |
 |------|-------|------|
-| 🔓 **อนุมัติสลิป/คำสั่งซื้อ** | `.../teacher.html` | `oxford2026` |
+| 🔓 **อนุมัติสลิป/คำสั่งซื้อ** | `.../teacher.html` | `<รหัสครูของคุณ>` |
 | 🛠️ Admin Panel (กดเปิดทุก Day) | `.../panel-k7m3x9q2p5.html` | — |
-| 🔒 Admin Gate (ใส่รหัสเข้า dashboard) | `.../gate-k7m3x9q2p5.html` | `Gift0142` |
-| ⚡ Dashboard admin (URL ตรง) | `.../dashboard.html?admin=Gift0142` | — |
+| 🔒 Admin Gate (ใส่รหัสเข้า dashboard) | `.../gate-k7m3x9q2p5.html` | `<รหัส admin ของคุณ>` |
+| ⚡ Dashboard admin (URL ตรง) | `.../gate-k7m3x9q2p5.html  (เข้าผ่าน URL ไม่ได้แล้ว)` | — |
 | ❌ ปิด admin mode | `.../dashboard.html?admin=off` | — |
 
 ---
@@ -51,7 +51,7 @@
 |--------|-----|
 | **API endpoint (/exec)** | `https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec` |
 | **เปิด Apps Script editor** | Google Sheet → Extensions → Apps Script หรือ https://script.google.com/home |
-| **Teacher pass** | `oxford2026` (Code.gs บรรทัด 13) |
+| **Teacher pass** | `<รหัสครูของคุณ>` (Code.gs บรรทัด 13) |
 
 > **Deploy Code.gs:** วางทับ → Save → Deploy → **Manage deployments → edit → New version** (อย่าสร้าง deployment ใหม่ URL จะเปลี่ยน)
 
@@ -86,7 +86,7 @@ QR PromptPay: `qr_promptpay.JPG` (ในโฟลเดอร์ root)
 
 ```
 1. ลูกค้า → register.html → เลือก Level → จ่าย QR → อัปสลิป
-2. คุณ → teacher.html (oxford2026) → Orders → ดูสลิป → อนุมัติ
+2. คุณ → teacher.html (<รหัสครูของคุณ>) → Orders → ดูสลิป → อนุมัติ
 3. ระบบออก student code (หรือ upgrade บัญชีเดิมถ้าซื้อเพิ่ม)
 4. ลูกค้า → login.html → ใส่ code → เข้าเรียน (เห็นเฉพาะ Level ที่ซื้อ)
 ```

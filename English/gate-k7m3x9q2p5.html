@@ -31,15 +31,41 @@
     <div class="off" onclick="turnOff()">ปิด Admin mode (กลับเป็นนักเรียนปกติ)</div>
   </div>
 <script>
-  const ADMIN_SECRET = 'Gift0142'; // 🔑 ต้องตรงกับใน dashboard.html
-  function tryAdmin(){
+  // เก็บเฉพาะ "ลายนิ้วมือ" ของรหัส (SHA-256) — ตัวรหัสจริงไม่อยู่ในไฟล์นี้
+  const ADMIN_HASH = '5f7140f04f786ef0645239306519d00cd11dc6f4307cd89e1ae6e3a30b44e20a';
+
+  async function sha256(t){
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function tryAdmin(){
     const v = document.getElementById('pw').value.trim();
-    if (v === ADMIN_SECRET){
-      localStorage.setItem('wla_admin','1');
-      location.href = 'dashboard.html';
-    } else {
-      document.getElementById('err').style.display = 'block';
-    }
+    const err = document.getElementById('err');
+    if (!v) { err.style.display = 'block'; return; }
+    try {
+      if (await sha256(v) === ADMIN_HASH){
+        localStorage.setItem('wla_admin','1');
+        location.href = 'dashboard.html';
+        return;
+      }
+    } catch(e) {}
+    err.style.display = 'block';
+  }
+
+  // เครื่องมือเปลี่ยนรหัสเอง — เปิดด้วย gate-k7m3x9q2p5.html?newpass
+  if (location.search.indexOf('newpass') > -1) {
+    window.addEventListener('DOMContentLoaded', function(){
+      const d = document.createElement('div');
+      d.style.cssText = 'margin-top:18px;padding:12px;border:1px solid #ccc;border-radius:10px;font-size:13px';
+      d.innerHTML = '<b>สร้างรหัสใหม่</b><br>พิมพ์รหัสที่ต้องการ แล้วเอาค่าที่ได้ไปวางแทน ADMIN_HASH ในไฟล์นี้' +
+        '<br><input id="np" style="width:100%;margin:8px 0;padding:7px">' +
+        '<button id="nb" style="padding:6px 14px">คำนวณ</button><div id="nr" style="margin-top:8px;word-break:break-all"></div>';
+      document.body.appendChild(d);
+      document.getElementById('nb').onclick = async function(){
+        document.getElementById('nr').textContent = await sha256(document.getElementById('np').value.trim());
+      };
+    });
   }
   function turnOff(){
     localStorage.removeItem('wla_admin');

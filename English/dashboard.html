@@ -861,16 +861,15 @@ function openLevel(L){
 }
 
 // ── MAIN ──
-const ADMIN_SECRET = 'Gift0142'; // 🔑 เปลี่ยนรหัสนี้เพื่อความปลอดภัย
+// ไม่เก็บรหัส admin ไว้ในหน้านี้แล้ว และปิดการเปิด admin ผ่าน URL
+// เข้าโหมด admin ได้ทางหน้า gate เท่านั้น
 
 function init() {
-  // Admin via URL: dashboard.html?admin=SECRET  (ปิด: ?admin=off)
+  // เหลือไว้แค่ "ปิด" admin mode — ไม่มีทางเปิดผ่าน URL อีกต่อไป
   const qp = new URLSearchParams(location.search);
   if (qp.has('admin')) {
     const v = qp.get('admin');
-    if (v === ADMIN_SECRET) localStorage.setItem('wla_admin', '1');
-    else if (v === 'off' || v === '0') localStorage.removeItem('wla_admin');
-    // ล้าง param ออกจาก URL ไม่ให้รหัสค้างในแถบ address
+    if (v === 'off' || v === '0') localStorage.removeItem('wla_admin');
     history.replaceState(null, '', location.pathname);
   }
 

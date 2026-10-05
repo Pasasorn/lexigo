@@ -37,6 +37,14 @@ small{color:#64748b}
 </header>
 
 <main>
+<div class="card" style="border-color:#f0ad4e;background:#fff8e6">
+  <h2>⚠️ หน้านี้เปิดจากอินเทอร์เน็ตได้</h2>
+  <p style="font-size:13.5px;margin:0;line-height:1.75">
+  โฟลเดอร์ <code>_docs/</code> ถูก deploy ขึ้น Cloudflare ด้วย ใครรู้ URL ก็เปิดได้
+  <b>จึงไม่เก็บรหัสครูไว้ในไฟล์</b> — ส่วนที่ 2 จะถามรหัสตอนกดปุ่ม<br>
+  ถ้าไม่อยากให้เข้าถึงได้เลย ลบไฟล์นี้ออกจาก repo หลังตรวจเสร็จ</p>
+</div>
+
 <div class="card">
   <h2>1️⃣ ตรวจอ่านอย่างเดียว — ปลอดภัย ไม่เขียนอะไรลงชีต</h2>
   <button onclick="runRead()" id="b1">▶ เริ่มตรวจ</button>
@@ -59,7 +67,7 @@ small{color:#64748b}
   <h2>📋 ถ้าไม่ผ่าน ทำยังไง</h2>
   <ol style="font-size:13.5px;line-height:1.9;margin:0;padding-left:20px">
     <li>Google Sheet → <b>Extensions → Apps Script</b></li>
-    <li><code>Ctrl+A</code> → <code>Delete</code> → วาง <code>English/Code.gs</code> ทั้งไฟล์ (1,671 บรรทัด) → <code>Ctrl+S</code></li>
+    <li><code>Ctrl+A</code> → <code>Delete</code> → วาง <code>English/Code.gs</code> ทั้งไฟล์ → <code>Ctrl+S</code></li>
     <li><b>Deploy → Manage deployments</b> <small>(ไม่ใช่ New deployment)</small></li>
     <li>กด ✏️ ดินสอ → ช่อง <b>Version</b> เลือก <b>New version</b> → <b>Deploy</b>
       <br><small style="color:#a93b23">⚠️ จุดที่พลาดบ่อยที่สุด — กด Deploy แล้วแต่ลืมสลับ dropdown เป็น New version</small></li>
@@ -74,7 +82,7 @@ small{color:#64748b}
 </main>
 
 <script>
-const TEACHER = 'oxford2026';   // ← รหัสครู ต้องตรงกับ TEACHER_PASS ใน Code.gs
+let TEACHER = '';   // ไม่เก็บรหัสครูไว้ในไฟล์ — ถามตอนกดปุ่มตรวจการเขียน
 const API = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
 
 /* ลองใหม่ได้ 2 ครั้ง — Apps Script หลุดชั่วคราวบ่อย */
@@ -124,9 +132,9 @@ async function runRead(){
   let v = null;
   try {
     v = await jsonp({action:'version'});
-    const isV6 = v && v.version === 'v6';
+    const isV6 = v && v.version === 'v7';
     mark(li, isV6, '<br>ได้ ' + esc(v) +
-      (isV6 ? '' : '<br><b style="color:#a93b23">ยังไม่ใช่ v6 → คะแนนรายทักษะและข้อมูลติดต่อลูกค้าจะไม่ถูกบันทึก</b>'));
+      (isV6 ? '' : '<br><b style="color:#a93b23">ยังไม่ใช่ v7 → คะแนนรายทักษะ อีเมลอัตโนมัติ และข้อมูลติดต่อลูกค้าจะไม่ทำงาน</b>'));
   } catch(e){ mark(li, false, '<br>' + e.message); }
 
   // 2 feature skill-sync
@@ -165,6 +173,10 @@ async function runWrite(){
   const ul = document.getElementById('r2'); ul.innerHTML = ''; pass = fail = 0;
   document.getElementById('s2').innerHTML = '';
   // รหัสต้องยาว 6 ตัวพอดี ไม่งั้น backend จะสุ่มให้ใหม่
+  if (!TEACHER) {
+    TEACHER = (prompt('ใส่รหัสครู (ค่า TEACHER_PASS ใน Code.gs)') || '').trim();
+    if (!TEACHER) { b.disabled = false; return; }
+  }
   let CODE = 'ZZ' + Math.floor(Math.random()*9000+1000);
 
   // 1 สร้างนักเรียนทดสอบ
@@ -175,7 +187,7 @@ async function runWrite(){
     made = !!(r && r.status === 'ok');
     if (made && r.code) CODE = r.code;       // backend อาจสุ่มรหัสใหม่ให้
     mark(li, made, '<br>ได้ ' + esc(r) +
-      (made ? '' : '<br>ถ้าขึ้นว่ารหัสครูไม่ถูกต้อง ให้แก้ค่า <code>TEACHER</code> ในไฟล์นี้'));
+      (made ? '' : '<br>ถ้าขึ้นว่ารหัสครูไม่ถูกต้อง โหลดหน้าใหม่แล้วใส่รหัสอีกครั้ง'));
   } catch(e){ mark(li, false, '<br>' + e.message); }
 
   // 2 บันทึกคะแนนพร้อมทักษะ
@@ -196,7 +208,7 @@ async function runWrite(){
     const got = [r.sk_read, r.sk_speak, r.sk_write].map(x => x===undefined?'—':x).join(' / ');
     const ok = Number(r.sk_read)===82 && Number(r.sk_speak)===68 && Number(r.sk_write)===54;
     mark(li, ok, '<br>ส่งไป <code>82 / 68 / 54</code> · ได้กลับ <code>' + got + '</code>' +
-      (ok ? '' : '<br><b style="color:#a93b23">ไม่ตรง → ยังไม่ได้ deploy v6 หรือชีต Progress ไม่มีคอลัมน์ G/H/I</b>'));
+      (ok ? '' : '<br><b style="color:#a93b23">ไม่ตรง → ยังไม่ได้ deploy v7 หรือชีต Progress หัวคอลัมน์ไม่ถูกต้อง (รัน resetAllSheets)</b>'));
   } catch(e){ mark(li, false, '<br>' + e.message); }
   else mark(li, false, '<br>ข้ามเพราะบันทึกไม่สำเร็จ');
 

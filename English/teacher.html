@@ -98,7 +98,8 @@ tr:hover td{background:#F0F4FF}
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec';
-const TEACHER_PASS_LOCAL = 'oxford2026';
+// ไม่เก็บรหัสครูไว้ในหน้าเว็บ — ใช้รหัสที่พิมพ์ตอน login และให้เซิร์ฟเวอร์เป็นคนตัดสิน
+let TEACHER_PASS_LOCAL = '';
 
 function jsonpCall(params) {
   return new Promise((resolve, reject) => {
@@ -242,15 +243,26 @@ function switchTab(tab) {
   if (tab==='orders') loadPurchases();
 }
 
-function doLogin() {
-  const p = document.getElementById('passInp').value.trim();
+async function doLogin() {
+  const p   = document.getElementById('passInp').value.trim();
   const err = document.getElementById('loginErr');
-  if (p === TEACHER_PASS_LOCAL) {
+  if (!p) { err.textContent = '❌ กรุณากรอกรหัส'; return; }
+
+  err.textContent = '⏳ กำลังตรวจสอบ…';
+  try {
+    // ให้เซิร์ฟเวอร์ตัดสิน — หน้าเว็บไม่รู้รหัสที่ถูกต้อง
+    const r = await jsonpCall({ action: 'stats', teacher: p });
+    if (!r || r.status !== 'ok') {
+      err.textContent = '❌ รหัสไม่ถูกต้อง';
+      return;
+    }
+    TEACHER_PASS_LOCAL = p;
+    err.textContent = '';
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboard').style.display = '';
     loadData();
-  } else {
-    err.textContent = '❌ รหัสไม่ถูกต้อง';
+  } catch (e) {
+    err.textContent = '❌ เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';
   }
 }
 
@@ -258,6 +270,7 @@ function logout() {
   document.getElementById('loginScreen').style.display = '';
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('passInp').value = '';
+  TEACHER_PASS_LOCAL = '';
 }
 
 async function loadData() {

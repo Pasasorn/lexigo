@@ -19,14 +19,14 @@
 
 ---
 
-## 🔐 Admin (รหัส: `Gift0142`)
+## 🔐 Admin (รหัส: `<รหัส admin ของคุณ>`)
 
 | หน้า | ลิงก์ |
 |------|-------|
 | 🛠️ Admin Panel (กดเปิด Day) | https://peekaword.pages.dev/English/panel-k7m3x9q2p5.html |
 | 🔒 Admin Gate (ใส่รหัส) | https://peekaword.pages.dev/English/gate-k7m3x9q2p5.html |
 | 👨‍🏫 Teacher Dashboard | https://peekaword.pages.dev/English/teacher.html |
-| ⚡ Dashboard admin (URL) | https://peekaword.pages.dev/English/dashboard.html?admin=Gift0142 |
+| ⚡ Dashboard admin (URL) | https://peekaword.pages.dev/English/gate-k7m3x9q2p5.html  (เข้าผ่าน URL ไม่ได้แล้ว) |
 | ❌ ปิด admin | https://peekaword.pages.dev/English/dashboard.html?admin=off |
 
 ---
