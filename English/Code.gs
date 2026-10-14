@@ -257,8 +257,8 @@ function doGet(e) {
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v13', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v14', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1223,12 +1223,8 @@ function actionSelfRegister(p, cb) {
   if (!nick || !first || !last) return respond({status:'error', msg:'ข้อมูลไม่ครบ'}, cb);
   if (!phone || !email)         return respond({status:'error', msg:'ข้อมูลไม่ครบ'}, cb);
 
-  // ตรวจซ้ำ
   const stSh   = getSheet(SHEET_STUDENTS);
   const stData = stSh.getDataRange().getValues();
-  for (let i = 1; i < stData.length; i++) {
-    if (stData[i][0].toString() === code) return respond({status:'code_taken', msg:'รหัส '+code+' ถูกใช้แล้ว'}, cb);
-  }
 
   // หาข้อมูล purchase จาก orderId
   const purSh   = getSheet(SHEET_PURCHASES);
@@ -1241,6 +1237,37 @@ function actionSelfRegister(p, cb) {
       pkgName = (purData[i][5] || course).toString().trim();
       break;
     }
+  }
+
+  // ── ถ้าตรวจสลิปอัตโนมัติผ่านไปแล้ว ออเดอร์นี้ "มีรหัสอยู่แล้ว" ──
+  // ต้องเติมชื่อ/อีเมลลงรหัสเดิม ไม่ใช่สร้างรหัสใหม่
+  // (ของเดิมสร้างซ้ำ → 1 การซื้อได้ 2 รหัส ตัวที่ active ไม่มีอีเมล เลยไม่มีเมลออก)
+  const issued = purRow >= 0 ? (purData[purRow][11] || '').toString().trim() : '';
+  if (issued) {
+    for (let i = 1; i < stData.length; i++) {
+      if (stData[i][0].toString() !== issued) continue;
+      const wasActive = (stData[i][3] || '').toString() === 'active';
+      if (nick)  stSh.getRange(i + 1, 2).setValue(nick);
+      if (email) stSh.getRange(i + 1, 3).setValue(email);
+      if (purRow >= 0) {
+        purSh.getRange(purRow + 1, 2).setValue(first + ' ' + last);
+        const pc = purSh.getRange(purRow + 1, 3);
+        pc.setNumberFormat('@'); pc.setValue(phone);
+        purSh.getRange(purRow + 1, 4).setValue(line);
+        purSh.getRange(purRow + 1, 5).setValue(email);
+        // อย่าถอยสถานะที่ตรวจผ่านแล้วกลับไปเป็น pending
+        if (!wasActive) purSh.getRange(purRow + 1, 9).setValue('pending_approval');
+      }
+      // เพิ่งได้อีเมลตอนนี้ → ส่งรหัสให้ (ตอนตรวจสลิปยังไม่มีอีเมลเลยส่งไม่ได้)
+      if (wasActive && email) sendWelcomeEmail_(email, nick, issued, pkgName, false);
+      return respond({status:'ok', code: issued, pkg_name: pkgName,
+                      auto: wasActive, reused: true}, cb);
+    }
+  }
+
+  // ตรวจรหัสซ้ำ (เฉพาะกรณีออกรหัสใหม่)
+  for (let i = 1; i < stData.length; i++) {
+    if (stData[i][0].toString() === code) return respond({status:'code_taken', msg:'รหัส '+code+' ถูกใช้แล้ว'}, cb);
   }
 
   // คำนวณ expiry
