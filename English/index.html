@@ -757,19 +757,19 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
 (function(){
   var PANELS=[
     '<div class="demo-art">'+
-      '<img src="img/img_day1.webp" alt="ตัวอย่างภาพประกอบบทเรียน Day 1" loading="lazy">'+
-      '<span class="chip-word">apple<span>แอปเปิล</span></span>'+
+      '<img src="img/img_day1.webp" alt="ภาพประกอบบทเรียน Day 1 — แมว สุนัข นก และปลา" loading="lazy">'+
+      '<span class="chip-word">cat<span>แมว</span></span>'+
     '</div>'+
     '<p class="demo-q">ลองอ่านประโยค</p>'+
-    '<p class="demo-sent">This is an <u>apple</u>.</p>'+
+    '<p class="demo-sent">This is a <u>cat</u>.</p>'+
     '<button class="btn-audio" id="btnSay">🔊 ฟังตัวอย่างเสียง</button>'+
     '<p class="tiny" style="margin-top:12px">• ตัวอย่างรูปแบบการเรียน &nbsp;ฟัง · อ่าน · พูด · ทบทวน</p>',
 
     '<p class="demo-q">ขั้นฝึกพูด — ลูกพูดตามประโยคนี้</p>'+
-    '<p class="demo-sent">Leo sees a <u>duck</u>.</p>'+
+    '<p class="demo-sent">The dog is <u>big</u>.</p>'+
     '<div class="card" style="box-shadow:none; background:var(--cream-2)">'+
       '<p class="tiny" style="margin-bottom:8px">สิ่งที่ระบบได้ยิน (ตัวอย่าง)</p>'+
-      '<p style="font-size:17px; font-weight:800">“leo sees a duck”</p>'+
+      '<p style="font-size:17px; font-weight:800">“the dog is big”</p>'+
       '<div class="bar-top" style="margin-top:12px"><span>คะแนนประโยคนี้</span><b>100%</b></div>'+
       '<div class="bar"><i style="width:100%; background:#5E9E6B"></i></div>'+
     '</div>'+
@@ -777,8 +777,8 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
 
     '<p class="demo-q">ขั้นทบทวน — ฟังแล้วเรียงคำให้เป็นประโยค</p>'+
     '<div style="display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 14px">'+
-      '<span class="pill">Leo</span><span class="pill">sees</span>'+
-      '<span class="pill">a</span><span class="pill">duck</span>'+
+      '<span class="pill">The</span><span class="pill">dog</span>'+
+      '<span class="pill">is</span><span class="pill">big</span>'+
     '</div>'+
     '<p class="muted">กดคำเรียงทีละคำจากเสียงที่ได้ยิน ถ้าเรียงผิดระบบจะให้ลองฟังใหม่</p>'+
     '<p class="tiny" style="margin-top:12px">ตัวอย่างรูปแบบกิจกรรม · ของจริงมีเกมทบทวนสลับ 5 แบบ</p>',
@@ -804,7 +804,7 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
       try{
         if(!window.speechSynthesis){alert('เบราว์เซอร์นี้ยังไม่รองรับการอ่านออกเสียง');return;}
         speechSynthesis.cancel();
-        var u=new SpeechSynthesisUtterance('This is an apple.');
+        var u=new SpeechSynthesisUtterance('This is a cat.');
         u.lang='en-US'; u.rate=.9; speechSynthesis.speak(u);
       }catch(e){}
     });
