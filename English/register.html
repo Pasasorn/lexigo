@@ -650,7 +650,7 @@ body{background:linear-gradient(135deg,#FFF9C4 0%,#FFF3E0 50%,#F3E5F5 100%);min-
 <div class="page" id="p4">
   <div class="hdr">
     <div class="logo">📋</div>
-    <h1>ลงทะเบียนสำเร็จ!</h1>
+    <h1 id="succHead">ได้รับข้อมูลแล้ว</h1>
     <p id="succSub">พร้อมเริ่มเรียนแล้ว</p>
   </div>
 
@@ -1178,9 +1178,11 @@ function showSuccess(st) {
         ms = document.getElementById('succMsg'),
         gb = document.getElementById('succGo');
 
+  const hd = document.getElementById('succHead');
   if (auto) {
     ic.textContent = '🎉';
     ti.textContent = 'เปิดสิทธิ์เรียบร้อย';
+    if (hd) hd.textContent = 'เปิดสิทธิ์เรียบร้อย!';
     if (sb) sb.textContent = 'เริ่มเรียนได้ทันที';
     ms.style.cssText += ';background:#E8F5E9;border:1.5px solid #A5D6A7;color:#2E7D32';
     ms.innerHTML = '✅ ตรวจสลิปอัตโนมัติผ่านแล้ว<br>' +
@@ -1190,7 +1192,8 @@ function showSuccess(st) {
   } else {
     ic.textContent = '⏳';
     ti.textContent = 'กำลังตรวจสลิป';
-    if (sb) sb.textContent = 'อีกสักครู่';
+    if (hd) hd.textContent = 'ได้รับสลิปแล้ว';
+    if (sb) sb.textContent = 'รอตรวจสอบสักครู่';
     ms.style.cssText += ';background:#E3F2FD;border:1.5px solid #90CAF9;color:#1565C0';
     ms.innerHTML = '✅ ได้รับข้อมูลแล้ว<br>' +
       'สลิปนี้ตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้<strong>ภายในวันเดียวกัน</strong><br>' +
@@ -1287,6 +1290,51 @@ function jsonp(params, ms) {
     document.body.appendChild(s);
   });
 }
+
+/* ── ช่องทาง Line: ดึงจาก Config sheet (key = line_id) ──────────────
+   มีค่า  → แทนที่ @PeekaWord ด้วยไอดีจริงทุกจุด
+   ว่าง   → ซ่อนทั้งบรรทัดไปเลย ไม่โชว์ช่องทางที่ยังไม่เปิด
+   (ลูกค้าที่จ่ายเงินแล้วติดปัญหา ต้องไม่ถูกส่งไปหาช่องทางที่ไม่มีอยู่จริง) */
+var PW_LINE_ID = null;          // null = ยังไม่รู้ ยังไม่ต้องแตะหน้าจอ
+var PW_TOKEN   = '@PeekaWord';
+
+function pwSyncLine() {
+  if (PW_LINE_ID === null) return;
+  var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  var hits = [], n;
+  while ((n = w.nextNode())) if (n.nodeValue.indexOf(PW_TOKEN) !== -1) hits.push(n);
+
+  hits.forEach(function (node) {
+    if (PW_LINE_ID) {                       // มีไอดี → แทนที่ข้อความ
+      node.nodeValue = node.nodeValue.split(PW_TOKEN).join('@' + PW_LINE_ID);
+      return;
+    }
+    // ไม่มีไอดี → ซ่อนบรรทัดที่พูดถึง Line
+    var el = node.parentElement, hop = 0;
+    while (el && hop < 3 && el !== document.body) {
+      var t = (el.textContent || '');
+      if (/Line/i.test(t) && t.length < 200) { el.style.display = 'none'; return; }
+      el = el.parentElement; hop++;
+    }
+    node.nodeValue = '';                    // อย่างน้อยอย่าให้เห็นไอดีปลอม
+  });
+}
+
+(function initPublicConfig() {
+  function run() {
+    jsonp({ action: 'publicConfig' }, 8000).then(function (r) {
+      PW_LINE_ID = (r && r.status === 'ok' && r.config && r.config.line_id)
+                     ? String(r.config.line_id).replace(/^@/, '').trim() : '';
+      pwSyncLine();
+      // หน้าเว็บ render การ์ดใหม่ทีหลัง (p3/p4) — ตามเก็บให้ด้วย
+      new MutationObserver(function () { pwSyncLine(); })
+        .observe(document.body, { childList: true, subtree: true });
+    }).catch(function () { /* ต่อไม่ได้ → ปล่อยข้อความเดิมไว้ ดีกว่าหน้าพัง */ });
+  }
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
 </script>
 <script src="js/track.js"></script>
 </body>

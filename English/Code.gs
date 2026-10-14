@@ -256,8 +256,9 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v11', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','completion-regex','score-percent','email-password','slip-verify',
+      case 'publicConfig':    return actionPublicConfig(p, cb);
+      case 'version':         return respond({status:'ok', version:'v12', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-bool-fix','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1419,6 +1420,19 @@ function setOrderNote_(orderId, state, msg, code) {
   } catch (e) {}
 }
 
+// ── ค่าที่หน้าเว็บเอาไปแสดงได้ (เปิดสาธารณะ) ─────────────────
+// whitelist เท่านั้น — ห้ามคืนทั้ง Config เพราะมี teacher_pass / slipok_api_key อยู่ด้วย
+// ?action=publicConfig
+function actionPublicConfig(p, cb) {
+  const pick = ['line_id', 'promptpay_number', 'site_url', 'early_bird_slots'];
+  const out = {};
+  pick.forEach(function (k) {
+    const v = getConfig(k);
+    out[k] = (v === null || v === undefined) ? '' : String(v).trim();
+  });
+  return respond({ status: 'ok', config: out }, cb);
+}
+
 // ?action=orderStatus&order_id=ORD-...
 function actionOrderStatus(p, cb) {
   const id = (p.order_id || '').toString().trim();
@@ -1467,8 +1481,11 @@ function actionVerifyPurchaseSlip(p, cb) {
   //                      'false' ข้ามการเช็กนั้น — เราเช็กเองอยู่แล้วด้วย payee_last4 (ชั้นที่ 2)
   const BRANCH = (getConfig('slipok_branch_id') || '').toString().trim();
   const KEY    = (getConfig('slipok_api_key')   || '').toString().trim();
-  const LOG    = ((getConfig('slipok_log') || 'true').toString().trim().toLowerCase() === 'false')
-                   ? 'false' : 'true';
+  // ระวัง: ถ้าช่องในชีตเป็น checkbox/TRUE-FALSE ของ Sheets getConfig จะคืน boolean false
+  // ซึ่ง falsy — ห้ามใช้ ( ... || 'true') เพราะจะกลายเป็น 'true' ทันที
+  const logRaw = getConfig('slipok_log');
+  const LOG    = (String(logRaw === null || logRaw === undefined ? '' : logRaw)
+                   .trim().toLowerCase() === 'false') ? 'false' : 'true';
   if (!BRANCH || !KEY || KEY === 'YOUR_SLIPOK_KEY_HERE' || /^https?:/i.test(KEY))
     return verdict_(orderId, 'manual', {status:'manual', msg: 'ยังไม่ได้ตั้งค่า SlipOK — ส่งให้ครูตรวจแทน' }, cb);
 
