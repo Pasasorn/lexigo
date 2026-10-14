@@ -256,8 +256,8 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v10', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v11', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1518,11 +1518,17 @@ function actionVerifyPurchaseSlip(p, cb) {
     }, cb);
 
   // ── ชั้น 2: บัญชีปลายทางต้องเป็นของเรา ──────────────────
-  // ใส่เลขบัญชี/พร้อมเพย์ 4 ตัวท้ายใน Config key = 'payee_last4'
-  const last4 = (getConfig('payee_last4') || '').toString().trim();
-  if (last4 && recvAcc && recvAcc.replace(/\D/g, '').indexOf(last4) === -1)
+  // Config 'payee_last4' ใส่ได้หลายค่า คั่นด้วย comma เช่น "8976,8291"
+  // (เลขบัญชีธนาคาร กับ พร้อมเพย์ ขึ้นบนสลิปคนละเลข — ต้องรับได้ทั้งคู่)
+  const last4List = (getConfig('payee_last4') || '').toString()
+                      .split(/[,\s/|]+/).map(function (s) { return s.replace(/\D/g, ''); })
+                      .filter(function (s) { return s.length >= 3; });
+  const recvDigits = recvAcc.replace(/\D/g, '');
+  if (last4List.length && recvDigits &&
+      !last4List.some(function (x) { return recvDigits.indexOf(x) !== -1; }))
     return verdict_(orderId, 'reject', {status:'reject',
-      msg: 'สลิปนี้โอนเข้าบัญชีอื่น ไม่ใช่บัญชีของ PeekaWord'
+      msg: 'สลิปนี้โอนเข้าบัญชีอื่น ไม่ใช่บัญชีของ PeekaWord (สลิประบุ ...' +
+           recvDigits.slice(-4) + ')'
     }, cb);
 
   // ── ชั้น 3: สลิปเก่าซ้ำ ─────────────────────────────────
