@@ -256,8 +256,8 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v9', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v10', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1463,8 +1463,12 @@ function actionVerifyPurchaseSlip(p, cb) {
   // SlipOK ต้องใช้ 2 ค่าแยกกัน:
   //   slipok_branch_id = เลขสาขา (ตัวเลข) ต่อท้าย URL
   //   slipok_api_key   = API key (ขึ้นต้น SLIPOK...) ส่งใน header x-authorization
+  //   slipok_log       = 'true' ให้ SlipOK เช็กบัญชีร้านของสาขาด้วย (ต้องผูกบัญชีใน dashboard ก่อน)
+  //                      'false' ข้ามการเช็กนั้น — เราเช็กเองอยู่แล้วด้วย payee_last4 (ชั้นที่ 2)
   const BRANCH = (getConfig('slipok_branch_id') || '').toString().trim();
   const KEY    = (getConfig('slipok_api_key')   || '').toString().trim();
+  const LOG    = ((getConfig('slipok_log') || 'true').toString().trim().toLowerCase() === 'false')
+                   ? 'false' : 'true';
   if (!BRANCH || !KEY || KEY === 'YOUR_SLIPOK_KEY_HERE' || /^https?:/i.test(KEY))
     return verdict_(orderId, 'manual', {status:'manual', msg: 'ยังไม่ได้ตั้งค่า SlipOK — ส่งให้ครูตรวจแทน' }, cb);
 
@@ -1477,7 +1481,7 @@ function actionVerifyPurchaseSlip(p, cb) {
     const res = UrlFetchApp.fetch('https://api.slipok.com/api/line/apikey/' + BRANCH, {
       method: 'post',
       headers: { 'x-authorization': KEY },
-      payload: { files: blob, log: 'true' },
+      payload: { files: blob, log: LOG },
       muteHttpExceptions: true
     });
     httpCode = res.getResponseCode();
