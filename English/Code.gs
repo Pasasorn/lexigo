@@ -256,8 +256,8 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v8', deployed:'2026-10-06',
-                                features:['slipok-branch-header','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v9', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1470,7 +1470,7 @@ function actionVerifyPurchaseSlip(p, cb) {
 
   slip = slip.replace(/^data:image\/\w+;base64,/, '');
 
-  let result;
+  let result, httpCode = 0;
   try {
     // ส่งเป็นไฟล์รูป (multipart) — ช่อง data ของ SlipOK ใช้กับ "ข้อความใน QR" เท่านั้น ไม่ใช่ base64 รูป
     const blob = Utilities.newBlob(Utilities.base64Decode(slip), 'image/jpeg', 'slip.jpg');
@@ -1480,11 +1480,20 @@ function actionVerifyPurchaseSlip(p, cb) {
       payload: { files: blob, log: 'true' },
       muteHttpExceptions: true
     });
-    result = JSON.parse(res.getContentText());
+    httpCode = res.getResponseCode();
+    result   = JSON.parse(res.getContentText());
   } catch (e) {
     // เรียก API ไม่ได้ → อย่าปฏิเสธลูกค้า ให้ครูตรวจมือแทน
     return verdict_(orderId, 'manual', {status:'manual', msg: 'ตรวจอัตโนมัติไม่ได้ — ส่งให้ครูตรวจ' }, cb);
   }
+
+  // ปัญหาฝั่งเรา (key ผิด / สาขาผิด / โควตาหมด / SlipOK ล่ม) → ห้ามปฏิเสธลูกค้า
+  // HTTP 200 เท่านั้นที่แปลว่า SlipOK อ่านสลิปแล้วตอบผลจริง
+  if (httpCode !== 200)
+    return verdict_(orderId, 'manual', {status:'manual',
+      msg: 'ตรวจอัตโนมัติไม่ได้ (SlipOK ' + httpCode +
+           (result && result.message ? ': ' + result.message : '') + ') — ส่งให้ครูตรวจ'
+    }, cb);
 
   if (!result || !result.success || !result.data)
     return verdict_(orderId, 'reject', {status:'reject',
