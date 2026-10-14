@@ -257,8 +257,8 @@ function doGet(e) {
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v14', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v15', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -976,7 +976,12 @@ function actionGetStats(p, cb) {
   for (let i = 1; i < data.length; i++) {
     if (data[i][8] !== 'rejected') sold++;  // นับทุก order ที่ไม่ถูก reject
   }
-  return respond({status:'ok', lifetimeSold: sold}, cb);
+  // ── ไม่นับออเดอร์ทดสอบระบบ ──
+  // Config key 'seat_offset' = จำนวนออเดอร์ที่เป็นการทดสอบ (เก็บแถวไว้ แต่ไม่กินที่นั่ง)
+  // ทำที่นี่ที่เดียว หน้าเว็บทุกหน้าได้ตัวเลขตรงกัน และป้าย "30 คนแรก · 1–30" ยังถูกต้อง
+  const offset = parseInt(getConfig('seat_offset'), 10) || 0;
+  const real   = Math.max(0, sold - offset);
+  return respond({status:'ok', lifetimeSold: real, rawOrders: sold, seatOffset: offset}, cb);
 }
 
 // ── newPurchase: บันทึก order ใหม่ ─────────────────────────
