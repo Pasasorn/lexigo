@@ -1,0 +1,9 @@
+# ไฟล์รับเข้า — ไม่ต้องขึ้น git (ไฟล์ใหญ่ ทำให้ push ไม่ผ่าน)
+_incoming/
+*.zip
+
+# ไฟล์ชั่วคราว
+_docs/.unzip/
+_docs/.api_url_backup.json
+Thumbs.db
+.DS_Store
