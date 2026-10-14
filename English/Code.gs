@@ -256,8 +256,8 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
-      case 'version':         return respond({status:'ok', version:'v7', deployed:'2026-10-06',
-                                features:['completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v8', deployed:'2026-10-06',
+                                features:['slipok-branch-header','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1460,18 +1460,24 @@ function actionVerifyPurchaseSlip(p, cb) {
   if (!orderId || !slip || !price)
     return respond({ status: 'error', msg: 'ข้อมูลไม่ครบ' }, cb);
 
-  const KEY = getConfig('slipok_api_key') || '';
-  if (!KEY || KEY === 'YOUR_SLIPOK_KEY_HERE')
+  // SlipOK ต้องใช้ 2 ค่าแยกกัน:
+  //   slipok_branch_id = เลขสาขา (ตัวเลข) ต่อท้าย URL
+  //   slipok_api_key   = API key (ขึ้นต้น SLIPOK...) ส่งใน header x-authorization
+  const BRANCH = (getConfig('slipok_branch_id') || '').toString().trim();
+  const KEY    = (getConfig('slipok_api_key')   || '').toString().trim();
+  if (!BRANCH || !KEY || KEY === 'YOUR_SLIPOK_KEY_HERE' || /^https?:/i.test(KEY))
     return verdict_(orderId, 'manual', {status:'manual', msg: 'ยังไม่ได้ตั้งค่า SlipOK — ส่งให้ครูตรวจแทน' }, cb);
 
   slip = slip.replace(/^data:image\/\w+;base64,/, '');
 
   let result;
   try {
-    const res = UrlFetchApp.fetch('https://api.slipok.com/api/line/apikey/' + KEY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      payload: JSON.stringify({ data: slip, log: true }),
+    // ส่งเป็นไฟล์รูป (multipart) — ช่อง data ของ SlipOK ใช้กับ "ข้อความใน QR" เท่านั้น ไม่ใช่ base64 รูป
+    const blob = Utilities.newBlob(Utilities.base64Decode(slip), 'image/jpeg', 'slip.jpg');
+    const res = UrlFetchApp.fetch('https://api.slipok.com/api/line/apikey/' + BRANCH, {
+      method: 'post',
+      headers: { 'x-authorization': KEY },
+      payload: { files: blob, log: 'true' },
       muteHttpExceptions: true
     });
     result = JSON.parse(res.getContentText());
