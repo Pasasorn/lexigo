@@ -257,8 +257,8 @@ function doGet(e) {
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v12', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-bool-fix','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v13', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1495,10 +1495,14 @@ function actionVerifyPurchaseSlip(p, cb) {
   try {
     // ส่งเป็นไฟล์รูป (multipart) — ช่อง data ของ SlipOK ใช้กับ "ข้อความใน QR" เท่านั้น ไม่ใช่ base64 รูป
     const blob = Utilities.newBlob(Utilities.base64Decode(slip), 'image/jpeg', 'slip.jpg');
+    // ใน multipart ทุกค่าเป็น "ข้อความ" — ส่ง log='false' ฝั่ง SlipOK อ่านได้เป็น truthy
+    // เอกสารระบุว่า "false หรือ ไม่ส่ง" ผลเหมือนกัน → ปิดการเช็ก = ไม่ใส่ฟิลด์เลย
+    const body = { files: blob };
+    if (LOG === 'true') body.log = 'true';
     const res = UrlFetchApp.fetch('https://api.slipok.com/api/line/apikey/' + BRANCH, {
       method: 'post',
       headers: { 'x-authorization': KEY },
-      payload: { files: blob, log: LOG },
+      payload: body,
       muteHttpExceptions: true
     });
     httpCode = res.getResponseCode();
@@ -1535,7 +1539,9 @@ function actionVerifyPurchaseSlip(p, cb) {
     }, cb);
 
   // ── ชั้น 2: บัญชีปลายทางต้องเป็นของเรา ──────────────────
-  // Config 'payee_last4' ใส่ได้หลายค่า คั่นด้วย comma เช่น "8976,8291"
+  // Config 'payee_last4' ใส่ได้หลายค่า — คั่นด้วย "เว้นวรรค" เช่น  8291 8976
+  // ⚠️ ห้ามคั่นด้วย comma: Google Sheets จะอ่าน "8291,8976" เป็นตัวเลข 82918976
+  //    (comma = ตัวคั่นหลักพัน) แล้วเทียบไม่ตรงกับสลิปใบไหนเลย
   // (เลขบัญชีธนาคาร กับ พร้อมเพย์ ขึ้นบนสลิปคนละเลข — ต้องรับได้ทั้งคู่)
   const last4List = (getConfig('payee_last4') || '').toString()
                       .split(/[,\s/|]+/).map(function (s) { return s.replace(/\D/g, ''); })
