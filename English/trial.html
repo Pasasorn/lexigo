@@ -3,7 +3,7 @@
 <title>PeekaWord — ทดลองเรียนฟรี 7 วัน</title>
 <meta name="theme-color" content="#1E4034">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mitr:wght@400;500;600&family=Noto+Sans+Thai+Looped:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม เสริมส้มดินเผา ═══ */
 :root{
@@ -16,19 +16,19 @@
   --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
   --line:#E4DED0; --shadow:0 2px 10px rgba(30,64,52,.06);
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Noto Sans Thai Looped',sans-serif}
 body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-webkit-text-size-adjust:100%}
 .wrap{max-width:520px;margin:0 auto}
 
 .hdr{background:var(--green);border-radius:22px;padding:24px 18px;color:#fff;text-align:center;margin-bottom:14px;box-shadow:var(--shadow)}
 .hdr .ico{font-size:46px;line-height:1}
-.hdr h1{font-size:28px;font-weight:800;margin-top:6px;font-family:'Baloo 2',sans-serif}
+.hdr h1{font-size:28px;font-weight:800;margin-top:6px;font-family:'Baloo 2','Mitr',sans-serif}
 .hdr .tag{font-size:16px;font-weight:700;color:#CBDACF;margin-top:3px}
 .hdr .sub{font-size:15px;font-weight:600;color:#BBCEC1;margin-top:4px;line-height:1.6}
 .badge{display:inline-block;background:rgba(255,255,255,.16);border-radius:999px;padding:8px 18px;font-size:15px;font-weight:800;margin-top:12px;color:#F3D9A8}
 
 .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
-.sec-t{font-size:18px;font-weight:800;color:var(--green);margin-bottom:12px;text-align:center;font-family:'Baloo 2',sans-serif}
+.sec-t{font-size:18px;font-weight:800;color:var(--green);margin-bottom:12px;text-align:center;font-family:'Baloo 2','Mitr',sans-serif}
 
 .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .day{border-radius:15px;padding:14px 6px;text-align:center;text-decoration:none;display:block;border:2px solid var(--green-line);background:var(--green-soft);transition:.15s;min-height:92px}
@@ -40,10 +40,10 @@ body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-web
 .day.lock .n{color:var(--ink-3)}
 .day .t{display:block;font-size:14px;font-weight:600;color:var(--ink-2);line-height:1.35;margin-top:2px}
 
-.inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 15px;font-size:16px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;color:var(--ink);background:#fff;margin-bottom:9px;min-height:50px}
+.inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 15px;font-size:16px;font-weight:700;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;outline:none;color:var(--ink);background:#fff;margin-bottom:9px;min-height:50px}
 .inp:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(30,64,52,.08)}
 
-.btn{width:100%;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;min-height:54px;box-shadow:0 3px 0 var(--brown-dk);transition:.1s}
+.btn{width:100%;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;min-height:54px;box-shadow:0 3px 0 var(--brown-dk);transition:.1s}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--brown-dk)}
 .btn.green{background:var(--green);box-shadow:0 3px 0 #153026}
 
@@ -79,7 +79,7 @@ body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-web
   <div class="card">
     <div class="sec-t">👇 เริ่มเรียนได้เลย ไม่ต้องสมัคร</div>
     <div class="day-grid" id="dayGrid"></div>
-    <div class="note">ครบทั้ง 7 วัน เปิดให้เรียนเลย ไม่ต้องกรอกอะไรทั้งนั้น</div>
+    <div class="note">ครบทั้ง 7 วัน เปิดให้เรียนเลย ไม่ต้องกรอกอะไรทั้งนั้น · ลองแล้วไม่ใช่ ก็ปิดได้เลย</div>
   </div>
 
   <div class="card" id="reportCard">
@@ -106,8 +106,8 @@ body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-web
   </div>
 
   <div class="card" style="text-align:center">
-    <div class="sec-t">ชอบมั้ย? เรียนต่อครบ 448 วัน</div>
-    <a href="register.html" class="btn" style="display:block;text-decoration:none;padding:14px">🛒 ดูแพ็กเกจ / สมัครเรียน</a>
+    <div class="sec-t">ถ้าลูกชอบ มีเส้นทางต่อให้ครบ 448 วัน</div>
+    <a href="register.html" class="btn" style="display:block;text-decoration:none;padding:14px">ดูเส้นทางเรียนต่อและราคา →</a>
     <div class="note">มีรหัสแล้ว? <a href="login.html" style="color:var(--green);font-weight:800">เข้าสู่ระบบ</a></div>
   </div>
 </div>

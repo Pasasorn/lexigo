@@ -3,7 +3,7 @@
 <title>PeekaWord — เข้าสู่ระบบ</title>
 <meta name="theme-color" content="#1E4034">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mitr:wght@400;500;600&family=Noto+Sans+Thai+Looped:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม ═══ */
 :root{
@@ -15,12 +15,12 @@
   --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
   --line:#E4DED0; --shadow:0 2px 14px rgba(30,64,52,.08);
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Noto Sans Thai Looped',sans-serif}
 body{background:var(--cream);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:var(--ink);-webkit-text-size-adjust:100%}
 .wrap{width:100%;max-width:400px}
 .logo-area{text-align:center;margin-bottom:22px}
 .logo-ico{font-size:62px;line-height:1}
-.logo-name{font-size:34px;font-weight:800;color:var(--green);margin-top:6px;font-family:'Baloo 2',sans-serif}
+.logo-name{font-size:34px;font-weight:800;color:var(--green);margin-top:6px;font-family:'Baloo 2','Mitr',sans-serif}
 .logo-tagline{font-size:15px;color:var(--ink-2);font-weight:600;margin-top:4px}
 .card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px 22px;box-shadow:var(--shadow)}
 .tabs{display:flex;gap:6px;background:var(--cream-2);border-radius:14px;padding:5px;margin-bottom:20px}
@@ -29,12 +29,12 @@ body{background:var(--cream);min-height:100vh;display:flex;align-items:center;ju
 .pane{display:none}.pane.on{display:block}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:15px;font-weight:800;color:var(--ink);margin-bottom:7px}
-.inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:16px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;color:var(--ink);transition:.2s;background:#fff;min-height:52px}
+.inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:16px;font-weight:700;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;outline:none;color:var(--ink);transition:.2s;background:#fff;min-height:52px}
 .inp:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(30,64,52,.08)}
-#codeInp{font-size:28px;letter-spacing:8px;text-align:center;font-family:'Baloo 2',sans-serif;color:var(--green)}
+#codeInp{font-size:28px;letter-spacing:8px;text-align:center;font-family:'Baloo 2','Mitr',sans-serif;color:var(--green)}
 .pwrap{position:relative}
 .peye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:19px;user-select:none;opacity:.6;padding:6px}
-.btn{width:100%;margin-top:10px;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;min-height:54px;box-shadow:0 3px 0 var(--brown-dk);transition:.1s}
+.btn{width:100%;margin-top:10px;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;min-height:54px;box-shadow:0 3px 0 var(--brown-dk);transition:.1s}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--brown-dk)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.green{background:var(--green);box-shadow:0 3px 0 #153026}
@@ -46,7 +46,7 @@ body{background:var(--cream);min-height:100vh;display:flex;align-items:center;ju
 .register-link a{color:var(--green);font-weight:800;text-decoration:none}
 .pending-msg{display:none;margin-top:14px;background:var(--orange-soft);border:1.5px solid #F0D2AE;border-radius:14px;padding:17px;text-align:center}
 .pending-msg .p-ico{font-size:32px;margin-bottom:7px}
-.pending-msg h3{font-size:17px;font-weight:800;color:var(--orange);margin-bottom:5px;font-family:'Baloo 2',sans-serif}
+.pending-msg h3{font-size:17px;font-weight:800;color:var(--orange);margin-bottom:5px;font-family:'Baloo 2','Mitr',sans-serif}
 .pending-msg p{font-size:14px;color:var(--ink-2);font-weight:600;line-height:1.7}
 .hint{font-size:14px;color:var(--ink-3);font-weight:600;margin-top:6px;line-height:1.6}
 .link{font-size:15px;font-weight:800;color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:4px}
@@ -171,7 +171,7 @@ body{background:var(--cream);min-height:100vh;display:flex;align-items:center;ju
 
     <div class="divider"></div>
     <div class="register-link">ยังไม่มีรหัส? <a href="register.html">สมัครเรียนที่นี่</a></div>
-    <div style="text-align:center;margin-top:10px"><a href="trial.html" style="display:inline-block;background:var(--green);color:#fff;border-radius:13px;padding:14px 22px;font-size:16px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🎁 ทดลองเรียนฟรี 7 วัน</a></div>
+    <div style="text-align:center;margin-top:10px"><a href="trial.html" style="display:inline-block;background:var(--green);color:#fff;border-radius:13px;padding:14px 22px;font-size:16px;font-weight:800;text-decoration:none;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🎁 ทดลองเรียนฟรี 7 วัน</a></div>
   </div>
 </div>
 

@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>📊 Learning Progress</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mitr:wght@400;500;600&family=Noto+Sans+Thai+Looped:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 /* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม ═══ */
@@ -18,22 +18,22 @@
   --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
   --line:#E4DED0; --shadow:0 2px 10px rgba(30,64,52,.06);
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Noto Sans Thai Looped',sans-serif}
 body{background:var(--cream);min-height:100vh;padding:16px;max-width:720px;margin:0 auto;color:var(--ink);-webkit-text-size-adjust:100%}
 .hdr{background:var(--green);border-radius:20px;padding:20px;margin-bottom:14px;color:#fff;box-shadow:var(--shadow)}
-.hdr h1{font-size:22px;font-weight:800;font-family:'Baloo 2',sans-serif}
+.hdr h1{font-size:22px;font-weight:800;font-family:'Baloo 2','Mitr',sans-serif}
 .hdr p{font-size:15px;color:#CBDACF;font-weight:600;margin-top:3px}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:center;box-shadow:var(--shadow)}
-.stat-n{font-size:28px;font-weight:800;color:var(--green);font-family:'Baloo 2',sans-serif}
+.stat-n{font-size:28px;font-weight:800;color:var(--green);font-family:'Baloo 2','Mitr',sans-serif}
 .stat-l{font-size:14px;color:var(--ink-2);font-weight:700;margin-top:3px}
 /* tabs */
 .tabs{display:flex;gap:6px;margin-bottom:12px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:6px;box-shadow:var(--shadow)}
-.tab{flex:1;padding:13px 8px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;text-align:center;color:var(--ink-2);background:none;border:none;font-family:'Nunito',sans-serif;transition:.15s;min-height:46px}
+.tab{flex:1;padding:13px 8px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;text-align:center;color:var(--ink-2);background:none;border:none;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;transition:.15s;min-height:46px}
 .tab.on{background:var(--green);color:#fff}
 .panel{display:none}.panel.on{display:block}
 .card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
-.card-title{font-size:17px;font-weight:800;color:var(--green);margin-bottom:13px;font-family:'Baloo 2',sans-serif}
+.card-title{font-size:17px;font-weight:800;color:var(--green);margin-bottom:13px;font-family:'Baloo 2','Mitr',sans-serif}
 /* step bars */
 .step-bars{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
 .sbar{display:flex;align-items:center;gap:9px}
@@ -58,14 +58,14 @@ body{background:var(--cream);min-height:100vh;padding:16px;max-width:720px;margi
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .mcard{background:var(--cream-2);border-radius:13px;padding:14px;text-align:center}
 .mcard-name{font-size:15px;font-weight:800;color:var(--green);margin-bottom:7px}
-.mcard-n{font-size:24px;font-weight:800;font-family:'Baloo 2',sans-serif}
+.mcard-n{font-size:24px;font-weight:800;font-family:'Baloo 2','Mitr',sans-serif}
 .mcard-sub{font-size:14px;color:var(--ink-2);font-weight:600}
 /* detail drawer */
 .detail{display:none;background:var(--cream-2);border-radius:11px;padding:12px 14px;margin:-2px 0 6px;border:1px solid var(--line)}
 .detail.open{display:block}
 .tip{background:var(--orange-soft);border:1.5px solid #F0D2AE;border-radius:11px;padding:11px 14px;font-size:14px;color:var(--orange);font-weight:700;margin-bottom:7px;line-height:1.65}
 .no-data{text-align:center;padding:26px;color:var(--ink-3);font-size:15px;font-weight:700}
-a.back{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#fff;border-radius:12px;padding:13px 18px;font-size:15px;font-weight:800;text-decoration:none;margin-bottom:12px;font-family:'Nunito',sans-serif;min-height:46px}
+a.back{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#fff;border-radius:12px;padding:13px 18px;font-size:15px;font-weight:800;text-decoration:none;margin-bottom:12px;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;min-height:46px}
 canvas{max-height:200px}
 @media (max-width:360px){
   body{padding:12px}

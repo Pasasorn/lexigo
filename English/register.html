@@ -7,7 +7,7 @@
 <title>PeekaWord — สมัครเรียน</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mitr:wght@400;500;600&family=Noto+Sans+Thai+Looped:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม เสริมส้มดินเผา ม่วง ฟ้า ═══ */
 :root{
@@ -21,7 +21,7 @@
   --line:#E4DED0;
   --shadow:0 2px 10px rgba(30,64,52,.06);
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Noto Sans Thai Looped',sans-serif}
 body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size-adjust:100%}
 
 /* Pages */
@@ -31,21 +31,21 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 /* Header */
 .hdr{background:var(--green);border-radius:22px;padding:22px 18px 18px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow)}
 .hdr .logo{font-size:38px;margin-bottom:6px}
-.hdr h1{font-size:21px;font-weight:800;color:#fff;font-family:'Baloo 2',sans-serif;margin-bottom:4px}
+.hdr h1{font-size:21px;font-weight:800;color:#fff;font-family:'Baloo 2','Mitr',sans-serif;margin-bottom:4px}
 .hdr p{font-size:15px;color:#CBDACF;font-weight:600;line-height:1.6}
 .hdr-sm{background:var(--green);border-radius:16px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
 .hdr-sm .ico{font-size:28px}
-.hdr-sm h2{font-size:17px;font-weight:800;color:#fff;font-family:'Baloo 2',sans-serif;margin-bottom:2px}
+.hdr-sm h2{font-size:17px;font-weight:800;color:#fff;font-family:'Baloo 2','Mitr',sans-serif;margin-bottom:2px}
 .hdr-sm p{font-size:14px;color:#CBDACF;font-weight:600}
 
 /* Cards */
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
-.card-title{font-size:16px;font-weight:800;color:var(--green);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;font-family:'Baloo 2',sans-serif}
+.card-title{font-size:16px;font-weight:800;color:var(--green);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;font-family:'Baloo 2','Mitr',sans-serif}
 
 /* ─── TIER PRICING TABLE ─── */
 .tier-card{background:var(--green);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:0 4px 18px rgba(30,64,52,.22)}
 .tier-head{text-align:center;margin-bottom:14px}
-.tier-head h2{font-size:19px;font-weight:800;color:#fff;margin-bottom:3px;font-family:'Baloo 2',sans-serif}
+.tier-head h2{font-size:19px;font-weight:800;color:#fff;margin-bottom:3px;font-family:'Baloo 2','Mitr',sans-serif}
 .tier-head p{font-size:14px;font-weight:600;color:#BBCEC1}
 .tier-rows{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
 .tier-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;transition:.2s}
@@ -59,7 +59,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 .tier-n{font-size:14px;font-weight:800;color:#fff;text-align:center;line-height:1.25}
 .tier-info{flex:1}
 .tier-label{font-size:14px;font-weight:600;color:#BBCEC1;margin-bottom:1px}
-.tier-price{font-size:22px;font-weight:800;color:#fff;line-height:1.1;font-family:'Baloo 2',sans-serif}
+.tier-price{font-size:22px;font-weight:800;color:#fff;line-height:1.1;font-family:'Baloo 2','Mitr',sans-serif}
 .tier-tag{font-size:14px;font-weight:800;padding:3px 9px;border-radius:8px;white-space:nowrap}
 .tier-row.current .tier-tag{background:rgba(255,255,255,.26);color:#fff}
 .tier-row.sold .tier-tag{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
@@ -67,12 +67,12 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 /* Price spotlight */
 .price-spotlight{text-align:center;padding:14px 0 10px}
 .price-badge{display:inline-block;background:rgba(255,255,255,.16);color:#F3D9A8;border-radius:11px;padding:6px 15px;font-size:14px;font-weight:800;margin-bottom:8px}
-.price-big{font-size:52px;font-weight:800;color:#fff;line-height:1.05;font-family:'Baloo 2',sans-serif}
+.price-big{font-size:52px;font-weight:800;color:#fff;line-height:1.05;font-family:'Baloo 2','Mitr',sans-serif}
 .price-save{font-size:15px;font-weight:700;color:#F3D9A8;margin-top:6px}
 /* Spots countdown */
 .spots-countdown{background:rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;text-align:center;margin-bottom:12px}
 .spots-label{font-size:14px;font-weight:600;color:#BBCEC1;margin-bottom:3px}
-.spots-big{font-size:40px;font-weight:800;color:#F3D9A8;line-height:1;font-family:'Baloo 2',sans-serif}
+.spots-big{font-size:40px;font-weight:800;color:#F3D9A8;line-height:1;font-family:'Baloo 2','Mitr',sans-serif}
 .spots-unit{font-size:14px;font-weight:600;color:#BBCEC1;margin-top:3px}
 .spots-bar-wrap{height:8px;background:rgba(255,255,255,.14);border-radius:4px;margin-top:11px;overflow:hidden}
 .spots-bar-fill{height:100%;background:#C97B52;border-radius:4px;transition:width .8s ease}
@@ -86,27 +86,27 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 .lvl.sel{border-color:var(--green);background:var(--green-soft);box-shadow:0 2px 8px rgba(30,64,52,.18)}
 .lvl.bonus{border-color:#D9B48A;background:var(--orange-soft)}
 .lvl.bonus.sel{border-color:var(--brown);background:var(--orange-soft)}
-.lv-num{font-size:20px;font-weight:800;color:var(--green);line-height:1;font-family:'Baloo 2',sans-serif}
+.lv-num{font-size:20px;font-weight:800;color:var(--green);line-height:1;font-family:'Baloo 2','Mitr',sans-serif}
 .lv-day{font-size:14px;font-weight:600;color:var(--ink-3);margin-top:3px;line-height:1.25}
 .lv-bonus{font-size:14px;font-weight:800;color:var(--brown);margin-top:2px}
 
 /* lifetime select button */
-.btn-lifetime{width:100%;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:18px 14px;font-size:18px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px;box-shadow:0 3px 0 var(--brown-dk);transition:.12s;min-height:56px}
+.btn-lifetime{width:100%;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:18px 14px;font-size:18px;font-weight:900;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;margin-top:12px;box-shadow:0 3px 0 var(--brown-dk);transition:.12s;min-height:56px}
 .btn-lifetime:active{transform:translateY(2px);box-shadow:0 1px 0 var(--brown-dk)}
 .price-per-day{text-align:center;margin-top:11px;font-size:15px;font-weight:700;color:#F3D9A8}
-.btn-lvl-go{width:100%;background:var(--green);color:#fff;border:none;border-radius:13px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px;min-height:50px;box-shadow:var(--shadow)}
+.btn-lvl-go{width:100%;background:var(--green);color:#fff;border:none;border-radius:13px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;margin-top:12px;min-height:50px;box-shadow:var(--shadow)}
 
 /* summary box */
 .sum-box{background:var(--green-soft);border:1px solid var(--green-line);border-radius:14px;padding:14px 16px;margin-bottom:14px}
 .sum-pkg{font-size:16px;font-weight:800;color:var(--green)}
-.sum-amt{font-size:28px;font-weight:800;color:var(--brown);margin-top:3px;font-family:'Baloo 2',sans-serif}
+.sum-amt{font-size:28px;font-weight:800;color:var(--brown);margin-top:3px;font-family:'Baloo 2','Mitr',sans-serif}
 .sum-note{font-size:14px;font-weight:600;color:var(--ink-2);margin-top:5px}
 
 /* Fields */
 .field{margin-bottom:14px}
 .field label{display:block;font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px}
 .req{color:var(--brown)}
-.inp{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;font-weight:600;color:var(--ink);font-family:'Nunito',sans-serif;background:#fff;transition:.15s;min-height:50px}
+.inp{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;font-weight:600;color:var(--ink);font-family:'Nunito','Noto Sans Thai Looped',sans-serif;background:#fff;transition:.15s;min-height:50px}
 .inp:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(30,64,52,.08)}
 .inp.ok{border-color:#5E9E6B}
 .inp.err{border-color:#C0564A;background:#FBECEA}
@@ -116,13 +116,13 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 
 /* bank */
 .bank-box{background:var(--blue-soft);border:1px solid #C9E2E9;border-radius:14px;padding:15px}
-.bank-ttl{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:11px;display:flex;align-items:center;gap:6px;font-family:'Baloo 2',sans-serif}
+.bank-ttl{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:11px;display:flex;align-items:center;gap:6px;font-family:'Baloo 2','Mitr',sans-serif}
 .brow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(31,111,139,.14);font-size:15px}
 .brow:last-child{border:none}
 .blbl{font-weight:600;color:var(--ink-2)}
 .bval{font-weight:800;color:var(--blue);text-align:right}
-.bcopy{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:8px 12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;min-height:38px;white-space:nowrap}
-.bamt{font-size:21px;font-weight:800;color:var(--brown);font-family:'Baloo 2',sans-serif}
+.bcopy{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:8px 12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;min-height:38px;white-space:nowrap}
+.bamt{font-size:21px;font-weight:800;color:var(--brown);font-family:'Baloo 2','Mitr',sans-serif}
 .qr-ph{background:#fff;border:1.5px dashed #9FC9D4;border-radius:12px;padding:14px;text-align:center;margin-top:12px}
 .qr-ph .qr-box{width:110px;height:110px;background:var(--cream-2);border-radius:9px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-3);font-weight:700;text-align:center}
 .qr-ph p{font-size:14px;font-weight:600;color:var(--ink-2)}
@@ -135,7 +135,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 .slip-preview img{max-width:100%;max-height:170px;border-radius:11px;border:2px solid var(--green-line)}
 
 /* buttons */
-.btn{width:100%;border:none;border-radius:14px;padding:16px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:.1s;margin-top:8px;min-height:54px}
+.btn{width:100%;border:none;border-radius:14px;padding:16px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;transition:.1s;margin-top:8px;min-height:54px}
 .btn:active{transform:translateY(2px)}
 .btn-orange{background:var(--brown);color:#fff;box-shadow:0 3px 0 var(--brown-dk)}
 .btn-orange:active{box-shadow:0 1px 0 var(--brown-dk)}
@@ -160,7 +160,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 /* pending page */
 .pend-hero{text-align:center;padding:12px 0 16px}
 .pend-hero .ico{font-size:52px;margin-bottom:8px}
-.pend-hero h2{font-size:22px;font-weight:800;color:var(--green);margin-bottom:6px;font-family:'Baloo 2',sans-serif}
+.pend-hero h2{font-size:22px;font-weight:800;color:var(--green);margin-bottom:6px;font-family:'Baloo 2','Mitr',sans-serif}
 .pend-tag{display:inline-block;background:var(--orange-soft);border:1.5px solid #F0D2AE;border-radius:11px;padding:7px 16px;font-size:15px;font-weight:800;color:var(--orange)}
 .info-table{background:var(--cream-2);border-radius:13px;padding:12px 14px;margin:14px 0;border:1px solid var(--line)}
 .irow{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:15px;border-bottom:1px solid var(--line)}
@@ -217,7 +217,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     <p>ชวนฟัง ชวนคิด ฝึกพูดวันละนิด พิชิต 3,000 คำ</p>
   </div>
 
-  <a href="trial.html" style="display:block;background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff;border-radius:16px;padding:14px;text-align:center;text-decoration:none;font-family:'Nunito',sans-serif;margin-bottom:14px;box-shadow:0 3px 12px rgba(46,125,50,.3)"><div style="font-size:16px;font-weight:900">🎁 ยังไม่แน่ใจ? ทดลองเรียนฟรี 7 วัน</div><div style="font-size:11px;font-weight:600;opacity:.95;margin-top:2px">Day 1–3 เข้าเรียนได้ทันที ไม่ต้องสมัคร</div></a>
+  <a href="trial.html" style="display:block;background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff;border-radius:16px;padding:14px;text-align:center;text-decoration:none;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;margin-bottom:14px;box-shadow:0 3px 12px rgba(46,125,50,.3)"><div style="font-size:16px;font-weight:900">🎁 ยังไม่แน่ใจ? ทดลองเรียนฟรี 7 วัน</div><div style="font-size:11px;font-weight:600;opacity:.95;margin-top:2px">Day 1–3 เข้าเรียนได้ทันที ไม่ต้องสมัคร</div></a>
   <!-- ── เรียนแบบธรรมชาติ ── -->
   <div style="background:#fff;border-radius:18px;padding:18px 16px;margin-bottom:14px;box-shadow:0 3px 14px rgba(0,0,0,.06)">
     <div style="text-align:center;font-size:15px;font-weight:900;color:#37474F;margin-bottom:3px">🌱 เรียนแบบธรรมชาติ ค่อยเป็นค่อยไป</div>
@@ -263,7 +263,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 
     <!-- Current price display -->
     <div class="price-spotlight">
-      <div class="price-badge" id="priceBadge">🔥 ราคาพิเศษ</div>
+      <div class="price-badge" id="priceBadge">ราคาช่วงเปิดตัว</div>
       <div class="price-big" id="priceMain">…</div>
       <div class="price-save" id="priceSave"></div>
     </div>
@@ -271,9 +271,9 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     <!-- Spots countdown -->
     <div class="spots-countdown">
       <div>
-        <div class="spots-label" id="spotsLabel">เหลือเพียง</div>
+        <div class="spots-label" id="spotsLabel">ราคานี้สำหรับผู้เรียนอีก</div>
         <div class="spots-big" id="spotsNum">…</div>
-        <div class="spots-unit">ที่ว่าง</div>
+        <div class="spots-unit">คน · หลังจากนั้นปรับขึ้นตามลำดับ</div>
       </div>
       <div class="spots-bar-wrap">
         <div class="spots-bar-fill" id="spotsBarFill"></div>
@@ -683,7 +683,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     </div>
     <div class="info-table" id="succDetail"></div>
     <div id="succMsg" style="border-radius:11px;padding:11px 13px;font-size:12px;font-weight:700;line-height:1.7;margin-top:10px"></div>
-    <a id="succGo" href="login.html" style="display:none;margin-top:12px;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:13px;font-size:16px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito',sans-serif">🚀 เข้าสู่ระบบ เริ่มเรียนเลย</a>
+    <a id="succGo" href="login.html" style="display:none;margin-top:12px;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:13px;font-size:16px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🚀 เข้าสู่ระบบ เริ่มเรียนเลย</a>
     <div id="approvalNotif" style="display:none;margin-top:10px"></div>
   </div>
   <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่</button>
@@ -697,10 +697,10 @@ const SK = 'wla_student';
 
 // ── Tier config ──
 const TIERS = [
-  { label:'30 คนแรก', range:'1–30',   price:1990, max:30,  tag:'🔥 Founder Price' },
-  { label:'รอบที่ 2',  range:'31–60',  price:2590, max:60,  tag:'Early Bird' },
-  { label:'รอบที่ 3',  range:'61–100', price:2990, max:100, tag:'Standard' },
-  { label:'รอบที่ 4',  range:'101+',   price:3990, max:9999,tag:'Regular' }
+  { label:'30 คนแรก', range:'1–30',   price:1990, max:30,  tag:'ช่วงเปิดตัว' },
+  { label:'รอบที่ 2',  range:'31–60',  price:2590, max:60,  tag:'รอบที่ 2' },
+  { label:'รอบที่ 3',  range:'61–100', price:2990, max:100, tag:'รอบที่ 3' },
+  { label:'รอบที่ 4',  range:'101+',   price:3990, max:9999,tag:'ราคาปกติ' }
 ];
 let currentTier = 0, spotsLeft = 30, selectedPkg = null, selectedLevel = null, slipData = null;
 
@@ -796,13 +796,13 @@ function updateTierUI(sold) {
 
   if (spotsLeft > 0) {
     num.textContent = spotsLeft;
-    lbl.textContent = 'เหลือเพียง';
+    lbl.textContent = 'ราคานี้สำหรับผู้เรียนอีก';
     // progress bar: เต็ม = 0 ที่เหลือ
     const pct = (spotsLeft / (tier.max - prevMax)) * 100;
     if (fill) fill.style.width = pct + '%';
   } else {
     num.textContent = '0';
-    lbl.textContent = '⚡ รอบนี้เต็มแล้ว';
+    lbl.textContent = 'ราคารอบนี้ครบแล้ว';
     if (fill) fill.style.width = '0%';
   }
 }
@@ -1006,7 +1006,7 @@ function showPending(d) {
       <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:#E65100;text-align:center">
         ${d.autoVerified ? '✅ เพิ่ม Level ให้บัญชีเดิมแล้ว<br><span style="font-size:11px;font-weight:600">ใช้ code เดิม login ได้ทันที · ส่งอีเมลยืนยันแล้ว</span>' : '⏳ กำลังตรวจสลิป<br><span style="font-size:11px;font-weight:600">ถ้าตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้ภายในวันเดียวกัน<br>อนุมัติแล้ว Level ใหม่ปลดล็อกเอง ใช้ code เดิมได้เลย</span>'}
       </div>
-      <a href="dashboard.html" style="display:block;margin-top:14px;background:var(--green);color:#fff;border-radius:13px;padding:15px;font-size:16px;font-weight:800;text-decoration:none;text-align:center;font-family:'Nunito',sans-serif">🏠 กลับหน้าหลัก</a>`;
+      <a href="dashboard.html" style="display:block;margin-top:14px;background:var(--green);color:#fff;border-radius:13px;padding:15px;font-size:16px;font-weight:800;text-decoration:none;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🏠 กลับหน้าหลัก</a>`;
     setStep(2); go(2);
     return;  // ไม่ไปฟอร์มลงทะเบียน
   }
@@ -1059,7 +1059,7 @@ async function checkOrderStatus(d) {
         notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:700;color:#C62828;text-align:center;line-height:1.8">
           ❌ สลิปไม่ผ่านการตรวจสอบ<br>
           <span style="font-size:11px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือส่งสลิปใหม่</span><br><br>
-          <button onclick="retryPayment()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
+          <button onclick="retryPayment()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
             🔄 ส่งสลิปใหม่</button>
           <div style="margin-top:8px;font-size:11px">หรือทักมาที่ Line: <strong>@PeekaWord</strong></div>
         </div>`;
@@ -1259,7 +1259,7 @@ async function checkApprovalStatus(code) {
         notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:700;color:#C62828;text-align:center;line-height:1.8">
           ❌ สลิปไม่ผ่านการตรวจสอบ<br>
           <span style="font-size:11px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือทักครูทาง Line</span><br><br>
-          <button onclick="resetAll()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">
+          <button onclick="resetAll()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
             🔄 สมัครใหม่</button>
           <div style="margin-top:8px;font-size:11px">Line: <strong>@PeekaWord</strong></div>
         </div>`;
@@ -1351,7 +1351,7 @@ function attachMailHelper(inputId) {
     b.textContent = '@' + d;
     b.style.cssText = 'border:1.5px solid #C7D5FF;background:#F1F5FF;color:#2E5BFF;' +
       'border-radius:999px;padding:5px 10px;font-size:11px;font-weight:800;' +
-      "cursor:pointer;font-family:'Nunito',sans-serif";
+      "cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif";
     b.onclick = function () {
       var v = inp.value.trim();
       var at = v.indexOf('@');

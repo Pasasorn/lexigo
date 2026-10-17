@@ -2,7 +2,7 @@
 <html lang="th"><head>
 <meta name="theme-color" content="#1E4034"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PeekaWord — หน้าหลัก</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mitr:wght@400;500;600&family=Noto+Sans+Thai+Looped:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม ═══ */
 :root{
@@ -15,25 +15,25 @@
   --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
   --line:#E4DED0; --shadow:0 2px 10px rgba(30,64,52,.06);
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito','Noto Sans Thai Looped',sans-serif}
 body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-webkit-text-size-adjust:100%}
 
 /* ── Header ── */
 .header{background:var(--green);border-radius:20px;padding:20px;margin-bottom:14px;color:#fff;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow)}
 .logo{font-size:36px;line-height:1}
-.header-text h1{font-size:22px;font-weight:800;margin-bottom:3px;font-family:'Baloo 2',sans-serif}
+.header-text h1{font-size:22px;font-weight:800;margin-bottom:3px;font-family:'Baloo 2','Mitr',sans-serif}
 .header-text p{font-size:15px;font-weight:600;color:#CBDACF}
 .header-badge{margin-left:auto;background:rgba(255,255,255,.14);border-radius:13px;padding:8px 13px;text-align:center;font-size:14px;font-weight:700;color:#CBDACF}
-.header-badge .num{font-size:24px;font-weight:800;display:block;line-height:1.15;color:#fff;font-family:'Baloo 2',sans-serif}
+.header-badge .num{font-size:24px;font-weight:800;display:block;line-height:1.15;color:#fff;font-family:'Baloo 2','Mitr',sans-serif}
 
 /* ── Stats row ── */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .stat-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:center;box-shadow:var(--shadow)}
-.stat-card .num{font-size:26px;font-weight:800;color:var(--green);display:block;font-family:'Baloo 2',sans-serif}
+.stat-card .num{font-size:26px;font-weight:800;color:var(--green);display:block;font-family:'Baloo 2','Mitr',sans-serif}
 .stat-card .lbl{font-size:14px;font-weight:700;color:var(--ink-2)}
 
 /* ── Section title ── */
-.sec-title{font-size:17px;font-weight:800;color:var(--green);margin-bottom:11px;padding-left:2px;font-family:'Baloo 2',sans-serif}
+.sec-title{font-size:17px;font-weight:800;color:var(--green);margin-bottom:11px;padding-left:2px;font-family:'Baloo 2','Mitr',sans-serif}
 
 /* ── Day grid ── */
 .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
@@ -67,15 +67,15 @@ body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-web
 /* ── Pending screen ── */
 .pending-box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 20px;text-align:center;box-shadow:var(--shadow);margin-bottom:16px}
 .pending-box .big-ico{font-size:56px;margin-bottom:14px}
-.pending-box h2{font-size:21px;font-weight:800;color:var(--green);margin-bottom:8px;font-family:'Baloo 2',sans-serif}
+.pending-box h2{font-size:21px;font-weight:800;color:var(--green);margin-bottom:8px;font-family:'Baloo 2','Mitr',sans-serif}
 .pending-box p{font-size:15px;color:var(--ink-2);font-weight:600;line-height:1.7}
 .poll-note{font-size:14px;color:var(--ink-3);margin-top:12px}
 #approvalNotif{margin-top:14px}
 
 /* ── Bottom bar ── */
 .bottom-bar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;gap:10px;align-items:center;box-shadow:var(--shadow);margin-bottom:14px}
-.btn-progress{flex:1;background:var(--green);color:#fff;border:none;border-radius:13px;padding:14px;font-size:16px;font-weight:800;cursor:pointer;text-decoration:none;display:block;text-align:center;font-family:'Nunito',sans-serif;min-height:48px}
-.btn-logout{background:#fff;border:1.5px solid var(--line);color:var(--ink-2);border-radius:13px;padding:13px 15px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;min-height:48px}
+.btn-progress{flex:1;background:var(--green);color:#fff;border:none;border-radius:13px;padding:14px;font-size:16px;font-weight:800;cursor:pointer;text-decoration:none;display:block;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;min-height:48px}
+.btn-logout{background:#fff;border:1.5px solid var(--line);color:var(--ink-2);border-radius:13px;padding:13px 15px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;min-height:48px}
 
 /* ── Course badge ── */
 .course-badge{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px 15px;margin-bottom:14px;display:flex;align-items:center;gap:11px;box-shadow:var(--shadow)}
@@ -659,7 +659,7 @@ async function checkApproval(code) {
       if (notif) {
         notif.innerHTML = `<div style="background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:11px;padding:12px 14px;font-size:13px;font-weight:800;color:#065F46;line-height:1.8">
           🎉 ครูอนุมัติแล้ว! รีโหลดเพื่อเริ่มเรียน<br>
-          <button onclick="location.reload()" style="margin-top:8px;background:#059669;color:#fff;border:none;border-radius:10px;padding:9px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif">
+          <button onclick="location.reload()" style="margin-top:8px;background:#059669;color:#fff;border:none;border-radius:10px;padding:9px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
             🌟 เริ่มเรียนเลย!</button></div>`;
       }
     } else if (res.approval_status === 'rejected') {
@@ -669,7 +669,7 @@ async function checkApproval(code) {
         notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:13px;font-weight:800;color:#C62828;line-height:1.8">
           ❌ สลิปไม่ผ่านการตรวจสอบ<br>
           <span style="font-size:12px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือสมัครใหม่</span><br>
-          <button onclick="location.href='register.html'" style="margin-top:8px;background:#C62828;color:#fff;border:none;border-radius:10px;padding:9px 22px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif">
+          <button onclick="location.href='register.html'" style="margin-top:8px;background:#C62828;color:#fff;border:none;border-radius:10px;padding:9px 22px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
             🔄 สมัครใหม่</button>
           <div style="margin-top:8px;font-size:11px">ติดต่อ Line: <strong>@PeekaWord</strong></div></div>`;
       }
