@@ -108,8 +108,11 @@ header{
   border:1px solid var(--green-line); color:var(--green); border-radius:999px;
   padding:7px 15px; font-size:14px; font-weight:800;
 }
-.mark-p{background:var(--purple-soft); color:var(--purple); border-radius:7px; padding:1px 7px; font-weight:800}
-.mark-o{background:var(--orange-soft); color:var(--orange); border-radius:7px; padding:1px 7px; font-weight:800}
+/* ไฮไลต์ต้องไม่ถูกตัดกลางคำ ไม่งั้นกล่องสีจะขาดเป็นสองบรรทัด */
+.mark-p,.mark-o{border-radius:7px; padding:2px 8px; font-weight:800;
+  white-space:nowrap; display:inline-block}
+.mark-p{background:var(--purple-soft); color:var(--purple)}
+.mark-o{background:var(--orange-soft); color:var(--orange); margin-top:6px}
 .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
 .muted{color:var(--ink-2); font-size:15px; font-weight:600}
 .tiny{color:var(--ink-3); font-size:14px; font-weight:600; line-height:1.65}
@@ -424,7 +427,7 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
 
     <p class="hero-sub">
       เปลี่ยนการท่องจำ เป็นการเรียนรู้ผ่านเรื่องสนุก ให้ลูกได้ฟัง อ่าน
-      <span class="mark-p">ฝึกพูดและดูคะแนน</span> และทบทวนคำเดิมอย่างสม่ำเสมอ
+      <span class="mark-p">ฝึกพูดและดูคะแนน</span> และทบทวนคำเดิมอย่างสม่ำเสมอ<br>
       <span class="mark-o">วันละ 15–20 นาที</span>
     </p>
     <a class="btn btn-main" href="trial.html">ทดลองเรียนฟรี 7 วัน ↗</a>
