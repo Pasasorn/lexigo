@@ -1647,7 +1647,24 @@ function actionVerifyPurchaseSlip(p, cb) {
 
 // ── ออกรหัสใหม่ หรือเพิ่ม Level ให้บัญชีเดิม ────────────────
 // ── ส่งอีเมลรหัสนักเรียนอัตโนมัติ (ไม่ขัดจังหวะถ้าส่งไม่สำเร็จ) ──
-function sendWelcomeEmail_(email, name, code, pkg, upgraded) {
+// ── รหัสปลดล็อกวันแรกของ Level ที่ซื้อ ───────────────────────
+// หน้าบทเรียนปลดล็อกด้วย "รหัสของวันก่อนหน้า" (เช่น Day 181 ขอรหัส D180-XXXX)
+// คนที่ซื้อ Level กลางคันจึงไม่เคยมีรหัสนั้น → เปิดวันแรกของตัวเองไม่ได้
+// ฟังก์ชันนี้สร้างรหัสให้ แล้วส่งไปกับอีเมล เพื่อไม่ต้องรอครูส่งให้ทีละคน
+function unlockCodeFor_(pkgName, type) {
+  if ((type || '').toString().trim() !== 'level') return '';
+  const m = String(pkgName || '').match(/Level\s*(\d{1,2})/i);
+  if (!m) return '';
+  const lv = parseInt(m[1], 10);
+  if (!(lv >= 2 && lv <= 15)) return '';          // Level 1 เริ่ม Day 1 ไม่ต้องใช้รหัส
+  const prevDay = (lv - 1) * 30;                   // Level 7 → Day 180
+  const CH = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // ชุดเดียวกับที่หน้าบทเรียนใช้
+  let s = 'D' + prevDay + '-';
+  for (let i = 0; i < 4; i++) s += CH.charAt(Math.floor(Math.random() * CH.length));
+  return s;
+}
+
+function sendWelcomeEmail_(email, name, code, pkg, upgraded, unlockCode) {
   if (!email || !code) return false;
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return false;
   try {
