@@ -1,41 +1,68 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PeekaWord — ทดลองเรียนฟรี 7 วัน</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#1E4034">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม เสริมส้มดินเผา ═══ */
+:root{
+  --cream:#FAF7F0; --cream-2:#F3EFE4;
+  --green:#1E4034; --green-soft:#E8EFE6; --green-line:#CFE0D2;
+  --brown:#A6482B; --brown-dk:#8E3B21;
+  --orange:#B5651D; --orange-soft:#FBE7D2;
+  --purple:#6B4E9E; --purple-soft:#EFE8F8;
+  --blue:#1F6F8B; --blue-soft:#E2EFF3;
+  --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
+  --line:#E4DED0; --shadow:0 2px 10px rgba(30,64,52,.06);
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
-body{background:#FFF8F0;min-height:100vh;padding:16px}
+body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-webkit-text-size-adjust:100%}
 .wrap{max-width:520px;margin:0 auto}
-.hdr{background:linear-gradient(135deg,#FF6B35,#FF9800);border-radius:22px;padding:22px 18px;color:#fff;text-align:center;margin-bottom:14px}
+
+.hdr{background:var(--green);border-radius:22px;padding:24px 18px;color:#fff;text-align:center;margin-bottom:14px;box-shadow:var(--shadow)}
 .hdr .ico{font-size:46px;line-height:1}
-.hdr h1{font-size:26px;font-weight:900;margin-top:4px}
-.hdr .tag{font-size:13px;font-weight:800;opacity:.95;margin-top:2px}
-.hdr .sub{font-size:12px;font-weight:600;opacity:.9;margin-top:1px}
-.badge{display:inline-block;background:rgba(255,255,255,.25);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:900;margin-top:10px}
-.card{background:#fff;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 3px 14px rgba(0,0,0,.06)}
-.sec-t{font-size:15px;font-weight:900;color:#37474F;margin-bottom:10px;text-align:center}
+.hdr h1{font-size:28px;font-weight:800;margin-top:6px;font-family:'Baloo 2',sans-serif}
+.hdr .tag{font-size:16px;font-weight:700;color:#CBDACF;margin-top:3px}
+.hdr .sub{font-size:15px;font-weight:600;color:#BBCEC1;margin-top:4px;line-height:1.6}
+.badge{display:inline-block;background:rgba(255,255,255,.16);border-radius:999px;padding:8px 18px;font-size:15px;font-weight:800;margin-top:12px;color:#F3D9A8}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.sec-t{font-size:18px;font-weight:800;color:var(--green);margin-bottom:12px;text-align:center;font-family:'Baloo 2',sans-serif}
+
 .day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.day{border-radius:14px;padding:13px 6px;text-align:center;text-decoration:none;display:block;border:2px solid transparent;transition:.15s}
-.day.open{background:#E8F5E9;border-color:#A5D6A7;cursor:pointer}
+.day{border-radius:15px;padding:14px 6px;text-align:center;text-decoration:none;display:block;border:2px solid var(--green-line);background:var(--green-soft);transition:.15s;min-height:92px}
+.day.open{background:var(--green-soft);border-color:var(--green-line);cursor:pointer}
 .day.open:active{transform:scale(.96)}
-.day.lock{background:#F5F5F5;border-color:#E0E0E0;cursor:pointer}
-.day .ico{font-size:20px;display:block}
-.day .n{display:block;font-size:13px;font-weight:900;color:#2E7D32;margin-top:2px}
-.day.lock .n{color:#9E9E9E}
-.day .t{display:block;font-size:9px;font-weight:700;color:#78909C;line-height:1.3;margin-top:1px}
-.inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:13px 15px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;color:#1E3A5F;background:#FAFAFA;margin-bottom:9px}
-.inp:focus{border-color:#FF6B35;background:#fff}
-.btn{width:100%;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif}
-.btn:active{opacity:.85}
-.btn.green{background:linear-gradient(135deg,#66BB6A,#2E7D32)}
-.feat{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
-.feat div{background:#F5F5F5;border-radius:12px;padding:10px 8px;text-align:center}
-.feat .fi{font-size:24px}
-.feat .fn{font-size:12px;font-weight:900;color:#37474F;margin-top:1px}
-.feat .fd{font-size:9px;color:#90A4AE;font-weight:700;line-height:1.4}
-.note{font-size:11px;color:#90A4AE;font-weight:700;text-align:center;line-height:1.6;margin-top:10px}
-.warn{display:none;background:#FF6B35;color:#fff;padding:11px 14px;border-radius:12px;font-size:13px;font-weight:800;text-align:center;margin-bottom:12px;line-height:1.5}
-#msg{font-size:13px;font-weight:800;text-align:center;min-height:18px;margin-top:8px}
+.day.lock{background:var(--cream-2);border-color:var(--line);cursor:pointer}
+.day .ico{font-size:22px;display:block}
+.day .n{display:block;font-size:15px;font-weight:800;color:var(--green);margin-top:3px}
+.day.lock .n{color:var(--ink-3)}
+.day .t{display:block;font-size:14px;font-weight:600;color:var(--ink-2);line-height:1.35;margin-top:2px}
+
+.inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 15px;font-size:16px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;color:var(--ink);background:#fff;margin-bottom:9px;min-height:50px}
+.inp:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(30,64,52,.08)}
+
+.btn{width:100%;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;min-height:54px;box-shadow:0 3px 0 var(--brown-dk);transition:.1s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--brown-dk)}
+.btn.green{background:var(--green);box-shadow:0 3px 0 #153026}
+
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.feat div{background:var(--cream-2);border-radius:14px;padding:14px 10px;text-align:center}
+.feat .fi{font-size:26px}
+.feat .fn{font-size:16px;font-weight:800;color:var(--green);margin-top:3px}
+.feat .fd{font-size:14px;color:var(--ink-2);font-weight:600;line-height:1.55;margin-top:2px}
+
+.note{font-size:14px;color:var(--ink-2);font-weight:600;text-align:center;line-height:1.7;margin-top:12px}
+.warn{display:none;background:var(--orange-soft);color:var(--orange);border:1.5px solid #F0D2AE;padding:13px 15px;border-radius:13px;font-size:15px;font-weight:800;text-align:center;margin-bottom:12px;line-height:1.6}
+#msg{font-size:15px;font-weight:800;text-align:center;min-height:20px;margin-top:8px}
+
+@media (max-width:360px){
+  body{padding:12px}
+  .hdr h1{font-size:24px}
+  .day{min-height:86px}
+  .day .t{font-size:13.5px}
+}
 </style></head>
 <body>
 <div class="wrap">
@@ -45,7 +72,7 @@ body{background:#FFF8F0;min-height:100vh;padding:16px}
     <div class="ico">🎁</div>
     <h1>PeekaWord</h1>
     <div class="tag">เปิดโลกคำศัพท์</div>
-    <div class="sub">ชวนฟัง ชวนคิด ฝึกพูดวันละนิด พิชิต 3,000 คำ</div>
+    <div class="sub">ฟัง อ่าน พูด ทบทวน วันละ 15–20 นาที</div>
     <div class="badge">✨ ทดลองเรียนฟรี 7 วัน</div>
   </div>
 
@@ -71,7 +98,7 @@ body{background:#FFF8F0;min-height:100vh;padding:16px}
     <div class="sec-t">📚 เรียนแบบธรรมชาติ ค่อยเป็นค่อยไป</div>
     <div class="feat">
       <div><div class="fi">👂</div><div class="fn">ฟัง</div><div class="fd">ฟังเรื่องก่อน<br>ให้หูคุ้นเสียง</div></div>
-      <div><div class="fi">🗣️</div><div class="fn">พูด</div><div class="fd">AI ฟัง<br>ให้คะแนนทันที</div></div>
+      <div><div class="fi">🗣️</div><div class="fn">พูด</div><div class="fd">พูดตามประโยค<br>ได้คะแนนทันที</div></div>
       <div><div class="fi">📖</div><div class="fn">อ่าน</div><div class="fd">เรื่องสั้น<br>เห็นคำในบริบท</div></div>
       <div><div class="fi">💭</div><div class="fn">คิด</div><div class="fd">ตอบคำถาม<br>เข้าใจจริง</div></div>
     </div>
@@ -81,7 +108,7 @@ body{background:#FFF8F0;min-height:100vh;padding:16px}
   <div class="card" style="text-align:center">
     <div class="sec-t">ชอบมั้ย? เรียนต่อครบ 448 วัน</div>
     <a href="register.html" class="btn" style="display:block;text-decoration:none;padding:14px">🛒 ดูแพ็กเกจ / สมัครเรียน</a>
-    <div class="note">มีรหัสแล้ว? <a href="login.html" style="color:#FF6B35;font-weight:900;text-decoration:none">เข้าสู่ระบบ</a></div>
+    <div class="note">มีรหัสแล้ว? <a href="login.html" style="color:var(--green);font-weight:800">เข้าสู่ระบบ</a></div>
   </div>
 </div>
 
@@ -125,10 +152,10 @@ function render(){
     pg.innerHTML='ยังไม่ได้เรียนวันไหนเลย — เรียนสัก 1 วันแล้วรายงานจะเริ่มมีข้อมูล';
     btn.style.opacity='.55';
   }else if(n<7){
-    pg.innerHTML='เรียนไปแล้ว <b style="color:#2E7D32">'+n+' / 7 วัน</b> — ดูผลตอนนี้ได้เลย หรือรอให้ครบ 7 วันจะแม่นกว่า';
+    pg.innerHTML='เรียนไปแล้ว <b style="color:var(--green)">'+n+' / 7 วัน</b> — ดูผลตอนนี้ได้เลย หรือรอให้ครบ 7 วันจะแม่นกว่า';
     btn.style.opacity='1';
   }else{
-    pg.innerHTML='🎉 <b style="color:#2E7D32">ครบ 7 วันแล้ว!</b> รายงานพร้อมดูได้เลย';
+    pg.innerHTML='🎉 <b style="color:var(--green)">ครบ 7 วันแล้ว!</b> รายงานพร้อมดูได้เลย';
     btn.style.opacity='1';
   }
 }

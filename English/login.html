@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PeekaWord — เข้าสู่ระบบ</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#1E4034">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม ═══ */
+:root{
+  --cream:#FAF7F0; --cream-2:#F3EFE4;
+  --green:#1E4034; --green-soft:#E8EFE6; --green-line:#CFE0D2;
+  --brown:#A6482B; --brown-dk:#8E3B21;
+  --orange:#B5651D; --orange-soft:#FBE7D2;
+  --blue:#1F6F8B;
+  --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
+  --line:#E4DED0; --shadow:0 2px 14px rgba(30,64,52,.08);
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
-body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.wrap{width:100%;max-width:390px}
+body{background:var(--cream);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:var(--ink);-webkit-text-size-adjust:100%}
+.wrap{width:100%;max-width:400px}
 .logo-area{text-align:center;margin-bottom:22px}
-.logo-ico{font-size:66px;line-height:1}
-.logo-name{font-size:32px;font-weight:900;color:#FF6B35;margin-top:4px}
-.logo-tagline{font-size:13px;color:#90A4AE;font-weight:700;margin-top:2px}
-.card{background:#fff;border-radius:24px;padding:26px 22px;box-shadow:0 8px 32px rgba(255,107,53,.12)}
-.tabs{display:flex;gap:6px;background:#F5F5F5;border-radius:14px;padding:5px;margin-bottom:20px}
-.tab{flex:1;text-align:center;padding:10px 6px;border-radius:10px;font-size:13px;font-weight:900;color:#90A4AE;cursor:pointer;transition:.15s}
-.tab.on{background:#fff;color:#FF6B35;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.logo-ico{font-size:62px;line-height:1}
+.logo-name{font-size:34px;font-weight:800;color:var(--green);margin-top:6px;font-family:'Baloo 2',sans-serif}
+.logo-tagline{font-size:15px;color:var(--ink-2);font-weight:600;margin-top:4px}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px 22px;box-shadow:var(--shadow)}
+.tabs{display:flex;gap:6px;background:var(--cream-2);border-radius:14px;padding:5px;margin-bottom:20px}
+.tab{flex:1;text-align:center;padding:13px 6px;border-radius:11px;font-size:15px;font-weight:800;color:var(--ink-2);cursor:pointer;transition:.15s;min-height:46px;display:flex;align-items:center;justify-content:center}
+.tab.on{background:#fff;color:var(--green);box-shadow:0 2px 8px rgba(30,64,52,.1)}
 .pane{display:none}.pane.on{display:block}
-.field{margin-bottom:15px}
-.field label{display:block;font-size:12px;font-weight:900;color:#546E7A;margin-bottom:7px;letter-spacing:.3px}
-.inp{width:100%;border:2px solid #E0E0E0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;color:#1E3A5F;transition:border-color .2s;background:#FAFAFA}
-.inp:focus{border-color:#FF6B35;background:#fff}
-#codeInp{font-size:26px;letter-spacing:8px;text-align:center}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:15px;font-weight:800;color:var(--ink);margin-bottom:7px}
+.inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:16px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;color:var(--ink);transition:.2s;background:#fff;min-height:52px}
+.inp:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(30,64,52,.08)}
+#codeInp{font-size:28px;letter-spacing:8px;text-align:center;font-family:'Baloo 2',sans-serif;color:var(--green)}
 .pwrap{position:relative}
-.peye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;user-select:none;opacity:.55}
-.btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#FF6B35,#FF9800);color:#fff;border:none;border-radius:14px;padding:15px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;letter-spacing:.3px}
-.btn:active{opacity:.85}
+.peye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:19px;user-select:none;opacity:.6;padding:6px}
+.btn{width:100%;margin-top:10px;background:var(--brown);color:#fff;border:none;border-radius:15px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;min-height:54px;box-shadow:0 3px 0 var(--brown-dk);transition:.1s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--brown-dk)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.btn.green{background:linear-gradient(135deg,#66BB6A,#2E7D32)}
-.err{display:none;margin-top:12px;font-size:13px;font-weight:800;color:#C62828;background:#FEE2E2;border-radius:12px;padding:10px 14px;text-align:center;line-height:1.6}
-.ok{display:none;margin-top:12px;font-size:13px;font-weight:800;color:#2E7D32;background:#E8F5E9;border-radius:12px;padding:10px 14px;text-align:center;line-height:1.6}
-.load{display:none;margin-top:10px;font-size:13px;font-weight:700;color:#1E88E5;text-align:center}
-.divider{border:none;border-top:1.5px dashed #E0E0E0;margin:18px 0}
-.register-link{text-align:center;font-size:13px;color:#90A4AE;font-weight:700}
-.register-link a{color:#FF6B35;font-weight:900;text-decoration:none}
-.pending-msg{display:none;margin-top:14px;background:#FFF8E1;border:1.5px solid #FFCC02;border-radius:14px;padding:16px;text-align:center}
-.pending-msg .p-ico{font-size:32px;margin-bottom:6px}
-.pending-msg h3{font-size:15px;font-weight:900;color:#E65100;margin-bottom:4px}
-.pending-msg p{font-size:12px;color:#78909C;font-weight:700;line-height:1.6}
-.hint{font-size:11px;color:#B0BEC5;font-weight:700;margin-top:5px;line-height:1.5}
-.link{font-size:13px;font-weight:800;color:#1E88E5;cursor:pointer;text-decoration:underline}
-.warn{display:none;background:#FF6B35;color:#fff;padding:11px 14px;border-radius:12px;font-size:13px;font-weight:800;text-align:center;margin-bottom:14px;line-height:1.5}
+.btn.green{background:var(--green);box-shadow:0 3px 0 #153026}
+.err{display:none;margin-top:12px;font-size:15px;font-weight:700;color:#A8372C;background:#FBECEA;border:1.5px solid #E8BDB6;border-radius:12px;padding:12px 15px;text-align:center;line-height:1.65}
+.ok{display:none;margin-top:12px;font-size:15px;font-weight:700;color:#2A5C3D;background:var(--green-soft);border:1.5px solid var(--green-line);border-radius:12px;padding:12px 15px;text-align:center;line-height:1.65}
+.load{display:none;margin-top:12px;font-size:15px;font-weight:700;color:var(--blue);text-align:center}
+.divider{border:none;border-top:1px solid var(--line);margin:20px 0}
+.register-link{text-align:center;font-size:15px;color:var(--ink-2);font-weight:600}
+.register-link a{color:var(--green);font-weight:800;text-decoration:none}
+.pending-msg{display:none;margin-top:14px;background:var(--orange-soft);border:1.5px solid #F0D2AE;border-radius:14px;padding:17px;text-align:center}
+.pending-msg .p-ico{font-size:32px;margin-bottom:7px}
+.pending-msg h3{font-size:17px;font-weight:800;color:var(--orange);margin-bottom:5px;font-family:'Baloo 2',sans-serif}
+.pending-msg p{font-size:14px;color:var(--ink-2);font-weight:600;line-height:1.7}
+.hint{font-size:14px;color:var(--ink-3);font-weight:600;margin-top:6px;line-height:1.6}
+.link{font-size:15px;font-weight:800;color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.warn{display:none;background:var(--orange-soft);color:var(--orange);border:1.5px solid #F0D2AE;padding:13px 15px;border-radius:13px;font-size:15px;font-weight:800;text-align:center;margin-bottom:14px;line-height:1.6}
+@media (max-width:360px){
+  body{padding:14px}
+  .logo-name{font-size:29px}
+  #codeInp{font-size:24px;letter-spacing:6px}
+}
 </style></head>
 <body>
 <div class="wrap">
@@ -154,7 +171,7 @@ body{background:linear-gradient(160deg,#FFF8F0 0%,#FFE0CC 100%);min-height:100vh
 
     <div class="divider"></div>
     <div class="register-link">ยังไม่มีรหัส? <a href="register.html">สมัครเรียนที่นี่</a></div>
-    <div style="text-align:center;margin-top:10px"><a href="trial.html" style="display:inline-block;background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:900;text-decoration:none;font-family:'Nunito',sans-serif">🎁 ทดลองเรียนฟรี 7 วัน</a></div>
+    <div style="text-align:center;margin-top:10px"><a href="trial.html" style="display:inline-block;background:var(--green);color:#fff;border-radius:13px;padding:14px 22px;font-size:16px;font-weight:800;text-decoration:none;font-family:'Nunito',sans-serif">🎁 ทดลองเรียนฟรี 7 วัน</a></div>
   </div>
 </div>
 
@@ -341,7 +358,7 @@ async function doRecover(){
     const res=await jsonp({action:'recover', email});
     if(res.status==='ok'){
       out.style.color='#2E7D32';
-      out.innerHTML='✅ พบแล้ว! รหัสของ <strong>'+(res.name||'คุณ')+'</strong> คือ<br><span style="font-size:22px;font-family:monospace;letter-spacing:3px;color:#1E88E5">'+res.code+'</span>';
+      out.innerHTML='✅ พบแล้ว! รหัสของ <strong>'+(res.name||'คุณ')+'</strong> คือ<br><span style="font-size:26px;font-family:monospace;letter-spacing:4px;color:var(--green)">'+res.code+'</span>';
       document.getElementById('codeInp').value=res.code;
       if(res.name) document.getElementById('nickInp').value=res.name;
     } else {
