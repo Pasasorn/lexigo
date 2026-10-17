@@ -1,49 +1,66 @@
 <!DOCTYPE html><html lang="th"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ผลการเรียน 7 วัน · PeekaWord</title>
+<meta name="theme-color" content="#1E4034">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#3D3355;--body:#6B6382;--muted:#9A93AE;--orange:#FF7A45;--orange-s:#FFF0E9;
- --green:#5BC98C;--green-s:#E9F9F0;--blue:#4DA8F0;--blue-s:#EAF5FE;--yellow-s:#FFF7E4;
- --pink:#FF6FA5;--pink-s:#FFEEF4;--cream:#FFFBF5}
+/* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม เสริมส้ม ม่วง ฟ้า ═══ */
+:root{
+ --cream:#FAF7F0; --cream-2:#F3EFE4;
+ --green:#1E4034; --green-s:#E8EFE6; --green-line:#CFE0D2;
+ --brown:#A6482B; --brown-dk:#8E3B21;
+ --orange:#B5651D; --orange-s:#FBE7D2;
+ --purple:#6B4E9E; --purple-s:#EFE8F8;
+ --blue:#1F6F8B; --blue-s:#E2EFF3;
+ --yellow-s:#FBF1DC;
+ --ink:#1B2A24; --body:#4A5A52; --muted:#71827A;
+ --line:#E4DED0;
+}
 *{box-sizing:border-box}
 body{font-family:'Baloo 2','Nunito',sans-serif;background:var(--cream);color:var(--body);
- font-size:17px;line-height:1.8;margin:0;padding:0 0 60px;-webkit-font-smoothing:antialiased}
+ font-size:17px;line-height:1.8;margin:0;padding:0 0 60px;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
 .wrap{max-width:640px;margin:0 auto;padding:0 20px}
-.top{background:linear-gradient(165deg,#FFE9DC,#F3F8FF);padding:34px 0 30px;text-align:center;margin-bottom:26px}
-h1{font-size:27px;font-weight:800;color:var(--ink);margin:0 0 6px;line-height:1.35}
-.sub{font-size:16px;font-weight:600;color:var(--body);margin:0}
-.card{background:#fff;border-radius:20px;padding:22px 20px;margin-bottom:16px;border:2px solid #F0EDF6}
-.card h2{font-size:19px;font-weight:800;color:var(--ink);margin:0 0 4px}
+.top{background:var(--green);padding:36px 0 32px;text-align:center;margin-bottom:26px}
+h1{font-size:28px;font-weight:800;color:#fff;margin:0 0 8px;line-height:1.35}
+.sub{font-size:16px;font-weight:600;color:#CBDACF;margin:0}
+.card{background:#fff;border-radius:20px;padding:22px 20px;margin-bottom:16px;border:1px solid var(--line);box-shadow:0 2px 10px rgba(30,64,52,.06)}
+.card h2{font-size:20px;font-weight:800;color:var(--green);margin:0 0 5px}
 .card .lead{font-size:15px;font-weight:600;color:var(--muted);margin:0 0 16px}
 .big{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.kpi{flex:1;min-width:130px;background:var(--orange-s);border-radius:16px;padding:14px;text-align:center}
-.kpi b{display:block;font-size:30px;font-weight:800;color:var(--orange);line-height:1.25}
-.kpi span{font-size:14px;font-weight:700;color:#B4552C}
+.kpi{flex:1;min-width:130px;background:var(--green-s);border:1px solid var(--green-line);border-radius:16px;padding:16px;text-align:center}
+.kpi b{display:block;font-size:32px;font-weight:800;color:var(--green);line-height:1.25}
+.kpi span{font-size:14px;font-weight:700;color:#3D6652}
 .sk{margin-bottom:18px}
-.sk-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
-.sk-n{font-size:16px;font-weight:800;color:var(--ink)}
-.sk-v{font-size:16px;font-weight:800;white-space:nowrap}
-.bar{height:14px;background:#F3F1F7;border-radius:100px;overflow:hidden}
+.sk-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.sk-n{font-size:17px;font-weight:800;color:var(--ink)}
+.sk-v{font-size:17px;font-weight:800;white-space:nowrap}
+.bar{height:14px;background:var(--cream-2);border-radius:100px;overflow:hidden}
 .fill{height:100%;border-radius:100px;transition:width .7s}
-.sk-t{font-size:14.5px;font-weight:600;color:var(--body);margin-top:7px;line-height:1.7}
-.tag{display:inline-block;font-size:13px;font-weight:800;padding:2px 11px;border-radius:100px;margin-right:6px}
-.nodata{background:#F6F5F8;border-radius:14px;padding:13px 15px;font-size:14.5px;font-weight:600;color:var(--muted)}
-.tip{background:var(--blue-s);border-radius:14px;padding:13px 15px;font-size:14.5px;font-weight:600;color:#1B6FA8;margin-top:9px;line-height:1.75}
-.btn{display:inline-block;background:var(--orange);color:#fff;padding:15px 32px;font-size:18px;font-weight:800;
- border-radius:100px;text-decoration:none;box-shadow:0 5px 0 #E85F2C}
-.btn2{display:inline-block;color:var(--body);padding:12px 24px;font-size:16px;font-weight:700;text-decoration:none;border-radius:100px;border:2px solid #E6E2EE}
+.sk-t{font-size:15px;font-weight:600;color:var(--body);margin-top:8px;line-height:1.75}
+.tag{display:inline-block;font-size:14px;font-weight:800;padding:3px 12px;border-radius:100px;margin-right:6px}
+.nodata{background:var(--cream-2);border-radius:14px;padding:14px 16px;font-size:15px;font-weight:600;color:var(--muted)}
+.tip{background:var(--blue-s);border:1px solid #C9E2E9;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:600;color:#17566E;margin-top:10px;line-height:1.75}
+.btn{display:inline-block;background:var(--brown);color:#fff;padding:16px 32px;font-size:18px;font-weight:800;
+ border-radius:100px;text-decoration:none;box-shadow:0 4px 0 var(--brown-dk);min-height:56px}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--brown-dk)}
+.btn2{display:inline-block;color:var(--body);padding:14px 24px;font-size:16px;font-weight:700;text-decoration:none;border-radius:100px;border:1.5px solid var(--line);background:#fff;min-height:48px}
 .mid{text-align:center;margin-top:26px}
-.foot{font-size:14px;font-weight:600;color:var(--muted);margin-top:12px;line-height:1.7}
-.daylist{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
-.dchip{font-size:13px;font-weight:800;padding:5px 12px;border-radius:100px;background:var(--green-s);color:#2E8B5E}
-.dchip.miss{background:#F3F1F7;color:var(--muted)}
-.inp{width:100%;padding:12px 15px;border:2px solid #E6E2EE;border-radius:12px;font-size:16px;
- font-family:inherit;font-weight:600;color:var(--ink);margin-bottom:9px;background:#fff}
-.inp:focus{outline:none;border-color:var(--orange)}
-.mini{background:transparent;border:2px solid #E6E2EE;color:var(--body);padding:12px;width:100%;
- border-radius:12px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer}
+.foot{font-size:14px;font-weight:600;color:var(--muted);margin-top:14px;line-height:1.75}
+.daylist{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
+.dchip{font-size:14px;font-weight:800;padding:6px 13px;border-radius:100px;background:var(--green-s);color:#2A5C3D}
+.dchip.miss{background:var(--cream-2);color:var(--muted)}
+.inp{width:100%;padding:14px 15px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;
+ font-family:inherit;font-weight:600;color:var(--ink);margin-bottom:10px;background:#fff;min-height:50px}
+.inp:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(30,64,52,.08)}
+.mini{background:#fff;border:1.5px solid var(--line);color:var(--body);padding:14px;width:100%;
+ border-radius:12px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;min-height:50px}
 .mini:active{transform:translateY(2px)}
+@media (max-width:360px){
+  .wrap{padding:0 14px}
+  h1{font-size:24px}
+  .kpi b{font-size:28px}
+}
 </style></head>
 <body>
 <div class="top"><div class="wrap">
@@ -64,11 +81,11 @@ function nick(){
   try{const s=JSON.parse(localStorage.getItem('wla_student')||'null'); if(s&&s.nick)return s.nick;}catch(e){}
   return '';
 }
-function col(v){ return v>=80?'#43A047':v>=60?'#F9A825':'#E5533D'; }
+function col(v){ return v>=80?'#5E9E6B':v>=60?'#D9A441':'#C47B5E'; }
 function band(v){
-  if(v>=80) return {t:'ทำได้ดีมาก',bg:'#E9F9F0',c:'#2E8B5E'};
-  if(v>=60) return {t:'พอใช้ได้',bg:'#FFF7E4',c:'#B07C0A'};
-  return {t:'ควรฝึกเพิ่ม',bg:'#FFEDEA',c:'#C0392B'};
+  if(v>=80) return {t:'ทำได้ดีมาก',bg:'#E8EFE6',c:'#2A5C3D'};
+  if(v>=60) return {t:'พอใช้ได้',bg:'#FBF1DC',c:'#8A5A10'};
+  return {t:'ควรฝึกเพิ่ม',bg:'#FBE7D2',c:'#A8502C'};
 }
 // คำแนะนำ: แยกตามทักษะ × ระดับคะแนน — อิงจากสิ่งที่ระบบวัดได้จริงเท่านั้น
 const ADVICE={

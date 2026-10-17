@@ -1,58 +1,76 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+<meta name="theme-color" content="#1E4034">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>📊 Learning Progress</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+/* ═══ โทนเดียวกับหน้าแรก: ครีม + เขียวเข้ม ═══ */
+:root{
+  --cream:#FAF7F0; --cream-2:#F3EFE4;
+  --green:#1E4034; --green-soft:#E8EFE6; --green-line:#CFE0D2;
+  --brown:#A6482B; --orange:#B5651D; --orange-soft:#FBE7D2;
+  --blue:#1F6F8B; --blue-soft:#E2EFF3;
+  --purple:#6B4E9E; --purple-soft:#EFE8F8;
+  --ink:#1B2A24; --ink-2:#4A5A52; --ink-3:#71827A;
+  --line:#E4DED0; --shadow:0 2px 10px rgba(30,64,52,.06);
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Nunito',sans-serif}
-body{background:#F3F0FF;min-height:100vh;padding:16px;max-width:720px;margin:0 auto;color:#37474F}
-.hdr{background:linear-gradient(135deg,#5C6BC0,#3949AB);border-radius:20px;padding:16px 20px;margin-bottom:14px;color:#fff}
-.hdr h1{font-size:20px;font-weight:900}
-.hdr p{font-size:12px;opacity:.8;font-weight:600;margin-top:2px}
+body{background:var(--cream);min-height:100vh;padding:16px;max-width:720px;margin:0 auto;color:var(--ink);-webkit-text-size-adjust:100%}
+.hdr{background:var(--green);border-radius:20px;padding:20px;margin-bottom:14px;color:#fff;box-shadow:var(--shadow)}
+.hdr h1{font-size:22px;font-weight:800;font-family:'Baloo 2',sans-serif}
+.hdr p{font-size:15px;color:#CBDACF;font-weight:600;margin-top:3px}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
-.stat{background:#fff;border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.07)}
-.stat-n{font-size:26px;font-weight:900;color:#5C6BC0}
-.stat-l{font-size:11px;color:#7986CB;font-weight:700;margin-top:2px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:center;box-shadow:var(--shadow)}
+.stat-n{font-size:28px;font-weight:800;color:var(--green);font-family:'Baloo 2',sans-serif}
+.stat-l{font-size:14px;color:var(--ink-2);font-weight:700;margin-top:3px}
 /* tabs */
-.tabs{display:flex;gap:6px;margin-bottom:12px;background:#fff;border-radius:14px;padding:6px;box-shadow:0 2px 6px rgba(0,0,0,0.07)}
-.tab{flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;text-align:center;color:#90A4AE;background:none;border:none;font-family:'Nunito',sans-serif;transition:.15s}
-.tab.on{background:#5C6BC0;color:#fff}
+.tabs{display:flex;gap:6px;margin-bottom:12px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:6px;box-shadow:var(--shadow)}
+.tab{flex:1;padding:13px 8px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;text-align:center;color:var(--ink-2);background:none;border:none;font-family:'Nunito',sans-serif;transition:.15s;min-height:46px}
+.tab.on{background:var(--green);color:#fff}
 .panel{display:none}.panel.on{display:block}
-.card{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
-.card-title{font-size:14px;font-weight:900;color:#3949AB;margin-bottom:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-title{font-size:17px;font-weight:800;color:var(--green);margin-bottom:13px;font-family:'Baloo 2',sans-serif}
 /* step bars */
-.step-bars{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
-.sbar{display:flex;align-items:center;gap:7px}
-.sbar-l{font-size:11px;font-weight:800;color:#78909C;width:95px;flex-shrink:0}
-.sbar-track{flex:1;height:8px;background:#E0E0E0;border-radius:4px;overflow:hidden}
-.sbar-fill{height:100%;border-radius:4px}
-.sbar-v{font-size:12px;font-weight:900;min-width:32px;text-align:right}
+.step-bars{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.sbar{display:flex;align-items:center;gap:9px}
+.sbar-l{font-size:14px;font-weight:700;color:var(--ink-2);width:108px;flex-shrink:0}
+.sbar-track{flex:1;height:9px;background:var(--cream-2);border-radius:5px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:5px}
+.sbar-v{font-size:15px;font-weight:800;min-width:38px;text-align:right;color:var(--green)}
 /* day rows */
-.week-hdr{background:#EDE7F6;border-radius:11px;padding:9px 13px;margin-bottom:7px;font-size:13px;font-weight:900;color:#3949AB;display:flex;justify-content:space-between;align-items:center}
-.day-row{display:flex;align-items:center;gap:8px;padding:7px 11px;background:#F8F9FA;border-radius:10px;margin-bottom:4px;cursor:pointer}
-.day-row:hover{background:#EDE7F6}
-.day-num{font-size:11px;font-weight:900;color:#90A4AE;width:38px;flex-shrink:0}
-.day-title{font-size:12px;font-weight:700;color:#37474F;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.day-bar{width:60px;height:7px;background:#E0E0E0;border-radius:4px;overflow:hidden;flex-shrink:0}
+.week-hdr{background:var(--green-soft);border:1px solid var(--green-line);border-radius:12px;padding:11px 14px;margin-bottom:7px;font-size:15px;font-weight:800;color:var(--green);display:flex;justify-content:space-between;align-items:center}
+.day-row{display:flex;align-items:center;gap:9px;padding:11px 13px;background:var(--cream-2);border-radius:11px;margin-bottom:5px;cursor:pointer;min-height:46px}
+.day-row:hover{background:var(--green-soft)}
+.day-num{font-size:14px;font-weight:800;color:var(--ink-3);width:44px;flex-shrink:0}
+.day-title{font-size:15px;font-weight:600;color:var(--ink);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-bar{width:62px;height:8px;background:#DDD7C8;border-radius:4px;overflow:hidden;flex-shrink:0}
 .day-bar-fill{height:100%;border-radius:4px}
-.badge{display:inline-block;padding:2px 7px;border-radius:7px;font-size:11px;font-weight:800;white-space:nowrap}
-.bg{background:#C8E6C9;color:#1B5E20}.by{background:#FFF9C4;color:#F57F17}.br{background:#FFCDD2;color:#B71C1C}.bn{background:#ECEFF1;color:#607D8B}
+.badge{display:inline-block;padding:4px 9px;border-radius:8px;font-size:14px;font-weight:800;white-space:nowrap}
+.bg{background:var(--green-soft);color:#2A5C3D}
+.by{background:#FBF1DC;color:#8A5A10}
+.br{background:var(--orange-soft);color:#A8502C}
+.bn{background:var(--cream-2);color:var(--ink-3)}
 /* month/year */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mcard{background:#F8F9FA;border-radius:12px;padding:12px;text-align:center}
-.mcard-name{font-size:13px;font-weight:900;color:#3949AB;margin-bottom:6px}
-.mcard-n{font-size:22px;font-weight:900}
-.mcard-sub{font-size:11px;color:#90A4AE;font-weight:700}
+.mcard{background:var(--cream-2);border-radius:13px;padding:14px;text-align:center}
+.mcard-name{font-size:15px;font-weight:800;color:var(--green);margin-bottom:7px}
+.mcard-n{font-size:24px;font-weight:800;font-family:'Baloo 2',sans-serif}
+.mcard-sub{font-size:14px;color:var(--ink-2);font-weight:600}
 /* detail drawer */
-.detail{display:none;background:#F8F9FA;border-radius:10px;padding:10px 12px;margin:-2px 0 5px;border:1px solid #E0E0E0}
+.detail{display:none;background:var(--cream-2);border-radius:11px;padding:12px 14px;margin:-2px 0 6px;border:1px solid var(--line)}
 .detail.open{display:block}
-.tip{background:#FFF8E1;border:2px solid #FFE082;border-radius:10px;padding:8px 12px;font-size:12px;color:#E65100;font-weight:700;margin-bottom:6px}
-.no-data{text-align:center;padding:24px;color:#90A4AE;font-size:13px;font-weight:700}
-a.back{display:inline-flex;align-items:center;gap:6px;background:#3949AB;color:#fff;border-radius:11px;padding:9px 16px;font-size:13px;font-weight:800;text-decoration:none;margin-bottom:12px;font-family:'Nunito',sans-serif}
+.tip{background:var(--orange-soft);border:1.5px solid #F0D2AE;border-radius:11px;padding:11px 14px;font-size:14px;color:var(--orange);font-weight:700;margin-bottom:7px;line-height:1.65}
+.no-data{text-align:center;padding:26px;color:var(--ink-3);font-size:15px;font-weight:700}
+a.back{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:#fff;border-radius:12px;padding:13px 18px;font-size:15px;font-weight:800;text-decoration:none;margin-bottom:12px;font-family:'Nunito',sans-serif;min-height:46px}
 canvas{max-height:200px}
+@media (max-width:360px){
+  body{padding:12px}
+  .sbar-l{width:88px;font-size:13.5px}
+}
 </style>
 </head>
 <body>
@@ -272,7 +290,7 @@ function render(){
       data:{
         labels:sorted.map(d=>'D'+d.day),
         datasets:[
-          {label:'Overall',data:sorted.map(d=>d.overall??null),borderColor:'#5C6BC0',backgroundColor:'rgba(92,107,192,0.08)',borderWidth:3,pointBackgroundColor:sorted.map(d=>sc(d.overall??0)),pointRadius:5,tension:0.3,fill:true},
+          {label:'Overall',data:sorted.map(d=>d.overall??null),borderColor:'#1E4034',backgroundColor:'rgba(30,64,52,0.08)',borderWidth:3,pointBackgroundColor:sorted.map(d=>sc(d.overall??0)),pointRadius:5,tension:0.3,fill:true},
           {label:'Step 3',data:sorted.map(d=>d.step3??null),borderColor:'#FF8A65',borderWidth:2,borderDash:[4,3],pointRadius:3,tension:0.3,fill:false},
         ]
       },
@@ -384,7 +402,7 @@ function render(){
         <div class="mcard-n" style="color:${sc(yAvg??50)}">${yAvg!=null?yAvg+'%':'—'}</div>
         <div class="mcard-sub">${yd.days.length} วัน / ${LEVEL_TOTAL} วัน (Level ${MY_LEVEL})</div>
         <div style="margin-top:6px;height:6px;background:#E0E0E0;border-radius:3px;overflow:hidden">
-          <div style="width:${Math.min(100,Math.round(yd.days.length/LEVEL_TOTAL*100))}%;height:100%;background:#5C6BC0;border-radius:3px"></div>
+          <div style="width:${Math.min(100,Math.round(yd.days.length/LEVEL_TOTAL*100))}%;height:100%;background:#1E4034;border-radius:3px"></div>
         </div>
         <div style="font-size:10px;color:#90A4AE;font-weight:700;margin-top:3px">${Math.min(100,Math.round(yd.days.length/LEVEL_TOTAL*100))}% ของ Level</div>
         ${s3avg!=null?`<div style="margin-top:6px;font-size:11px;font-weight:800;color:${sc(s3avg)}">🗣️ พูด avg: ${s3avg}%</div>`:''}
