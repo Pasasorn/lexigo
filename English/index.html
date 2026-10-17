@@ -129,8 +129,8 @@ header{
 .hero .btn{min-width:min(100%,330px)}
 .hero-micro{font-size:14px; color:var(--ink-3); font-weight:700; margin-top:12px}
 .hero-tag{margin-top:22px; font-size:15px; font-weight:800; color:var(--green)}
-.hero-art{max-width:400px; margin:4px auto 18px}
-.hero-art svg{width:100%; height:auto; display:block}
+.hero-art{max-width:520px; margin:6px auto 16px}
+.hero-art img{width:100%; height:auto; display:block}
 
 /* แถบภาพเรื่องเลื่อน — ใช้ภาพประกอบของเราเอง 448 ภาพ */
 .strip{margin-top:26px; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
@@ -369,60 +369,12 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
     <!-- ภาพหลัก: หนังสือเปิดสู่สวนคำศัพท์ — วาดเป็น SVG ในหน้าเว็บ
          ไม่ต้องโหลดไฟล์ภาพ จึงคมทุกความละเอียด และไม่ถ่วงเวลาโหลด -->
     <div class="hero-art">
-      <svg viewBox="0 0 400 320" role="img"
-           aria-label="หนังสือภาษาอังกฤษเปิดอยู่กลางสวน มีคำว่า apple และ Hello">
-        <circle cx="200" cy="150" r="128" fill="#DCEAE4"/>
-        <circle cx="305" cy="72"  r="26"  fill="#E8B04B"/>
-        <g fill="#FFFFFF">
-          <ellipse cx="108" cy="88"  rx="30" ry="15"/>
-          <ellipse cx="124" cy="80"  rx="19" ry="13"/>
-          <ellipse cx="268" cy="108" rx="24" ry="12"/>
-          <ellipse cx="281" cy="101" rx="15" ry="10"/>
-        </g>
-        <g fill="#C98B56">
-          <path d="M96 143l5 12 12 5-12 5-5 12-5-12-12-5 12-5z"/>
-          <path d="M300 140l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"/>
-        </g>
-        <ellipse cx="200" cy="266" rx="122" ry="29" fill="#AFCB90"/>
-
-        <!-- ใบไม้หลังหนังสือ -->
-        <path d="M118 244c-26-4-42-26-38-52 26-2 48 14 50 40z" fill="#2C5546"/>
-        <path d="M284 240c24-8 36-30 29-53-25-1-45 17-47 41z" fill="#2C5546"/>
-        <path d="M300 254c14-6 21-20 16-33-15 0-27 10-27 25z" fill="#5C886F"/>
-
-        <!-- หนังสือเปิด: ปกเขียวเข้ม + หน้ากระดาษแผ่ออกเป็นรูปตัว V -->
-        <path d="M200 112 108 136v112l92-16z" fill="#1E4034"/>
-        <path d="M200 112l92 24v112l-92-16z" fill="#1E4034"/>
-        <path d="M195 122 119 142v96l76-13z" fill="#F7F3E8"/>
-        <path d="M205 122l76 20v96l-76-13z" fill="#FBF8F0"/>
-        <rect x="195" y="112" width="10" height="123" rx="4" fill="#163024"/>
-
-        <!-- หน้าซ้าย: ภาพ apple -->
-        <circle cx="155" cy="168" r="20" fill="#E8A84B"/>
-        <path d="M155 149c6-9 16-10 21-7-3 8-12 12-21 7z" fill="#5C886F"/>
-        <text x="156" y="214" text-anchor="middle" font-family="Nunito,sans-serif"
-              font-size="18" font-weight="800" fill="#1E4034">apple</text>
-
-        <!-- หน้าขวา: Hello! + บรรทัดข้อความ -->
-        <rect x="222" y="150" width="50" height="25" rx="7" fill="#DCEAE4"/>
-        <text x="247" y="168" text-anchor="middle" font-family="Nunito,sans-serif"
-              font-size="15" font-weight="800" fill="#1E4034">Hello!</text>
-        <g fill="#DAD5C4">
-          <rect x="222" y="188" width="50" height="6" rx="3"/>
-          <rect x="222" y="202" width="40" height="6" rx="3"/>
-          <rect x="222" y="216" width="46" height="6" rx="3"/>
-        </g>
-
-        <!-- ดอกไม้เล็ก ๆ บนหญ้า -->
-        <g>
-          <path d="M214 268q10 9 20 0" stroke="#5C886F" stroke-width="2.5"
-                fill="none" stroke-linecap="round"/>
-          <circle cx="212" cy="264" r="5" fill="#E8A6A0"/>
-          <circle cx="212" cy="264" r="1.8" fill="#FBF8F0"/>
-          <circle cx="236" cy="264" r="5" fill="#E8A6A0"/>
-          <circle cx="236" cy="264" r="1.8" fill="#FBF8F0"/>
-        </g>
-      </svg>
+      <picture>
+        <source media="(min-width:600px)" srcset="img/site/hero_book.webp" type="image/webp">
+        <img src="img/site/hero_book_sm.webp" width="1000" height="809"
+             alt="หนังสือเปิดออกเป็นสวนคำศัพท์ มีแอปเปิล ไมโครโฟน และกรอบคำพูด"
+             fetchpriority="high" decoding="async">
+      </picture>
     </div>
 
     <p class="hero-sub">
