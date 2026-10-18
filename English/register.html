@@ -197,8 +197,24 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 .note{font-size:14px;font-weight:600;color:var(--ink-2);line-height:1.7;text-align:center;padding:0 8px;margin-top:8px}
 .foot{font-size:14px;color:var(--ink-3);text-align:center;padding:8px 0 18px;line-height:1.8}
 
+/* ── กล่องชวนทดลองเรียน + วิธีเรียน ── */
+.try-box{display:block;background:var(--green-soft);border:1.5px solid var(--green-line);
+  border-radius:16px;padding:16px;text-align:center;text-decoration:none;margin-bottom:14px}
+.try-t{font-size:17px;font-weight:800;color:var(--green);font-family:'Baloo 2','Mitr',sans-serif}
+.try-s{font-size:14px;font-weight:600;color:var(--ink-2);margin-top:4px;line-height:1.6}
+.how-h{text-align:center;font-size:18px;font-weight:800;color:var(--green);
+  font-family:'Baloo 2','Mitr',sans-serif;margin-bottom:4px}
+.how-s{text-align:center;font-size:14px;color:var(--ink-2);font-weight:600;margin-bottom:14px}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.how{border-radius:15px;padding:16px 10px;text-align:center}
+.how-ic{font-size:32px;line-height:1.1}
+.how-n{font-size:17px;font-weight:800;margin-top:4px;font-family:'Baloo 2','Mitr',sans-serif}
+.how-d{font-size:14px;color:var(--ink-2);font-weight:600;line-height:1.6;margin-top:3px}
+.how-f{text-align:center;font-size:14px;color:var(--ink-2);font-weight:600;margin-top:14px;line-height:1.7}
+
 @media (max-width:360px){
   .page{padding:14px 12px 24px}
+  .how-ic{font-size:28px}
   .price-big{font-size:44px}
   .code-chip{font-size:25px;letter-spacing:3px;padding:11px 16px}
 }
@@ -211,41 +227,44 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 ══════════════════════════════ -->
 <div class="page on" id="p0">
   <div class="hdr">
-    <div class="logo">🚀</div>
+    <div class="logo">🌱</div>
     <h1>PeekaWord</h1>
-    <p style="font-size:14px;font-weight:900;margin-bottom:3px">เปิดโลกคำศัพท์</p>
-    <p>ชวนฟัง ชวนคิด ฝึกพูดวันละนิด พิชิต 3,000 คำ</p>
+    <p>ภาษาอังกฤษผ่านเรื่องสนุก · ฟัง อ่าน พูด ทบทวน วันละ 15–20 นาที</p>
   </div>
 
-  <a href="trial.html" style="display:block;background:linear-gradient(135deg,#66BB6A,#2E7D32);color:#fff;border-radius:16px;padding:14px;text-align:center;text-decoration:none;font-family:'Nunito','Noto Sans Thai Looped',sans-serif;margin-bottom:14px;box-shadow:0 3px 12px rgba(46,125,50,.3)"><div style="font-size:16px;font-weight:900">🎁 ยังไม่แน่ใจ? ทดลองเรียนฟรี 7 วัน</div><div style="font-size:11px;font-weight:600;opacity:.95;margin-top:2px">Day 1–3 เข้าเรียนได้ทันที ไม่ต้องสมัคร</div></a>
-  <!-- ── เรียนแบบธรรมชาติ ── -->
-  <div style="background:#fff;border-radius:18px;padding:18px 16px;margin-bottom:14px;box-shadow:0 3px 14px rgba(0,0,0,.06)">
-    <div style="text-align:center;font-size:15px;font-weight:900;color:#37474F;margin-bottom:3px">🌱 เรียนแบบธรรมชาติ ค่อยเป็นค่อยไป</div>
-    <div style="text-align:center;font-size:12px;color:#90A4AE;font-weight:700;margin-bottom:14px">วันละนิด ซึมซับเหมือนเด็กเรียนภาษาแม่</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div style="background:#E3F2FD;border-radius:14px;padding:12px 10px;text-align:center">
-        <div style="font-size:30px">👂</div>
-        <div style="font-size:13px;font-weight:900;color:#1565C0;margin-top:2px">ฟัง</div>
-        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">ฟังเรื่องก่อน<br>ให้หูคุ้นเสียง</div>
+  <a href="trial.html" class="try-box">
+    <div class="try-t">ยังไม่แน่ใจ? ลองเรียนฟรี 7 วันก่อนได้</div>
+    <div class="try-s">Day 1–7 เข้าเรียนได้ทันที ไม่ต้องสมัคร ไม่ต้องผูกบัตร</div>
+  </a>
+
+  <!-- ── วิธีเรียน ── -->
+  <div class="card">
+    <div class="how-h">🌱 เรียนแบบธรรมชาติ ค่อยเป็นค่อยไป</div>
+    <div class="how-s">วันละนิด ซึมซับเหมือนเด็กเรียนภาษาแม่</div>
+    <div class="how-grid">
+      <div class="how" style="background:var(--blue-soft)">
+        <div class="how-ic">👂</div>
+        <div class="how-n" style="color:var(--blue)">ฟัง</div>
+        <div class="how-d">ฟังเรื่องก่อน<br>ให้หูคุ้นเสียง</div>
       </div>
-      <div style="background:#FFF3E0;border-radius:14px;padding:12px 10px;text-align:center">
-        <div style="font-size:30px">🗣️</div>
-        <div style="font-size:13px;font-weight:900;color:#E65100;margin-top:2px">พูด</div>
-        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">พูดตาม AI ฟัง<br>ให้คะแนนทันที</div>
+      <div class="how" style="background:var(--orange-soft)">
+        <div class="how-ic">🗣️</div>
+        <div class="how-n" style="color:var(--orange)">พูด</div>
+        <div class="how-d">พูดตามประโยค<br>ได้คะแนนทันที</div>
       </div>
-      <div style="background:#E8F5E9;border-radius:14px;padding:12px 10px;text-align:center">
-        <div style="font-size:30px">📖</div>
-        <div style="font-size:13px;font-weight:900;color:#2E7D32;margin-top:2px">อ่าน</div>
-        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">อ่านเรื่องสั้น<br>เห็นคำในบริบท</div>
+      <div class="how" style="background:var(--green-soft)">
+        <div class="how-ic">📖</div>
+        <div class="how-n" style="color:var(--green)">อ่าน</div>
+        <div class="how-d">อ่านเรื่องสั้น<br>เห็นคำในบริบท</div>
       </div>
-      <div style="background:#F3E5F5;border-radius:14px;padding:12px 10px;text-align:center">
-        <div style="font-size:30px">💭</div>
-        <div style="font-size:13px;font-weight:900;color:#6A1B9A;margin-top:2px">คิด</div>
-        <div style="font-size:10px;color:#78909C;font-weight:700;line-height:1.4">ตอบคำถาม<br>เข้าใจจริง ไม่ท่องจำ</div>
+      <div class="how" style="background:var(--purple-soft)">
+        <div class="how-ic">💭</div>
+        <div class="how-n" style="color:var(--purple)">คิด</div>
+        <div class="how-d">ตอบคำถาม<br>เข้าใจจริง ไม่ท่องจำ</div>
       </div>
     </div>
-    <div style="text-align:center;font-size:11px;color:#90A4AE;font-weight:700;margin-top:12px;line-height:1.6">
-      🎮 มีเกม 5 แบบสลับทุกวัน · 🤖 เกม Coding · 🏆 แข่งขันสะสมแต้ม<br>เรียนสนุก ไม่กดดัน โตไปพร้อมกันทุกวัน
+    <div class="how-f">
+      🎮 เกมทบทวน 5 แบบสลับทุกวัน · 🏆 สะสมแต้มได้<br>เรียนสนุก ไม่กดดัน ไปทีละก้าวพร้อมกัน
     </div>
   </div>
 
@@ -258,7 +277,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
 
     <!-- Full price -->
     <div style="text-align:center;margin-bottom:8px">
-      <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.6);text-decoration:line-through">ปกติ ฿ 8,985 (15 Level × ฿ 599)</span>
+      <span style="font-size:14px;font-weight:600;color:#BBCEC1">ถ้าเลือกซื้อทีละ Level ครบ 15 ระดับ = ฿ 8,985</span>
     </div>
 
     <!-- Current price display -->
@@ -273,7 +292,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
       <div>
         <div class="spots-label" id="spotsLabel">ราคานี้สำหรับผู้เรียนอีก</div>
         <div class="spots-big" id="spotsNum">…</div>
-        <div class="spots-unit">คน · หลังจากนั้นปรับขึ้นตามลำดับ</div>
+        <div class="spots-unit">คน · ใช้สิทธิ์ได้เลยตอนนี้</div>
       </div>
       <div class="spots-bar-wrap">
         <div class="spots-bar-fill" id="spotsBarFill"></div>
@@ -281,7 +300,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     </div>
 
     <button class="btn-lifetime" id="btnLifetime" onclick="selectPkg('lifetime')">
-      🌟 สมัครตลอดชีพ — จองที่นี่!<br>
+      เลือกแพ็กเกจตลอดชีพ<br>
       <span style="font-size:22px;letter-spacing:.5px">฿ <span id="lifetimePriceBtn">…</span></span>
     </button>
     <div class="price-per-day" id="pricePerDay"></div>
@@ -392,7 +411,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     </button>
   </div>
 
-  <div class="note">💡 สมัครตลอดชีพคุ้มกว่ามาก — ได้ครบ 15 Level ราคาเดียว ประหยัดถึง 71%!</div>
+  <div class="note">เลือกทีละ Level ก็ได้ ถ้าอยากลองก่อน · หรือเลือกตลอดชีพถ้าตั้งใจเรียนยาว ได้ครบ 15 Level ในราคาเดียว</div>
   <div class="foot">📞 สอบถาม Line: @PeekaWord</div>
 
   <!-- ── ลิงค์ไปหน้า Login ── -->
@@ -493,7 +512,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
       </div>
       <div class="slip-preview" id="slipPreview">
         <img id="slipImg" src="" alt="สลิป">
-        <div style="font-size:11px;font-weight:800;color:#2E7D32;margin-top:4px">✅ แนบสลิปเรียบร้อย</div>
+        <div style="font-size:14px;font-weight:800;color:#2A5C3D;margin-top:4px">✅ แนบสลิปเรียบร้อย</div>
       </div>
       <div class="ferr" id="eSlip">กรุณาแนบสลิป</div>
     </div>
@@ -542,7 +561,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
       <div class="sl-item"><span class="sl-n s-now">2</span><div>ทีมงานกำลังตรวจสอบสลิป <strong>ใช้เวลา 5–10 นาที</strong></div></div>
       <div class="sl-item"><span class="sl-n s-wait">3</span><div>ลงทะเบียน (ครูจะส่งลิงค์ให้ทาง Line)</div></div>
     </div>
-    <div style="background:#E3F2FD;border-radius:11px;padding:10px 13px;font-size:11px;font-weight:700;color:#1565C0;line-height:1.6;border:1.5px solid #90CAF9;margin-top:6px">
+    <div style="background:var(--blue-soft);border-radius:11px;padding:10px 13px;font-size:14px;font-weight:700;color:var(--blue);line-height:1.6;border:1.5px solid #9FC9D4;margin-top:6px">
       💡 ยังไม่ได้รับลิงค์ใน 15 นาที? ทักมาที่<br>Line: <strong>@PeekaWord</strong> ได้เลย
     </div>
   </div>
@@ -571,7 +590,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     <div class="si"><div class="si-n act">3</div><div class="si-t act">ลงทะเบียน</div></div>
   </div>
 
-  <div style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:#2E7D32;line-height:1.6">
+  <div style="background:var(--green-soft);border:2px solid var(--green-line);border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:#2A5C3D;line-height:1.6">
     📋 ตั้งรหัสผ่านของน้อง แล้วเข้าเรียนได้ทันที
   </div>
 
@@ -581,7 +600,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     <div class="field">
       <label>รหัสนักเรียน <span style="font-size:10px;color:#90A4AE;font-weight:700">(ระบบสร้างให้อัตโนมัติ)</span></label>
       <input class="inp" id="rCode" type="text" readonly
-        style="background:#E8F5E9;border-color:#A5D6A7;color:#2E7D32;font-size:22px;letter-spacing:6px;text-align:center;cursor:default">
+        style="background:var(--green-soft);border-color:var(--green-line);color:#2A5C3D;font-size:22px;letter-spacing:6px;text-align:center;cursor:default">
       <div style="font-size:10px;font-weight:700;color:#90A4AE;margin-top:3px">
         ไม่ต้องจำก็ได้ — เข้าเรียนด้วย <b>อีเมล + รหัสผ่าน</b> ที่ตั้งด้านล่าง
       </div>
@@ -627,7 +646,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
     </div>
 
     <div style="background:#FFF8E1;border:2px solid #FFE082;border-radius:14px;padding:13px;margin-bottom:14px">
-      <div style="font-size:12px;font-weight:900;color:#E65100;margin-bottom:9px">🔐 ตั้งรหัสผ่านสำหรับเข้าเรียน</div>
+      <div style="font-size:12px;font-weight:900;color:var(--orange);margin-bottom:9px">🔐 ตั้งรหัสผ่านสำหรับเข้าเรียน</div>
       <div class="field" style="margin-bottom:10px">
         <label>รหัสผ่าน <span class="req">*</span></label>
         <input class="inp" id="rPw" type="password" placeholder="อย่างน้อย 6 ตัว" maxlength="60" autocomplete="new-password">
@@ -677,13 +696,13 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
   <div class="card">
     <div class="succ-hero">
       <div style="font-size:48px;margin-bottom:6px" id="succIcon">⏳</div>
-      <div style="font-size:16px;font-weight:900;color:#1565C0;margin-bottom:4px" id="succTitle">กำลังตรวจสลิป</div>
+      <div style="font-size:16px;font-weight:900;color:var(--blue);margin-bottom:4px" id="succTitle">กำลังตรวจสลิป</div>
       <div style="font-size:12px;font-weight:700;color:#546E7A;margin-bottom:4px">รหัสนักเรียนของคุณ:</div>
       <div class="code-chip" id="succCode">—</div>
     </div>
     <div class="info-table" id="succDetail"></div>
     <div id="succMsg" style="border-radius:11px;padding:11px 13px;font-size:12px;font-weight:700;line-height:1.7;margin-top:10px"></div>
-    <a id="succGo" href="login.html" style="display:none;margin-top:12px;background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;border-radius:12px;padding:13px;font-size:16px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🚀 เข้าสู่ระบบ เริ่มเรียนเลย</a>
+    <a id="succGo" href="login.html" style="display:none;margin-top:12px;background:var(--green);color:#fff;border-radius:12px;padding:13px;font-size:16px;font-weight:900;text-decoration:none;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🚀 เข้าสู่ระบบ เริ่มเรียนเลย</a>
     <div id="approvalNotif" style="display:none;margin-top:10px"></div>
   </div>
   <button class="btn btn-back" onclick="resetAll()">เริ่มต้นใหม่</button>
@@ -739,7 +758,7 @@ window.onload = function() {
       const nick = st.nick || st.fullname || '';
       const nk = document.getElementById('rNick'); if (nk && nick) nk.value = nick;
       const banner = document.createElement('div');
-      banner.style.cssText = 'background:#E8F5E9;border:2px solid #A5D6A7;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:800;color:#2E7D32;text-align:center';
+      banner.style.cssText = 'background:var(--green-soft);border:2px solid var(--green-line);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:800;color:#2A5C3D;text-align:center';
       banner.innerHTML = '➕ ซื้อ Level เพิ่มสำหรับ <strong>' + nick + '</strong><br><span style="font-size:11px;font-weight:600">เลือก Level ใหม่ที่ต้องการ แล้วชำระเงินได้เลย</span>';
       const host = document.querySelector('.container, body'); if (host) host.insertBefore(banner, host.firstChild);
     }, 300);
@@ -780,13 +799,13 @@ function updateTierUI(sold) {
 
   // แสดงราคาปัจจุบันเท่านั้น — ไม่แสดง tier ถัดไป
   document.getElementById('priceMain').textContent  = '฿ ' + tier.price.toLocaleString();
-  document.getElementById('priceSave').textContent  = `ประหยัด ฿ ${saved.toLocaleString()} (ลด ${discount}%)`;
+  document.getElementById('priceSave').textContent  = `ต่างจากการซื้อทีละ Level ฿ ${saved.toLocaleString()}`;
   document.getElementById('priceBadge').textContent = tier.tag;
   document.getElementById('lifetimePriceBtn').textContent = tier.price.toLocaleString();
   // per-day comparison
   const perDay = (tier.price / 448).toFixed(2);
   const ppd = document.getElementById('pricePerDay');
-  if(ppd) ppd.textContent = `☕ ตกวันละเพียง ฿ ${perDay} บาท เท่านั้น! (448 วัน)`;
+  if(ppd) ppd.textContent = `เฉลี่ยวันละ ฿ ${perDay} ตลอดเส้นทาง 448 วัน`;
 
 
   // Countdown spots
@@ -1003,7 +1022,7 @@ function showPending(d) {
       <div class="irow"><span class="ilbl">นักเรียน</span><span class="ival">${nick}</span></div>
       <div class="irow"><span class="ilbl">Level ใหม่</span><span class="ival hi">${d.pkgName||'—'}</span></div>
       <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿ ${Number(d.price||0).toLocaleString()}</span></div>
-      <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:#E65100;text-align:center">
+      <div style="margin-top:12px;background:var(--orange-soft);border:2px solid #F0D2AE;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:var(--orange);text-align:center">
         ${d.autoVerified ? '✅ เพิ่ม Level ให้บัญชีเดิมแล้ว<br><span style="font-size:11px;font-weight:600">ใช้ code เดิม login ได้ทันที · ส่งอีเมลยืนยันแล้ว</span>' : '⏳ กำลังตรวจสลิป<br><span style="font-size:11px;font-weight:600">ถ้าตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้ภายในวันเดียวกัน<br>อนุมัติแล้ว Level ใหม่ปลดล็อกเอง ใช้ code เดิมได้เลย</span>'}
       </div>
       <a href="dashboard.html" style="display:block;margin-top:14px;background:var(--green);color:#fff;border-radius:13px;padding:15px;font-size:16px;font-weight:800;text-decoration:none;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🏠 กลับหน้าหลัก</a>`;
@@ -1059,7 +1078,7 @@ async function checkOrderStatus(d) {
         notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:700;color:#C62828;text-align:center;line-height:1.8">
           ❌ สลิปไม่ผ่านการตรวจสอบ<br>
           <span style="font-size:11px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือส่งสลิปใหม่</span><br><br>
-          <button onclick="retryPayment()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
+          <button onclick="retryPayment()" style="background:var(--orange);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
             🔄 ส่งสลิปใหม่</button>
           <div style="margin-top:8px;font-size:11px">หรือทักมาที่ Line: <strong>@PeekaWord</strong></div>
         </div>`;
@@ -1208,7 +1227,7 @@ function showSuccess(st) {
     ti.textContent = 'เปิดสิทธิ์เรียบร้อย';
     if (hd) hd.textContent = 'เปิดสิทธิ์เรียบร้อย!';
     if (sb) sb.textContent = 'เริ่มเรียนได้ทันที';
-    ms.style.cssText += ';background:#E8F5E9;border:1.5px solid #A5D6A7;color:#2E7D32';
+    ms.style.cssText += ';background:var(--green-soft);border:1.5px solid var(--green-line);color:#2A5C3D';
     ms.innerHTML = '✅ ตรวจสลิปอัตโนมัติผ่านแล้ว<br>' +
       'ส่งรหัสนักเรียนไปที่อีเมล <strong>' + (st.email || 'ของคุณ') + '</strong> แล้ว<br>' +
       '<span style="font-size:11px;font-weight:600">ถ้าไม่เจอ ลองดูในโฟลเดอร์ Junk/Spam</span>';
@@ -1218,7 +1237,7 @@ function showSuccess(st) {
     ti.textContent = 'กำลังตรวจสลิป';
     if (hd) hd.textContent = 'ได้รับสลิปแล้ว';
     if (sb) sb.textContent = 'รอตรวจสอบสักครู่';
-    ms.style.cssText += ';background:#E3F2FD;border:1.5px solid #90CAF9;color:#1565C0';
+    ms.style.cssText += ';background:var(--blue-soft);border:1.5px solid #9FC9D4;color:var(--blue)';
     ms.innerHTML = '✅ ได้รับข้อมูลแล้ว<br>' +
       'สลิปนี้ตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้<strong>ภายในวันเดียวกัน</strong><br>' +
       'เปิดสิทธิ์แล้วจะส่งรหัสไปที่อีเมล <strong>' + (st.email || 'ของคุณ') + '</strong><br>' +
@@ -1259,7 +1278,7 @@ async function checkApprovalStatus(code) {
         notif.innerHTML = `<div style="background:#FEE2E2;border:1.5px solid #FCA5A5;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:700;color:#C62828;text-align:center;line-height:1.8">
           ❌ สลิปไม่ผ่านการตรวจสอบ<br>
           <span style="font-size:11px;color:#78909C">กรุณาตรวจสอบยอดโอน หรือทักครูทาง Line</span><br><br>
-          <button onclick="resetAll()" style="background:#E65100;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
+          <button onclick="resetAll()" style="background:var(--orange);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">
             🔄 สมัครใหม่</button>
           <div style="margin-top:8px;font-size:11px">Line: <strong>@PeekaWord</strong></div>
         </div>`;
@@ -1364,7 +1383,7 @@ function attachMailHelper(inputId) {
   });
 
   var hint = document.createElement('div');
-  hint.style.cssText = 'font-size:11px;font-weight:700;color:#2E7D32;margin-top:4px';
+  hint.style.cssText = 'font-size:14px;font-weight:700;color:#2A5C3D;margin-top:4px';
 
   inp.parentNode.insertBefore(bar, inp.nextSibling);
   bar.parentNode.insertBefore(hint, bar.nextSibling);
