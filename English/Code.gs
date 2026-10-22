@@ -1581,7 +1581,10 @@ function actionVerifyPurchaseSlip(p, cb) {
     result   = JSON.parse(res.getContentText());
   } catch (e) {
     // เรียก API ไม่ได้ → อย่าปฏิเสธลูกค้า ให้ครูตรวจมือแทน
-    return verdict_(orderId, 'manual', {status:'manual', msg: 'ตรวจอัตโนมัติไม่ได้ — ส่งให้ครูตรวจ' }, cb);
+    // เก็บสาเหตุไว้ในชีตด้วย (เช่น timeout / SlipOK ตอบไม่ใช่ JSON) จะได้วินิจฉัยได้
+    const why = String((e && e.message) || e).slice(0, 120);
+    return verdict_(orderId, 'manual', {status:'manual',
+      msg: 'ตรวจอัตโนมัติไม่ได้ (' + why + ') — ส่งให้ครูตรวจ' }, cb);
   }
 
   // ปัญหาฝั่งเรา (key ผิด / สาขาผิด / โควตาหมด / SlipOK ล่ม) → ห้ามปฏิเสธลูกค้า
