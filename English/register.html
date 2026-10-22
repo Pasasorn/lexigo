@@ -1018,12 +1018,16 @@ function showPending(d) {
   // ── ซื้อ Level เพิ่ม (บัญชีเดิม) → ข้ามฟอร์มลงทะเบียน ไปหน้ารออนุมัติเลย ──
   if (window._BUYMORE) {
     const nick = window._BUYMORE.nick || window._BUYMORE.fullname || 'คุณ';
+    const rs   = !!window._BUYMORE.resubmit;   // ส่งสลิปใหม่ของออเดอร์เดิม ไม่ใช่ซื้อ Level เพิ่ม
     document.getElementById('pendTable').innerHTML = `
-      <div class="irow"><span class="ilbl">นักเรียน</span><span class="ival">${nick}</span></div>
-      <div class="irow"><span class="ilbl">Level ใหม่</span><span class="ival hi">${d.pkgName||'—'}</span></div>
+      <div class="irow"><span class="ilbl">${rs ? 'รหัสนักเรียน' : 'นักเรียน'}</span><span class="ival">${rs ? (window._BUYMORE.code || '—') : nick}</span></div>
+      <div class="irow"><span class="ilbl">${rs ? 'แพ็กเกจ' : 'Level ใหม่'}</span><span class="ival hi">${d.pkgName||'—'}</span></div>
       <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿ ${Number(d.price||0).toLocaleString()}</span></div>
       <div style="margin-top:12px;background:var(--orange-soft);border:2px solid #F0D2AE;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:var(--orange);text-align:center">
-        ${d.autoVerified ? '✅ เพิ่ม Level ให้บัญชีเดิมแล้ว<br><span style="font-size:11px;font-weight:600">ใช้ code เดิม login ได้ทันที · ส่งอีเมลยืนยันแล้ว</span>' : '⏳ กำลังตรวจสลิป<br><span style="font-size:11px;font-weight:600">ถ้าตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้ภายในวันเดียวกัน<br>อนุมัติแล้ว Level ใหม่ปลดล็อกเอง ใช้ code เดิมได้เลย</span>'}
+        ${d.autoVerified
+          ? (rs ? '✅ ตรวจสลิปผ่านแล้ว เปิดสิทธิ์ให้รหัสเดิมเรียบร้อย<br><span style="font-size:11px;font-weight:600">ส่งอีเมลยืนยันแล้ว · เข้าสู่ระบบได้เลย</span>'
+                : '✅ เพิ่ม Level ให้บัญชีเดิมแล้ว<br><span style="font-size:11px;font-weight:600">ใช้ code เดิม login ได้ทันที · ส่งอีเมลยืนยันแล้ว</span>')
+          : '⏳ กำลังตรวจสลิป<br><span style="font-size:11px;font-weight:600">ถ้าตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้ภายในวันเดียวกัน<br>อนุมัติแล้ว' + (rs ? 'จะส่งอีเมลให้ ใช้รหัสเดิมเข้าเรียนได้เลย' : ' Level ใหม่ปลดล็อกเอง ใช้ code เดิมได้เลย') + '</span>'}
       </div>
       <a href="dashboard.html" style="display:block;margin-top:14px;background:var(--green);color:#fff;border-radius:13px;padding:15px;font-size:16px;font-weight:800;text-decoration:none;text-align:center;font-family:'Nunito','Noto Sans Thai Looped',sans-serif">🏠 กลับหน้าหลัก</a>`;
     setStep(2); go(2);
@@ -1098,7 +1102,19 @@ function retryPayment() {
 function resubmitSlip(code) {
   let d = {};
   try { d = JSON.parse(localStorage.getItem(PK) || '{}'); } catch(e) {}
-  if (code) window._BUYMORE = { code: String(code) };
+  // ถึงหน้า "กำลังตรวจสลิป" แล้ว PK ถูกลบไปแล้ว (ย้ายไป SK) → ประกอบข้อมูลกลับจาก SK
+  if (!d.type) {
+    let st = {};
+    try { st = JSON.parse(localStorage.getItem(SK) || '{}'); } catch(e) {}
+    if (st.type) {
+      const tier = TIERS[currentTier] || { price: 1990 };
+      d = { type: st.type, level: st.level, cefr: st.cefr,
+            pkgName: st.course || (st.type === 'lifetime' ? 'ตลอดชีพ (3,000 คำ ทุก Level)' : 'Level ' + st.level),
+            price: st.type === 'lifetime' ? tier.price : 599, tier: currentTier + 1,
+            payName: st.fullname, payEmail: st.email, payPhone: st.phone };
+    }
+  }
+  if (code) window._BUYMORE = { code: String(code), resubmit: true };
   if (d.type && d.pkgName && d.price) {
     selectedPkg = { type:d.type, pkgName:d.pkgName, price:d.price, tier:d.tier, level:d.level, cefr:d.cefr, days:d.days };
     document.getElementById('sumPkg').textContent  = selectedPkg.pkgName;
