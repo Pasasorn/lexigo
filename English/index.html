@@ -507,7 +507,7 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
         <p style="font-size:26px;font-weight:800;font-family:'Baloo 2','Mitr',sans-serif;margin:4px 0 14px">This is a cat.</p>
         <div style="background:var(--purple-soft);border-radius:13px;padding:14px 16px">
           <div style="display:flex;align-items:baseline;gap:10px">
-            <span style="font-size:15px;font-weight:800;color:var(--purple);margin-right:auto">คะแนนการออกเสียง</span>
+            <span style="font-size:15px;font-weight:800;color:var(--purple);margin-right:auto">คำที่พูดได้ตรง</span>
             <b style="font-family:'Baloo 2','Mitr',sans-serif;font-size:34px;color:var(--purple)">82%</b>
           </div>
           <p class="tiny" style="margin-top:4px">คะแนนตัวอย่างเพื่อแสดงรูปแบบ</p>
@@ -875,8 +875,8 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
     var left=Math.max(0,30-sold);
     if(left>0){
       n.textContent=left;
-      t.innerHTML='ราคา ฿1,990 นี้เป็นราคาช่วงเปิดตัว สำหรับผู้เรียน <b>'+left+
-        '</b> คนแรก ใช้สิทธิ์ได้เลยตอนนี้ · ตรวจสอบราคาปัจจุบันได้ที่หน้าแพ็กเกจ';
+      t.innerHTML='ราคา ฿1,990 นี้เป็นราคาช่วงเปิดตัว · ยังรับได้อีก <b>'+left+
+        '</b> คน ใช้สิทธิ์ได้เลยตอนนี้ · ตรวจสอบราคาปัจจุบันได้ที่หน้าแพ็กเกจ';
     }else{
       t.textContent='ราคาช่วงเปิดตัวรอบนี้ครบแล้ว · ดูราคาปัจจุบันได้ที่หน้าแพ็กเกจ';
     }

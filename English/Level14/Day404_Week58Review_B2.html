@@ -810,7 +810,7 @@ function cbRun(){
 
 function showCompletion(){
   let code=localStorage.getItem(LOCK_KEY);
-  if(!code){code=generateCode(104);localStorage.setItem(LOCK_KEY,code);}if(window.pwCollect)pwCollect(404);syncToCloud(404,code,pwPct());
+  if(!code){code=generateCode(404);localStorage.setItem(LOCK_KEY,code);}if(window.pwCollect)pwCollect(404);syncToCloud(404,code,pwPct());
   document.getElementById('codeDisplay').textContent=code;
   document.getElementById('savedCode').textContent=code;
   document.getElementById('alreadyDone').classList.add('show');
@@ -836,7 +836,6 @@ function checkLock(){
 }
 function tryUnlock(){
   const input=document.getElementById('codeInput').value.trim().toUpperCase();
-  if(input==='ADMIN-0000'){unlockContent();return;}
   if(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(input)){localStorage.setItem(PREV_KEY,input);document.getElementById('unlockErr').style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
   else{document.getElementById('unlockErr').style.display='block';}
 }

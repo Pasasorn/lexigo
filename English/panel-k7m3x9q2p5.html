@@ -17,6 +17,14 @@ p{font-size:13px;color:#666;font-weight:700;margin-bottom:20px}
 .clear-btn{width:100%;background:#FEF2F2;border:2px solid #FCA5A5;color:#C62828;border-radius:14px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
 .note{font-size:11px;color:#94A3B8;font-weight:700;text-align:center;margin-top:12px}
 </style></head><body>
+<script>
+/* ประตูแอดมิน: ต้องผ่าน gate-k7m3x9q2p5.html (ตรวจรหัสด้วย SHA-256) ก่อน
+   หน้านี้ห้ามตั้ง wla_admin เองเด็ดขาด — เคยเป็นช่องให้ใครก็ได้ปลดล็อกบทเรียนทั้ง 448 วันโดยไม่จ่าย */
+if (localStorage.getItem('wla_admin') !== '1') {
+  location.replace('gate-k7m3x9q2p5.html');
+}
+</script>
+
 <div class="box">
   <h1>🔧 Admin Test Panel</h1>
   <p>กดปุ่ม Day ที่ต้องการ → เปิดได้ทันที ไม่ต้องใส่รหัส</p>
@@ -139,7 +147,7 @@ DAYS.forEach(d => {
   const btn = document.createElement('button');
   btn.className = 'day-btn' + (d.review ? ' review' : '');
   btn.innerHTML = 'Day ' + d.n + (d.review ? '<br><small>Review</small>' : '');
-  btn.onclick = () => { localStorage.setItem('wla_admin','1'); location.href = d.file; };
+  btn.onclick = () => { location.href = d.file; };   // wla_admin มาจาก gate เท่านั้น
   grid.appendChild(btn);
 });
 function clearAll() {

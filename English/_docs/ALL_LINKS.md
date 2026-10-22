@@ -23,10 +23,10 @@
 
 | หน้า | ลิงก์ |
 |------|-------|
-| 🛠️ Admin Panel (กดเปิด Day) | https://peekaword.pages.dev/English/panel-k7m3x9q2p5.html |
-| 🔒 Admin Gate (ใส่รหัส) | https://peekaword.pages.dev/English/gate-k7m3x9q2p5.html |
+| 🛠️ Admin Panel (กดเปิด Day) | https://peekaword.pages.dev/English/panel-<ไม่เปิดเผย>.html |
+| 🔒 Admin Gate (ใส่รหัส) | https://peekaword.pages.dev/English/gate-<ไม่เปิดเผย>.html |
 | 👨‍🏫 Teacher Dashboard | https://peekaword.pages.dev/English/teacher.html |
-| ⚡ Dashboard admin (URL) | https://peekaword.pages.dev/English/gate-k7m3x9q2p5.html  (เข้าผ่าน URL ไม่ได้แล้ว) |
+| ⚡ Dashboard admin (URL) | https://peekaword.pages.dev/English/gate-<ไม่เปิดเผย>.html  (เข้าผ่าน URL ไม่ได้แล้ว) |
 | ❌ ปิด admin | https://peekaword.pages.dev/English/dashboard.html?admin=off |
 
 ---

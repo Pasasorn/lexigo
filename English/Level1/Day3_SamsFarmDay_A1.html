@@ -269,6 +269,8 @@ const FIBS=[
 
 function checkLock(){
   if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}
+  // โหมดทดลองฟรี 7 วัน: เปิดได้โดยไม่ต้องมีรหัสวันก่อน (แต่ถ้าเรียนจบแล้วให้ไปโชว์ 'already done' ตามปกติ)
+  if(parseInt(localStorage.getItem('wla_trial_open')||'0',10)>=3 && !localStorage.getItem('wla_d3')){unlockContent();return;}
   const prev=localStorage.getItem(PREV_KEY),mine=localStorage.getItem(MY_KEY);
   if(mine){document.getElementById('alreadyDone').classList.add('show');document.getElementById('savedCode').textContent=mine;unlockContent();}
   else if(prev){unlockContent();}
@@ -276,7 +278,7 @@ function checkLock(){
 }
 function tryUnlock(){
   const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');
-  if(v==='ADMIN-0000' || (new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
+  if((new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
   else{err.style.display='block';}
 }
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}

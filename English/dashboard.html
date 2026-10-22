@@ -806,7 +806,11 @@ function showDashboard(st) {
   if (isAdmin || st.type === 'lifetime') {
     owned = []; for (let L = 1; L <= maxContentLevel; L++) owned.push(L);
   } else {
-    const nums = (String(st.level || '').match(/\d+/g) || []).map(Number).filter(n => n >= 1 && n <= 15);
+    // "Level 4 A2" → [4]  (เดิมใช้ /\d+/g จับ A2 → 2 ทำให้ได้ Level แถมที่ไม่ได้ซื้อ)
+    const _lv = String(st.level || '').trim();
+    // รับได้ทั้ง "Level 4 A2" / "Level 3,5" และตัวเลขล้วน "2" (register เก็บเป็นตัวเลข)
+    const _m = _lv.match(/Level\s*([\d,\s]+)/i) || (/^[\d,\s]+$/.test(_lv) ? [null, _lv] : null);
+    const nums = (_m ? _m[1].split(/[,\s]+/) : []).map(Number).filter(n => n >= 1 && n <= 15);
     owned = nums.length ? [...new Set(nums)].sort((a,b) => a-b) : [1];
   }
   window._OWNED = owned;

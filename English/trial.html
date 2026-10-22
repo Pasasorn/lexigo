@@ -125,7 +125,7 @@ const DAYS=[
   {n:7,f:'Level1/Day7_Week1Review_A1.html',  t:"Week 1 Review ⭐"},
 ];
 function trial(){ try{return JSON.parse(localStorage.getItem(TK)||'null');}catch(e){return null;} }
-function doneDays(){ let n=0; for(let i=1;i<=7;i++) if(localStorage.getItem('wla_d'+i)) n++; return n; }
+function doneDays(){ let n=0; for(let i=1;i<=7;i++){ const v=localStorage.getItem('wla_d'+i); if(v && v!=='TRIAL') n++; } return n; }
 
 function render(){
   const g=document.getElementById('dayGrid'); g.innerHTML='';
@@ -140,10 +140,11 @@ function render(){
         // ทำเครื่องหมายว่านี่คือ progress ของโหมดทดลอง ไม่ใช่ของบัญชีจริง
         // ถ้าไม่ตั้ง wla_last_code เด็กที่ login ครั้งแรกจะได้ progress ทดลองติดมาด้วย
         localStorage.setItem('wla_last_code','TRIAL');
-        for(let i=1;i<d.n;i++) if(!localStorage.getItem('wla_d'+i)) localStorage.setItem('wla_d'+i,'TRIAL');
+        // เปิด Day 1–7 ให้หมดโดยไม่ยัดค่าปลอมลง wla_dN (ไม่งั้นจะโชว์ว่า 'เรียนจบแล้ว' ทั้งที่ยังไม่ได้เรียน)
+        localStorage.setItem('wla_trial_open','7');
       };
     }
-    const fin = localStorage.getItem('wla_d'+d.n) ? '✅' : '📘';
+    const v = localStorage.getItem('wla_d'+d.n); const fin = (v && v!=='TRIAL') ? '✅' : '📘';
     el.innerHTML='<span class="ico">'+fin+'</span><span class="n">Day '+d.n+'</span><span class="t">'+d.t+'</span>';
     g.appendChild(el);
   });

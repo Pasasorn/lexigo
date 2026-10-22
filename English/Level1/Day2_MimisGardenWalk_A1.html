@@ -316,6 +316,8 @@ const D1_PREFIX = 'D1-';
 
 function checkLock(){
   if(localStorage.getItem('wla_admin')==='1'){unlockContent();return;}
+  // โหมดทดลองฟรี 7 วัน: เปิดได้โดยไม่ต้องมีรหัสวันก่อน (แต่ถ้าเรียนจบแล้วให้ไปโชว์ 'already done' ตามปกติ)
+  if(parseInt(localStorage.getItem('wla_trial_open')||'0',10)>=2 && !localStorage.getItem('wla_d2')){unlockContent();return;}
   const d1code = localStorage.getItem(D1_KEY);
   const d2code = localStorage.getItem(D2_KEY);
 
@@ -336,7 +338,6 @@ function checkLock(){
 function tryUnlock(){
   const input = document.getElementById('codeInput').value.trim().toUpperCase();
   const errEl = document.getElementById('unlockErr');
-  if(input==='ADMIN-0000'){unlockContent();return;}
   // Validate: must start with D1- and be 7 chars
   if(input.startsWith(D1_PREFIX) && input.length === 7){
     localStorage.setItem(D1_KEY, input); // save entered code

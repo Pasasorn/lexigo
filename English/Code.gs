@@ -257,8 +257,8 @@ function doGet(e) {
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v15', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v17', deployed:'2026-10-06',
+                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -460,7 +460,7 @@ function actionGetLeaderboard(p, cb) {
     if (data[i][3] !== 'active') continue;
     const c   = data[i][0].toString();
     const pm  = progMap[c] || { days: [], total_score: 0, day30_date: null };
-    const streak = calcStreak(pm.savedAts);
+    const streak = calcStreak(pm.savedAts || []);
     students.push({
       name:           data[i][1] || 'ไม่ระบุชื่อ',
       code:           c,
@@ -518,7 +518,8 @@ function actionGetLeaderboard(p, cb) {
     .slice(0, 10)
     .map((s, i) => ({ ...s, qc_rank: i + 1 }));
 
-  const cfg = getConfigAll();
+  // ส่งเฉพาะค่าที่หน้าเว็บต้องใช้ — ห้าม getConfigAll() เพราะมี teacher_pass / slipok_api_key
+  const cfg = publicConfig_();
   return respond({ status:'ok', open: isOpen, students, speed_heroes: speedHeroes, quiz_champions: quizChampions, competition_days: compDays, config: cfg }, cb);
 }
 
@@ -908,7 +909,7 @@ function actionMyStats(p, cb) {
   if (s.max >= 30) bonus += PTS_S30;
   else if (s.max >= 7) bonus += PTS_S7;
 
-  const cfg = getConfigAll();
+  const cfg = publicConfig_();   // whitelist เท่านั้น ไม่ใช่ทั้งแท็บ
 
   return respond({
     status: 'ok',
@@ -974,7 +975,11 @@ function actionGetStats(p, cb) {
   const data = sh.getDataRange().getValues();
   let sold = 0;
   for (let i = 1; i < data.length; i++) {
-    if (data[i][8] !== 'rejected') sold++;  // นับทุก order ที่ไม่ถูก reject
+    // นับเฉพาะ "ตลอดชีพ" ที่จ่ายแล้วจริง — pending (ยังไม่แนบสลิป) / level / trial ไม่กินที่นั่ง
+    // ไม่งั้นใครยิง newPurchase เล่นก็ดันราคาขึ้นได้
+    const type   = (data[i][7] || '').toString();
+    const status = (data[i][8] || '').toString();
+    if (type === 'lifetime' && (status === 'verified' || status === 'pending_approval')) sold++;
   }
   // ── ไม่นับออเดอร์ทดสอบระบบ ──
   // Config key 'seat_offset' = จำนวนออเดอร์ที่เป็นการทดสอบ (เก็บแถวไว้ แต่ไม่กินที่นั่ง)
@@ -1009,9 +1014,20 @@ function actionNewPurchase(p, cb) {
 }
 
 // ── helper: แปลงชื่อ pkg → เลข level (เช่น "Level 2" → 2) ─
+// ── อ่านเซ็ต Level ที่เป็นเจ้าของจาก pkg_name เช่น "Level 3,5" / "Level 4 A2" → [3,5] / [4]
+//    ห้ามใช้ /\d+/g ตรง ๆ เพราะจะจับ "A2" → 2 และ "Oxford 3000" → 3000
+function ownedLevels_(pkgName) {
+  const s = (pkgName || '').toString();
+  const m = s.match(/Level\s*([\d,\s]+)/i);
+  if (!m) return [];
+  return m[1].split(/[,\s]+/).map(function (x) { return parseInt(x, 10); })
+             .filter(function (x) { return x >= 1 && x <= 15; });
+}
+
 function levelNumFromPkg(pkgName) {
-  const m = (pkgName || '').toString().match(/(\d+)/);
-  return m ? parseInt(m[1]) : 1;
+  // "Level 3 A1" → 3   (ห้ามจับ "A1"/"3000" — เคยทำให้ซื้อ Level 4 A2 ได้ Level 2 แถม)
+  const m = (pkgName || '').toString().match(/Level\s*(\d+)/i);
+  return m ? parseInt(m[1], 10) : 1;
 }
 
 // ── uploadSlip: รับสลิป base64 → บันทึกไฟล์ใน Google Drive ─
@@ -1119,8 +1135,18 @@ function actionVerifyPurchase(p, cb) {
       const stData = stSh2.getDataRange().getValues();
       for (let j = 1; j < stData.length; j++) {
         if (stData[j][0].toString() !== existingCode) continue;
+        // ซื้อ "ตลอดชีพ" ทับบัญชี Level เดิม → เป็น lifetime เต็ม (ให้ตรงกับทาง slip อัตโนมัติ)
+        if (type === 'lifetime') {
+          stSh2.getRange(j + 1, 7).setValue('lifetime');
+          stSh2.getRange(j + 1, 8).setValue(pkgName);
+          stSh2.getRange(j + 1, 9).setValue('');
+          stSh2.getRange(j + 1, 4).setValue('active');
+          sh.getRange(i + 1, 9).setValue('verified');
+          sh.getRange(i + 1, 12).setValue(existingCode);
+          return respond({status:'ok', upgraded:true, student_code: existingCode, owned: 'lifetime', name: stData[j][1]}, cb);
+        }
         // อัปเกรด: เพิ่ม Level ใหม่เข้าเซ็ตที่มี (independent — เป็นเจ้าของเฉพาะ Level ที่ซื้อ)
-        const oldNums = (String(stData[j][7]).match(/\d+/g) || []).map(Number);
+        const oldNums = ownedLevels_(stData[j][7]);
         const newLevel = levelNumFromPkg(pkgName);
         const owned = [...new Set(oldNums.concat([newLevel]))].sort(function(a,b){return a-b;});
         stSh2.getRange(j + 1, 8).setValue('Level ' + owned.join(','));  // pkg_name เก็บเซ็ต เช่น "Level 3,5"
@@ -1455,14 +1481,22 @@ function setOrderNote_(orderId, state, msg, code) {
 // ── ค่าที่หน้าเว็บเอาไปแสดงได้ (เปิดสาธารณะ) ─────────────────
 // whitelist เท่านั้น — ห้ามคืนทั้ง Config เพราะมี teacher_pass / slipok_api_key อยู่ด้วย
 // ?action=publicConfig
-function actionPublicConfig(p, cb) {
-  const pick = ['line_id', 'promptpay_number', 'site_url', 'early_bird_slots'];
+function publicConfig_() {
+  // คีย์ที่เปิดเผยได้ — ห้ามใส่ teacher_pass, slipok_api_key, slipok_branch_id, payee_last4
+  const pick = ['line_id', 'promptpay_number', 'site_url', 'early_bird_slots',
+                'leaderboard_open', 'competition_days', 'competition_start', 'competition_end',
+                'quiz_free_attempts', 'quiz_paid_price',
+                'pts_attendance', 'pts_full_day', 'pts_streak_7', 'pts_streak_30'];
   const out = {};
   pick.forEach(function (k) {
     const v = getConfig(k);
     out[k] = (v === null || v === undefined) ? '' : String(v).trim();
   });
-  return respond({ status: 'ok', config: out }, cb);
+  return out;
+}
+
+function actionPublicConfig(p, cb) {
+  return respond({ status: 'ok', config: publicConfig_() }, cb);
 }
 
 // ?action=orderStatus&order_id=ORD-...
@@ -1495,7 +1529,6 @@ function verdict_(orderId, state, obj, cb) {
 function actionVerifyPurchaseSlip(p, cb) {
   const orderId = (p.order_id || '').toString().trim();
   const pkg     = (p.pkg || '').toString().trim();
-  const price   = parseInt(p.price) || 0;
   const type    = (p.type || 'level').toString().trim();
   const name    = (p.name || '').toString().trim();
   const email   = (p.email || '').toString().trim().toLowerCase();
@@ -1503,7 +1536,14 @@ function actionVerifyPurchaseSlip(p, cb) {
   const existingCode = (p.existing_code || '').toString().trim();
   let   slip    = (p.slip || p.slip_base64 || '').toString().trim();
 
-  if (!orderId || !slip || !price)
+  // ราคา: ห้ามเชื่อตัวเลขจาก client (เคยทดสอบส่ง price=1 แล้วได้รหัสตลอดชีพ)
+  // ใช้ "ราคาขั้นต่ำของแพ็กเกจ" ที่ server รู้เอง — ต่ำกว่านี้ถือว่าจ่ายไม่ครบ
+  const MIN_PRICE = { lifetime: 1990, level: 599, annual: 1590 };
+  const clientPrice = parseInt(p.price) || 0;
+  const floor = MIN_PRICE[type] || MIN_PRICE.level;
+  const price = Math.max(clientPrice, floor);
+
+  if (!orderId || !slip)
     return respond({ status: 'error', msg: 'ข้อมูลไม่ครบ' }, cb);
 
   // SlipOK ต้องใช้ 2 ค่าแยกกัน:
@@ -1565,7 +1605,7 @@ function actionVerifyPurchaseSlip(p, cb) {
   const recvName = ((d.receiver && d.receiver.displayName) || '').toString();
 
   // ── ชั้น 1: ยอดเงินต้องตรง ───────────────────────────────
-  if (Math.round(amount) < price)
+  if (amount + 0.001 < price)
     return verdict_(orderId, 'reject', {status:'reject',
       msg: 'ยอดโอนไม่ตรง — สลิปแสดง ' + amount + ' บาท แต่แพ็กเกจนี้ ' + price + ' บาท'
     }, cb);
@@ -1579,7 +1619,14 @@ function actionVerifyPurchaseSlip(p, cb) {
                       .split(/[,\s/|]+/).map(function (s) { return s.replace(/\D/g, ''); })
                       .filter(function (s) { return s.length >= 3; });
   const recvDigits = recvAcc.replace(/\D/g, '');
-  if (last4List.length && recvDigits &&
+  // ยังไม่ได้ตั้ง payee_last4 = ยังเช็กบัญชีปลายทางไม่ได้ → ห้ามผ่านอัตโนมัติ
+  if (!last4List.length)
+    return verdict_(orderId, 'manual', {status:'manual',
+      msg: 'ยังไม่ได้ตั้งค่า payee_last4 ใน Config — ส่งให้ครูตรวจ' }, cb);
+  if (!recvDigits)
+    return verdict_(orderId, 'manual', {status:'manual',
+      msg: 'สลิปไม่ระบุบัญชีผู้รับ — ส่งให้ครูตรวจ' }, cb);
+  if (recvDigits &&
       !last4List.some(function (x) { return recvDigits.indexOf(x) !== -1; }))
     return verdict_(orderId, 'reject', {status:'reject',
       msg: 'สลิปนี้โอนเข้าบัญชีอื่น ไม่ใช่บัญชีของ PeekaWord (สลิประบุ ...' +
@@ -1705,12 +1752,25 @@ function sendWelcomeEmail_(email, name, code, pkg, upgraded, unlockCode) {
 function issueOrUpgradeCode_(orderId, pkg, type, name, email, existingCode) {
   const sh = ensurePasswordColumns_();
 
+  // ซื้อ "ตลอดชีพ" ทับบัญชีที่เคยซื้อ Level → ต้องกลายเป็น lifetime เต็ม ไม่ใช่ "Level 2,3000"
+  if (type === 'lifetime') {
+    const st = (existingCode && findStudentByCode_(sh, existingCode)) ||
+               (email && findStudentByEmail_(sh, email));
+    if (st) {
+      sh.getRange(st.row, 7).setValue('lifetime');
+      sh.getRange(st.row, 8).setValue(pkg);
+      sh.getRange(st.row, 9).setValue('');          // ล้าง expiry
+      sh.getRange(st.row, 4).setValue('active');
+      return { code: st.data[0].toString(), upgraded: true, pkg_name: pkg };
+    }
+  }
+
   // กรณีซื้อ Level เพิ่ม
   if (existingCode) {
     const st = findStudentByCode_(sh, existingCode);
     if (st) {
       const oldPkg = (st.data[7] || '').toString();
-      const oldNums = (oldPkg.match(/\d+/g) || []).map(Number);
+      const oldNums = ownedLevels_(oldPkg);
       const newNum = levelNumFromPkg(pkg);
       const owned = Array.from(new Set(oldNums.concat([newNum]))).sort(function (a, b) { return a - b; });
       const merged = 'Level ' + owned.join(',');
@@ -1724,7 +1784,7 @@ function issueOrUpgradeCode_(orderId, pkg, type, name, email, existingCode) {
     const st = findStudentByEmail_(sh, email);
     if (st) {
       const oldPkg = (st.data[7] || '').toString();
-      const oldNums = (oldPkg.match(/\d+/g) || []).map(Number);
+      const oldNums = ownedLevels_(oldPkg);
       const newNum = levelNumFromPkg(pkg);
       const owned = Array.from(new Set(oldNums.concat([newNum]))).sort(function (a, b) { return a - b; });
       const merged = 'Level ' + owned.join(',');

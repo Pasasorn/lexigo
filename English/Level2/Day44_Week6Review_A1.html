@@ -812,7 +812,6 @@ function checkLock(){
 }
 function tryUnlock(){
   const input=document.getElementById('codeInput').value.trim().toUpperCase();
-  if(input==='ADMIN-0000'){unlockContent();return;}
   if(new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(input)){localStorage.setItem(PREV_KEY,input);document.getElementById('unlockErr').style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
   else{document.getElementById('unlockErr').style.display='block';}
 }

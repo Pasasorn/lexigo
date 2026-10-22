@@ -254,7 +254,7 @@ function checkLock(){
 }
 function tryUnlock(){
   const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');
-  if(v==='ADMIN-0000' || (new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
+  if((new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}
   else{err.style.display='block';}
 }
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}

@@ -576,7 +576,7 @@ function checkLock(){
 function tryUnlock(){
   var v=document.getElementById('codeInput').value.trim().toUpperCase();
   var prev=localStorage.getItem(PREV_KEY);
-  if(v==='ADMIN-0000'||v===prev||(v&&v.indexOf('D'+(DAY-1)+'-')===0)){
+  if(v===prev||(v&&v.indexOf('D'+(DAY-1)+'-')===0)){
     localStorage.setItem(PREV_KEY,v);
     document.getElementById('lockScreen').style.display='none';
     unlockContent();

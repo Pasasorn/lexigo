@@ -186,11 +186,11 @@ function render(){
   </div>
 
   ` + (!PAID ? `<div class="card" id="mailCard">
-    <h2>📮 เก็บรายงานนี้ไว้ไหม</h2>
-    <p class="lead">ส่งสรุปนี้เข้าอีเมล พร้อมเตือนเมื่อถึงเวลาเรียน Day 8 · ไม่บังคับ ดูรายงานได้อยู่แล้ว</p>
+    <h2>📮 ฝากชื่อไว้ให้เราติดต่อกลับไหม</h2>
+    <p class="lead">ถ้าอยากให้เราแนะนำเส้นทางเรียนต่อ ฝากอีเมลไว้ได้ · ไม่บังคับ รายงานนี้ดูได้จากหน้านี้อยู่แล้ว</p>
     <input class="inp" id="mName" placeholder="ชื่อเล่นของน้อง" maxlength="30">
     <input class="inp" id="mEmail" type="email" placeholder="อีเมลผู้ปกครอง" maxlength="80">
-    <button class="mini" onclick="sendReport()">ส่งรายงานเข้าอีเมล</button>
+    <button class="mini" onclick="sendReport()">ฝากข้อมูลติดต่อ</button>
     <div id="mMsg" class="foot" style="text-align:center"></div>
   </div>` : '');
 
@@ -258,7 +258,7 @@ async function sendReport(){
   try{
     await jsonp({action:'newPurchase', order_id:'RPT-'+Date.now(), pkg:'Trial Report · '+note,
                  price:0, type:'trial', name:nm, email:em, phone:''});
-    m.style.color='#2E8B5E'; m.textContent='✅ ส่งแล้วค่ะ เช็กอีเมลได้เลย';
+    m.style.color='#2E8B5E'; m.textContent='✅ บันทึกไว้แล้ว ขอบคุณค่ะ — รายงานนี้ดูได้จากหน้านี้ตลอดเวลา';
     try{ localStorage.setItem('pw_trial', JSON.stringify({name:nm,email:em,at:new Date().toISOString()})); }catch(e){}
   }catch(e){ m.style.color='#C0392B'; m.textContent='ส่งไม่สำเร็จ ลองใหม่อีกครั้งนะคะ'; }
 }

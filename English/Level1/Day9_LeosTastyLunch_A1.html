@@ -316,7 +316,6 @@ function checkLock(){
 function tryUnlock(){
   const input=document.getElementById('codeInput').value.trim().toUpperCase();
   const errEl=document.getElementById('unlockErr');
-  if(input==='ADMIN-0000'){unlockContent();return;}
   if(new RegExp('^'+PREV_PREFIX+'[A-Z0-9]{4}$').test(input)){
     localStorage.setItem(D_PREV_KEY,input);
     errEl.style.display='none';

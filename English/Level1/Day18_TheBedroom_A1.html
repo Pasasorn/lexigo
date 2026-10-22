@@ -662,7 +662,7 @@ function checkLock(){
 function tryUnlock(){
   const v=document.getElementById('codeInput').value.trim().toUpperCase();
   const prev=localStorage.getItem(PREV_KEY);
-  if(v==='ADMIN-0000'||v===prev||(v&&new RegExp('^D'+(DAY-1)+'-[A-Z0-9]{4}$').test(v))){
+  if(v===prev||(v&&new RegExp('^D'+(DAY-1)+'-[A-Z0-9]{4}$').test(v))){
     localStorage.setItem(PREV_KEY,v);
     document.getElementById('lockScreen').style.display='none';
     unlockContent();

@@ -11,7 +11,7 @@
 |------|-----|----------|
 | **Teacher (อนุมัติสลิป)** | `<รหัสครูของคุณ>` | teacher.html — ตั้งใน Code.gs บรรทัด 13 |
 | **Admin (ดู dashboard ทุก Level)** | `<รหัส admin ของคุณ>` | dashboard.html?admin= / gate |
-| **Token ชื่อไฟล์ admin** | `k7m3x9q2p5` | panel/gate filenames |
+| **Token ชื่อไฟล์ admin** | `<เก็บไว้นอกเอกสาร — ไฟล์นี้ deploy สาธารณะ>` | panel/gate filenames |
 
 ---
 
@@ -20,9 +20,9 @@
 | หน้า | ลิงก์ | รหัส |
 |------|-------|------|
 | 🔓 **อนุมัติสลิป/คำสั่งซื้อ** | `.../teacher.html` | `<รหัสครูของคุณ>` |
-| 🛠️ Admin Panel (กดเปิดทุก Day) | `.../panel-k7m3x9q2p5.html` | — |
-| 🔒 Admin Gate (ใส่รหัสเข้า dashboard) | `.../gate-k7m3x9q2p5.html` | `<รหัส admin ของคุณ>` |
-| ⚡ Dashboard admin (URL ตรง) | `.../gate-k7m3x9q2p5.html  (เข้าผ่าน URL ไม่ได้แล้ว)` | — |
+| 🛠️ Admin Panel (กดเปิดทุก Day) | `.../panel-<ไม่เปิดเผย>.html` | — |
+| 🔒 Admin Gate (ใส่รหัสเข้า dashboard) | `.../gate-<ไม่เปิดเผย>.html` | `<รหัส admin ของคุณ>` |
+| ⚡ Dashboard admin (URL ตรง) | `.../gate-<ไม่เปิดเผย>.html  (เข้าผ่าน URL ไม่ได้แล้ว)` | — |
 | ❌ ปิด admin mode | `.../dashboard.html?admin=off` | — |
 
 ---

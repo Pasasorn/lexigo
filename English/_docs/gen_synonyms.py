@@ -22,7 +22,19 @@ def slug(s):
 # เจอตอนตรวจผลรอบแรก: "ประตู" = door/goal · "วัด" = temple/measure
 # "อุปสรรค" = obstacle/prefix(ไวยากรณ์) · "เหรียญ" = coin/medal
 BLOCK = {('door', 'goal'), ('temple', 'measure'),
-         ('barrier', 'prefix'), ('coin', 'medal')}
+         ('barrier', 'prefix'), ('coin', 'medal'),
+         # รอบตรวจโดยครูสอนภาษา: แปลไทยตรงกันแต่ความหมาย/ชนิดคำต่างจนบอกเด็กว่า "แปลเหมือน" ไม่ได้
+         ('trolley', 'wheelchair'),   # รถเข็นซื้อของ ≠ รถเข็นคนพิการ
+         ('melt', 'dissolve'),        # หลอมด้วยความร้อน ≠ ละลายในของเหลว
+         ('match', 'tournament'),     # 1 แมตช์ ≠ ทัวร์นาเมนต์
+         ('patience', 'endurance'),   # อดทนทางใจ ≠ อึดทางกาย
+         ('humble', 'lowly'),         # lowly = ต่ำต้อย
+         ('sorry', 'apologize'),      # adj ≠ verb
+         ('accept', 'admit'),         # admit = ยอมรับว่าทำผิด
+         ('setback', 'barrier'),      # เหตุถดถอย ≠ สิ่งกีดขวาง
+         ('balanced', 'equilibrium'), # adj ≠ noun
+         ('intuition', 'instinct'),   # ลางสังหรณ์ ≠ สัญชาตญาณ
+         ('persist', 'persevere')}    # รากศัพท์คนละคำ ไม่ใช่ตระกูลเดียวกัน
 
 
 def same_root(a, b):
