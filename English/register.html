@@ -946,6 +946,30 @@ async function doPayment() {
   document.getElementById('btnPay').disabled=true;
   document.getElementById('ldPay').classList.add('on');
 
+  // ── อีเมล/เบอร์นี้มีบัญชีอยู่แล้ว? ถามก่อนรับสลิป ไม่ปล่อยให้งงทีหลังว่าทำไมรหัสไม่ตรง ──
+  if (!window._BUYMORE) {
+    let cc = null;
+    try { cc = await jsonp({ action:'checkContact', email: pEmail, phone: pPhone }); } catch(e) {}
+    if (cc && cc.exists) {
+      document.getElementById('ldPay').classList.remove('on');
+      document.getElementById('btnPay').disabled=false;
+      const box = document.getElementById('altPay');
+      box.className = 'alt on alt-warn';
+      box.innerHTML =
+        '👤 ' + (cc.via === 'email' ? 'อีเมลนี้' : 'เบอร์นี้') + 'มีบัญชีอยู่แล้ว — ' +
+        (cc.nick ? 'ชื่อเล่น <b>' + cc.nick.replace(/</g,'&lt;') + '</b> ' : '') +
+        'รหัส <b>' + (cc.code || cc.masked) + '</b>' + (cc.pkg ? ' · ' + cc.pkg.replace(/</g,'&lt;') : '') +
+        '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
+        '<button type="button" onclick="useExistingAccount(' + JSON.stringify(cc).replace(/"/g,'&quot;') + ')" ' +
+        'style="flex:1;min-width:150px;background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✅ ใช้บัญชีเดิม / เพิ่มสิทธิ์ให้บัญชีนี้</button>' +
+        '<button type="button" onclick="editContact()" ' +
+        'style="flex:1;min-width:150px;background:#fff;color:var(--blue);border:1.5px solid #9FC9D4;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✏️ แก้ไขอีเมล/เบอร์ (สมัครใหม่)</button>' +
+        '</div>';
+      box.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+  }
+
   const orderId = 'ORD-' + Date.now();
   const data = { ...selectedPkg, orderId, slipAttached: true, payName: pName, payEmail: pEmail, payPhone: pPhone };
 
@@ -1020,7 +1044,7 @@ function showPending(d) {
     const nick = window._BUYMORE.nick || window._BUYMORE.fullname || 'คุณ';
     const rs   = !!window._BUYMORE.resubmit;   // ส่งสลิปใหม่ของออเดอร์เดิม ไม่ใช่ซื้อ Level เพิ่ม
     document.getElementById('pendTable').innerHTML = `
-      <div class="irow"><span class="ilbl">${rs ? 'รหัสนักเรียน' : 'นักเรียน'}</span><span class="ival">${rs ? (window._BUYMORE.code || '—') : nick}</span></div>
+      <div class="irow"><span class="ilbl">${rs ? 'รหัสนักเรียน' : 'นักเรียน'}</span><span class="ival">${rs ? (d.studentCode || window._BUYMORE.code || '—') : nick}</span></div>
       <div class="irow"><span class="ilbl">${rs ? 'แพ็กเกจ' : 'Level ใหม่'}</span><span class="ival hi">${d.pkgName||'—'}</span></div>
       <div class="irow"><span class="ilbl">ยอดชำระ</span><span class="ival hi">฿ ${Number(d.price||0).toLocaleString()}</span></div>
       <div style="margin-top:12px;background:var(--orange-soft);border:2px solid #F0D2AE;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:800;color:var(--orange);text-align:center">
@@ -1095,6 +1119,20 @@ function retryPayment() {
   localStorage.removeItem(PK);
   go(1); // กลับหน้าชำระเงิน
   setStep(1);
+}
+
+// ผู้ใช้เลือก "ใช้บัญชีเดิม" → ส่งสลิปผูกกับรหัสเดิม (backend จับคู่ด้วยอีเมลอยู่แล้ว
+// ถ้ารหัสถูกปิดบังเพราะตรงแค่เบอร์ ให้ backend จับคู่เอง)
+function useExistingAccount(cc) {
+  window._BUYMORE = { code: cc.code || '', nick: cc.nick || '', resubmit: true };
+  hideAlt('altPay');
+  doPayment();
+}
+function editContact() {
+  hideAlt('altPay');
+  const el = document.getElementById('payEmail');
+  if (el) { el.focus(); el.scrollIntoView({ behavior:'smooth', block:'center' }); }
+  showAlt('altPay', '✏️ แก้อีเมลหรือเบอร์ให้เป็นของนักเรียนคนใหม่ แล้วกดส่งอีกครั้ง', 'warn');
 }
 
 // ส่งสลิปใหม่จากหน้า "กำลังตรวจสลิป" — คงแพ็กเกจ/ข้อมูลติดต่อ/รหัสนักเรียนเดิม

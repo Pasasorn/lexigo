@@ -256,9 +256,10 @@ function doGet(e) {
       case 'orderStatus':     return actionOrderStatus(p, cb);
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
+      case 'checkContact':    return actionCheckContact(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v18', deployed:'2026-10-23',
-                                features:['receiver-proxy','slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v19', deployed:'2026-10-23',
+                                features:['check-contact','receiver-proxy','slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1414,6 +1415,41 @@ function findStudentByEmail_(sh, email) {
     }
   }
   return null;
+}
+
+// ?action=checkContact&email=..&phone=..
+// ก่อนรับสลิป: อีเมล/เบอร์นี้มีบัญชีอยู่แล้วไหม → หน้าเว็บจะถามว่า "ใช้บัญชีเดิม" หรือ "แก้ไขข้อมูล"
+// กันเคส: สมัครซ้ำแล้วงงว่าทำไมได้รหัสไม่ตรงกับที่เห็นครั้งก่อน
+// ส่งรหัสเต็มกลับเฉพาะเมื่ออีเมลตรง (เจ้าของอีเมลได้รหัสทางเมลอยู่แล้ว) · เบอร์ตรงอย่างเดียว → ปิดบังรหัส
+function actionCheckContact(p, cb) {
+  const email = (p.email || '').toString().trim().toLowerCase();
+  const phone = (p.phone || '').toString().replace(/\D/g, '');
+  if (!email && !phone) return respond({status:'ok', exists:false}, cb);
+
+  const sh = getSheet(SHEET_STUDENTS);
+  let st = email ? findStudentByEmail_(sh, email) : null;
+  let via = st ? 'email' : '';
+
+  if (!st && phone.length >= 9) {
+    // Students ไม่เก็บเบอร์ → ดูจาก Purchases ที่ออกรหัสแล้ว
+    const pData = getSheet(SHEET_PURCHASES).getDataRange().getValues();
+    for (let i = pData.length - 1; i >= 1; i--) {
+      const ph = (pData[i][2] || '').toString().replace(/\D/g, '');
+      const code = (pData[i][11] || '').toString().trim();
+      if (ph === phone && code) { st = findStudentByCode_(sh, code); if (st) { via = 'phone'; break; } }
+    }
+  }
+  if (!st) return respond({status:'ok', exists:false}, cb);
+
+  const code = st.data[0].toString();
+  return respond({status:'ok', exists:true, via: via,
+    code:   via === 'email' ? code : '',
+    masked: code.slice(0, 2) + '••' + code.slice(-2),
+    nick:   (st.data[1] || '').toString(),
+    pkg:    (st.data[7] || '').toString(),
+    type:   (st.data[6] || '').toString(),
+    active: (st.data[3] || '').toString() === 'active'
+  }, cb);
 }
 
 function findStudentByCode_(sh, code) {
