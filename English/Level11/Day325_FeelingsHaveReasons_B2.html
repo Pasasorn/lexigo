@@ -152,7 +152,7 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
     <img src="../img/img_day325.png" alt="Story illustration" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.src.replace('.png','.webp');}else{this.parentElement.style.display='none'}">
   </div>
-  <div class="sbox"><span class="vocab">Temperament</span> is what you were born with; character is what you build. Sunlight and sleep both affect <span class="vocab">serotonin</span>, which affects mood. Being <span class="vocab">assertive</span> is not the same as being loud. To <span class="vocab">reframe</span> a setback is to ask what else it could mean. Healthy <span class="vocab">coping</span> faces the problem instead of the feeling about the problem. <span class="vocab">Acceptance</span> is not agreement; it is refusing to argue with what already happened. Kind <span class="vocab">selftalk</span> is not silly, and cruel <span class="vocab">selftalk</span> is not honest. <span class="vocab">Optimism</span> helps you start. A little <span class="vocab">pessimism</span> helps you prepare.</div>
+  <div class="sbox"><span class="vocab">Temperament</span> is what you were born with; character is what you build. Sunlight and sleep both affect <span class="vocab">serotonin</span>, which affects mood. Being <span class="vocab">assertive</span> is not the same as being loud. To <span class="vocab">reframe</span> a setback is to ask what else it could mean. Healthy <span class="vocab">coping</span> faces the problem instead of the feeling about the problem. <span class="vocab">Acceptance</span> is not agreement; it is refusing to argue with what already happened. Kind <span class="vocab">self-talk</span> is not silly, and cruel <span class="vocab">self-talk</span> is not honest. <span class="vocab">Optimism</span> helps you start. A little <span class="vocab">pessimism</span> helps you prepare.</div>
   <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: Is being assertive the same as being loud?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ No, it is not the same.</div></div>
   <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Softening advice: it might help to / you may find that.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
@@ -227,7 +227,7 @@ const WORDS=[
   {e:'reframe',t:'มองมุมใหม่',ph:'/ˌriːˈfreɪm/',em:'🔄'},
   {e:'coping',t:'การรับมือ',ph:'/ˈkəʊpɪŋ/',em:'🛟'},
   {e:'acceptance',t:'การยอมรับ',ph:'/əkˈseptəns/',em:'🤲'},
-  {e:'selftalk',t:'การพูดกับตัวเอง',ph:'/ˈselftɔːk/',em:'💭'},
+  {e:'self-talk',t:'การพูดกับตัวเอง',ph:'/ˈselftɔːk/',em:'💭'},
   {e:'optimism',t:'การมองโลกในแง่ดี',ph:'/ˈɒptɪmɪzəm/',em:'🌤️'},
   {e:'pessimism',t:'การมองโลกในแง่ร้าย',ph:'/ˈpesɪmɪzəm/',em:'🌧️'}
 ];
@@ -243,7 +243,7 @@ const DS=[
   "Acceptance is not agreement.",
   "Optimism helps you start."
 ];
-const STORY="Temperament is what you were born with; character is what you build. Sunlight and sleep both affect serotonin, which affects mood. Being assertive is not the same as being loud. To reframe a setback is to ask what else it could mean. Healthy coping faces the problem instead of the feeling about the problem. Acceptance is not agreement; it is refusing to argue with what already happened. Kind selftalk is not silly, and cruel selftalk is not honest. Optimism helps you start. A little pessimism helps you prepare.";
+const STORY="Temperament is what you were born with; character is what you build. Sunlight and sleep both affect serotonin, which affects mood. Being assertive is not the same as being loud. To reframe a setback is to ask what else it could mean. Healthy coping faces the problem instead of the feeling about the problem. Acceptance is not agreement; it is refusing to argue with what already happened. Kind self-talk is not silly, and cruel self-talk is not honest. Optimism helps you start. A little pessimism helps you prepare.";
 const PREV_KEY='wla_d324',MY_KEY='wla_d325',PREV_PFX='D324-',MY_DAY=325;
 let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;

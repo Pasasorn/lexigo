@@ -99,7 +99,7 @@ body{background:var(--cream);min-height:100vh;padding:16px;color:var(--ink);-web
   <div class="logo">📚</div>
   <div class="header-text">
     <h1 id="greetText">สวัสดี!</h1>
-    <p id="courseText">PeekaWord — Oxford 3000</p>
+    <p id="courseText">PeekaWord — 3,000 คำ</p>
   </div>
   <div class="header-badge">
     <span class="num" id="streakNum">0</span>
@@ -780,10 +780,10 @@ function showDashboard(st) {
   }
   const cefr = st.cefr || 'A1';
   document.getElementById('cefrDot').style.background   = CEFR_COLOR[cefr] || '#43A047';
-  document.getElementById('courseName').textContent     = isAdmin ? '🔑 ADMIN — All Levels' : (st.course || 'Oxford 3000');
+  document.getElementById('courseName').textContent     = isAdmin ? '🔑 ADMIN — All Levels' : (st.course || '3,000 คำ');
   document.getElementById('courseRange').textContent    = 'Day ' + startDay + '–' + Math.min(endDay, 448);
   document.getElementById('courseBadge').style.display  = 'flex';
-  document.getElementById('courseText').textContent     = st.course || 'Oxford 3000';
+  document.getElementById('courseText').textContent     = st.course || '3,000 คำ';
 
   if (st.pending_approval) {
     document.getElementById('pendingBox').style.display  = 'block';

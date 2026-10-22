@@ -152,8 +152,8 @@ body{background:#E3F2FD;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <div style="margin-bottom:12px;border-radius:16px;overflow:hidden;border:2px solid #BBDEFB;background:#E3F2FD;min-height:100px;display:flex;align-items:center;justify-content:center">
     <img src="../img/img_day168.png" alt="Story illustration" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=this.src.replace('.png','.webp');}else{this.parentElement.style.display='none'}">
   </div>
-  <div class="sbox"><span class="vocab">Gratitude</span> turns what we have into enough. Mimi wrote three things she <span class="vocab">appreciate</span> each night. A warm home is a big <span class="vocab">blessing</span>. Grandma stayed <span class="vocab">modest</span> about her cooking prize. She likes to give <span class="vocab">credit</span> to others instead. A <span class="vocab">lowly</span> heart listens more than it speaks. Always <span class="vocab">recall</span> who helped you.</div>
-  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What did Mimi write each night?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ She wrote three things she appreciate.</div></div>
+  <div class="sbox"><span class="vocab">Gratitude</span> turns what we have into enough. Mimi wrote three things she <span class="vocab">appreciates</span> each night. A warm home is a big <span class="vocab">blessing</span>. Grandma stayed <span class="vocab">modest</span> about her cooking prize. She likes to give <span class="vocab">credit</span> to others instead. A <span class="vocab">lowly</span> heart listens more than it speaks. Always <span class="vocab">recall</span> who helped you.</div>
+  <div style="margin-top:12px;background:#FFF3E0;border:2px solid #FFCC80;border-radius:14px;padding:12px 14px"><div style="font-size:14px;font-weight:900;color:#E65100;margin-bottom:6px">💬 Think: What did Mimi write each night?</div><button onclick="var a=document.getElementById('thinkAns');a.style.display=(a.style.display==='none'?'block':'none');this.textContent=(a.style.display==='none'?'👀 Show answer':'🙈 Hide');" style="background:#FB8C00;color:#fff;border:none;border-radius:10px;padding:6px 16px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif">👀 Show answer</button><div id="thinkAns" style="display:none;margin-top:8px;font-size:14px;color:#37474F;font-weight:700;line-height:1.5">✅ She wrote three things she appreciates.</div></div>
   <div style="margin-top:10px;background:#EDE7F6;border:2px solid #B39DDB;border-radius:14px;padding:11px 14px"><div style="font-size:13px;font-weight:900;color:#5E35B1">📝 Grammar: Thanking: Thank you for helping me. I appreciate it.</div></div>
   <div style="margin-top:12px;background:#BBDEFB;border:2px solid #90CAF9;border-radius:16px;padding:14px 16px">
     <div id="micStatus2" style="background:#E8F5E9;border:2px solid #A5D6A7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:800;color:#2E7D32;margin-bottom:8px;display:none">✅ Mic ready — tap 🎤 to speak!</div>
@@ -226,12 +226,12 @@ const WORDS=[
   {e:'blessing',t:'สิ่งดีที่ได้รับ',ph:'/ˈblesɪŋ/',em:'🍀'},
   {e:'modest',t:'ถ่อมตน',ph:'/ˈmɒdɪst/',em:'🌾'},
   {e:'credit',t:'การให้เครดิต',ph:'/ˈkredɪt/',em:'🌟'},
-  {e:'lowly',t:'ถ่อมตัว',ph:'/ˈləʊli/',em:'🪷'},
+  {e:'lowly',t:'ต่ำต้อย, ถ่อมตน',ph:'/ˈləʊli/',em:'🪷'},
   {e:'recall',t:'นึกถึง',ph:'/rɪˈkɔːl/',em:'🧠'}
 ];
 const SS=[
   "Gratitude turns what we have into enough.",
-  "Mimi wrote three things she appreciate.",
+  "Mimi wrote three things she appreciates.",
   "A warm home is a big blessing.",
   "She likes to give credit to others instead.",
   "Always recall who helped you."
@@ -241,7 +241,7 @@ const DS=[
   "She likes to give credit to others instead.",
   "Always recall who helped you."
 ];
-const STORY="Gratitude turns what we have into enough. Mimi wrote three things she appreciate each night. A warm home is a big blessing. Grandma stayed modest about her cooking prize. She likes to give credit to others instead. A lowly heart listens more than it speaks. Always recall who helped you.";
+const STORY="Gratitude turns what we have into enough. Mimi wrote three things she appreciates each night. A warm home is a big blessing. Grandma stayed modest about her cooking prize. She likes to give credit to others instead. A lowly heart listens more than it speaks. Always recall who helped you.";
 const PREV_KEY='wla_d167',MY_KEY='wla_d168',PREV_PFX='D167-',MY_DAY=168;
 let activeRec2=null, step2Score=null;
 let s2FullText='', s2SilenceTimer=null;

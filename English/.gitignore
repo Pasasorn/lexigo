@@ -7,3 +7,6 @@ _docs/.unzip/
 _docs/.api_url_backup.json
 Thumbs.db
 .DS_Store
+
+# clasp staging (มี scriptId/deploymentId ไม่ต้องขึ้น git)
+_gas/

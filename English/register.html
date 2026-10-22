@@ -271,7 +271,7 @@ body{background:var(--cream);min-height:100vh;color:var(--ink);-webkit-text-size
   <!-- LIFETIME TIER CARD -->
   <div class="tier-card">
     <div class="tier-head">
-      <h2>🌟 ตลอดชีพ — Oxford 3,000 คำ ครบ 15 Level</h2>
+      <h2>ตลอดชีพ — 3,000 คำ ครบ 15 Level</h2>
       <p>A1 · A2 · B1 · B2 · 448 วัน · รวม Bonus Level</p>
     </div>
 
@@ -860,7 +860,7 @@ function selectLevel(n) {
 function selectPkg(type) {
   if (type === 'lifetime') {
     const tier = TIERS[currentTier];
-    selectedPkg = { type:'lifetime', pkgName:`ตลอดชีพ (Oxford 3000 ทุก Level)`, price:tier.price, tier:currentTier+1 };
+    selectedPkg = { type:'lifetime', pkgName:`ตลอดชีพ (3,000 คำ ทุก Level)`, price:tier.price, tier:currentTier+1 };
   } else if (type === 'level') {
     if (!selectedLevel) { alert('กรุณาเลือก Level ก่อน'); return; }
     const lv = LEVELS[selectedLevel];
@@ -869,7 +869,7 @@ function selectPkg(type) {
   // Update payment page
   document.getElementById('sumPkg').textContent  = selectedPkg.pkgName;
   document.getElementById('sumAmt').textContent  = `฿ ${selectedPkg.price.toLocaleString()}`;
-  document.getElementById('sumNote').textContent = selectedPkg.type==='lifetime' ? `รอบที่ ${selectedPkg.tier} — Oxford 3000 ครบ 15 Level · 448 วัน` : `เรียน 30 วัน — Level ${selectedPkg.level}`;
+  document.getElementById('sumNote').textContent = selectedPkg.type==='lifetime' ? `รอบที่ ${selectedPkg.tier} — 3,000 คำ ครบ 15 Level · 448 วัน` : `เรียน 30 วัน — Level ${selectedPkg.level}`;
   document.getElementById('bankAmt').textContent = `฿ ${selectedPkg.price.toLocaleString()}`;
   go(1);
 }
