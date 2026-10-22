@@ -257,8 +257,8 @@ function doGet(e) {
       case 'checkCode':       return actionCheckCode(p, cb);
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v17', deployed:'2026-10-06',
-                                features:['slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v18', deployed:'2026-10-23',
+                                features:['receiver-proxy','slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -1600,8 +1600,16 @@ function actionVerifyPurchaseSlip(p, cb) {
   const d        = result.data;
   const amount   = parseFloat(d.amount) || 0;
   const transRef = (d.transRef || d.transactionId || d.ref1 || '').toString();
-  const recvAcc  = ((d.receiver && (d.receiver.account && (d.receiver.account.value ||
-                     d.receiver.account.bank && d.receiver.account.bank.account))) || '').toString();
+  // SlipOK ส่งปลายทางได้หลายช่อง: account.value (เลขบัญชี) / proxy.value (พร้อมเพย์:
+  // เบอร์โทร, เลขบัตร ปชช., e-wallet) / account.bank.account — โอนผ่านพร้อมเพย์บางธนาคาร
+  // ส่งมาแค่ proxy ไม่มี account → ต้องรวมทุกช่อง ไม่งั้นตกไป "ไม่ระบุบัญชีผู้รับ" ทั้งที่ถูกต้อง
+  const rc = d.receiver || {};
+  const recvAcc  = [
+    rc.account && rc.account.value,
+    rc.proxy   && rc.proxy.value,
+    rc.account && rc.account.bank && rc.account.bank.account,
+    rc.account && rc.account.proxy && rc.account.proxy.value
+  ].filter(Boolean).map(String).join(' ');
   const recvName = ((d.receiver && d.receiver.displayName) || '').toString();
 
   // ── ชั้น 1: ยอดเงินต้องตรง ───────────────────────────────
@@ -1618,7 +1626,10 @@ function actionVerifyPurchaseSlip(p, cb) {
   const last4List = (getConfig('payee_last4') || '').toString()
                       .split(/[,\s/|]+/).map(function (s) { return s.replace(/\D/g, ''); })
                       .filter(function (s) { return s.length >= 3; });
-  const recvDigits = recvAcc.replace(/\D/g, '');
+  // เทียบทีละช่อง ไม่เอาเลขทุกช่องมาต่อกัน (กัน 4 หลักไปตรงคร่อมรอยต่อโดยบังเอิญ)
+  const recvList   = recvAcc.split(' ').map(function (s) { return s.replace(/\D/g, ''); })
+                            .filter(Boolean);
+  const recvDigits = recvList.join('');
   // ยังไม่ได้ตั้ง payee_last4 = ยังเช็กบัญชีปลายทางไม่ได้ → ห้ามผ่านอัตโนมัติ
   if (!last4List.length)
     return verdict_(orderId, 'manual', {status:'manual',
@@ -1627,7 +1638,8 @@ function actionVerifyPurchaseSlip(p, cb) {
     return verdict_(orderId, 'manual', {status:'manual',
       msg: 'สลิปไม่ระบุบัญชีผู้รับ — ส่งให้ครูตรวจ' }, cb);
   if (recvDigits &&
-      !last4List.some(function (x) { return recvDigits.indexOf(x) !== -1; }))
+      !last4List.some(function (x) {
+        return recvList.some(function (r) { return r.indexOf(x) !== -1; }); }))
     return verdict_(orderId, 'reject', {status:'reject',
       msg: 'สลิปนี้โอนเข้าบัญชีอื่น ไม่ใช่บัญชีของ PeekaWord (สลิประบุ ...' +
            recvDigits.slice(-4) + ')'
