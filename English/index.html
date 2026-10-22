@@ -751,10 +751,12 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
     <div class="f-bot">
       <p>PeekaWord · เรื่อง ภาพ และเสียงทั้งหมดสร้างขึ้นใหม่สำหรับหลักสูตรนี้</p>
       <p style="margin-top:6px">มีรหัสแล้ว? <a href="login.html" style="color:var(--green); font-weight:800">เข้าสู่ระบบ</a></p>
+      <p id="pwVer" style="margin-top:10px;font-size:11px;opacity:.55">web — · api —</p>
     </div>
   </div>
 </footer>
 
+<script src="js/ver.js"></script>
 <script>
 /* ── เมนูมือถือ ── */
 (function(){
@@ -846,6 +848,20 @@ footer{background:var(--cream-2); border-top:1px solid var(--line); padding:32px
   }
   tabs.forEach(function(t,i){t.addEventListener('click',function(){show(i);});});
   show(0);
+})();
+
+/* ── เวอร์ชัน (ท้ายหน้า): web = เวลาที่ deploy.ps1 push (js/ver.js) · api = Code.gs ที่ live อยู่ ── */
+(function(){
+  var el=document.getElementById('pwVer'); if(!el) return;
+  var web=window.PW_WEB_VER||'—', api='—';
+  function show(){ el.textContent='web '+web+' · api '+api; }
+  show();
+  var cb='pwver_'+Date.now(), s=document.createElement('script');
+  var timer=setTimeout(function(){ try{delete window[cb];}catch(e){} s.remove(); },8000);
+  window[cb]=function(d){ clearTimeout(timer); try{delete window[cb];}catch(e){} s.remove();
+    if(d&&d.version){ api=d.version+(d.deployed?' ('+d.deployed+')':''); show(); } };
+  s.src='https://script.google.com/macros/s/AKfycbz8SuCV8PsUkIElDN3rFm9eE1TKm0UOFS5M_u6TrHmxkslAOQuopYmv3IFM0JBoRYq-/exec?action=version&callback='+cb;
+  document.head.appendChild(s);
 })();
 
 /* ── จำนวนที่นั่ง: ดึงจาก backend จริง ไม่ตั้งตัวเลขเอง ──

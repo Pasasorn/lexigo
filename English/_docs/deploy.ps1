@@ -56,6 +56,8 @@ if (-not $SkipGit) {
   $big = git -c core.quotepath=off ls-files --others --exclude-standard | ForEach-Object {
     $f = $_.Trim(); if ($f -and (Test-Path -LiteralPath $f) -and (Get-Item -LiteralPath $f).Length -gt 95MB) { $f } }
   if ($big) { Write-Host "STOP: file > 95 MB: $big" -ForegroundColor Red; exit 1 }
+  # ประทับเวลาเวอร์ชันหน้าเว็บ (โชว์ท้ายหน้า index) ก่อน commit
+  "window.PW_WEB_VER='$(Get-Date -Format 'yyyy-MM-dd HH:mm')';" | Set-Content (Join-Path $root 'js\ver.js') -Encoding ASCII
   git add -A
   if (-not $Message) { $Message = "deploy $ver $(Get-Date -Format 'yyyy-MM-dd')" }
   git commit -m $Message 2>&1 | Out-Host

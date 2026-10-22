@@ -1093,6 +1093,32 @@ function retryPayment() {
   setStep(1);
 }
 
+// ส่งสลิปใหม่จากหน้า "กำลังตรวจสลิป" — คงแพ็กเกจ/ข้อมูลติดต่อ/รหัสนักเรียนเดิม
+// (existing_code → backend เปิดสิทธิ์ให้รหัสเดิม ไม่สร้างนักเรียนซ้ำ)
+function resubmitSlip(code) {
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem(PK) || '{}'); } catch(e) {}
+  if (code) window._BUYMORE = { code: String(code) };
+  if (d.type && d.pkgName && d.price) {
+    selectedPkg = { type:d.type, pkgName:d.pkgName, price:d.price, tier:d.tier, level:d.level, cefr:d.cefr, days:d.days };
+    document.getElementById('sumPkg').textContent  = selectedPkg.pkgName;
+    document.getElementById('sumAmt').textContent  = `฿ ${Number(selectedPkg.price).toLocaleString()}`;
+    document.getElementById('bankAmt').textContent = `฿ ${Number(selectedPkg.price).toLocaleString()}`;
+  }
+  ['payName','payEmail','payPhone'].forEach(id => {
+    const el = document.getElementById(id), v = d[id];
+    if (el && v && !el.value) el.value = v;
+  });
+  slipData = null;
+  const f = document.getElementById('slipFile'); if (f) f.value = '';
+  const pv = document.getElementById('slipPreview'); if (pv) pv.style.display = 'none';
+  if (_approvalTimer) clearInterval(_approvalTimer);
+  if (!selectedPkg) { go(0); setStep(0); return; }
+  go(1); setStep(1);
+  showAlt('altPay', '📎 แนบสลิปใบใหม่แล้วกดส่งอีกครั้ง — ใช้รหัสนักเรียน ' + (code || 'เดิม') + ' เหมือนเดิม', 'warn');
+  window.scrollTo(0, 0);
+}
+
 // ── STEP 3: Register student ──
 // รหัสนักเรียนสร้างให้อัตโนมัติ ผู้ปกครองไม่ต้องคิดเอง
 // (ยังเก็บไว้เพราะเป็น key ของ progress ทั้งระบบ — แต่ผู้ใช้ login ด้วย email/password)
@@ -1244,8 +1270,14 @@ function showSuccess(st) {
     ms.innerHTML = '✅ ได้รับข้อมูลแล้ว<br>' +
       'สลิปนี้ตรวจอัตโนมัติไม่ผ่าน จะมีคนตรวจให้<strong>ภายในวันเดียวกัน</strong><br>' +
       'เปิดสิทธิ์แล้วจะส่งรหัสไปที่อีเมล <strong>' + (st.email || 'ของคุณ') + '</strong><br>' +
-      '<span style="font-size:11px;font-weight:600">หน้านี้จะอัปเดตเองถ้าเปิดค้างไว้ · สอบถาม Line @PeekaWord</span>';
+      '<span style="font-size:11px;font-weight:600">หน้านี้จะอัปเดตเองถ้าเปิดค้างไว้ · สอบถาม Line @PeekaWord</span>' +
+      // โอนผิดยอด/สลิปไม่ชัด → ส่งใหม่ได้เองโดยใช้รหัสนักเรียนเดิม ไม่ต้องรอครู
+      '<div style="margin-top:10px;text-align:center"><button type="button" onclick="resubmitSlip(\'' +
+      String(st.code || '').replace(/\D/g, '') + '\')" style="background:#fff;color:var(--blue);border:1.5px solid #9FC9D4;' +
+      'border-radius:10px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">' +
+      '🔄 ส่งสลิปใหม่ (ใช้รหัสเดิม)</button></div>';
   }
+  try { pwSyncLine(); } catch(e) {}
 
   setStep(4); go(4);
   if (_approvalTimer) clearInterval(_approvalTimer);
