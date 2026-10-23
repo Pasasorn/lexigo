@@ -1,1 +1,1 @@
-window.PW_WEB_VER='2026-10-23 00:00';
+window.PW_WEB_VER='2026-10-24 01:01';

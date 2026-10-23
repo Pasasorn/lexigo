@@ -39,21 +39,11 @@
 372,13,B2,epoch,ยุคสมัยทางธรณี,epoch.webp
 372,13,B2,duration,ช่วงเวลาที่กินไป,duration.webp
 372,13,B2,calibrate,ปรับเทียบให้แม่นยำ,calibrate.webp
-392,14,B2,morpheme,หน่วยคำ,morpheme.webp
-392,14,B2,morphology,วิทยาหน่วยคำ,morphology.webp
-392,14,B2,prefix,คำอุปสรรค (ส่วนหน้าคำ),prefix.webp
-392,14,B2,suffix,ปัจจัยท้ายคำ,suffix.webp
-392,14,B2,inflection,การผันคำ,inflection.webp
-392,14,B2,neologism,คำเกิดใหม่,neologism.webp
-392,14,B2,coinage,การประดิษฐ์คำใหม่,coinage.webp
-392,14,B2,archaic,โบราณเลิกใช้แล้ว,archaic.webp
 393,14,B2,syntax,วากยสัมพันธ์,syntax.webp
 393,14,B2,subordinate,อนุประโยครอง,subordinate.webp
 393,14,B2,modifier,ส่วนขยาย,modifier.webp
 393,14,B2,determiner,คำนำหน้านาม,determiner.webp
 393,14,B2,preposition,บุพบท,preposition.webp
-393,14,B2,conjunction,คำเชื่อม,conjunction.webp
-393,14,B2,ambiguity,ความกำกวม,ambiguity.webp
 393,14,B2,polysemy,ความหมายหลากหลายของคำเดียว,polysemy.webp
 393,14,B2,homophone,คำพ้องเสียง,homophone.webp
 394,14,B2,vernacular,ภาษาพูดพื้นถิ่น,vernacular.webp
