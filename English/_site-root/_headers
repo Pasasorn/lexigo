@@ -1,0 +1,14 @@
+# Cloudflare Pages headers — https://developers.cloudflare.com/pages/configuration/headers/
+# noai/noimageai = ขอไม่ให้ใช้ฝึก AI (TDM reservation) · noindex = ไม่ให้ search engine เก็บบทเรียน
+/English/Level*
+  X-Robots-Tag: noindex, noarchive, noimageai, noai
+  TDM-Reservation: 1
+/English/img/*
+  X-Robots-Tag: noindex, noimageai, noai
+  TDM-Reservation: 1
+/English/_docs/*
+  X-Robots-Tag: noindex, noarchive, noai
+/English/*
+  TDM-Reservation: 1
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

@@ -52,6 +52,9 @@ if (-not $SkipGit) {
   Write-Host "`n== git push (Cloudflare Pages builds automatically) ==" -ForegroundColor Cyan
   $top = git rev-parse --show-toplevel
   Set-Location $top
+  # robots.txt / _headers ต้องอยู่ root ของ repo (Cloudflare อ่านจาก root เท่านั้น) — คัดลอกจาก English\_site-root
+  Copy-Item (Join-Path $root '_site-root\robots.txt') (Join-Path $top 'robots.txt') -Force
+  Copy-Item (Join-Path $root '_site-root\_headers')   (Join-Path $top '_headers')   -Force
   # กันไฟล์ใหญ่หลุดเข้า commit (GitHub จำกัด 100 MB)
   $big = git -c core.quotepath=off ls-files --others --exclude-standard | ForEach-Object {
     $f = $_.Trim(); if ($f -and (Test-Path -LiteralPath $f) -and (Get-Item -LiteralPath $f).Length -gt 95MB) { $f } }
