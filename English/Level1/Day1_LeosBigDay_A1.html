@@ -202,10 +202,10 @@ body{background:#FFF3E0;min-height:100vh;padding:14px;max-width:680px;margin:0 a
   <div class="navrow"><button class="btn btn-o" onclick="go(2)">← Back</button><button class="btn btn-p" onclick="go(4)">Next →</button></div>
 </div>
 
-<!-- p4 Step 4: Dictation -->
+<!-- p4 Step 4: Listen + Order (ใช้คำเป็นประโยค) -->
 <div class="page" id="p4">
   <div class="step-label">Step 4 · Listen + Order 🔤</div>
-  <p class="step-sub">กด ▶ ฟัง → กดคำเรียงประโยค!</p>
+  <p class="step-sub">กด ▶ ฟัง → นำคำมาเรียงให้เป็นประโยค!</p>
   <div id="s4area"></div>
   <div style="margin-top:10px;display:flex;gap:8px">
     <button class="btn btn-p" onclick="checkS4()">Check ✓</button>
@@ -661,7 +661,7 @@ function buildDaySummary(){
   const steps=[
     {label:'📖 Step 2 อ่านออกเสียง', val:step2Score},
     {label:'🗣️ Step 3 พูดตาม',        val:s3avg},
-    {label:'✏️ Step 4 Dictation',     val:step4Score},
+    {label:'✏️ Step 4 Sentence',     val:step4Score},
     {label:'🎮 Step 5 Word Match',    val:step5Score},
   ];
   const scores=steps.map(s=>s.val).filter(s=>s!==null);
