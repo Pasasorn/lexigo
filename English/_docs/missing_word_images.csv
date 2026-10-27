@@ -1,39 +1,8 @@
 ﻿day,level,cefr,english,thai,filename_needed
-368,13,B2,nebula,เนบิวลา,nebula.webp
-368,13,B2,constellation,กลุ่มดาว,constellation.webp
-368,13,B2,asteroid,ดาวเคราะห์น้อย,asteroid.webp
-368,13,B2,comet,ดาวหาง,comet.webp
-368,13,B2,eclipse,อุปราคา,eclipse.webp
-368,13,B2,light-year,ปีแสง,lightyear.webp
-368,13,B2,observatory,หอดูดาว,observatory.webp
-368,13,B2,exoplanet,ดาวเคราะห์นอกระบบ,exoplanet.webp
-368,13,B2,habitable,อาศัยอยู่ได้,habitable.webp
-369,13,B2,cosmology,จักรวาลวิทยา,cosmology.webp
-369,13,B2,Big Bang,บิกแบง,bigbang.webp
-369,13,B2,redshift,การเลื่อนไปทางแดง,redshift.webp
-369,13,B2,expansion,การขยายตัวของเอกภพ,expansion.webp
-369,13,B2,cosmic,เกี่ยวกับเอกภพ,cosmic.webp
-369,13,B2,primordial,ดั้งเดิมแต่แรกเริ่ม,primordial.webp
-369,13,B2,abundance,"ความอุดมสมบูรณ์, ปริมาณมาก",abundance.webp
-369,13,B2,discern,สังเกตแยกแยะออก,discern.webp
-369,13,B2,speculative,ที่ยังเป็นเพียงข้อคาดการณ์,speculative.webp
-370,13,B2,black hole,หลุมดำ,blackhole.webp
-370,13,B2,supernova,ซูเปอร์โนวา,supernova.webp
-370,13,B2,neutron star,ดาวนิวตรอน,neutronstar.webp
-370,13,B2,meteor,ดาวตก,meteor.webp
-370,13,B2,magnetosphere,สนามแม่เหล็กโลก,magnetosphere.webp
-370,13,B2,solar wind,ลมสุริยะ,solarwind.webp
-370,13,B2,ionosphere,ชั้นไอโอโนสเฟียร์,ionosphere.webp
-370,13,B2,luminous,เปล่งแสงสว่าง,luminous.webp
-370,13,B2,collapse,ยุบตัวลง,collapse.webp
 371,13,B2,trajectory,วิถีโคจร,trajectory.webp
-371,13,B2,payload,สัมภาระที่ส่งขึ้นไป,payload.webp
-371,13,B2,launchpad,ฐานปล่อยจรวด,launchpad.webp
 371,13,B2,weightless,ไร้น้ำหนัก,weightless.webp
-371,13,B2,microgravity,แรงโน้มถ่วงต่ำมาก,microgravity.webp
 371,13,B2,spacesuit,ชุดอวกาศ,spacesuit.webp
 371,13,B2,rover,ยานสำรวจภาคพื้น,rover.webp
-371,13,B2,docking,การเชื่อมต่อยาน,docking.webp
 371,13,B2,reentry,การกลับเข้าชั้นบรรยากาศ,reentry.webp
 372,13,B2,chronology,ลำดับเวลา,chronology.webp
 372,13,B2,epoch,ยุคสมัยทางธรณี,epoch.webp
