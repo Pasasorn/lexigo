@@ -637,9 +637,13 @@ const ALL_DAYS = [
 // ── Level → day range ──
 function getLevelRange(levelNum, type) {
   if (type === 'lifetime' || !levelNum) return { startDay:1, endDay:448 };
-  // ซื้อ Level แบบสะสม → เห็น Day 1 ถึง (level × 30) เสมอ
-  const e = parseInt(levelNum) >= 15 ? 448 : parseInt(levelNum) * 30;
-  return { startDay: 1, endDay: e };
+  // levelNum อาจเป็น "Level 4 A2" / "Level 3,5" / "4" — parseInt ตรง ๆ จะได้ NaN
+  const lv = String(levelNum).trim();
+  const m = lv.match(/Level\s*([\d,\s]+)/i) || (/^[\d,\s]+$/.test(lv) ? [null, lv] : null);
+  const nums = (m ? m[1].split(/[,\s]+/) : []).map(Number).filter(n => n >= 1 && n <= 15);
+  if (!nums.length) return { startDay:1, endDay:448 };
+  const mx = Math.max(...nums);
+  return { startDay: 1, endDay: mx >= 15 ? 448 : mx * 30 };
 }
 
 // ── CEFR color ──
@@ -647,12 +651,15 @@ const CEFR_COLOR = { A1:'#43A047', A2:'#1E88E5', B1:'#FB8C00', B2:'#E53935' };
 
 // ── Streak ──
 function calcStreak() {
-  let streak = 0;
-  for (let d = 448; d >= 1; d--) {
-    if (localStorage.getItem('wla_d' + d)) streak++;
-    else break;
-  }
-  return streak;
+  // วันติดกัน = วันปฏิทินที่มีการเรียนจบอย่างน้อย 1 บท (จาก pw_skills.at) นับถอยจากวันนี้/เมื่อวาน
+  let sk = {}; try { sk = JSON.parse(localStorage.getItem('pw_skills') || '{}') || {}; } catch (e) {}
+  const set = new Set(Object.values(sk).map(x => x && x.at).filter(Boolean));
+  if (!set.size) return 0;
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  if (!set.has(iso(d))) { d.setDate(d.getDate() - 1); if (!set.has(iso(d))) return 0; }
+  let n = 0; while (set.has(iso(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
 }
 
 // ── JSONP ──
@@ -729,9 +736,10 @@ function buildGrid(startDay, endDay, isAdmin) {
   }
 
   // Strict sequential: find the last consecutively-done day (skipped for admin)
+  const doneKey = n => { const v = localStorage.getItem('wla_d' + n); return !!v && v !== 'LEVEL-START'; };
   let frontier = startDay - 1;
   for (const d of myDays) {
-    if (localStorage.getItem('wla_d' + d.n)) frontier = d.n;
+    if (doneKey(d.n)) frontier = d.n;
     else break;
   }
 
@@ -745,7 +753,7 @@ function buildGrid(startDay, endDay, isAdmin) {
       // Admin sees everything, all clickable, marked as preview
       isDone = false; isCurrent = false; unlocked = true;
     } else {
-      isDone    = d.n <= frontier && !!localStorage.getItem('wla_d' + d.n);
+      isDone    = d.n <= frontier && doneKey(d.n);
       isCurrent = d.n === frontier + 1;
       unlocked  = isDone || isCurrent;
       if (isDone) doneCnt++;

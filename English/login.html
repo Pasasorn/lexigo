@@ -359,9 +359,7 @@ async function doRecover(){
     const res=await jsonp({action:'recover', email});
     if(res.status==='ok'){
       out.style.color='#2E7D32';
-      out.innerHTML='✅ พบแล้ว! รหัสของ <strong>'+(res.name||'คุณ')+'</strong> คือ<br><span style="font-size:26px;font-family:monospace;letter-spacing:4px;color:var(--green)">'+res.code+'</span>';
-      document.getElementById('codeInp').value=res.code;
-      if(res.name) document.getElementById('nickInp').value=res.name;
+      out.innerHTML='📧 ถ้าอีเมลนี้มีบัญชีอยู่ เราส่งรหัสนักเรียนไปให้แล้ว'+(res.masked?' (รหัส '+res.masked+')':'')+'<br><span style="font-size:13px;font-weight:600">ลองดูในกล่องจดหมาย/Junk แล้วนำรหัสมากรอกด้านบน</span>';
     } else {
       out.style.color='#C62828';
       out.textContent='❌ ไม่พบอีเมลนี้ในระบบ — ติดต่อครูที่ Line: @PeekaWord';

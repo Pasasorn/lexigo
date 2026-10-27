@@ -186,7 +186,7 @@ function collectLocal(){
 function mergeCloud(data,log){
   (log||[]).forEach(r=>{
     const n=parseInt(r.day); if(!n||!BY_N[n])return;
-    const date=r.saved_at?String(r.saved_at).slice(0,10):null;
+    const date=r.saved_at?(function(){const d=new Date(r.saved_at);return isNaN(d)?String(r.saved_at).slice(0,10):iso(d);})():null;   // saved_at เป็น UTC → วันท้องถิ่น
     const score=(typeof r.correct_count==='number')?r.correct_count:null;
     if(!data[n]) data[n]={total:score,read:r.sk_read??null,speak:r.sk_speak??null,write:r.sk_write??null,date,src:'cloud'};
     else{ const d=data[n]; if(d.total==null)d.total=score; if(d.read==null)d.read=r.sk_read??null; if(d.speak==null)d.speak=r.sk_speak??null; if(d.write==null)d.write=r.sk_write??null; if(!d.date)d.date=date; }

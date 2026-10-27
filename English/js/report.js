@@ -48,7 +48,7 @@
       read:  clamp(gv('step2Score')),
       speak: speak,
       write: clamp(gv('step4Score')),
-      at:    new Date().toISOString().slice(0, 10)
+      at:    (function (d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); })(new Date())   // วันที่ท้องถิ่น ไม่ใช่ UTC
     };
 
     // คะแนนรวมของวัน: ใช้ของระบบถ้ามี ไม่มีก็เฉลี่ยจากทักษะที่ทำจริง

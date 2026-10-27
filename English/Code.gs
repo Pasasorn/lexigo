@@ -258,8 +258,8 @@ function doGet(e) {
       case 'selfRegister':    return actionSelfRegister(p, cb);
       case 'checkContact':    return actionCheckContact(p, cb);
       case 'publicConfig':    return actionPublicConfig(p, cb);
-      case 'version':         return respond({status:'ok', version:'v19', deployed:'2026-10-23',
-                                features:['check-contact','receiver-proxy','slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
+      case 'version':         return respond({status:'ok', version:'v20', deployed:'2026-10-28',
+                                features:['sec-audit-3','check-contact','receiver-proxy','slipok-branch-header','slip-http-guard','slipok-log-config','payee-multi','log-omit-when-false','public-config','no-duplicate-student','seat-offset','security-audit-1','security-audit-2','completion-regex','score-percent','email-password','slip-verify',
                                           'purchase-contact-info','trial-lead-capture','skill-sync','auto-slip-email','sheet-tools','pass-in-config']}, cb);
       case 'checkApproval':   return actionCheckApproval(p, cb);
       // ── Auth v4 ──
@@ -425,10 +425,18 @@ function actionRecover(p, cb) {
   for (let i = 1; i < data.length; i++) {
     const savedEmail = (data[i][2] || '').toString().toLowerCase();
     if (savedEmail === email && data[i][3] === 'active') {
-      return respond({status:'ok', code: data[i][0], name: data[i][1]}, cb);
+      // ส่งรหัสไปที่อีเมลเจ้าของเท่านั้น ไม่ตอบกลับหน้าเว็บ (ใครรู้อีเมลก็ถามได้)
+      try {
+        MailApp.sendEmail({ to: email, subject: 'PeekaWord — รหัสนักเรียนของคุณ',
+          htmlBody: '<p>รหัสนักเรียนของ <b>' + (data[i][1] || '') + '</b> คือ</p>' +
+                    '<p style="font-size:26px;letter-spacing:4px"><b>' + data[i][0] + '</b></p>' +
+                    '<p>เข้าเรียนได้ที่ ' + (getConfig('site_url') || '') + 'login.html</p>' });
+      } catch (e) {}
+      return respond({status:'ok', sent:true, name: data[i][1], masked: data[i][0].toString().slice(0,2) + '••' + data[i][0].toString().slice(-2)}, cb);
     }
   }
-  return respond({status:'not_found', msg:'ไม่พบ email นี้ในระบบ'}, cb);
+  // ข้อความเดียวกับกรณีพบ — กันคนไล่เช็กว่าอีเมลไหนเคยสมัคร
+  return respond({status:'ok', sent:true, masked:''}, cb);
 }
 
 // ── 5. Leaderboard (สาธารณะ) ─────────────────────────────────
@@ -464,7 +472,8 @@ function actionGetLeaderboard(p, cb) {
     const streak = calcStreak(pm.savedAts || []);
     students.push({
       name:           data[i][1] || 'ไม่ระบุชื่อ',
-      code:           c,
+      // ห้ามส่งรหัสเต็ม: รหัสคือกุญแจของบัญชี (save/myStats/setPassword) ใครเห็นก็ยึดบัญชีได้
+      code:           c.slice(0, 2) + '••' + c.slice(-2),
       days_done:      pm.days.length,
       last_day:       pm.days.length ? Math.max(...pm.days) : 0,
       total_score:    Math.round(pm.total_score),
@@ -1146,6 +1155,13 @@ function actionVerifyPurchase(p, cb) {
           sh.getRange(i + 1, 12).setValue(existingCode);
           return respond({status:'ok', upgraded:true, student_code: existingCode, owned: 'lifetime', name: stData[j][1]}, cb);
         }
+        // บัญชี lifetime มีครบทุก Level แล้ว — ห้ามลดเป็น Level เดี่ยว
+        if ((stData[j][6] || '').toString() === 'lifetime') {
+          stSh2.getRange(j + 1, 4).setValue('active');
+          sh.getRange(i + 1, 9).setValue('verified');
+          sh.getRange(i + 1, 12).setValue(existingCode);
+          return respond({status:'ok', upgraded:true, student_code: existingCode, owned: 'lifetime', name: stData[j][1]}, cb);
+        }
         // อัปเกรด: เพิ่ม Level ใหม่เข้าเซ็ตที่มี (independent — เป็นเจ้าของเฉพาะ Level ที่ซื้อ)
         const oldNums = ownedLevels_(stData[j][7]);
         const newLevel = levelNumFromPkg(pkgName);
@@ -1409,12 +1425,16 @@ function randomToken_(n) {
 function findStudentByEmail_(sh, email) {
   const data = sh.getDataRange().getValues();
   const e = (email || '').toString().trim().toLowerCase();
+  if (!e) return null;
+  let fallback = null;
   for (let i = 1; i < data.length; i++) {
-    if ((data[i][2] || '').toString().trim().toLowerCase() === e) {
-      return { row: i + 1, data: data[i] };
-    }
+    if ((data[i][2] || '').toString().trim().toLowerCase() !== e) continue;
+    const status = (data[i][3] || '').toString();
+    if (status === 'deleted') continue;                 // แถวที่ลบแล้วห้ามบังบัญชีจริง
+    if (status === 'active') return { row: i + 1, data: data[i] };
+    if (!fallback) fallback = { row: i + 1, data: data[i] };
   }
-  return null;
+  return fallback;
 }
 
 // ?action=checkContact&email=..&phone=..
@@ -1423,7 +1443,9 @@ function findStudentByEmail_(sh, email) {
 // ส่งรหัสเต็มกลับเฉพาะเมื่ออีเมลตรง (เจ้าของอีเมลได้รหัสทางเมลอยู่แล้ว) · เบอร์ตรงอย่างเดียว → ปิดบังรหัส
 function actionCheckContact(p, cb) {
   const email = (p.email || '').toString().trim().toLowerCase();
-  const phone = (p.phone || '').toString().replace(/\D/g, '');
+  // เบอร์: ตัดทุกอย่างที่ไม่ใช่ตัวเลข · +66xxxxxxxxx → 0xxxxxxxxx · ชีตอาจตัด 0 หน้าทิ้ง → เทียบ 9 หลักท้าย
+  const normPhone = function (v) { let d = String(v || '').replace(/\D/g, ''); if (d.length === 11 && d.slice(0, 2) === '66') d = '0' + d.slice(2); return d.slice(-9); };
+  const phone = normPhone(p.phone);
   if (!email && !phone) return respond({status:'ok', exists:false}, cb);
 
   const sh = getSheet(SHEET_STUDENTS);
@@ -1434,9 +1456,9 @@ function actionCheckContact(p, cb) {
     // Students ไม่เก็บเบอร์ → ดูจาก Purchases ที่ออกรหัสแล้ว
     const pData = getSheet(SHEET_PURCHASES).getDataRange().getValues();
     for (let i = pData.length - 1; i >= 1; i--) {
-      const ph = (pData[i][2] || '').toString().replace(/\D/g, '');
+      const ph = normPhone(pData[i][2]);
       const code = (pData[i][11] || '').toString().trim();
-      if (ph === phone && code) { st = findStudentByCode_(sh, code); if (st) { via = 'phone'; break; } }
+      if (ph && ph === phone && code) { st = findStudentByCode_(sh, code); if (st) { via = 'phone'; break; } }
     }
   }
   if (!st) return respond({status:'ok', exists:false}, cb);
@@ -1564,7 +1586,7 @@ function verdict_(orderId, state, obj, cb) {
 
 function actionVerifyPurchaseSlip(p, cb) {
   const orderId = (p.order_id || '').toString().trim();
-  const pkg     = (p.pkg || '').toString().trim();
+  let   pkg     = (p.pkg || '').toString().trim();
   const type    = (p.type || 'level').toString().trim();
   const name    = (p.name || '').toString().trim();
   const email   = (p.email || '').toString().trim().toLowerCase();
@@ -1574,6 +1596,19 @@ function actionVerifyPurchaseSlip(p, cb) {
 
   // ราคา: ห้ามเชื่อตัวเลขจาก client (เคยทดสอบส่ง price=1 แล้วได้รหัสตลอดชีพ)
   // ใช้ "ราคาขั้นต่ำของแพ็กเกจ" ที่ server รู้เอง — ต่ำกว่านี้ถือว่าจ่ายไม่ครบ
+  // pkg จาก client เชื่อไม่ได้: type=level ต้องเป็น "Level N" เดียว (N 1–15) server ประกอบชื่อเอง
+  // (เคยส่ง 'Level 1,2,…,15' ด้วยสลิป 599 แล้วได้ทุก Level)
+  if (type !== 'level' && type !== 'lifetime')
+    return verdict_(orderId, 'reject', {status:'reject', msg: 'ประเภทแพ็กเกจไม่ถูกต้อง' }, cb);
+  if (type === 'level') {
+    const lvNums = ((pkg.match(/Level\s*([\d,\s]+)/i) || [])[1] || '').split(/[,\s]+/).map(Number).filter(function (n) { return n >= 1 && n <= 15; });
+    if (lvNums.length !== 1)
+      return verdict_(orderId, 'reject', {status:'reject', msg: 'แพ็กเกจไม่ถูกต้อง — เลือก Level ทีละ 1 Level' }, cb);
+    const cefr = lvNums[0] <= 3 ? 'A1' : lvNums[0] <= 6 ? 'A2' : lvNums[0] <= 10 ? 'B1' : 'B2';
+    pkg = 'Level ' + lvNums[0] + ' ' + cefr;
+  } else if (type === 'lifetime') {
+    pkg = 'ตลอดชีพ (3,000 คำ ทุก Level)';
+  }
   const MIN_PRICE = { lifetime: 1990, level: 599, annual: 1590 };
   const clientPrice = parseInt(p.price) || 0;
   const floor = MIN_PRICE[type] || MIN_PRICE.level;
@@ -1618,7 +1653,8 @@ function actionVerifyPurchaseSlip(p, cb) {
   } catch (e) {
     // เรียก API ไม่ได้ → อย่าปฏิเสธลูกค้า ให้ครูตรวจมือแทน
     // เก็บสาเหตุไว้ในชีตด้วย (เช่น timeout / SlipOK ตอบไม่ใช่ JSON) จะได้วินิจฉัยได้
-    const why = String((e && e.message) || e).slice(0, 120);
+    let why = String((e && e.message) || e).slice(0, 160);
+    if (KEY) why = why.split(KEY).join('***');          // กันคีย์หลุดลงชีต/หน้าเว็บ ถ้า error echo มา
     return verdict_(orderId, 'manual', {status:'manual',
       msg: 'ตรวจอัตโนมัติไม่ได้ (' + why + ') — ส่งให้ครูตรวจ' }, cb);
   }
@@ -1820,12 +1856,18 @@ function issueOrUpgradeCode_(orderId, pkg, type, name, email, existingCode) {
   if (existingCode) {
     const st = findStudentByCode_(sh, existingCode);
     if (st) {
+      // บัญชี lifetime มีทุก Level อยู่แล้ว — ห้ามเขียน pkg ทับเป็น "Level N"
+      if ((st.data[6] || '').toString() === 'lifetime') {
+        sh.getRange(st.row, 4).setValue('active');
+        return { code: existingCode, upgraded: true, pkg_name: (st.data[7] || '').toString() };
+      }
       const oldPkg = (st.data[7] || '').toString();
       const oldNums = ownedLevels_(oldPkg);
       const newNum = levelNumFromPkg(pkg);
       const owned = Array.from(new Set(oldNums.concat([newNum]))).sort(function (a, b) { return a - b; });
       const merged = 'Level ' + owned.join(',');
       sh.getRange(st.row, 8).setValue(merged);
+      sh.getRange(st.row, 4).setValue('active');   // จ่ายแล้วต้องเข้าเรียนได้ (เคยค้าง pending_approval)
       return { code: existingCode, upgraded: true, pkg_name: merged };
     }
   }
@@ -1834,6 +1876,10 @@ function issueOrUpgradeCode_(orderId, pkg, type, name, email, existingCode) {
   if (email) {
     const st = findStudentByEmail_(sh, email);
     if (st) {
+      if ((st.data[6] || '').toString() === 'lifetime') {
+        sh.getRange(st.row, 4).setValue('active');
+        return { code: st.data[0].toString(), upgraded: true, pkg_name: (st.data[7] || '').toString() };
+      }
       const oldPkg = (st.data[7] || '').toString();
       const oldNums = ownedLevels_(oldPkg);
       const newNum = levelNumFromPkg(pkg);
@@ -1888,6 +1934,16 @@ function actionSetPassword(p, cb) {
   if (!st) return respond({ status: 'not_found', msg: 'ไม่พบรหัสนักเรียนนี้' }, cb);
   if (st.data[3] !== 'active')
     return respond({ status: 'error', msg: 'บัญชียังไม่ถูกเปิดใช้งาน' }, cb);
+
+  // รหัสนักเรียน 6 หลักไม่ใช่ความลับ → ถ้าบัญชีมีรหัสผ่านอยู่แล้ว ต้องพิสูจน์รหัสเดิม (old_ph)
+  // ไม่งั้นใครรู้รหัสนักเรียนก็เปลี่ยนรหัสผ่าน+อีเมลยึดบัญชีได้ (ลืมรหัสผ่านให้ใช้ทาง reset token)
+  const curHash = (st.data[COL_PASS_HASH] || '').toString();
+  const curSalt = (st.data[COL_PASS_SALT] || '').toString();
+  if (curHash && curSalt) {
+    const oldPh = (p.old_ph || '').toString().trim().toLowerCase();
+    if (!oldPh || sha256_(oldPh + '|' + curSalt) !== curHash)
+      return respond({ status: 'error', msg: 'บัญชีนี้ตั้งรหัสผ่านไว้แล้ว — เข้าสู่ระบบด้วยอีเมล หรือกด "ลืมรหัสผ่าน"' }, cb);
+  }
 
   // email ต้องไม่ชนกับบัญชีอื่น
   if (email) {

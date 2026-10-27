@@ -960,9 +960,10 @@ async function doPayment() {
         '👤 ' + (cc.via === 'email' ? 'อีเมลนี้' : 'เบอร์นี้') + 'มีบัญชีอยู่แล้ว — ' +
         (cc.nick ? 'ชื่อเล่น <b>' + cc.nick.replace(/</g,'&lt;') + '</b> ' : '') +
         'รหัส <b>' + (cc.code || cc.masked) + '</b>' + (cc.pkg ? ' · ' + cc.pkg.replace(/</g,'&lt;') : '') +
+        (cc.code ? '' : '<div style="margin-top:6px;font-size:12px;font-weight:600">บัญชีนี้สมัครด้วยอีเมลอื่น — ถ้าต้องการเพิ่มสิทธิ์ให้บัญชีเดิม ให้กรอก<b>อีเมลเดิม</b>ที่เคยสมัคร แล้วกดส่งอีกครั้ง</div>') +
         '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
-        '<button type="button" onclick="useExistingAccount(' + JSON.stringify(cc).replace(/"/g,'&quot;') + ')" ' +
-        'style="flex:1;min-width:150px;background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✅ ใช้บัญชีเดิม / เพิ่มสิทธิ์ให้บัญชีนี้</button>' +
+        (cc.code ? '<button type="button" onclick="useExistingAccount(' + JSON.stringify(cc).replace(/"/g,'&quot;') + ')" ' +
+        'style="flex:1;min-width:150px;background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✅ ใช้บัญชีเดิม / เพิ่มสิทธิ์ให้บัญชีนี้</button>' : '') +
         '<button type="button" onclick="editContact()" ' +
         'style="flex:1;min-width:150px;background:#fff;color:var(--blue);border:1.5px solid #9FC9D4;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">✏️ แก้ไขอีเมล/เบอร์ (สมัครใหม่)</button>' +
         '</div>';
@@ -1138,7 +1139,9 @@ function editContact() {
 
 // ส่งสลิปใหม่จากหน้า "กำลังตรวจสลิป" — คงแพ็กเกจ/ข้อมูลติดต่อ/รหัสนักเรียนเดิม
 // (existing_code → backend เปิดสิทธิ์ให้รหัสเดิม ไม่สร้างนักเรียนซ้ำ)
-function resubmitSlip(code) {
+async function resubmitSlip(code) {
+  // ราคา lifetime ขึ้นกับ tier ปัจจุบัน — หน้ารอตรวจไม่ได้โหลด tier มาก่อน ต้องดึงก่อนตั้งราคา
+  try { const g = await jsonp({ action:'getStats' }); updateTierUI(g.lifetimeSold || 0); } catch(e) {}
   let d = {};
   try { d = JSON.parse(localStorage.getItem(PK) || '{}'); } catch(e) {}
   // ถึงหน้า "กำลังตรวจสลิป" แล้ว PK ถูกลบไปแล้ว (ย้ายไป SK) → ประกอบข้อมูลกลับจาก SK
