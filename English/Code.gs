@@ -473,7 +473,8 @@ function actionGetLeaderboard(p, cb) {
     students.push({
       name:           data[i][1] || 'ไม่ระบุชื่อ',
       // ห้ามส่งรหัสเต็ม: รหัสคือกุญแจของบัญชี (save/myStats/setPassword) ใครเห็นก็ยึดบัญชีได้
-      code:           c.slice(0, 2) + '••' + c.slice(-2),
+      code:           maskCode_(c),
+      _full:          c,
       days_done:      pm.days.length,
       last_day:       pm.days.length ? Math.max(...pm.days) : 0,
       total_score:    Math.round(pm.total_score),
@@ -513,13 +514,13 @@ function actionGetLeaderboard(p, cb) {
 
   // สร้าง map days_done per student
   const daysDoneMap = {};
-  for (const s of students) daysDoneMap[s.code] = s.days_done;
+  for (const s of students) { daysDoneMap[s._full] = s.days_done; delete s._full; }
 
   const quizChampions = Object.entries(qBest)
     .filter(([code]) => (daysDoneMap[code] || 0) >= compDays)  // ต้องเรียนครบ 30 วันก่อน
     .map(([code, b]) => ({
-      code,
-      nickname: nameMap[code] || code,
+      code: maskCode_(code),
+      nickname: nameMap[code] || maskCode_(code),
       quiz_score:   b.score,
       time_seconds: b.time_seconds,
       days_done:    daysDoneMap[code] || 0,
@@ -770,7 +771,7 @@ function actionGetQuizLeaderboard(p, cb) {
   for (let i = 1; i < stData.length; i++) nameMap[stData[i][0].toString()] = stData[i][1];
 
   const results = Object.entries(bestMap)
-    .map(([code, score]) => ({ code, name: nameMap[code] || code, score }))
+    .map(([code, score]) => ({ code: maskCode_(code), name: nameMap[code] || maskCode_(code), score }))
     .sort((a, b) => b.score - a.score);
 
   return respond({status:'ok', results}, cb);
@@ -1168,6 +1169,7 @@ function actionVerifyPurchase(p, cb) {
         const owned = [...new Set(oldNums.concat([newLevel]))].sort(function(a,b){return a-b;});
         stSh2.getRange(j + 1, 8).setValue('Level ' + owned.join(','));  // pkg_name เก็บเซ็ต เช่น "Level 3,5"
         stSh2.getRange(j + 1, 7).setValue('level');                    // type (col 7)
+        stSh2.getRange(j + 1, 4).setValue('active');                   // จ่ายแล้วต้องเข้าเรียนได้
         // อัปเดต Purchases row → ใช้ code เดิม (ไม่สร้างบัญชีใหม่)
         sh.getRange(i + 1, 9).setValue('verified');
         sh.getRange(i + 1, 12).setValue(existingCode);
@@ -1176,6 +1178,17 @@ function actionVerifyPurchase(p, cb) {
       // ไม่พบบัญชีเดิม → fallthrough สร้างใหม่ (กันพลาด)
     }
 
+    // อีเมลนี้มีบัญชีอยู่แล้ว (เช่น เด็กกรอกโปรไฟล์ไปก่อนครูอนุมัติ) → อัปเกรด/เปิดใช้บัญชีเดิม ไม่สร้างซ้ำ
+    if (email) {
+      const stSh0 = getSheet(SHEET_STUDENTS);
+      const ex = findStudentByEmail_(stSh0, email);
+      if (ex) {
+        const out = issueOrUpgradeCode_(orderId, pkgName, type, name, email, ex.data[0].toString());
+        sh.getRange(i + 1, 9).setValue('verified');
+        sh.getRange(i + 1, 12).setValue(out.code);
+        return respond({status:'ok', upgraded:true, student_code: out.code, name, email, type, owned: out.pkg_name}, cb);
+      }
+    }
     // เพิ่มใน Students sheet (status=pending รอเด็กกรอกโปรไฟล์)
     const stSh = getSheet(SHEET_STUDENTS);
     stSh.appendRow([code, name, email, 'pending', new Date().toISOString(), 'purchase:' + orderId, type, pkgName, expiryDate]);
@@ -1202,7 +1215,7 @@ function actionCheckOrder(p, cb) {
       return respond({
         status:       'ok',
         order_status: data[i][8],      // pending | verified | rejected
-        student_code: data[i][11] || '',
+        student_code: maskCode_(data[i][11]),   // ค้นด้วยเบอร์เดาได้ → ไม่ส่งรหัสเต็ม
         pkg_name:     data[i][5]  || '',
       }, cb);
     }
@@ -1473,6 +1486,8 @@ function actionCheckContact(p, cb) {
     active: (st.data[3] || '').toString() === 'active'
   }, cb);
 }
+
+function maskCode_(c) { c = String(c || ''); return c.length >= 4 ? c.slice(0, 2) + '••' + c.slice(-2) : '••••'; }
 
 function findStudentByCode_(sh, code) {
   const data = sh.getDataRange().getValues();
@@ -1943,6 +1958,14 @@ function actionSetPassword(p, cb) {
     const oldPh = (p.old_ph || '').toString().trim().toLowerCase();
     if (!oldPh || sha256_(oldPh + '|' + curSalt) !== curHash)
       return respond({ status: 'error', msg: 'บัญชีนี้ตั้งรหัสผ่านไว้แล้ว — เข้าสู่ระบบด้วยอีเมล หรือกด "ลืมรหัสผ่าน"' }, cb);
+  } else {
+    // ยังไม่มีรหัสผ่าน: ถ้าบัญชีมีอีเมลจากตอนซื้ออยู่แล้ว ต้องเป็นอีเมลเดิมเท่านั้น
+    // (ไม่งั้นใครรู้รหัสนักเรียนก็ตั้งรหัสผ่าน+ย้ายอีเมลยึดบัญชีได้ก่อนเจ้าของ)
+    const storedEmail = (st.data[2] || '').toString().trim().toLowerCase();
+    if (storedEmail && email && email !== storedEmail)
+      return respond({ status: 'error', msg: 'อีเมลไม่ตรงกับที่ใช้สมัคร — ใช้อีเมลเดิม หรือติดต่อครูเพื่อเปลี่ยน' }, cb);
+    if (storedEmail && !email)
+      return respond({ status: 'error', msg: 'กรุณากรอกอีเมลที่ใช้สมัคร' }, cb);
   }
 
   // email ต้องไม่ชนกับบัญชีอื่น
