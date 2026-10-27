@@ -39,7 +39,7 @@
     var w = words().find(function (x) { return String(x.t || '').trim() === th; });
     if (!w) return;
     lastThai = th;
-    h.innerHTML = pic(w.e, 110, w.em || '📝');
+    h.innerHTML = pic(w.pic || w.e, 110, w.em || '📝');
   }
 
   /* ── Step 5: memory match ── */
@@ -56,7 +56,7 @@
         continue;
       }
       for (var j = 0; j < ws.length; j++) {
-        if (String(ws[j].em || '') === txt) { b.innerHTML = pic(ws[j].e, 80, txt); break; }
+        if (String(ws[j].em || '') === txt) { b.innerHTML = pic(ws[j].pic || ws[j].e, 80, txt); break; }
       }
     }
   }
@@ -81,7 +81,7 @@
                 byNorm[n.replace(/ed$/, '')] || byNorm[n.replace(/ing$/, '')];
         if (!w || seen[w.e]) continue;
         seen[w.e] = 1;
-        html += '<img src="../img/words/' + slug(w.e) + '.webp" alt="" title="' + String(w.e).replace(/"/g, '') +
+        html += '<img src="../img/words/' + slug(w.pic || w.e) + '.webp" alt="" title="' + String(w.e).replace(/"/g, '') +
                 '" loading="lazy" onerror="pwPicFail(this)">';
       }
       if (!html) continue;

@@ -230,7 +230,7 @@ const WORDS=[
   {e:'endemic',t:'พบเฉพาะถิ่นเดียว',ph:'/enˈdemɪk/',em:'🏝️'},
   {e:'invasive',t:'สปีชีส์รุกราน',ph:'/ɪnˈveɪsɪv/',em:'⚔️'},
   {e:'fragmentation',t:'การแตกเป็นหย่อมของถิ่นอาศัย',ph:'/ˌfræɡmenˈteɪʃn/',em:'🧱'},
-  {e:'corridor',t:'ทางเชื่อม (ผืนป่า)',ph:'/ˈkɒrɪdɔː(r)/',em:'🛤️'},
+  {e:'corridor',pic:'linkway',t:'ทางเชื่อม (ผืนป่า)',ph:'/ˈkɒrɪdɔː(r)/',em:'🛤️'},
   {e:'captivebreeding',t:'การเพาะเลี้ยงเพื่อขยายพันธุ์',ph:'/ˈkæptɪvˌbriːdɪŋ/',em:'🏛️'},
   {e:'rewilding',t:'การคืนธรรมชาติสู่พื้นที่',ph:'/ˌriːˈwaɪldɪŋ/',em:'🌲'},
   {e:'genepool',t:'กองพันธุกรรมของประชากร',ph:'/ˈdʒiːnpuːl/',em:'🧪'},
@@ -321,7 +321,7 @@ function checkLock(){if(localStorage.getItem('wla_admin')==='1'){unlockContent()
 function tryUnlock(){const v=document.getElementById('codeInput').value.trim().toUpperCase(),err=document.getElementById('unlockErr');if((new RegExp('^'+PREV_PFX+'[A-Z0-9]{4}$').test(v))){localStorage.setItem(PREV_KEY,v);err.style.display='none';document.getElementById('lockScreen').style.display='none';unlockContent();}else{err.style.display='block';}}
 function unlockContent(){document.getElementById('mainContent').style.display='block';initContent();}
 function initContent(){
-  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><div class='ac-em'>${pwPic(w.e,w.em)}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph}</div><div class='ac-hint'>Tap to hear</div></div>`).join('');
+  document.getElementById('cvA').innerHTML=WORDS.map(w=>`<div class='ac' onclick="speak('${String(w.e).replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><div class='ac-em'>${pwPic(w.pic||w.e,w.em)}</div><div class='ac-en'>🔊 ${w.e}</div><div class='ac-ph'>${w.ph}</div><div class='ac-hint'>Tap to hear</div></div>`).join('');
   const dotsEl=document.getElementById('dots');STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
   buildSL();
   buildS4();
